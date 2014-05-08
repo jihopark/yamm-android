@@ -1,14 +1,21 @@
 package com.example.papreeca.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class IntroActivity extends BaseActivity {
+    private ViewPager introPager;
+    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +23,7 @@ public class IntroActivity extends BaseActivity {
         setContentView(R.layout.activity_intro);
 
         configButtons();
+        configViewPager();
     }
 
     /*
@@ -30,6 +38,79 @@ public class IntroActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+
+    /*
+    * Config ViewPager and Indicator
+    * */
+
+    private void configViewPager(){
+        introPager = (ViewPager)findViewById(R.id.intro_pager);
+        adapter = new IntroPagerAdapter(getApplicationContext());
+
+        introPager.setAdapter(adapter);
+
+        //Bind the title indicator to the adapter
+        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(introPager);
+    }
+
+    /**
+     * A pager adapter that represents 4 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    private class IntroPagerAdapter extends PagerAdapter {
+        private LayoutInflater mInflater;
+        final int NUMBER_OF_PAGE = 4;
+
+        public IntroPagerAdapter(Context c){
+            super();
+            mInflater = LayoutInflater.from(c);
+        }
+
+        @Override
+        public int getCount() {
+            return NUMBER_OF_PAGE;
+        }
+
+        @Override
+        public Object instantiateItem(View collection, int position) {
+
+            LayoutInflater inflater = (LayoutInflater) collection.getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            int resId = 0;
+            switch (position) {
+                case 0:
+                    resId = R.layout.intro_one;
+                    break;
+                case 1:
+                    resId = R.layout.intro_one;
+                    break;
+                case 2:
+                    resId = R.layout.intro_one;
+                    break;
+                case 3:
+                    resId = R.layout.intro_one;
+                    break;
+            }
+
+            View view = inflater.inflate(resId, null);
+
+            ((ViewPager) collection).addView(view, 0);
+
+            return view;
+        }
+
+        @Override
+        public void destroyItem(View pager, int position, Object view) {
+            ((ViewPager)pager).removeView((View)view);
+        }
+
+        @Override
+        public boolean isViewFromObject(View pager, Object obj) {
+            return pager == obj;
+        }
+    }
 
     /*
     * Setup OnclickListener for button that finishes intro
