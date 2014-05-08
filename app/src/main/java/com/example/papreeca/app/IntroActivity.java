@@ -18,6 +18,17 @@ public class IntroActivity extends BaseActivity {
         introButtonConfig();
     }
 
+    /*
+    * Go to Home Screen When Back Button of IntroActivity
+    * */
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
     /*
