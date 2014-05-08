@@ -16,13 +16,13 @@ import com.viewpagerindicator.CirclePageIndicator;
 public class IntroActivity extends BaseActivity {
     private ViewPager introPager;
     private PagerAdapter adapter;
+    protected final int NUMBER_OF_PAGE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        configButtons();
         configViewPager();
     }
 
@@ -40,7 +40,7 @@ public class IntroActivity extends BaseActivity {
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
     /*
-    * Config ViewPager and Indicator
+    * Config ViewPager and Indicator(OnPageChangeListener to config intro_button
     * */
 
     private void configViewPager(){
@@ -51,7 +51,23 @@ public class IntroActivity extends BaseActivity {
 
         //Bind the title indicator to the adapter
         CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                if (position == NUMBER_OF_PAGE - 1)
+                    configIntroButton();
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         indicator.setViewPager(introPager);
+
     }
 
     /**
@@ -60,7 +76,6 @@ public class IntroActivity extends BaseActivity {
      */
     private class IntroPagerAdapter extends PagerAdapter {
         private LayoutInflater mInflater;
-        final int NUMBER_OF_PAGE = 4;
 
         public IntroPagerAdapter(Context c){
             super();
@@ -90,11 +105,14 @@ public class IntroActivity extends BaseActivity {
                     resId = R.layout.intro_one;
                     break;
                 case 3:
-                    resId = R.layout.intro_one;
+                    resId = R.layout.intro_final;
                     break;
             }
 
             View view = inflater.inflate(resId, null);
+
+            //Config Intro Button if final page
+
 
             ((ViewPager) collection).addView(view, 0);
 
@@ -115,7 +133,7 @@ public class IntroActivity extends BaseActivity {
     /*
     * Setup OnclickListener for button that finishes intro
     * */
-    private void configButtons(){
+    private void configIntroButton(){
         Button introButton = (Button) findViewById(R.id.intro_button);
         introButton.setOnClickListener(new View.OnClickListener() {
             @Override

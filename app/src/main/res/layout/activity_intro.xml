@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/intro_pager"
-        android:layout_weight="5"
+        android:layout_weight="10"
         />
 
     <!-- View Pager Indicator -->
@@ -27,17 +27,8 @@
         android:padding="10dip"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_weight="1"
      />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/intro_button"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_weight="1"/>
 
     </LinearLayout>
 </RelativeLayout>
