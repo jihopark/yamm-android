@@ -29,7 +29,6 @@ public class MainActivity extends BaseActivity {
         if (true || prefs.getBoolean("firstrun",true)){
             Toast.makeText(getApplicationContext(),"첫 실행입니다",Toast.LENGTH_LONG).show(); //To be deleted
             Intent introActivity = new Intent(getBaseContext(), IntroActivity.class);
-            introActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(introActivity);
         }
 
