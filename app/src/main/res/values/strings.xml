@@ -9,5 +9,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_battle">BattleActivity</string>
     <string name="title_activity_battle_result">BattleResult</string>
+    <string name="title_activity_join">JoinActivity</string>
 
 </resources>

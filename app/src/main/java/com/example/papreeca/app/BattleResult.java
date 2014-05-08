@@ -14,6 +14,8 @@ public class BattleResult extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_result);
+
+        configButtons();
     }
 
     /*
@@ -25,6 +27,41 @@ public class BattleResult extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+
+    private void configButtons() {
+        Button joinUsButton = (Button) findViewById(R.id.battle_result_joinus);
+        Button facebookButton = (Button) findViewById(R.id.battle_result_facebook);
+        Button tryAgainButton = (Button) findViewById(R.id.battle_result_tryagain);
+
+        //Join Us
+
+        joinUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Go to JoinActivity
+                Intent joinActivity = new Intent(getBaseContext(), JoinActivity.class);
+                startActivity(joinActivity);
+            }
+        });
+
+        //Facebook
+
+        facebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        //Try Again
+        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tryAgainDialog();
+            }
+        });
+    }
 
     private void tryAgainDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

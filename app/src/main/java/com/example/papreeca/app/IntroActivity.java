@@ -15,7 +15,7 @@ public class IntroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        introButtonConfig();
+        configButtons();
     }
 
     /*
@@ -34,7 +34,7 @@ public class IntroActivity extends BaseActivity {
     /*
     * Setup OnclickListener for button that finishes intro
     * */
-    private void introButtonConfig(){
+    private void configButtons(){
         Button introButton = (Button) findViewById(R.id.intro_button);
         introButton.setOnClickListener(new View.OnClickListener() {
             @Override

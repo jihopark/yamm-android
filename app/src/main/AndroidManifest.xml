@@ -50,6 +50,10 @@
             android:name="com.example.papreeca.app.BattleResult"
             android:label="@string/title_activity_battle_result" >
         </activity>
+        <activity
+            android:name="com.example.papreeca.app.JoinActivity"
+            android:label="@string/title_activity_join" >
+        </activity>
     </application>
 
 </manifest>
