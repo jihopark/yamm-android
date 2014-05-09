@@ -17,7 +17,7 @@
             android:name="com.example.papreeca.app.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light"  >
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
