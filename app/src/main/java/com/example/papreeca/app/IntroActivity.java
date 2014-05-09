@@ -8,7 +8,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -54,8 +53,17 @@ public class IntroActivity extends BaseActivity {
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
-                if (position == NUMBER_OF_PAGE - 1)
-                    configIntroButton();
+                if (position == NUMBER_OF_PAGE - 1) {
+                    SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);        //Save preference that INTRO was run once
+                    prefs.edit().putBoolean("firstrun", false).commit();
+
+                    Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_LONG).show(); //To be deleted
+
+                    //Go to Battle Activity
+                    Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
+                    startActivity(battleActivity);
+                    //configIntroButton();
+                }
             }
 
             @Override
@@ -102,7 +110,7 @@ public class IntroActivity extends BaseActivity {
                     resId = R.layout.intro_one;
                     break;
                 case 2:
-                    resId = R.layout.intro_one;
+                    resId = R.layout.intro_three;
                     break;
                 case 3:
                     resId = R.layout.intro_final;
@@ -110,9 +118,6 @@ public class IntroActivity extends BaseActivity {
             }
 
             View view = inflater.inflate(resId, null);
-
-            //Config Intro Button if final page
-
 
             ((ViewPager) collection).addView(view, 0);
 
@@ -133,7 +138,7 @@ public class IntroActivity extends BaseActivity {
     /*
     * Setup OnclickListener for button that finishes intro
     * */
-    private void configIntroButton(){
+/*    private void configIntroButton(){
         Button introButton = (Button) findViewById(R.id.intro_button);
         introButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,5 +153,5 @@ public class IntroActivity extends BaseActivity {
             }
         });
     }
-
+*/
 }

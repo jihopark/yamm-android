@@ -11,4 +11,5 @@
     <string name="title_activity_battle_result">BattleResult</string>
     <string name="title_activity_join">JoinActivity</string>
 
+    <string name="join_message">가입을 위해 이름과 전화번호를</string>
 </resources>
