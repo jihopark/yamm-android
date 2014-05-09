@@ -15,6 +15,7 @@ public class BattleResult extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_result);
 
+        hideActionBar();
         configButtons();
     }
 

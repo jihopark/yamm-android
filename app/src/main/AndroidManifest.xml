@@ -17,7 +17,7 @@
             android:name="com.example.papreeca.app.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            android:theme="@style/Theme.AppCompat.Light"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +28,8 @@
         <!-- Main Screen -->
         <activity
             android:name="com.example.papreeca.app.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,25 +42,28 @@
             android:name="com.example.papreeca.app.IntroActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_intro"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
         <!-- Battle Screen -->
         <activity
             android:name="com.example.papreeca.app.BattleActivity"
-            android:label="@string/title_activity_battle" >
+            android:label="@string/title_activity_battle"
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
         <!-- Battle Result Screen -->
         <activity
             android:name="com.example.papreeca.app.BattleResult"
-            android:label="@string/title_activity_battle_result" >
+            android:label="@string/title_activity_battle_result"
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
         <!-- Join Screen -->
         <activity
             android:name="com.example.papreeca.app.JoinActivity"
-            android:label="@string/title_activity_join" >
+            android:label="@string/title_activity_join"
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
     </application>
 

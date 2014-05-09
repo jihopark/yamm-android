@@ -22,6 +22,7 @@ public class IntroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        hideActionBar();
         configViewPager();
     }
 
@@ -134,24 +135,4 @@ public class IntroActivity extends BaseActivity {
             return pager == obj;
         }
     }
-
-    /*
-    * Setup OnclickListener for button that finishes intro
-    * */
-/*    private void configIntroButton(){
-        Button introButton = (Button) findViewById(R.id.intro_button);
-        introButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-                Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_LONG).show(); //To be deleted
-                prefs.edit().putBoolean("firstrun", false).commit();
-
-                //Go to Battle Activity
-                Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
-                startActivity(battleActivity);
-            }
-        });
-    }
-*/
 }
