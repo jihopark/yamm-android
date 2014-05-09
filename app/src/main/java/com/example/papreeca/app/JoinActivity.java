@@ -18,7 +18,7 @@ public class JoinActivity extends BaseActivity {
     private boolean isVerificationLayoutInflated = false;
     private final int JOIN_LAYOUT = 1;
     private final int VERI_LAYOUT = 2;
-    private int currentScreen = JOIN_LAYOUT;
+    private int currentFrame = JOIN_LAYOUT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class JoinActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentScreen == JOIN_LAYOUT)
+        if (currentFrame == JOIN_LAYOUT)
             super.onBackPressed();
         else
             goBackHome();
@@ -59,8 +59,25 @@ public class JoinActivity extends BaseActivity {
                     inflateVerificationLayout();
                     isVerificationLayoutInflated = true;
                 }
+                changeFrame();
             }
         });
+    }
+
+    /*
+    * Changes Frame
+    * */
+    private void changeFrame(){
+        if (currentFrame==JOIN_LAYOUT){
+            verificationLayout.setVisibility(View.VISIBLE);
+            joinLayout.setVisibility(View.INVISIBLE);
+            currentFrame = VERI_LAYOUT;
+        }
+        else{
+            verificationLayout.setVisibility(View.INVISIBLE);
+            joinLayout.setVisibility(View.VISIBLE);
+            currentFrame = JOIN_LAYOUT;
+        }
     }
 
     /*
@@ -71,10 +88,6 @@ public class JoinActivity extends BaseActivity {
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mInflater.inflate(R.layout.phone_verification, verificationLayout,true);
-        verificationLayout.setVisibility(View.VISIBLE);
-        joinLayout.setVisibility(View.INVISIBLE);
-        currentScreen = VERI_LAYOUT;
-
 
         configVeriConfirmButton();
         configVeriAgainButton();
@@ -107,9 +120,7 @@ public class JoinActivity extends BaseActivity {
         veriAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verificationLayout.setVisibility(View.INVISIBLE);
-                joinLayout.setVisibility(View.VISIBLE);
-                currentScreen = JOIN_LAYOUT;
+                changeFrame();
             }
         });
     }
