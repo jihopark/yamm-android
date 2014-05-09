@@ -3,6 +3,7 @@ package com.example.papreeca.app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -51,6 +52,10 @@ public class IntroActivity extends BaseActivity {
 
         //Bind the title indicator to the adapter
         CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
+
+        //Set Indicator Color
+        indicator.setFillColor(Color.BLACK);
+
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
