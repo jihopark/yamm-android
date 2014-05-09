@@ -57,7 +57,7 @@ public class BaseActivity extends ActionBarActivity {
 
      private void showInternetConnectionAlert(){
         if (!checkInternetConnection()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(BaseActivity.this);
 
             builder.setTitle("인터넷 연결?");
             builder.setMessage("인터넷 연결이 필요합니다");

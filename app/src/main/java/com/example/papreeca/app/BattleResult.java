@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class BattleResult extends BaseActivity {
@@ -17,6 +20,7 @@ public class BattleResult extends BaseActivity {
 
         hideActionBar();
         configButtons();
+        loadBattleResultImage();
     }
 
     /*
@@ -28,6 +32,15 @@ public class BattleResult extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+
+    private void loadBattleResultImage(){
+        ImageView imageView = (ImageView) findViewById(R.id.battle_result);
+        String imageURL = "http://d2ivf9obbiisa4.cloudfront.net/dish/1";
+
+        Picasso.with(getApplicationContext()).load(imageURL).into(imageView);
+
+    }
+
 
     private void configButtons() {
         Button joinUsButton = (Button) findViewById(R.id.battle_result_joinus);
