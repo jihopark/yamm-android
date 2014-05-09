@@ -1,0 +1,41 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/verification_text"
+        android:id="@+id/textView"
+        android:textSize="16dp"
+        android:padding="15dp"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/verification_field"
+        android:text="@string/verification_field"
+        style="@style/EditText"
+        />
+
+    <Button
+        style="@style/MyButton"
+        android:text="@string/verification_confirm_button"
+        android:id="@+id/verification_confirm_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/verification_resend_button"
+        android:id="@+id/verification_resend_button"
+        android:textColor="#ff0000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/verification_again_button"
+        android:id="@+id/verification_again_button"
+         />
+
+</LinearLayout>

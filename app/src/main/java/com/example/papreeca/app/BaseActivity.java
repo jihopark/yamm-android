@@ -3,6 +3,7 @@ package com.example.papreeca.app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -44,7 +45,12 @@ public class BaseActivity extends ActionBarActivity {
         getSupportActionBar().hide();
     }
 
-
+    protected void goBackHome(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
     /*
     * Show Alert Box until Internet Connection is Available
     * */
