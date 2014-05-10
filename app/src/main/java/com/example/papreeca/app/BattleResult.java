@@ -1,6 +1,5 @@
 package com.example.papreeca.app;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -78,29 +77,18 @@ public class BattleResult extends BaseActivity {
     }
 
     private void tryAgainDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("한번 더?");
-        builder.setMessage("다시 한번 해보시겠습니까?");
-        final AlertDialog alert = builder.setPositiveButton("한번 더", null)
-                .setNegativeButton("이제 그만", null)
-                .create();
-        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
-            public void onShow(DialogInterface dialog) {
-                Button b = alert.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Go back to BattleActivity
-                        Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
-                        startActivity(battleActivity);
-                    }
-                });
+            public void onClick(DialogInterface dialog, int which) {
+                //Go back to BattleActivity
+                Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
+                startActivity(battleActivity);
             }
-        });
+        };
 
-        alert.show();
+        createDialog(BattleResult.this, R.string.battleagain_dialog_title, R.string.battleagain_dialog_message,
+                R.string.battleagain_dialog_positive, R.string.battleagain_dialog_negative,positiveListener, null).show();
+
     }
 
 

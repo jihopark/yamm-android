@@ -37,7 +37,21 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    /*
+    * Builds Alert Dialog with positive and negative buttons
+    * */
+    protected AlertDialog createDialog(Context context, int title, int message, int positive, int negative,
+                                       DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+        AlertDialog alert = builder.setPositiveButton(getString(positive),positiveListener)
+                .setNegativeButton(getString(negative),negativeListener)
+                .setTitle(getString(title))
+                .setMessage(getString(message))
+                .create();
+
+        return alert;
+    }
     /*
     * Hides Action Bar
     * */

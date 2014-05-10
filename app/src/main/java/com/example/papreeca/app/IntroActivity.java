@@ -56,7 +56,7 @@ public class IntroActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == NUMBER_OF_PAGE - 1) {
-                    Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_LONG).show(); //To be deleted
+                    Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
                     //Go to Battle Activity
                     Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);

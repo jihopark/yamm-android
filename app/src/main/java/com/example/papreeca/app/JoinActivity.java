@@ -1,6 +1,5 @@
 package com.example.papreeca.app;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -53,7 +52,7 @@ public class JoinActivity extends BaseActivity {
         sendV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),R.string.verification_sent,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),R.string.verification_sent,Toast.LENGTH_SHORT).show();
 
                 if (!isVerificationLayoutInflated) {
                     inflateVerificationLayout();
@@ -104,7 +103,7 @@ public class JoinActivity extends BaseActivity {
         veriConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -133,23 +132,16 @@ public class JoinActivity extends BaseActivity {
         veriResendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
 
                 DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),"문자를 재전송하였습니다",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.verification_resend_message),Toast.LENGTH_SHORT).show();
                     }
                 };
 
-                final AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive),positiveListener)
-                                                .setNegativeButton(getString(R.string.dialog_negative),null)
-                                                .setTitle(getString(R.string.verification_dialog_title))
-                                                .setMessage(getString(R.string.verification_dialog_message))
-                                                .create();
-
-                alert.show();
-
+                createDialog(JoinActivity.this, R.string.verification_dialog_title, R.string.verification_dialog_message,
+                        R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
             }
         });
     }

@@ -1,6 +1,5 @@
 package com.example.papreeca.app;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,8 +25,6 @@ public class BattleActivity extends BaseActivity {
     * */
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(BattleActivity.this);
-
         DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -39,13 +36,8 @@ public class BattleActivity extends BaseActivity {
             }
         };
 
-        final AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive),positiveListener)
-                .setNegativeButton(getString(R.string.dialog_negative),null)
-                .setTitle(getString(R.string.battle_dialog_title))
-                .setMessage(getString(R.string.battle_dialog_message))
-                .create();
-
-        alert.show();
+        createDialog(BattleActivity.this, R.string.battle_dialog_title, R.string.battle_dialog_message,
+                R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
     }
 
 
@@ -59,7 +51,7 @@ public class BattleActivity extends BaseActivity {
         battleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "배틀 끝", Toast.LENGTH_LONG).show(); //To be deleted
+                Toast.makeText(getApplicationContext(), "배틀 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
                 //Save Preference that finished first run
                 SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);        //Save preference that INTRO was run once
