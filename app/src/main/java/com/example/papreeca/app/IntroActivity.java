@@ -2,7 +2,6 @@ package com.example.papreeca.app;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -57,9 +56,6 @@ public class IntroActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == NUMBER_OF_PAGE - 1) {
-                    SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);        //Save preference that INTRO was run once
-                    prefs.edit().putBoolean("firstrun", false).commit();
-
                     Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_LONG).show(); //To be deleted
 
                     //Go to Battle Activity
