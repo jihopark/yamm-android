@@ -27,15 +27,16 @@
                 />
 
             <EditText
-                android:text="@string/verification_name"
+                android:hint="@string/verification_name"
                 android:id="@+id/name_field"
                 style="@style/EditText"
                 />
 
             <EditText
-                android:text="@string/verification_phone"
+                android:hint="@string/verification_phone"
                 android:id="@+id/phone_field"
                 style="@style/EditText"
+                android:inputType="phone"
                 />
 
             <Button

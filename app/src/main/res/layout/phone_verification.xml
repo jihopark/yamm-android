@@ -15,8 +15,9 @@
 
     <EditText
         android:id="@+id/verification_field"
-        android:text="@string/verification_field"
+        android:hint="@string/verification_field"
         style="@style/EditText"
+        android:inputType="numberDecimal"
         />
 
     <Button
