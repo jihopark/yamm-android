@@ -15,6 +15,12 @@
     <string name="dialog_positive">네</string>
     <string name="dialog_negative">아니오</string>
 
+
+    <!--Grid Fragment -->
+    <string name="grid_introduction">못 먹는 음식 다 골라</string>
+    <string name="grid_button">없는데요</string>
+
+
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>
     <string name="battle_dialog_title">왜 하다말고</string>

@@ -106,7 +106,7 @@ public class IntroActivity extends BaseActivity {
                     resId = R.layout.intro_one;
                     break;
                 case 1:
-                    resId = R.layout.intro_one;
+                    resId = R.layout.intro_grid;
                     break;
                 case 2:
                     resId = R.layout.intro_three;
