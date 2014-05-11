@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class IntroActivity extends BaseActivity {
         hideActionBar();
         configViewPager();
     }
+
 
     /*
     * Go to Home Screen When Back Button of IntroActivity
@@ -59,10 +61,12 @@ public class IntroActivity extends BaseActivity {
                 if (position == NUMBER_OF_PAGE - 1) {
                     Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
+                    //Send Grid Selected Result to server
+                    sendGridResultToServer((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
+
                     //Go to Battle Activity
                     Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
                     startActivity(battleActivity);
-                    //configIntroButton();
                 }
             }
 
@@ -76,6 +80,13 @@ public class IntroActivity extends BaseActivity {
         });
         indicator.setViewPager(introPager);
 
+    }
+    /*
+    * Sends Grid Selected Result to server
+    * Only executed right before stating Battle Activity
+    * */
+    private void sendGridResultToServer(GridFragment f){
+        Log.v("IntroActivity",f.getSelectedItems()+"");
     }
 
     /**

@@ -12,12 +12,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/grid_introduction"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/grid_button"
-            android:id="@+id/grid_button" />
     </LinearLayout>
 
     <ScrollView
