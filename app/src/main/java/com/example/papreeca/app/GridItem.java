@@ -11,6 +11,10 @@ public class GridItem {
         id = -1;
     }
 
+    public GridItem(GridItem a){
+        name = a.getName();
+        id = a.getId();
+    }
     public GridItem(int ID){
         id = ID;
     }
@@ -28,7 +32,7 @@ public class GridItem {
         name = n;
     }
 
-    public long getId(){
+    public int getId(){
         return id;
     }
 

@@ -30,7 +30,7 @@ public class GridSelectionListAdapter extends BaseAdapter {
         GridItemView item;
 
         if (convertView == null)
-            item = new GridItemView(mContext, new GridItem());
+            item = new GridItemView(mContext, getItem(position));
         else{
             item = (GridItemView) convertView;
         }

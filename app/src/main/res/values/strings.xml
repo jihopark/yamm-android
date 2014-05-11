@@ -20,6 +20,8 @@
     <string name="grid_introduction">못 먹는 음식 다 골라</string>
     <string name="grid_button">없는데요</string>
     <string name="grid_item_selected_text">윀</string>
+    <string name="grid_selected_none">없는데요</string>
+    <string name="grid_selected_some">다 골랐어요</string>
 
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>

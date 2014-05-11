@@ -2,6 +2,7 @@ package com.example.papreeca.app;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,16 +31,14 @@ public class GridItemView extends FrameLayout {
 
     public GridItemView(Context context,  GridItem aItem){
         super(context);
+        item = aItem;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.grid_item, this, true);
         setGridItemImage((ImageView) findViewById(R.id.grid_item_image));
+        setGridItemText((TextView) findViewById(R.id.grid_item_text));
         selectedText = (TextView)findViewById(R.id.grid_item_selected);
-        item = aItem;
-        setValues();
-    }
 
-    public void setValues(){
     }
 
     public void setChecked(boolean checked){
@@ -63,8 +62,7 @@ public class GridItemView extends FrameLayout {
     }
 
     public void setGridItem(GridItem i){
-        item = i;
-        setValues();
+        item = new GridItem(i);
     }
     /*
      * To make square
@@ -76,6 +74,12 @@ public class GridItemView extends FrameLayout {
     }
 
     /////////////////////Private method
+    private void setGridItemText(TextView view){
+        Log.v("Grid", item.getName()+" Name Set");
+
+        view.setText(item.getName());
+    }
+
     private void setGridItemImage(ImageView view){
         view.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholer));
     }
