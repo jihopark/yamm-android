@@ -42,7 +42,7 @@ public class IntroActivity extends BaseActivity {
     * */
 
     private void configViewPager(){
-        introPager = (MyIntroViewPager)findViewById(R.id.intro_pager);
+        introPager = (ViewPager)findViewById(R.id.intro_pager);
         adapter = new IntroPagerAdapter(getApplicationContext());
 
         introPager.setAdapter(adapter);

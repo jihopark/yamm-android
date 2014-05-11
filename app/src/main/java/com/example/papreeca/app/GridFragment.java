@@ -6,7 +6,6 @@ package com.example.papreeca.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,6 @@ public class GridFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     //Change Clicked Status ofGridItemView
                     ((GridItemView) v).toggle();
-                    Log.v("GridItemView",position+" Touched");
                 }
             });
         return view;
