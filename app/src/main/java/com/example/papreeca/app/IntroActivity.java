@@ -38,10 +38,11 @@ public class IntroActivity extends BaseActivity {
 
     /*
     * Config ViewPager and Indicator(OnPageChangeListener to config intro_button
+    * https://github.com/JakeWharton/Android-ViewPagerIndicator
     * */
 
     private void configViewPager(){
-        introPager = (ViewPager)findViewById(R.id.intro_pager);
+        introPager = (MyIntroViewPager)findViewById(R.id.intro_pager);
         adapter = new IntroPagerAdapter(getApplicationContext());
 
         introPager.setAdapter(adapter);

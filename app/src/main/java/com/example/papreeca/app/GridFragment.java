@@ -6,9 +6,11 @@ package com.example.papreeca.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -43,6 +45,13 @@ public class GridFragment extends Fragment {
     private GridSelectionListView initGridSelectionListView(){
         GridSelectionListView view = new GridSelectionListView(getActivity());
         view.setAdapter(initiateAdapter());
+            view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    //Change Clicked Status ofGridItemView
+                    ((GridItemView) v).toggle();
+                    Log.v("GridItemView",position+" Touched");
+                }
+            });
         return view;
     }
 

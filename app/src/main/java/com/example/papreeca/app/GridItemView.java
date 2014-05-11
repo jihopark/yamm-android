@@ -1,6 +1,7 @@
 package com.example.papreeca.app;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,6 +37,10 @@ public class GridItemView extends RelativeLayout {
 
     public void setChecked(boolean checked){
         mChecked = checked;
+        if (checked)
+            this.getChildAt(0).setBackgroundColor(Color.RED);
+        else
+            this.getChildAt(0).setBackgroundColor(Color.YELLOW);
     }
 
     public boolean getChecked(){
