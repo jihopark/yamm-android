@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ImageView android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,8 +12,17 @@
         android:text="Default"
         android:layout_gravity="bottom"
         android:gravity="center_horizontal"
-        android:background="@string/grid_text_background"
-        />
+        android:background="#87a2a2a2"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/grid_item_selected"
+        android:visibility="invisible"
+        android:background="#aa181818"
+        android:textColor="#ffffff"
+        android:text="@string/grid_item_selected_text"
+        android:textSize="16dp"
+        android:gravity="center"/>
 
 
 </FrameLayout>

@@ -1,8 +1,9 @@
 package com.example.papreeca.app;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 public class GridItemView extends FrameLayout {
     private TextView itemText;
     private ImageView imageView;
+    private TextView selectedText;
 
     private boolean mChecked = false;
     private GridItem item;
@@ -21,12 +23,18 @@ public class GridItemView extends FrameLayout {
         super(context);
     }
 
-    public GridItemView(Context context, GridItem aItem){
+    public GridItemView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
+
+    public GridItemView(Context context,  GridItem aItem){
         super(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.grid_item, this, true);
-        setGridItemImage((ImageView)layout.findViewById(R.id.grid_item_image));
+        inflater.inflate(R.layout.grid_item, this, true);
+        setGridItemImage((ImageView) findViewById(R.id.grid_item_image));
+        selectedText = (TextView)findViewById(R.id.grid_item_selected);
         item = aItem;
         setValues();
     }
@@ -37,9 +45,9 @@ public class GridItemView extends FrameLayout {
     public void setChecked(boolean checked){
         mChecked = checked;
         if (checked)
-            this.getChildAt(0).setBackgroundColor(Color.RED);
+            selectedText.setVisibility(View.VISIBLE);
         else
-            this.getChildAt(0).setBackgroundColor(Color.YELLOW);
+            selectedText.setVisibility(View.INVISIBLE);
     }
 
     public boolean getChecked(){

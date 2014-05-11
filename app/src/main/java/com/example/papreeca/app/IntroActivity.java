@@ -100,7 +100,6 @@ public class IntroActivity extends BaseActivity {
 
             LayoutInflater inflater = (LayoutInflater) collection.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             int resId = 0;
             switch (position) {
                 case 0:
