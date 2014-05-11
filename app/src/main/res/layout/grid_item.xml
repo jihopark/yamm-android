@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF0000">
+    >
 
     <ImageView android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        </ImageView>
+        android:layout_height="match_parent"
+        android:id="@+id/grid_item_image"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Default"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:background="@string/grid_text_background"
+        />
 
-</RelativeLayout>
+
+</FrameLayout>

@@ -3,16 +3,17 @@ package com.example.papreeca.app;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Created by parkjiho on 5/10/14.
  */
-public class GridItemView extends RelativeLayout {
-    private TextView dishItemText;
-    private ImageView dishImageView;
+public class GridItemView extends FrameLayout {
+    private TextView itemText;
+    private ImageView imageView;
+
     private boolean mChecked = false;
     private GridItem item;
 
@@ -24,10 +25,8 @@ public class GridItemView extends RelativeLayout {
         super(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.grid_item, this, true);
-
-        //dishItemText = (TextView)findViewById(R.id.dishItemValue);
-        //dishImageView = (ImageView) findViewById(R.id.dishImageView);
+        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.grid_item, this, true);
+        setGridItemImage((ImageView)layout.findViewById(R.id.grid_item_image));
         item = aItem;
         setValues();
     }
@@ -61,10 +60,15 @@ public class GridItemView extends RelativeLayout {
     }
     /*
      * To make square
-     * @see android.widget.RelativeLayout#onMeasure(int, int)
+     * @see android.widget.FrameLayout#onMeasure(int, int)
      */
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+    }
+
+    /////////////////////Private method
+    private void setGridItemImage(ImageView view){
+        view.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholer));
     }
 }
