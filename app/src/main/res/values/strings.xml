@@ -26,6 +26,7 @@
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>
     <string name="battle_dialog_title">왜 하다말고</string>
+    <string name="battle_none_button">둘다 싫어</string>
 
     <!-- Join Activity-->
     <string name="join_message">가입을 위해 이름과 전화번호를</string>

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
  * Created by parkjiho on 5/12/14.
  */
 public class BattleFragment extends Fragment{
-
+    DishItemView first, second;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
@@ -39,10 +39,11 @@ public class BattleFragment extends Fragment{
         FrameLayout layout1 = (FrameLayout) layout.findViewById(R.id.battle_layout1);
         FrameLayout layout2 = (FrameLayout) layout.findViewById(R.id.battle_layout2);
 
-        DishItemView first = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getFirst(), layout1);
+        first = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getFirst(), layout1);
         Log.v("BattleFragment", "First DishItemView made");
 
-        DishItemView second = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getSecond(), layout2);
+        second = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getSecond(), layout2);
         Log.v("BattleFragment", "Second DishItemView made");
     }
+
 }
