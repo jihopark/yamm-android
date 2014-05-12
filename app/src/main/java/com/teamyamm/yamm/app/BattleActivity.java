@@ -4,12 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 
 public class BattleActivity extends BaseActivity {
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +19,8 @@ public class BattleActivity extends BaseActivity {
         setContentView(R.layout.activity_battle);
 
         hideActionBar();
-        introButtonConfig();
+        setBattleFragments();
+        //introButtonConfig();
     }
 
     /*
@@ -42,7 +45,20 @@ public class BattleActivity extends BaseActivity {
 
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    /*
+    * Setup Battle Fragments
+    * */
+    private void setBattleFragments(){
 
+        BattleFragment bf1 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment1);
+        BattleFragment bf2 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment2);
+
+        bf1.setText("hi");
+        bf2.setText("bye");
+
+        ft.hide(bf1);
+        ft.commit();
+    }
     /*
     * Setup OnclickListener for button that finishes battle
     * */
