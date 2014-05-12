@@ -34,13 +34,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.teamyamm.yamm.app.BattleFragment"
-            android:id="@+id/battle_fragment1" />
+            android:id="@+id/battle_fragment1"/>
         <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="com.teamyamm.yamm.app.BattleFragment"
-            android:id="@+id/battle_fragment2"
-            />
+            android:id="@+id/battle_fragment2"/>
         </FrameLayout>
 
 </LinearLayout>

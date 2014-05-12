@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
  */
 public class BattleFragment extends Fragment{
     DishItemView first, second;
+    LinearLayout fragmentLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
@@ -26,24 +28,40 @@ public class BattleFragment extends Fragment{
         return layout;
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
+   /* @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.v("BattleFragment", "BattleFragment onHiddenChanged Started");
 
-        setDishItemView();
+        BattleActivity at = (BattleActivity) getActivity();
+        if (hidden) {
+            setDishItemView(at.currentSecondItem);
+
+        }
+    }*/
+
+    public void setDishItemView(BattleItem i){
+        Log.v("BattleFragment", "BattleFragment setDishItem Started");
+        fragmentLayout = (LinearLayout) getView().findViewById(R.id.battle_fragment_layout);
+        FrameLayout layout1 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout1);
+        FrameLayout layout2 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout2);
+
+        first = new DishItemView(getActivity(),i.getFirst(), layout1);
+        Log.v("BattleFragment", "First DishItemView made " +first);
+
+        second = new DishItemView(getActivity(),i.getSecond(), layout2);
+        Log.v("BattleFragment", "Second DishItemView made " +second);
     }
 
-    public void setDishItemView(){
-        Log.v("BattleFragment", "BattleFragment onStart Started");
-        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.battle_scroll_layout);
-        FrameLayout layout1 = (FrameLayout) layout.findViewById(R.id.battle_layout1);
-        FrameLayout layout2 = (FrameLayout) layout.findViewById(R.id.battle_layout2);
-
-        first = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getFirst(), layout1);
-        Log.v("BattleFragment", "First DishItemView made");
-
-        second = new DishItemView(getActivity(),((BattleActivity) getActivity()).currentFirstItem.getSecond(), layout2);
-        Log.v("BattleFragment", "Second DishItemView made");
+    public void toggle(){
+        if (fragmentLayout.getVisibility()==View.VISIBLE) {
+            fragmentLayout.setVisibility(View.INVISIBLE);
+            Log.v("BattleFragment", "DishItemView "+ first +" " + second +" made Invisible");
+        }
+        else if (fragmentLayout.getVisibility()==View.INVISIBLE) {
+            fragmentLayout.setVisibility(View.VISIBLE);
+            Log.v("BattleFragment", "DishItemView "+ first+" " + second +" made Invisible");
+        }
     }
 
 }

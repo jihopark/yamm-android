@@ -17,6 +17,8 @@ public class BattleActivity extends BaseActivity {
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     public ArrayList<BattleItem> items = new ArrayList<BattleItem>();
     public BattleItem currentFirstItem, currentSecondItem;
+    public int count = 0;
+    public boolean isFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +62,9 @@ public class BattleActivity extends BaseActivity {
 
         BattleFragment bf1 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment1);
         BattleFragment bf2 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment2);
-
-
-
-     //   bf1.setText(first.getFirst() +" vs " + first.getSecond());
-      //  bf2.setText(second.getFirst() +" vs " + second.getSecond());
-
-        ft.hide(bf2);
-        ft.commit();
+        bf2.setDishItemView(currentSecondItem);
+        bf1.setDishItemView(currentFirstItem);
+        bf2.toggle();
     }
 
     /*
@@ -84,6 +81,17 @@ public class BattleActivity extends BaseActivity {
         Log.v("BattleActivity","Current Second Item " + currentSecondItem);
     }
 
+    /*
+    * Change current item to next one, returns null if end of list
+    * */
+    public boolean loadNextItem(){
+        if (count == items.size()-1)
+            return false;
+
+        currentFirstItem = currentSecondItem;
+        currentSecondItem = items.get(++count);
+        return true;
+    }
 
      /*
     * Setup OnclickListener for button that finishes battle
