@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.papreeca.app" >
+    package="com.teamyamm.yamm.app">
 
     <!-- Permission -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,7 +14,7 @@
 
         <!-- Splash Screen -->
         <activity
-            android:name="com.example.papreeca.app.SplashScreen"
+            android:name="com.teamyamm.yamm.app.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"  >
@@ -27,7 +27,7 @@
 
         <!-- Main Screen -->
         <activity
-            android:name="com.example.papreeca.app.MainActivity"
+            android:name="com.teamyamm.yamm.app.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
@@ -39,7 +39,7 @@
 
         <!-- Intro Screen -->
         <activity
-            android:name="com.example.papreeca.app.IntroActivity"
+            android:name="com.teamyamm.yamm.app.IntroActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_intro"
             android:theme="@style/Theme.AppCompat.Light" >
@@ -47,21 +47,21 @@
 
         <!-- Battle Screen -->
         <activity
-            android:name="com.example.papreeca.app.BattleActivity"
+            android:name="com.teamyamm.yamm.app.BattleActivity"
             android:label="@string/title_activity_battle"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
         <!-- Battle Result Screen -->
         <activity
-            android:name="com.example.papreeca.app.BattleResult"
+            android:name="com.teamyamm.yamm.app.BattleResult"
             android:label="@string/title_activity_battle_result"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
         <!-- Join Screen -->
         <activity
-            android:name="com.example.papreeca.app.JoinActivity"
+            android:name="com.teamyamm.yamm.app.JoinActivity"
             android:label="@string/title_activity_join"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>

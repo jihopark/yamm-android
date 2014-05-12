@@ -1,4 +1,4 @@
-package com.example.papreeca.app.util;
+package com.teamyamm.yamm.app.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

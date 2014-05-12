@@ -1,4 +1,4 @@
-package com.example.papreeca.app;
+package com.teamyamm.yamm.app;
 
 /**
  * Created by parkjiho on 5/10/14.

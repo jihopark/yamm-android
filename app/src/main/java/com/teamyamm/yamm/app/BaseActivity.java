@@ -1,4 +1,4 @@
-package com.example.papreeca.app;
+package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.widget.Button;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
-    protected static final String packageName = "com.example.papreeca.app";
+    protected static final String packageName = "com.teamyamm.yamm.app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

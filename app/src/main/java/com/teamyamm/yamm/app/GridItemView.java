@@ -1,4 +1,4 @@
-package com.example.papreeca.app;
+package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.util.AttributeSet;
