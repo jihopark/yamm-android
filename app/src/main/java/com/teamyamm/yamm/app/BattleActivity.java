@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class BattleActivity extends BaseActivity {
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    ArrayList<BattleItem> items = new ArrayList<BattleItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +56,30 @@ public class BattleActivity extends BaseActivity {
         BattleFragment bf1 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment1);
         BattleFragment bf2 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment2);
 
-        bf1.setText("hi");
-        bf2.setText("bye");
+        loadBattleItems();
 
-        ft.hide(bf1);
+        BattleItem first = items.get(0);
+        BattleItem second = items.get(1);
+
+
+        bf1.setText(first.getFirst() +" vs " + first.getSecond());
+        bf2.setText(second.getFirst() +" vs " + second.getSecond());
+
+        ft.hide(bf2);
         ft.commit();
     }
+
     /*
+    * Load Battle Items from Server
+    * */
+    private void loadBattleItems(){
+        items.add(new BattleItem(new DishItem(1,"설렁탕"), new DishItem(1,"된장국")));
+        items.add(new BattleItem(new DishItem(3,"치킨"), new DishItem(4,"피자")));
+        items.add(new BattleItem(new DishItem(5,"비빔냉면"), new DishItem(6,"샐러드")));
+    }
+
+
+     /*
     * Setup OnclickListener for button that finishes battle
     * */
     private void introButtonConfig(){
