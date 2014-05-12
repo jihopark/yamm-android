@@ -53,15 +53,4 @@ public class BattleFragment extends Fragment{
         Log.v("BattleFragment", "Second DishItemView made " +second);
     }
 
-    public void toggle(){
-        if (fragmentLayout.getVisibility()==View.VISIBLE) {
-            fragmentLayout.setVisibility(View.INVISIBLE);
-            Log.v("BattleFragment", "DishItemView "+ first +" " + second +" made Invisible");
-        }
-        else if (fragmentLayout.getVisibility()==View.INVISIBLE) {
-            fragmentLayout.setVisibility(View.VISIBLE);
-            Log.v("BattleFragment", "DishItemView "+ first+" " + second +" made Invisible");
-        }
-    }
-
 }

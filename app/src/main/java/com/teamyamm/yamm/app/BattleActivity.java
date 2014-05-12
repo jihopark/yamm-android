@@ -64,7 +64,8 @@ public class BattleActivity extends BaseActivity {
         BattleFragment bf2 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment2);
         bf2.setDishItemView(currentSecondItem);
         bf1.setDishItemView(currentFirstItem);
-        bf2.toggle();
+        ft.hide(bf2);
+        ft.commit();
     }
 
     /*
