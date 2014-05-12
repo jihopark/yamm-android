@@ -35,4 +35,17 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">18dp</item>
     </style>
+
+    <!-- Battle Activity -->
+    <style name="versus">
+        <item name="android:textSize">40dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">#87a2a2a2</item>
+        <item name="android:gravity">left|center</item>
+    </style>
+    <style name="dish_item_text">
+        <item name="android:textSize">30dp</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:background">#87a2a2a2</item>
+    </style>
 </resources>

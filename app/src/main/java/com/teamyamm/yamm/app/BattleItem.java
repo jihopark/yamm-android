@@ -56,4 +56,8 @@ public class BattleItem {
         return list.size();
     }
 
+    public String toString(){
+        return getFirst() +" vs. " + getSecond();
+    }
+
 }
