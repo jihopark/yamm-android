@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
  */
 public class BattleFragment extends Fragment{
     DishItemView first, second;
+    Button battleNoneButton;
     LinearLayout fragmentLayout;
 
     @Override
@@ -28,29 +30,30 @@ public class BattleFragment extends Fragment{
         return layout;
     }
 
-   /* @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.v("BattleFragment", "BattleFragment onHiddenChanged Started");
-
-        BattleActivity at = (BattleActivity) getActivity();
-        if (hidden) {
-            setDishItemView(at.currentSecondItem);
-
-        }
-    }*/
-
     public void setDishItemView(BattleItem i){
-        Log.v("BattleFragment", "BattleFragment setDishItem Started");
+        Log.v("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         fragmentLayout = (LinearLayout) getView().findViewById(R.id.battle_fragment_layout);
         FrameLayout layout1 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout1);
         FrameLayout layout2 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout2);
 
         first = new DishItemView(getActivity(),i.getFirst(), layout1);
-        Log.v("BattleFragment", "First DishItemView made " +first);
+        Log.v("BattleFragment setDishItemView", "First DishItemView made " +first);
 
         second = new DishItemView(getActivity(),i.getSecond(), layout2);
-        Log.v("BattleFragment", "Second DishItemView made " +second);
+        Log.v("BattleFragment setDishItemView", "Second DishItemView made " +second);
+
+        //Set Battle Non Button
+        battleNoneButton = (Button) fragmentLayout.findViewById(R.id.battle_none_button);
+        battleNoneButton.setOnClickListener(setBattleNoneButtonClickListener());
+    }
+
+    private View.OnClickListener setBattleNoneButtonClickListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BattleActivity)getActivity()).switchFragment();
+            }
+        };
     }
 
 }
