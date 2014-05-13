@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class BattleItem {
     public static final int NO_RESPONSE = 0;
     public static final int NONE = -1;
+    public static final int FIRST = 1;
+    public static final int SECOND = 2;
 
     private ArrayList<DishItem> list;
     private String battleName = "defaultBattle";
@@ -57,7 +59,7 @@ public class BattleItem {
     }
 
     public String toString(){
-        return getFirst() +" vs. " + getSecond();
+        return getFirst() +" vs. " + getSecond() + " //Winner-" + getResult() ;
     }
 
 }

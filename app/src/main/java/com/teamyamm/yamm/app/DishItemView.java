@@ -37,6 +37,8 @@ public class DishItemView extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         item = aItem;
+        setClickable(true);
+        setFocusable(true);
 
         FrameLayout layout =(FrameLayout) inflater.inflate(R.layout.dish_item, parent, true);
 
@@ -47,6 +49,8 @@ public class DishItemView extends FrameLayout {
 
         //Measures Width Dynamically
         measureDynamicDimension();
+
+
     }
 
     ///////////////////////////////Private
@@ -55,16 +59,16 @@ public class DishItemView extends FrameLayout {
         ViewTreeObserver vto = imageView.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                if (div.width == 0 && div.height == 0 ) {
+                if (div.width == 0 && div.height == 0) {
                     div.width = imageView.getMeasuredWidth();
                     div.height = imageView.getMeasuredHeight();
                     Log.v("Listener", "DishItemView Dim: " + div.width + "x" + div.height + " Set Image");
 
                     //Set Image here
-                    setImage(div.width,div.height);
+                    setImage(div.width, div.height);
                     //Set Text Size
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, div.height/TEXT_TO_HEIGHT_RATIO);
-                    Log.v("Listener", "DishItemView Text: "+div.height/TEXT_TO_HEIGHT_RATIO);
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, div.height / TEXT_TO_HEIGHT_RATIO);
+                    Log.v("Listener", "DishItemView Text: " + div.height / TEXT_TO_HEIGHT_RATIO);
 
                     imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
@@ -91,7 +95,6 @@ public class DishItemView extends FrameLayout {
         view.setBackgroundColor(Color.YELLOW);
         this.imageView = view;
 
-        //Measure Dimension of this view
 
     }
 }

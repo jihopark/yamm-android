@@ -67,19 +67,20 @@ public class BattleActivity extends BaseActivity {
     public boolean switchFragment(){
         if (isFinished == true) {
             Log.v("switchFragment", "Last Item");
+            Log.v("switchFragment","Items Selected : " + items);
             return false;
         }
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
         BattleFragment hidden;
         if (fragmentShown == FRAGMENT_ONE_SHOWN){
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragmentTransaction.hide(bf1);
             fragmentTransaction.show(bf2);
             Log.v("switchFragment", "Hide bf1 and show bf2");
             hidden = bf1;
         }
         else{ //if fragmentShown == FRAGMENT_TWO_SHOWN
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
             fragmentTransaction.show(bf1);
             fragmentTransaction.hide(bf2);
             hidden = bf2;
@@ -110,11 +111,11 @@ public class BattleActivity extends BaseActivity {
         bf1 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment1);
         bf2 = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment2);
         bf1.setDishItemView(currentFirstItem);
-        Log.v("setBattleFragment","bf1 init");
+        Log.v("setBattleFragment", "bf1 init");
         bf2.setDishItemView(currentSecondItem);
-        Log.v("setBattleFragment","bf2 init");
+        Log.v("setBattleFragment", "bf2 init");
         fragmentTransaction.commit();
-        Log.v("setBattleFragment","first commit");
+        Log.v("setBattleFragment", "first commit");
     }
 
 
