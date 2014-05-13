@@ -37,7 +37,7 @@ public class GridItem {
     }
 
     public String toString(){
-        return String.valueOf(getId())+ ":" + name;
+        return getId() + ":" + name;
     }
 
     public String getImageURL(){

@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -62,7 +63,7 @@ public class IntroActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
                     //Send Grid Selected Result to server
-                    sendGridResultToServer((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
+                    saveGridResult((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
 
                     //Go to Battle Activity
                     Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
@@ -82,11 +83,15 @@ public class IntroActivity extends BaseActivity {
 
     }
     /*
-    * Sends Grid Selected Result to server
+    * Save Grid Selected Result to shared preferences
     * Only executed right before stating Battle Activity
     * */
-    private void sendGridResultToServer(GridFragment f){
-        Log.v("IntroActivity",f.getSelectedItems()+"");
+    private void saveGridResult(GridFragment f){
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.GRID_RESULT),f.getSelectedItems()+"");
+        editor.commit();
+        Log.v("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
     }
 
     /**

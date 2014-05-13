@@ -74,6 +74,7 @@ public class BattleActivity extends BaseActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         BattleFragment hidden;
+
         if (fragmentShown == FRAGMENT_ONE_SHOWN){
             fragmentTransaction.hide(bf1);
             fragmentTransaction.show(bf2);
