@@ -49,6 +49,8 @@ public class BattleActivity extends BaseActivity {
         DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //Deleted because after battle activity, it shouldn't go back to intro activity
+               /*
                 //Save Previous Activity
                 BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
                         ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_INTRO));
@@ -57,7 +59,7 @@ public class BattleActivity extends BaseActivity {
                 Intent introActivity = new Intent(getBaseContext(), IntroActivity.class);
                 introActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                startActivity(introActivity);
+                startActivity(introActivity);*/
                 goBackHome();
             }
         };
