@@ -50,7 +50,10 @@ public class SplashScreen extends Activity {
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Intent activity = null;
 
-        // Remove TRUE later
+        // To Remove later
+        BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+
+
         String value = prefs.getString(getString(R.string.PREVIOUS_ACTIVITY),"none");
         Log.v("SplashScreen","Activity Pref value:"+value);
 
@@ -62,7 +65,7 @@ public class SplashScreen extends Activity {
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
             activity = new Intent(getBaseContext(), BattleActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT)))
-            activity = new Intent(getBaseContext(), BattleResult.class);
+            activity = new Intent(getBaseContext(), BattleResultActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_JOIN)))
             activity = new Intent(getBaseContext(), JoinActivity.class);
 

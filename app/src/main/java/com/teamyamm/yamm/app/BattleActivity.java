@@ -2,13 +2,9 @@ package com.teamyamm.yamm.app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -38,7 +34,6 @@ public class BattleActivity extends BaseActivity {
 
         hideActionBar();
         setBattleFragments();
-        //introButtonConfig();
     }
 
     /*
@@ -75,6 +70,7 @@ public class BattleActivity extends BaseActivity {
         if (isFinished == true) {
             Log.v("switchFragment", "Last Item");
             Log.v("switchFragment","Items Selected : " + items);
+            finishBattle();
             return false;
         }
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -112,6 +108,16 @@ public class BattleActivity extends BaseActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
+    * Saves Battle Result and Proceed to Battle Result Activity
+    * */
+    private void finishBattle(){
+        Log.v("BattleActivity/finishBattle", "FinishBattle Started");
+
+        Intent intent = new Intent(getBaseContext(), BattleResultActivity.class);
+        startActivity(intent);
+    }
+
+     /*
     * Setup Battle Fragments
     * */
     private void setBattleFragments(){
@@ -164,27 +170,6 @@ public class BattleActivity extends BaseActivity {
         return true;
     }
 
-     /*
-    * Setup OnclickListener for button that finishes battle
-    * */
-    private void introButtonConfig(){
-        Button battleButton = (Button) findViewById(R.id.battle_button);
-        battleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "배틀 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
-                //Save Preference that finished first run
-                SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);        //Save preference that INTRO was run once
-                prefs.edit().putBoolean("firstrun", false).commit();
-
-                // Send Battle Result to Server
-
-                //Go to BattleResult Activity
-                Intent battleResultActivity = new Intent(getBaseContext(), BattleResult.class);
-                startActivity(battleResultActivity);
-            }
-        });
-    }
 
 }

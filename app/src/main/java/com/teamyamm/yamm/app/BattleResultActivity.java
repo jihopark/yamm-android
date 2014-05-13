@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 
-public class BattleResult extends BaseActivity {
+public class BattleResultActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class BattleResult extends BaseActivity {
             }
         };
 
-        createDialog(BattleResult.this, R.string.battleagain_dialog_title, R.string.battleagain_dialog_message,
+        createDialog(BattleResultActivity.this, R.string.battleagain_dialog_title, R.string.battleagain_dialog_message,
                 R.string.battleagain_dialog_positive, R.string.battleagain_dialog_negative,positiveListener, null).show();
 
     }
