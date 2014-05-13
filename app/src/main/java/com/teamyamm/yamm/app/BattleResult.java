@@ -51,6 +51,10 @@ public class BattleResult extends BaseActivity {
         joinUsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Save Previous Activity
+                BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
+                        ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_JOIN));
+
                 //Go to JoinActivity
                 Intent joinActivity = new Intent(getBaseContext(), JoinActivity.class);
                 startActivity(joinActivity);
@@ -80,6 +84,9 @@ public class BattleResult extends BaseActivity {
         DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //Save Previous Activity
+                BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
+                        ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLE));
                 //Go back to BattleActivity
                 Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
                 startActivity(battleActivity);

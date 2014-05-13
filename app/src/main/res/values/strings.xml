@@ -13,6 +13,11 @@
 
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
+    <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
+    <string name="PREVIOUS_ACTIVITY_INTRO">intro</string>
+    <string name="PREVIOUS_ACTIVITY_BATTLE">battle</string>
+    <string name="PREVIOUS_ACTIVITY_BATTLERESULT">battleresult</string>
+    <string name="PREVIOUS_ACTIVITY_JOIN">join</string>
 
     <!-- Dialog -->
     <string name="dialog_positive">네</string>

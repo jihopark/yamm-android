@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
+import android.util.Log;
 
 
 /**
@@ -33,7 +33,7 @@ public class SplashScreen extends Activity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
 
-                if (!checkFirstExecution()) { // If first execution of the app, go to IntroActivity
+                if (!checkPreviousActivity()) { // If first execution of the app, go to IntroActivity
                     Intent i = new Intent(SplashScreen.this, MainActivity.class);
                     startActivity(i);
                 }
@@ -46,20 +46,36 @@ public class SplashScreen extends Activity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
-    private boolean checkFirstExecution(){
+    private boolean checkPreviousActivity(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        Intent activity = null;
 
         // Remove TRUE later
+        String value = prefs.getString(getString(R.string.PREVIOUS_ACTIVITY),"none");
+        Log.v("SplashScreen","Activity Pref value:"+value);
 
-        if (true || prefs.getBoolean("firstrun",true)){
-            Toast.makeText(getApplicationContext(), "첫 실행입니다", Toast.LENGTH_LONG).show(); //To be deleted
-            Intent introActivity = new Intent(getBaseContext(), IntroActivity.class);
-            startActivity(introActivity);
+        if (value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
+            //Save Previous activity to shared preference
+            BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+            activity = new Intent(getBaseContext(), IntroActivity.class);
+        }
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
+            activity = new Intent(getBaseContext(), BattleActivity.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT)))
+            activity = new Intent(getBaseContext(), BattleResult.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_JOIN)))
+            activity = new Intent(getBaseContext(), JoinActivity.class);
+
+        if (activity!=null){
+            Log.v("SplashScreen","Activity Start");
+            startActivity(activity);
             return true;
         }
         return false;
 
 
     }
+
+
 
 }

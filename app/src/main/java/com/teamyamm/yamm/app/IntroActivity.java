@@ -62,8 +62,12 @@ public class IntroActivity extends BaseActivity {
                 if (position == NUMBER_OF_PAGE - 1) {
                     Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
-                    //Send Grid Selected Result to server
+                    //Save Grid Result to pref
                     saveGridResult((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
+
+                    //Save Previous Activity
+                    BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
+                            ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLE));
 
                     //Go to Battle Activity
                     Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
@@ -88,9 +92,7 @@ public class IntroActivity extends BaseActivity {
     * */
     private void saveGridResult(GridFragment f){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(getString(R.string.GRID_RESULT),f.getSelectedItems()+"");
-        editor.commit();
+        BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),f.getSelectedItems()+"");
         Log.v("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
     }
 
