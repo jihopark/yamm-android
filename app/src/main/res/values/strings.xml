@@ -24,6 +24,9 @@
     <!-- Dialog -->
     <string name="dialog_positive">네</string>
     <string name="dialog_negative">아니오</string>
+    <string name="internet_alert_title">인터넷?</string>
+    <string name="internet_alert_message">인터넷 연결이 필요합니다</string>
+    <string name="internet_alert_button">재시도</string>
 
 
     <!--Grid Fragment -->

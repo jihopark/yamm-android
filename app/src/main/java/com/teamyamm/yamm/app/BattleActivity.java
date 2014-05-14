@@ -1,11 +1,13 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -111,6 +113,8 @@ public class BattleActivity extends BaseActivity {
     * Saves Battle Result and Proceed to Battle Result Activity
     * */
     private void finishBattle(){
+        boolean resultSent = true;
+
         Log.v("BattleActivity/finishBattle", "FinishBattle Started");
         Log.v("BattleActivity/finishBattle","Items Selected : " + items);
         //Save items to Shared Preferences
@@ -121,24 +125,60 @@ public class BattleActivity extends BaseActivity {
 
         //Send to Server, sleeps if internet isn't connected
         if (!sendBattleResults(result)){
-            Log.e("Server Communication Error","Sending Battle Results Failed");
-            //showInternetConnectionAlert();
+            Log.e("Server Communication Error", "Sending Battle Results Failed");
+            showInternetConnectionAlert(new CustomBattleListener(internetAlert));
+            resultSent=false;
         }
 
+        //If sendBattle Result Failed, don't go to Battle Result
+        if (resultSent!=false) {
+            goToBattleResult();
+        }
+    }
+
+    /*
+    * Go to Battle Result Activity
+    * */
+    private void goToBattleResult(){
+        Log.v("BattleActivity/goToBattleResult", "goToBattleResult activated");
         //Save Previous Activity
         BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
-                ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT));
+                , getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT));
 
         //Start BattleResultActivity
         Intent intent = new Intent(getBaseContext(), BattleResultActivity.class);
         startActivity(intent);
     }
     /*
+    * Custom Listener for Battle Activity InternetDialog
+    * */
+    private class CustomBattleListener implements View.OnClickListener {
+        private final Dialog dialog;
+        public CustomBattleListener(Dialog dialog) {
+            this.dialog = dialog;
+        }
+        @Override
+        public void onClick(View v) {
+            Log.v("BattleActivity/CustomBattleListener", "Listener activated");
+            if (checkInternetConnection()) {
+                Log.v("BattleActivity/CustomBattleListener","Internet came back");
+                dialog.dismiss();
+                goToBattleResult();
+            }
+        }
+    }
+
+    /*
     * Sends result string to server
     * returns false if sending fails
     * */
     private boolean sendBattleResults(String s){
         Log.v("BattleActivity/sendBattleResults", "sendBattleResults Started");
+
+        //Check internet connection
+        if (!checkInternetConnection()){
+            return false;
+        }
         return true;
     }
     /*

@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,13 +13,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 /**
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
+    protected AlertDialog.Builder builder;
+    protected AlertDialog internetAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,6 +28,8 @@ public class BaseActivity extends ActionBarActivity {
 
         setDefaultOrientation(); //Set Portrait Orientation for whole application
 
+        //Set Dialog for Internet Connection
+        setInternetConnectionAlert();
     }
 
 
@@ -34,7 +38,7 @@ public class BaseActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        showInternetConnectionAlert(); //Check if Internet is connected, else Show Alert
+        showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
     }
 
@@ -63,7 +67,6 @@ public class BaseActivity extends ActionBarActivity {
         editor.commit();
         Log.v("BaseActivity/putInPref", "key:" + a + " value:" + b + " saved");
     }
-
      /*
     * Hides Action Bar
     * */
@@ -77,46 +80,47 @@ public class BaseActivity extends ActionBarActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
     }
+
+    private void setInternetConnectionAlert(){
+        builder = new AlertDialog.Builder(BaseActivity.this);
+        builder.setTitle(R.string.internet_alert_title);
+        builder.setMessage(R.string.internet_alert_message);
+        internetAlert = builder.setCancelable(false)
+                .setPositiveButton(R.string.internet_alert_button, null).create();
+    }
     /*
     * Show Alert Box until Internet Connection is Available
     * */
 
-     private void showInternetConnectionAlert(){
+     protected void showInternetConnectionAlert(View.OnClickListener listener){
         if (!checkInternetConnection()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(BaseActivity.this);
-
-            builder.setTitle("인터넷 연결?");
-            builder.setMessage("인터넷 연결이 필요합니다");
-
-            final AlertDialog alert = builder.setCancelable(false)
-                    .setPositiveButton("재시도", null)
-                    .create();
-
-            alert.setOnShowListener(new DialogInterface.OnShowListener() {
-
-                @Override
-                public void onShow(DialogInterface dialog) {
-
-                    Button b = alert.getButton(AlertDialog.BUTTON_POSITIVE);
-                    b.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-                            if (checkInternetConnection())
-                                alert.dismiss();
-                        }
-                    });
-                }
-            });
-
-            alert.show();
+            if (listener == null)
+                listener = new CustomListener(internetAlert);
+            internetAlert.show();
+            internetAlert.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(listener);
         }
     }
+
+    private class CustomListener implements View.OnClickListener {
+        private final Dialog dialog;
+        public CustomListener(Dialog dialog) {
+            this.dialog = dialog;
+        }
+        @Override
+        public void onClick(View v) {
+            Log.v("BaseActivity/CustomListener", "Listener activated");
+            if (checkInternetConnection()) {
+                Log.v("BaseActivity/CustomListener","Internet came back");
+                dialog.dismiss();
+            }
+        }
+    }
+
 
     /*
     * Returns TRUE if internet connection is available
     * */
-    private boolean checkInternetConnection(){
+    protected boolean checkInternetConnection(){
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
