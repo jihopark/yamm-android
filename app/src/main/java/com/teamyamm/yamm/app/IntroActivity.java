@@ -92,7 +92,10 @@ public class IntroActivity extends BaseActivity {
     * */
     private void saveGridResult(GridFragment f){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-        BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),f.getSelectedItems()+"");
+        String s = "";
+        for (GridItem i : f.getSelectedItems())
+            s = s +i.getId()+",";
+        BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),s);
         Log.v("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
     }
 
