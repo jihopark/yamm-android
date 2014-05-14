@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,13 +105,7 @@ public class JoinActivity extends BaseActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
 
-                //Save Previous Activity
-                BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
-                        ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_MAIN));
-
-                //Go to Battle Activity
-                Intent mainActivity = new Intent(getBaseContext(), MainActivity.class);
-                startActivity(mainActivity);
+                goToActivity(MainActivity.class);
             }
         });
     }

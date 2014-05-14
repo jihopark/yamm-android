@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -132,23 +131,10 @@ public class BattleActivity extends BaseActivity {
 
         //If sendBattle Result Failed, don't go to Battle Result
         if (resultSent!=false) {
-            goToBattleResult();
+            goToActivity(BattleResultActivity.class);
         }
     }
 
-    /*
-    * Go to Battle Result Activity
-    * */
-    private void goToBattleResult(){
-        Log.v("BattleActivity/goToBattleResult", "goToBattleResult activated");
-        //Save Previous Activity
-        BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
-                , getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT));
-
-        //Start BattleResultActivity
-        Intent intent = new Intent(getBaseContext(), BattleResultActivity.class);
-        startActivity(intent);
-    }
     /*
     * Custom Listener for Battle Activity InternetDialog
     * */
@@ -163,7 +149,7 @@ public class BattleActivity extends BaseActivity {
             if (checkInternetConnection()) {
                 Log.v("BattleActivity/CustomBattleListener","Internet came back");
                 dialog.dismiss();
-                goToBattleResult();
+                goToActivity(BattleResultActivity.class);
             }
         }
     }

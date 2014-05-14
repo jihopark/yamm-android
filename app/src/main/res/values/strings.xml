@@ -14,11 +14,11 @@
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
-    <string name="PREVIOUS_ACTIVITY_INTRO">intro</string>
-    <string name="PREVIOUS_ACTIVITY_BATTLE">battle</string>
-    <string name="PREVIOUS_ACTIVITY_BATTLERESULT">battleresult</string>
-    <string name="PREVIOUS_ACTIVITY_JOIN">join</string>
-    <string name="PREVIOUS_ACTIVITY_MAIN">main</string>
+    <string name="PREVIOUS_ACTIVITY_INTRO">IntroActivity</string>
+    <string name="PREVIOUS_ACTIVITY_BATTLE">BattleActivity</string>
+    <string name="PREVIOUS_ACTIVITY_BATTLERESULT">BattleResultActivity</string>
+    <string name="PREVIOUS_ACTIVITY_JOIN">JoinActivity</string>
+    <string name="PREVIOUS_ACTIVITY_MAIN">MainActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
 
 

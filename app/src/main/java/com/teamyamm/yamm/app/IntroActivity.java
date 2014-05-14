@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,13 +64,7 @@ public class IntroActivity extends BaseActivity {
                     //Save Grid Result to pref
                     saveGridResult((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
 
-                    //Save Previous Activity
-                    BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
-                            ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLE));
-
-                    //Go to Battle Activity
-                    Intent battleActivity = new Intent(getBaseContext(), BattleActivity.class);
-                    startActivity(battleActivity);
+                    goToActivity(BattleActivity.class);
                 }
             }
 

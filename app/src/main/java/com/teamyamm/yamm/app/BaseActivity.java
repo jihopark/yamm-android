@@ -44,6 +44,21 @@ public class BaseActivity extends ActionBarActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
+    * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
+    * */
+
+    protected void goToActivity(Class<?> nextActivity){
+        Log.v("BaseActivity/goToActivity","Going to "+nextActivity.getSimpleName());
+
+        //Save Previous Activity
+        putInPref(getSharedPreferences(packageName, MODE_PRIVATE)
+                ,getString(R.string.PREVIOUS_ACTIVITY), nextActivity.getSimpleName());
+
+        Intent intent = new Intent(getBaseContext(), nextActivity);
+        startActivity(intent);
+    }
+
+     /*
     * Builds Alert Dialog with positive and negative buttons
     * */
     protected AlertDialog createDialog(Context context, int title, int message, int positive, int negative,
