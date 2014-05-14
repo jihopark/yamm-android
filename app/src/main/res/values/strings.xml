@@ -18,6 +18,7 @@
     <string name="PREVIOUS_ACTIVITY_BATTLE">battle</string>
     <string name="PREVIOUS_ACTIVITY_BATTLERESULT">battleresult</string>
     <string name="PREVIOUS_ACTIVITY_JOIN">join</string>
+    <string name="PREVIOUS_ACTIVITY_MAIN">main</string>
     <string name="BATTLE_RESULTS">battleitems</string>
 
 
