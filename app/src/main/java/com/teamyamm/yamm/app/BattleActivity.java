@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -69,7 +70,6 @@ public class BattleActivity extends BaseActivity {
     public boolean switchFragment(){
         if (isFinished == true) {
             Log.v("switchFragment", "Last Item");
-            Log.v("switchFragment","Items Selected : " + items);
             finishBattle();
             return false;
         }
@@ -112,9 +112,50 @@ public class BattleActivity extends BaseActivity {
     * */
     private void finishBattle(){
         Log.v("BattleActivity/finishBattle", "FinishBattle Started");
+        Log.v("BattleActivity/finishBattle","Items Selected : " + items);
+        //Save items to Shared Preferences
 
+        //BattleItem.toString = (firstdishitem.id),(seconddishitem.id),(result)
+        //list will be saved in String like this  ex. 1,2,2;2,3,-1;3,4,5;
+        String result = saveBattleResults();
+
+        //Send to Server, sleeps if internet isn't connected
+        if (!sendBattleResults(result)){
+            Log.e("Server Communication Error","Sending Battle Results Failed");
+            //showInternetConnectionAlert();
+        }
+
+        //Save Previous Activity
+        BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
+                ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT));
+
+        //Start BattleResultActivity
         Intent intent = new Intent(getBaseContext(), BattleResultActivity.class);
         startActivity(intent);
+    }
+    /*
+    * Sends result string to server
+    * returns false if sending fails
+    * */
+    private boolean sendBattleResults(String s){
+        Log.v("BattleActivity/sendBattleResults", "sendBattleResults Started");
+        return true;
+    }
+    /*
+    * Save battle results to sharedpref
+    * Returns saved string
+    * */
+    private String saveBattleResults(){
+        Log.v("BattleActivity/saveBattleResults", "saveBattleResults Started");
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        String saved = prefs.getString(getString(R.string.BATTLE_RESULTS),"");
+
+        for (BattleItem i : items)
+            saved = saved + i +";";
+
+        BaseActivity.putInPref(prefs,getString(R.string.BATTLE_RESULTS),saved);
+        Log.v("BattleActivity/saveBattleResults","BattleItems saved");
+        return saved;
     }
 
      /*
@@ -141,7 +182,8 @@ public class BattleActivity extends BaseActivity {
         items.add(new BattleItem(new DishItem(1,"설렁탕"), new DishItem(1,"된장국")));
         items.add(new BattleItem(new DishItem(3,"치킨"), new DishItem(4,"피자")));
         items.add(new BattleItem(new DishItem(5,"비빔냉면"), new DishItem(6,"샐러드")));
-        items.add(new BattleItem(new DishItem(5,"국밥"), new DishItem(6,"해장국")));
+        items.add(new BattleItem(new DishItem(7,"국밥"), new DishItem(8,"해장국")));
+        items.add(new BattleItem(new DishItem(9,"짜장면"), new DishItem(10,"짬뽕")));
 
 
         currentFirstItem = items.get(0);

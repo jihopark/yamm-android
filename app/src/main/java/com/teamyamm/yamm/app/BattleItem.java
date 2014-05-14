@@ -58,8 +58,9 @@ public class BattleItem {
         return list.size();
     }
 
+    //BattleItem.toString = (firstdishitem.id),(seconddishitem.id),(result)
     public String toString(){
-        return getFirst() +" vs. " + getSecond() + " //Winner-" + getResult() ;
+        return getFirst().getId() + "," + getSecond().getId() + "," + getResult();
     }
 
 }

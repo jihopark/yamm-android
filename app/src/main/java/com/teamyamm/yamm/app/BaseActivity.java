@@ -61,7 +61,7 @@ public class BaseActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = prf.edit();
         editor.putString(a,b);
         editor.commit();
-        Log.v("BaseActivity/putInPref","key:" + a + " value:" + b + " saved");
+        Log.v("BaseActivity/putInPref", "key:" + a + " value:" + b + " saved");
     }
 
      /*
