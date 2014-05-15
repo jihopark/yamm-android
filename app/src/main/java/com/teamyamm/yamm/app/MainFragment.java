@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,17 @@ public class MainFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.v("MainFragment/onCreateView", "onCreateView started");
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.main_fragment, container, false);
+
+        Log.v("MainFragment/onCreateView", "xml inflated");
         yammLayout = (LinearLayout) layout.findViewById(R.id.yamm_layout);
+        Log.v("MainFragment/onCreateView", "yamm layout found");
         streamListView = (ListView) layout.findViewById(R.id.stream_list_view);
-
+        Log.v("MainFragment/onCreateView", "stream list view found");
         adapter = setStreamListAdapter();
-
+        streamListView.setAdapter(adapter);
+        Log.v("MainFragment/onCreateView", "stream list adapter set");
 
 
         return layout;

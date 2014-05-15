@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -36,12 +37,19 @@ public class StreamListAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent){
         DishStreamView view = null;
+        Log.v("StreamListAdapter/getView", "getView Started");
 
-        if (convertView == null)
+        if (convertView == null) {
+
+            Log.v("StreamListAdapter/getView", "Make New DishStreamView");
             view = new DishStreamView(mContext, getItem(position), parent);
+        }
         else{
+            Log.v("StreamListAdapter/getView", "Put convertView into original view");
             view = (DishStreamView) convertView;
         }
+
+        Log.v("StreamListAdapter/getView", "set dish item to view - " +getItem(position).getName());
         view.setDishItem(getItem(position));
 
         return view;
