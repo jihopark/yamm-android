@@ -10,7 +10,6 @@ public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
-    private ListView rightDrawer;
 
 
 
@@ -22,7 +21,6 @@ public class MainActivity extends BaseActivity {
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         leftDrawer = (ListView) findViewById(R.id.left_drawer);
-        rightDrawer = (ListView) findViewById(R.id.right_drawer);
 
         // Set the adapter for the list view
         leftDrawer.setAdapter(new ArrayAdapter<String>(this,
