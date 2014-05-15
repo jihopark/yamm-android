@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -32,6 +33,7 @@ public class MainFragment extends Fragment {
         Log.v("MainFragment/onCreateView", "stream list view found");
         adapter = setStreamListAdapter();
         streamListView.setAdapter(adapter);
+        streamListView.setOnScrollListener(new StreamScrollListener());
         Log.v("MainFragment/onCreateView", "stream list adapter set");
 
 
@@ -39,6 +41,19 @@ public class MainFragment extends Fragment {
     }
 
     ////////////////////////////////Private Methods
+    /*
+    * Custom Scroll Listener that loads more items if end of scroll detected in ListView
+    * */
+    private class StreamScrollListener implements AbsListView.OnScrollListener{
+
+        public void onScrollStateChanged(AbsListView view, int scrollState){ }
+
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
+            Log.v("ScrollListener","firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
+            if (firstVisibleItem + visibleItemCount totalItemCount)
+        }
+    }
+
 
     private StreamListAdapter setStreamListAdapter(){
         //GET INITIAL LIST FROM SERVER
