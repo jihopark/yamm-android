@@ -37,18 +37,22 @@ public class DishStreamView extends FrameLayout {
         FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.dish_stream, this, true);
         Log.v("DishStreamView/constructor", "dish stream xml inflated");
         textView = (TextView) layout.findViewById(R.id.dish_stream_text);
-        textView.setText(item.getName());
         Log.v("DishStreamView/constructor", "textview set");
 
         imageView = (ImageView) layout.findViewById(R.id.dish_stream_image);
-        setStreamImage(imageView);
+        loadViews();
     }
 
     public void setDishItem(DishItem a){
         item = a;
     }
 
-    public void setStreamImage(ImageView view){
+    public void setStreamImage(){
+    }
+
+    public void loadViews(){
+        setStreamImage();
+        textView.setText(item.getName());
     }
 
     @Override

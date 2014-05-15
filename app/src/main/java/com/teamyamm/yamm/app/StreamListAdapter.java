@@ -51,7 +51,7 @@ public class StreamListAdapter extends BaseAdapter {
 
         Log.v("StreamListAdapter/getView", "set dish item to view - " +getItem(position).getName());
         view.setDishItem(getItem(position));
-
+        view.loadViews();
         return view;
     }
 }

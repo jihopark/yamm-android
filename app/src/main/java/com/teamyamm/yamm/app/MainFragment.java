@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
 
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
             Log.v("ScrollListener","firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
-            if (firstVisibleItem + visibleItemCount totalItemCount)
+            //if (firstVisibleItem + visibleItemCount totalItemCount)
         }
     }
 
