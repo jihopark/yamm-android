@@ -65,4 +65,7 @@
     <string name="battleagain_dialog_positive">한번 더</string>
     <string name="battleagain_dialog_negative">이제 그만</string>
 
+    <!-- Main Fragment -->
+    <string name="stream_end_message">이젠 없어요</string>
+
 </resources>

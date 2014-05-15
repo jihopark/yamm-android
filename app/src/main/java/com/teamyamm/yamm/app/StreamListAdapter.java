@@ -54,4 +54,8 @@ public class StreamListAdapter extends BaseAdapter {
         view.loadViews();
         return view;
     }
+
+    public void addDishItem(DishItem item){
+        items.add(item);
+    }
 }
