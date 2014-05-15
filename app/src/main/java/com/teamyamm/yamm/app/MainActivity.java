@@ -13,6 +13,7 @@ public class MainActivity extends BaseActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +26,9 @@ public class MainActivity extends BaseActivity {
         // Set the adapter for the list view
         leftDrawer.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.left_drawer_item, navMenuTitles));
-        // Set the list's click listener
-       // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        //Set up Main Fragment
+
     }
 
 
