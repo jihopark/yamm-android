@@ -42,6 +42,8 @@ public class BaseActivity extends ActionBarActivity {
 
     }
 
+
+
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity

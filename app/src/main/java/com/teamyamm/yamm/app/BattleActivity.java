@@ -125,7 +125,7 @@ public class BattleActivity extends BaseActivity {
         //Send to Server, sleeps if internet isn't connected
         if (!sendBattleResults(result)){
             Log.e("Server Communication Error", "Sending Battle Results Failed");
-            showInternetConnectionAlert(new CustomBattleListener(internetAlert));
+            showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             resultSent=false;
         }
 
@@ -138,21 +138,23 @@ public class BattleActivity extends BaseActivity {
     /*
     * Custom Listener for Battle Activity InternetDialog
     * */
-    private class CustomBattleListener implements View.OnClickListener {
+    private class CustomInternetListener implements View.OnClickListener {
         private final Dialog dialog;
-        public CustomBattleListener(Dialog dialog) {
+        public CustomInternetListener(Dialog dialog) {
             this.dialog = dialog;
         }
         @Override
         public void onClick(View v) {
-            Log.v("BattleActivity/CustomBattleListener", "Listener activated");
+            Log.v("BattleActivity/CustomInternetListener", "Listener activated");
             if (checkInternetConnection()) {
-                Log.v("BattleActivity/CustomBattleListener","Internet came back");
+                Log.v("BattleActivity/CustomInternetListener","Internet came back");
                 dialog.dismiss();
-                goToActivity(BattleResultActivity.class);
+                finishBattle();
             }
         }
     }
+
+
 
     /*
     * Sends result string to server

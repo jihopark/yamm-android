@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 public class IntroActivity extends BaseActivity {
     private ViewPager introPager;
     private PagerAdapter adapter;
+    private GridFragment gridFragment;
     protected final int NUMBER_OF_PAGE = 4;
 
     @Override
@@ -61,10 +63,9 @@ public class IntroActivity extends BaseActivity {
                 if (position == NUMBER_OF_PAGE - 1) {
                     Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
 
-                    //Save Grid Result to pref
-                    saveGridResult((GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment)) ;
-
-                    goToActivity(BattleActivity.class);
+                    //Save Grid Result to pref & Send GridResult to Server & Go To Battle Activity
+                    gridFragment = (GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment);
+                    finishIntro();
                 }
             }
 
@@ -77,19 +78,74 @@ public class IntroActivity extends BaseActivity {
             }
         });
         indicator.setViewPager(introPager);
-
     }
     /*
+    * Finshes Intro and saves&sends gridresults and go to BattleActivity
+    * */
+    private void finishIntro(){
+        boolean resultSent = true;
+        Log.v("IntroActivity/finishBattle", "FinishIntro Started");
+
+        //Save to Shared Pref
+        String result = saveGridResult(gridFragment);
+
+        //Send to Server
+
+        if (!sendGridResult(result)){
+            Log.e("Server Communication Error", "Sending Battle Results Failed");
+            showInternetConnectionAlert(new CustomInternetListener(internetAlert));
+            resultSent=false;
+        }
+        //If sendBattle Result Failed, don't go to Battle Activity
+        if (resultSent!=false) {
+            goToActivity(BattleActivity.class);
+        }
+    }
+
+    /*
+    * Send Grid Selected Result to server
+    * Only executed right before stating Battle Activity
+    * */
+    private boolean sendGridResult(String s){
+        Log.v("IntroActivity/sendGridResults", "sendGridResults Started");
+        //Check internet connection
+        if (!checkInternetConnection()){
+            return false;
+        }
+        return true;
+    }
+
+    /*
+   * Custom Listener for Intro Activity InternetDialog
+   * */
+    private class CustomInternetListener implements View.OnClickListener {
+        private final Dialog dialog;
+        public CustomInternetListener(Dialog dialog) {
+            this.dialog = dialog;
+        }
+        @Override
+        public void onClick(View v) {
+            Log.v("IntroActivity/CustomInternetListener", "Listener activated");
+            if (checkInternetConnection()) {
+                Log.v("IntroActivity/CustomInternetListener","Internet came back");
+                dialog.dismiss();
+                finishIntro();
+            }
+        }
+    }
+
+     /*
     * Save Grid Selected Result to shared preferences
     * Only executed right before stating Battle Activity
     * */
-    private void saveGridResult(GridFragment f){
+    private String saveGridResult(GridFragment f){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         String s = "";
         for (GridItem i : f.getSelectedItems())
             s = s +i.getId()+",";
         BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),s);
         Log.v("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
+        return s;
     }
 
     /**
