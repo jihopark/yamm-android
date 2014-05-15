@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class MainFragment extends Fragment {
     LinearLayout yammLayout;
     ListView streamListView;
     StreamListAdapter adapter;
+    Button yammButton;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,11 +39,23 @@ public class MainFragment extends Fragment {
         streamListView.setOnScrollListener(new StreamScrollListener());
         Log.v("MainFragment/onCreateView", "stream list adapter set");
 
+        //Set YammLayout
+        yammButton = (Button) layout.findViewById(R.id.yamm_button);
+        yammButton.setOnClickListener(getYammButtonOnClickListener());
 
         return layout;
     }
 
     ////////////////////////////////Private Methods
+    private View.OnClickListener getYammButtonOnClickListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Yamm",Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
     /*
     * Custom Scroll Listener that loads more items if end of scroll detected in ListView
     * */
