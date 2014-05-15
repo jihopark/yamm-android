@@ -4,12 +4,16 @@ package com.teamyamm.yamm.app;
  * Created by parkjiho on 5/10/14.
  */
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -19,7 +23,9 @@ public class GridFragment extends Fragment {
     private GridSelectionListView listView;
     private GridSelectionListAdapter adapter;
     private ScrollView sv;
+    private CheckBox checkbox;
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
+    private GridItem vegi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,6 +37,13 @@ public class GridFragment extends Fragment {
 
         //In fragment, getActivity.findViewById won't work. Get layout directly from inflater instead
 
+        //Set Checkbox
+        checkbox = (CheckBox) layout.findViewById(R.id.grid_checkbox);
+        checkbox.setChecked(false);
+        checkbox.setOnCheckedChangeListener(initCheckBoxChangeListener());
+        vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id),"채식");
+
+        //Set ScrollView & ListView
         sv = (ScrollView) layout.findViewById(R.id.grid_scroll_view);
         sv.addView(listView);
 
@@ -51,6 +64,22 @@ public class GridFragment extends Fragment {
     }
 
     ////////////////////////////////////Private Method
+    /*
+    * Initiate CheckBox OnclickListener
+    * */
+    private CompoundButton.OnCheckedChangeListener initCheckBoxChangeListener(){
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.v("GridFragment/onCheckedChanged","isChecked "+ isChecked + ", add " + vegi);
+                if (isChecked)
+                    selectedItems.add(vegi);
+                else
+                    selectedItems.remove(vegi);
+            }
+        };
+    }
+
     /*
     * Initiate GridSelectionListView
     * */
@@ -75,16 +104,10 @@ public class GridFragment extends Fragment {
     * */
     private GridSelectionListAdapter initiateAdapter(){
         adapter = new GridSelectionListAdapter(getActivity());
-        adapter.addItem(new GridItem(1,"설렁탕"));
-        adapter.addItem(new GridItem(2,"피자"));
-        adapter.addItem(new GridItem(3,"해장국"));
-        adapter.addItem(new GridItem(4,"물냉면"));
-        adapter.addItem(new GridItem(5,"비빔냉면"));
-        adapter.addItem(new GridItem(6,"라면"));
-        adapter.addItem(new GridItem(7,"갈비탕"));
-        adapter.addItem(new GridItem(8,"떡볶이"));
-        adapter.addItem(new GridItem(9,"김밥"));
-        adapter.addItem(new GridItem(10,"돈부리"));
+        TypedArray array = getResources().obtainTypedArray(R.array.grid_items);
+
+        for (int i=1;i<=array.length();i++)
+            adapter.addItem(new GridItem(i,array.getString(i-1)));
 
         return adapter;
     }
