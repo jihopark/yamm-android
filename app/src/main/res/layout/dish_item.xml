@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/dish_item_image"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:layout_marginTop="1dp"/>
     <TextView

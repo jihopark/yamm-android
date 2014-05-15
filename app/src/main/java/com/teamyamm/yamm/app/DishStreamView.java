@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ public class DishStreamView extends FrameLayout {
     private DishItem item;
     private TextView textView;
     private ImageView imageView;
+    private int width, height;
     private static double ratio = 0.5;
 
     public DishStreamView(Context context){
@@ -51,9 +53,18 @@ public class DishStreamView extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = (int)(ratio*width);
-        Log.v("DishStreamView/onMeasure", "Width " + width + " Height " + height );
+        width =  MeasureSpec.getSize(widthMeasureSpec);
+        height = (int)(ratio*width);
         setMeasuredDimension(width, height);
+        Log.v("DishStreamView/onMeasure", "Width " + width + " Height " + height );
+
+        final int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            final View v = getChildAt(i);
+            // this works because you set the dimensions of the ImageView to FILL_PARENT
+            v.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(),
+                    MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(
+                    getMeasuredHeight(), MeasureSpec.EXACTLY));
+        }
     }
 }
