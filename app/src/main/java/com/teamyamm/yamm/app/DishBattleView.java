@@ -15,23 +15,23 @@ import android.widget.TextView;
 /**
  * Created by parkjiho on 5/12/14.
  */
-public class DishItemView extends FrameLayout {
+public class DishBattleView extends FrameLayout {
     private DishItem item;
     public ImageView imageView;
     public TextView textView;
     private int width=0, height=0;
     private final int TEXT_TO_HEIGHT_RATIO = 12;
 
-    public DishItemView(Context context){
+    public DishBattleView(Context context){
         super(context);
     }
 
-    public DishItemView(Context context, AttributeSet attrs)
+    public DishBattleView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public DishItemView(Context context,  DishItem aItem, ViewGroup parent) {
+    public DishBattleView(Context context, DishItem aItem, ViewGroup parent) {
         super(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,7 +55,7 @@ public class DishItemView extends FrameLayout {
 
     ///////////////////////////////Private
     private void measureDynamicDimension(){
-        final DishItemView div = this;
+        final DishBattleView div = this;
         ViewTreeObserver vto = imageView.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
