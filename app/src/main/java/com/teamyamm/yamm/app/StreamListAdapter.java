@@ -12,11 +12,15 @@ import java.util.List;
  * Created by parkjiho on 5/15/14.
  */
 public class StreamListAdapter extends BaseAdapter {
-    private List<DishItem> items = new ArrayList<DishItem>();
+    private List<DishItem> items;
     private Context mContext;
 
     public StreamListAdapter(Context context){
         mContext = context;
+    }
+    public StreamListAdapter(Context context, ArrayList<DishItem> list){
+        this(context);
+        items = list;
     }
 
     @Override
@@ -32,6 +36,13 @@ public class StreamListAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent){
         DishStreamView view = null;
+
+        if (convertView == null)
+            view = new DishStreamView(mContext, getItem(position), parent);
+        else{
+            view = (DishStreamView) convertView;
+        }
+        view.setDishItem(getItem(position));
 
         return view;
     }

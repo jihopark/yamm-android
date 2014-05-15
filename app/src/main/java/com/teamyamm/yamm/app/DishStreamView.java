@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
  * Created by parkjiho on 5/15/14.
  */
 public class DishStreamView extends FrameLayout {
+    DishItem item;
 
     public DishStreamView(Context context){
         super(context);
@@ -21,7 +22,9 @@ public class DishStreamView extends FrameLayout {
 
     public DishStreamView(Context context, DishItem aItem, ViewGroup parent) {
         super(context);
+    }
 
-
+    public void setDishItem(DishItem a){
+        item = a;
     }
 }
