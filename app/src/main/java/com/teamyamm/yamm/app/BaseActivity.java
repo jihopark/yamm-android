@@ -22,6 +22,8 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
     public static String baseURL = "http://yamm-image-server-env-xircgwqd2k.elasticbeanstalk.com";
+    public final static float imageRatio = 1.5f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -49,7 +51,7 @@ public class BaseActivity extends ActionBarActivity {
     * Create Image Server URL for Dish
     * */
     public static String getDishImageURL(int id, int width, int height){
-        return baseURL + "/dish/" + id + "/c" + width + "x" + height;
+        return baseURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }
 
 
