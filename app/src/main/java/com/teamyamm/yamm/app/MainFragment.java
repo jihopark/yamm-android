@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
-
+            DialogFragment newFragment = new YammDatePickerFragment();
+            newFragment.show(getChildFragmentManager(), "timePicker");
         }
     }
 
