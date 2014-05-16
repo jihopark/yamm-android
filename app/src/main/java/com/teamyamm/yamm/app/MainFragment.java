@@ -193,7 +193,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         list.add(new DishItem(9,"꼼장어"));
         list.add(new DishItem(10,"똠얌꿍"));
 
-        return new StreamListAdapter(getActivity(), list);
+        //Passes Screen Width
+        return new StreamListAdapter(getActivity(), list, ((BaseActivity)getActivity()).getScreenWidth());
     }
     /*
     * Load more items on StreamListViewAdapter; returns false if no more to add

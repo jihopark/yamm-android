@@ -19,6 +19,7 @@ import java.util.List;
 public class StreamListAdapter extends BaseAdapter {
     private List<DishItem> items;
     private Context mContext;
+    private int screenWidth;
 
     static class ViewHolder{
         public TextView text;
@@ -28,9 +29,10 @@ public class StreamListAdapter extends BaseAdapter {
     public StreamListAdapter(Context context){
         mContext = context;
     }
-    public StreamListAdapter(Context context, ArrayList<DishItem> list){
+    public StreamListAdapter(Context context, ArrayList<DishItem> list, int w){
         this(context);
         items = list;
+        screenWidth = w;
     }
 
     @Override
@@ -59,12 +61,19 @@ public class StreamListAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }
         ViewHolder holder = (ViewHolder) view.getTag();
+        //Set TextView
         holder.text.setText(getItem(position).getName());
+
+        //Set ImageView
+        int height = (int)(DishStreamView.RATIO*screenWidth);
         Picasso.with(mContext).load(BaseActivity.getDishImageURL(getItem(position).getId()
-                ,holder.image.getMeasuredWidth(),holder.image.getMeasuredHeight()))
+                ,screenWidth,height))
                 .placeholder(R.drawable.image_placeholer)
                 .into(holder.image);
 
+
+        Log.v("StreamListAdapter/getView", "imageurl " +BaseActivity.getDishImageURL(getItem(position).getId()
+                ,screenWidth,height));
         Log.v("StreamListAdapter/getView", "set dish item to view - " + getItem(position).getName());
         return view;
     }

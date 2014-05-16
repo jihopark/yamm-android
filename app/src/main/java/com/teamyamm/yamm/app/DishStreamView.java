@@ -20,7 +20,7 @@ public class DishStreamView extends LinearLayout {
     private TextView textView;
     private ImageView imageView;
     private int width, height;
-    private static double ratio = 0.5;
+    public final static double RATIO = 0.5; //Ratio of width:height of ImageView in DishStreamView
     private Context context;
 
     public DishStreamView(Context context){
@@ -46,7 +46,6 @@ public class DishStreamView extends LinearLayout {
         Log.v("DishStreamView/constructor", "textview set");
 
         imageView = (ImageView) layout.findViewById(R.id.dish_stream_image);
-        loadViews();
     }
 
     public void setDishItem(DishItem a){
@@ -69,7 +68,7 @@ public class DishStreamView extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         width =  MeasureSpec.getSize(widthMeasureSpec);
-        height = (int)(ratio*width);
+        height = (int)(RATIO*width);
         setMeasuredDimension(width, height);
         Log.v("DishStreamView/onMeasure", "Width " + width + " Height " + height );
 

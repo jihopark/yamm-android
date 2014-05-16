@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -43,16 +44,24 @@ public class BaseActivity extends ActionBarActivity {
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
     }
-
-
-
-    ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
-    * Create Image Server URL for Dish
+    * returns screen width
     * */
+    public int getScreenWidth(){
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return metrics.widthPixels;
+    }
+
+    /*
+   * Create Image Server URL for Dish
+   * */
     public static String getDishImageURL(int id, int width, int height){
         return baseURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }
+
+
+    ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
 
     /*
