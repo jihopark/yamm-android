@@ -3,6 +3,7 @@ package com.teamyamm.yamm.app;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -11,7 +12,7 @@ public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
-
+    private MainFragment mainFragment;
 
 
 
@@ -32,7 +33,7 @@ public class MainActivity extends BaseActivity {
                 R.layout.left_drawer_item, navMenuTitles));
 
         //Set up Main Fragment
-
+        mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
 
     }
 

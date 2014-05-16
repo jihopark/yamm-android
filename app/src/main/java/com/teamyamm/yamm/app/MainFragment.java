@@ -1,10 +1,12 @@
 package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -32,6 +34,9 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     StreamListAdapter adapter;
     Button yammButton;
     Spinner yammDateSpinner;
+
+    public GestureDetector detector;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,6 +68,17 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         //Set Layout Weight of yammFrameLayout & streamListView
         setLayoutWeights(1f,3f);
+
+        //Add Gesture Detector to streamListView
+        detector = new GestureDetector(getActivity(), new StreamGestureListener());
+        streamListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                detector.onTouchEvent(event);
+                return getActivity().onTouchEvent(event);
+            }
+        });
+
 
         return layout;
     }
@@ -214,5 +230,12 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         adapter.notifyDataSetChanged();
         return false;
+    }
+
+    private class StreamGestureListener extends GestureDetector.SimpleOnGestureListener{
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
+            Log.i("StreamGestureListener","scroll detected");
+            return true;
+        }
     }
 }
