@@ -139,7 +139,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Custom Scroll Listener that loads more items if end of scroll detected in ListView
     * */
     private class StreamScrollListener implements AbsListView.OnScrollListener{
-        private int visibleThreshold = 1; // how many items before loading new contents
+        private int visibleThreshold = 3; // how many items before loading new contents
         private boolean loading = true;
         private boolean data = true;
         private int currentPage = 0;
@@ -187,8 +187,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         list.add(new DishItem(3,"치킨"));
         list.add(new DishItem(4,"피자"));
         list.add(new DishItem(5,"비빔냉면"));
-        /*
-        */
+        list.add(new DishItem(6,"순대국"));
+        list.add(new DishItem(7,"물냉면"));
+        list.add(new DishItem(8,"김치찜"));
+        list.add(new DishItem(9,"꼼장어"));
+        list.add(new DishItem(10,"똠얌꿍"));
 
         return new StreamListAdapter(getActivity(), list);
     }
@@ -197,11 +200,17 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * */
     private boolean loadMoreItemsOnAdapter(){
         Log.v("MainFragment/loadMoreItemsOnAdapter","More Items loaded");
-        adapter.addDishItem(new DishItem(6,"샐러드"));
-        adapter.addDishItem(new DishItem(7,"국밥"));
-        adapter.addDishItem(new DishItem(8,"해장국"));
-        adapter.addDishItem(new DishItem(9,"짜장면"));
-        adapter.addDishItem(new DishItem(10,"짬뽕"));
+        adapter.addDishItem(new DishItem(11,"샐러드"));
+        adapter.addDishItem(new DishItem(12,"국밥"));
+        adapter.addDishItem(new DishItem(13,"해장국"));
+        adapter.addDishItem(new DishItem(14,"짜장면"));
+        adapter.addDishItem(new DishItem(15,"짬뽕"));
+        adapter.addDishItem(new DishItem(16,"탕수육"));
+        adapter.addDishItem(new DishItem(17,"우동"));
+        adapter.addDishItem(new DishItem(18,"라면"));
+        adapter.addDishItem(new DishItem(19,"쫄면"));
+        adapter.addDishItem(new DishItem(20,"막국수"));
+
         adapter.notifyDataSetChanged();
         return false;
     }
