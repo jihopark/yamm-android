@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,8 +21,10 @@ import java.util.ArrayList;
  */
 
 public class MainFragment extends Fragment {
-    LinearLayout yammLayout;
+    FrameLayout yammFrameLayout;
     ListView streamListView;
+    LinearLayout yammLayout1, yammLayout2;
+    EditText yammFriendEditText;
     StreamListAdapter adapter;
     Button yammButton;
 
@@ -30,7 +34,7 @@ public class MainFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.main_fragment, container, false);
 
         Log.v("MainFragment/onCreateView", "xml inflated");
-        yammLayout = (LinearLayout) layout.findViewById(R.id.yamm_layout);
+        yammFrameLayout = (FrameLayout) layout.findViewById(R.id.yamm_framelayout);
         Log.v("MainFragment/onCreateView", "yamm layout found");
         streamListView = (ListView) layout.findViewById(R.id.stream_list_view);
         Log.v("MainFragment/onCreateView", "stream list view found");
@@ -40,20 +44,58 @@ public class MainFragment extends Fragment {
         Log.v("MainFragment/onCreateView", "stream list adapter set");
 
         //Set YammLayout
+        yammLayout1 = (LinearLayout) layout.findViewById(R.id.yamm_layout1);
+        yammLayout2 = (LinearLayout) layout.findViewById(R.id.yamm_layout2);
+
+        yammFriendEditText = (EditText) layout.findViewById(R.id.yamm_friend_edit_text);
+
         yammButton = (Button) layout.findViewById(R.id.yamm_button);
         yammButton.setOnClickListener(getYammButtonOnClickListener());
+
+        //Set Layout Weight of yammFrameLayout & streamListView
+        setLayoutWeights(1f,3f);
 
         return layout;
     }
 
     ////////////////////////////////Private Methods
+    /*
+    * Set Layout weights of yammFrameLayout and streamListView
+    * */
+
+    private void setLayoutWeights(float a, float b){
+        yammFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, a));
+        streamListView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, b));
+    }
+
+    /*
+    * Yamm Button OnClickListener
+    * */
+
     private View.OnClickListener getYammButtonOnClickListener(){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Yamm",Toast.LENGTH_SHORT).show();
+                toggleYammLayoutVisibility();
+                Toast.makeText(getActivity(),"GONE",Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    /*
+    * Changes visibility of yammLayout1 and yammLayout2
+    * */
+    private void toggleYammLayoutVisibility(){
+        if (yammLayout1.getVisibility()==LinearLayout.GONE){
+            yammLayout2.setVisibility(LinearLayout.GONE);
+            yammLayout1.setVisibility(LinearLayout.VISIBLE);
+            setLayoutWeights(1f,7f);
+        }
+        else{
+            yammLayout1.setVisibility(LinearLayout.GONE);
+            yammLayout2.setVisibility(LinearLayout.VISIBLE);
+            setLayoutWeights(1f,3f);
+        }
     }
 
     /*
@@ -66,11 +108,24 @@ public class MainFragment extends Fragment {
         private int currentPage = 0;
         private int previousTotal = 0;
         private boolean toastShown = false;
+        private boolean top = false; //whether the scroll is top of the list or not
 
-        public void onScrollStateChanged(AbsListView view, int scrollState){ }
+        public void onScrollStateChanged(AbsListView view, int scrollState){
+            if (!top && scrollState == this.SCROLL_STATE_TOUCH_SCROLL && yammLayout1.getVisibility() == LinearLayout.GONE){
+                Log.v("ScrollListener/onScrollStateChanged","ScrollDetected, toggle visibility");
+                toggleYammLayoutVisibility();
+            }
+        }
 
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
             Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
+
+            //Mark If the scroll is on the top of the list
+            if (firstVisibleItem == 0)
+                top = true;
+            else
+                top = false;
+
             if (loading) {
                 if (totalItemCount > previousTotal) {
                     loading = false;

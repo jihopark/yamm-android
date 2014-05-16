@@ -3,21 +3,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:id="@+id/yamm_layout"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:id="@+id/yamm_framelayout">
+
+        <!-- Yamm Layout 1 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/yamm_layout1"
+            android:visibility="gone">
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/yamm_button"
                 android:text="@string/yamm_button_text"/>
         </LinearLayout>
+
+        <!-- Yamm Layout 2 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/yamm_layout2">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/yamm_friend_edit_text"
+                android:hint="@string/yamm_friend_edit_text_hint"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="hello"
+                    android:layout_weight="1"/>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="hi"/>
+                </LinearLayout>
+
+            </LinearLayout>
+     </FrameLayout>
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/stream_list_view"
-        android:layout_weight="7"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/stream_list_view"/>
 </LinearLayout>

@@ -68,5 +68,6 @@
     <!-- Main Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="yamm_button_text">친구랑 밥먹기</string>
+    <string name="yamm_friend_edit_text_hint">같이 먹을 사람을 선택하세요</string>
 
 </resources>
