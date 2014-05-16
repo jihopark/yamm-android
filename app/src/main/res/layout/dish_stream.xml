@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_marginTop="1dp">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/dish_stream_image"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="hello"
+        android:layout_weight="1"
         android:id="@+id/dish_stream_text"
         style="@style/dish_stream_text"/>
-</FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/dish_stream_image"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>
+</LinearLayout>

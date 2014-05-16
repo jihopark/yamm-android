@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by parkjiho on 5/15/14.
  */
-public class DishStreamView extends FrameLayout {
+public class DishStreamView extends LinearLayout {
     private DishItem item;
     private TextView textView;
     private ImageView imageView;
@@ -40,7 +40,7 @@ public class DishStreamView extends FrameLayout {
         Log.v("DishStreamView/constructor", "constructor started - " + aItem.getName());
         item = aItem;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.dish_stream, this, true);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dish_stream, this, true);
         Log.v("DishStreamView/constructor", "dish stream xml inflated");
         textView = (TextView) layout.findViewById(R.id.dish_stream_text);
         Log.v("DishStreamView/constructor", "textview set");
