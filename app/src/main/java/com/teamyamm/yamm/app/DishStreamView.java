@@ -10,6 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by parkjiho on 5/15/14.
  */
@@ -19,6 +21,7 @@ public class DishStreamView extends FrameLayout {
     private ImageView imageView;
     private int width, height;
     private static double ratio = 0.5;
+    private Context context;
 
     public DishStreamView(Context context){
         super(context);
@@ -31,6 +34,9 @@ public class DishStreamView extends FrameLayout {
 
     public DishStreamView(Context context, DishItem aItem, ViewGroup parent) {
         super(context);
+
+        this.context = context;
+
         Log.v("DishStreamView/constructor", "constructor started - " + aItem.getName());
         item = aItem;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,6 +54,7 @@ public class DishStreamView extends FrameLayout {
     }
 
     public void setStreamImage(){
+        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId(),imageView.getMeasuredWidth(),imageView.getMeasuredHeight())).into(imageView);
     }
 
     public void loadViews(){

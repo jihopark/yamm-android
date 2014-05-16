@@ -21,7 +21,7 @@ public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-
+    public static String baseURL = "http://yamm-image-server-env-xircgwqd2k.elasticbeanstalk.com";
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -48,8 +48,8 @@ public class BaseActivity extends ActionBarActivity {
     /*
     * Create Image Server URL for Dish
     * */
-    public String getDishImageURL(int id, int width, int height){
-        return getString(R.string.IMAGE_SERVER_URL) + "/dish/" + id + "/c" + width + "x" + height;
+    public static String getDishImageURL(int id, int width, int height){
+        return baseURL + "/dish/" + id + "/c" + width + "x" + height;
     }
 
 

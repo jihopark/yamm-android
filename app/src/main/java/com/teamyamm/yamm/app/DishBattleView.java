@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,7 +22,7 @@ public class DishBattleView extends FrameLayout {
     public TextView textView;
     private int width=0, height=0;
     private final int TEXT_TO_HEIGHT_RATIO = 12;
-    private BaseActivity currentActivity;
+    private Context context;
 
     public DishBattleView(Context context){
         super(context);
@@ -34,10 +33,10 @@ public class DishBattleView extends FrameLayout {
         super(context, attrs);
     }
 
-    public DishBattleView(Context context, DishItem aItem, ViewGroup parent, BaseActivity activity) {
+    public DishBattleView(Context context, DishItem aItem, ViewGroup parent) {
         super(context);
 
-        currentActivity = activity;
+        this.context = context;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -47,7 +46,7 @@ public class DishBattleView extends FrameLayout {
 
         FrameLayout layout =(FrameLayout) inflater.inflate(R.layout.dish_item, parent, true);
 
-        setDishItemImage((ImageView) layout.findViewById(R.id.dish_item_image));
+        imageView = (ImageView) layout.findViewById(R.id.dish_item_image);
         Log.v("DishItemView", "Dish Image Set");
         setDishItemText((TextView) layout.findViewById(R.id.dish_item_text));
         Log.v("DishItemView", "Dish Text Set"+ " " + ((TextView) layout.findViewById(R.id.dish_item_text)).getText());
@@ -85,21 +84,12 @@ public class DishBattleView extends FrameLayout {
     * Sets image on ImageView, return true if succeed else false
     * */
     private boolean setImage(int w, int h){
-        Picasso.with(currentActivity).load(currentActivity.getDishImageURL(item.getId(),w,h)).into(imageView);
+        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId(),w,h)).into(imageView);
         return true;
     }
 
     private void setDishItemText(TextView view){
         view.setText(item.getName());
         this.textView = view;
-    }
-
-    private void setDishItemImage(ImageView view){
-        int width, height;
-  //      view.setImageDrawable(getResources().getDrawable(R.drawable.example_image));
-        view.setBackgroundColor(Color.YELLOW);
-        this.imageView = view;
-
-
     }
 }
