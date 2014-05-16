@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  * Created by parkjiho on 5/15/14.
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener  {
     FrameLayout yammFrameLayout;
     ListView streamListView;
     LinearLayout yammLayout1, yammLayout2;
@@ -65,6 +66,21 @@ public class MainFragment extends Fragment {
         return layout;
     }
 
+    /*
+    * For implementing AdapterView.OnItemSelectedListener
+    * For Date Spinner
+    * */
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
+
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) { }
+
     ////////////////////////////////Private Methods
     /*
     * Sets Date Spinner
@@ -73,7 +89,10 @@ public class MainFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yammDateSpinner.setAdapter(adapter);
+        yammDateSpinner.setOnItemSelectedListener(this);
     }
+
+
 
     /*
     * Set Layout weights of yammFrameLayout and streamListView
