@@ -5,6 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +19,11 @@ import java.util.List;
 public class StreamListAdapter extends BaseAdapter {
     private List<DishItem> items;
     private Context mContext;
+
+    static class ViewHolder{
+        public TextView text;
+        public ImageView image;
+    }
 
     public StreamListAdapter(Context context){
         mContext = context;
@@ -36,21 +45,27 @@ public class StreamListAdapter extends BaseAdapter {
     public int getCount(){ return items.size(); }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        DishStreamView view = null;
+        DishStreamView view = (DishStreamView) convertView;
         Log.v("StreamListAdapter/getView", "getView Started");
 
         if (convertView == null) {
             Log.v("StreamListAdapter/getView", "Make New DishStreamView");
             view = new DishStreamView(mContext, getItem(position), parent);
-        }
-        else{
-            Log.v("StreamListAdapter/getView", "Put convertView into original view");
-            view = (DishStreamView) convertView;
-            view.setDishItem(getItem(position));
-            view.loadViews();
-        }
 
-        Log.v("StreamListAdapter/getView", "set dish item to view - " +getItem(position).getName());
+            //Configure View Holder
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.text = (TextView) view.findViewById(R.id.dish_stream_text);
+            viewHolder.image = (ImageView) view.findViewById(R.id.dish_stream_image);
+            view.setTag(viewHolder);
+        }
+        ViewHolder holder = (ViewHolder) view.getTag();
+        holder.text.setText(getItem(position).getName());
+        Picasso.with(mContext).load(BaseActivity.getDishImageURL(getItem(position).getId()
+                ,holder.image.getMeasuredWidth(),holder.image.getMeasuredHeight()))
+                .placeholder(R.drawable.image_placeholer)
+                .into(holder.image);
+
+        Log.v("StreamListAdapter/getView", "set dish item to view - " + getItem(position).getName());
         return view;
     }
 
