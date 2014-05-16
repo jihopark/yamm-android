@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by parkjiho on 5/12/14.
  */
@@ -21,6 +23,7 @@ public class DishBattleView extends FrameLayout {
     public TextView textView;
     private int width=0, height=0;
     private final int TEXT_TO_HEIGHT_RATIO = 12;
+    private BaseActivity currentActivity;
 
     public DishBattleView(Context context){
         super(context);
@@ -31,8 +34,10 @@ public class DishBattleView extends FrameLayout {
         super(context, attrs);
     }
 
-    public DishBattleView(Context context, DishItem aItem, ViewGroup parent) {
+    public DishBattleView(Context context, DishItem aItem, ViewGroup parent, BaseActivity activity) {
         super(context);
+
+        currentActivity = activity;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -80,7 +85,7 @@ public class DishBattleView extends FrameLayout {
     * Sets image on ImageView, return true if succeed else false
     * */
     private boolean setImage(int w, int h){
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.example_image));
+        Picasso.with(currentActivity).load(currentActivity.getDishImageURL(item.getId(),w,h)).into(imageView);
         return true;
     }
 

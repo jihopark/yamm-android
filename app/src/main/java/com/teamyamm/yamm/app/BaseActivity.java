@@ -46,6 +46,14 @@ public class BaseActivity extends ActionBarActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
+    * Create Image Server URL for Dish
+    * */
+    public String getDishImageURL(int id, int width, int height){
+        return getString(R.string.IMAGE_SERVER_URL) + "/dish/" + id + "/c" + width + "x" + height;
+    }
+
+
+    /*
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
     * */
 

@@ -11,6 +11,9 @@
     <string name="title_activity_battle_result">BattleResult</string>
     <string name="title_activity_join">JoinActivity</string>
 
+    <!-- Server URL -->
+    <string name ="IMAGE_SERVER_URL">http://yamm-image-server-env-xircgwqd2k.elasticbeanstalk.com</string>
+
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>

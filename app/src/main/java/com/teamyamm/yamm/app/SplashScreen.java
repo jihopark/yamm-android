@@ -51,8 +51,8 @@ public class SplashScreen extends Activity {
         Intent activity = null;
 
         // To Remove later
-     //   BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
-     //   prefs.edit().remove(getString(R.string.BATTLE_RESULTS)).commit();
+        BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+        prefs.edit().remove(getString(R.string.BATTLE_RESULTS)).commit();
         Log.w("SplashScreen","Delete SharedPreference manipulation in production");
 
         String value = prefs.getString(getString(R.string.PREVIOUS_ACTIVITY),"none");

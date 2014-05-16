@@ -38,9 +38,9 @@ public class BattleFragment extends Fragment{
         FrameLayout layout1 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout1);
         FrameLayout layout2 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout2);
 
-        first = new DishBattleView(getActivity(),item.getFirst(), layout1);
+        first = new DishBattleView(getActivity(),item.getFirst(), layout1, (BaseActivity) getActivity());
         Log.v("BattleFragment setDishItemView", "First DishItemView made " +first);
-        second = new DishBattleView(getActivity(),item.getSecond(), layout2);
+        second = new DishBattleView(getActivity(),item.getSecond(), layout2, (BaseActivity) getActivity());
         Log.v("BattleFragment setDishItemView", "Second DishItemView made " +second);
 
         //Set Battle Non Button
