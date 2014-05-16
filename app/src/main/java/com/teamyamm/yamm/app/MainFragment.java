@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class MainFragment extends Fragment {
     EditText yammFriendEditText;
     StreamListAdapter adapter;
     Button yammButton;
+    Spinner yammDateSpinner;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +55,10 @@ public class MainFragment extends Fragment {
         yammButton = (Button) layout.findViewById(R.id.yamm_button);
         yammButton.setOnClickListener(getYammButtonOnClickListener());
 
+        //Set Date Spinner
+        yammDateSpinner = (Spinner) layout.findViewById(R.id.yamm_date_spinner);
+        setDateSpinner();
+
         //Set Layout Weight of yammFrameLayout & streamListView
         setLayoutWeights(1f,3f);
 
@@ -59,6 +66,15 @@ public class MainFragment extends Fragment {
     }
 
     ////////////////////////////////Private Methods
+    /*
+    * Sets Date Spinner
+    * */
+    private void setDateSpinner(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        yammDateSpinner.setAdapter(adapter);
+    }
+
     /*
     * Set Layout weights of yammFrameLayout and streamListView
     * */
