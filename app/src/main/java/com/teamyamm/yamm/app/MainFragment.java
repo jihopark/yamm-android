@@ -108,10 +108,9 @@ public class MainFragment extends Fragment {
         private int currentPage = 0;
         private int previousTotal = 0;
         private boolean toastShown = false;
-        private boolean top = false; //whether the scroll is top of the list or not
 
         public void onScrollStateChanged(AbsListView view, int scrollState){
-            if (!top && scrollState == this.SCROLL_STATE_TOUCH_SCROLL && yammLayout1.getVisibility() == LinearLayout.GONE){
+            if (scrollState == this.SCROLL_STATE_TOUCH_SCROLL && yammLayout1.getVisibility() == LinearLayout.GONE){
                 Log.v("ScrollListener/onScrollStateChanged","ScrollDetected, toggle visibility");
                 toggleYammLayoutVisibility();
             }
@@ -119,12 +118,6 @@ public class MainFragment extends Fragment {
 
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
             Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
-
-            //Mark If the scroll is on the top of the list
-            if (firstVisibleItem == 0)
-                top = true;
-            else
-                top = false;
 
             if (loading) {
                 if (totalItemCount > previousTotal) {
