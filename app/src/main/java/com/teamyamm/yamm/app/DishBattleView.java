@@ -84,7 +84,8 @@ public class DishBattleView extends FrameLayout {
     * Sets image on ImageView, return true if succeed else false
     * */
     private boolean setImage(int w, int h){
-        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId(),w,h)).into(imageView);
+        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId(),w,h))
+                .placeholder(R.drawable.image_placeholer).into(imageView);
         return true;
     }
 

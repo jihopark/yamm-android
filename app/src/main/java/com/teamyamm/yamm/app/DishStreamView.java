@@ -54,7 +54,11 @@ public class DishStreamView extends FrameLayout {
     }
 
     public void setStreamImage(){
-        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId(),imageView.getMeasuredWidth(),imageView.getMeasuredHeight())).into(imageView);
+        Picasso.with(context).load(BaseActivity.getDishImageURL(item.getId()
+                ,imageView.getMeasuredWidth(),imageView.getMeasuredHeight()))
+                .placeholder(R.drawable.image_placeholer)
+                .into(imageView);
+        Log.v("DishStreamView/setStreamImage", "Image Loaded");
     }
 
     public void loadViews(){

@@ -154,7 +154,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         }
 
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
-            Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
+   //         Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
 
             if (loading) {
                 if (totalItemCount > previousTotal) {

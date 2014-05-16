@@ -40,18 +40,17 @@ public class StreamListAdapter extends BaseAdapter {
         Log.v("StreamListAdapter/getView", "getView Started");
 
         if (convertView == null) {
-
             Log.v("StreamListAdapter/getView", "Make New DishStreamView");
             view = new DishStreamView(mContext, getItem(position), parent);
         }
         else{
             Log.v("StreamListAdapter/getView", "Put convertView into original view");
             view = (DishStreamView) convertView;
+            view.setDishItem(getItem(position));
+            view.loadViews();
         }
 
         Log.v("StreamListAdapter/getView", "set dish item to view - " +getItem(position).getName());
-        view.setDishItem(getItem(position));
-        view.loadViews();
         return view;
     }
 
