@@ -162,12 +162,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         private int previousTotal = 0;
         private boolean toastShown = false;
 
-        public void onScrollStateChanged(AbsListView view, int scrollState){
-            if (scrollState == this.SCROLL_STATE_TOUCH_SCROLL && yammLayout1.getVisibility() == LinearLayout.GONE){
-                Log.v("ScrollListener/onScrollStateChanged","ScrollDetected, toggle visibility");
-                toggleYammLayoutVisibility();
-            }
-        }
+        public void onScrollStateChanged(AbsListView view, int scrollState){ }
 
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
    //         Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
@@ -233,8 +228,19 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     private class StreamGestureListener extends GestureDetector.SimpleOnGestureListener{
+        final int SCROLL_TOLERANCE = 100;
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
-            Log.i("StreamGestureListener","scroll detected");
+            if (Math.abs(e1.getY() - e2.getY()) > SCROLL_TOLERANCE) {
+                if (e1.getY() < e2.getY()) {
+                    Log.i("StreamGestureListener", "scroll up");
+                    if (yammLayout2.getVisibility() == LinearLayout.GONE)
+                        toggleYammLayoutVisibility();
+                } else {
+                    Log.i("StreamGestureListener", "scroll down");
+                    if (yammLayout1.getVisibility() == LinearLayout.GONE)
+                        toggleYammLayoutVisibility();
+                }
+            }
             return true;
         }
     }
