@@ -29,6 +29,8 @@
     <string name="internet_alert_message">인터넷 연결이 필요합니다</string>
     <string name="internet_alert_button">재시도</string>
     <string name="meal_picker_dialog_title">설마 아침부터...</string>
+    <string name="invalid_date_message">오늘 이후의 날짜를 입력해주세요</string>
+    <string name="invalid_date_title">과거</string>
 
     <!--Grid Fragment -->
     <string name="grid_introduction">못 먹는 음식 다 골라</string>

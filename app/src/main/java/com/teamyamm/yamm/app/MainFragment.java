@@ -36,7 +36,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public Spinner yammDateSpinner;
     public ArrayAdapter<CharSequence> spinnerAdapter;
     public GestureDetector detector;
-
+    public DialogFragment datePickerFragment;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -177,8 +177,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
         if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
-            DialogFragment newFragment = new YammDatePickerFragment();
-            newFragment.show(getChildFragmentManager(), "timePicker");
+            datePickerFragment = new YammDatePickerFragment();
+            datePickerFragment.show(getChildFragmentManager(), "timePicker");
         }
     }
     public void onNothingSelected(AdapterView<?> parent) { }
