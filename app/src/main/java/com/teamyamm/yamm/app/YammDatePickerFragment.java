@@ -7,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,9 +24,10 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
     }
 
     public void onDateSet(DatePicker picker, int year, int month, int day){
-        Toast.makeText(getActivity(), "Date Picked " + dateToString(year, month, day) ,Toast.LENGTH_SHORT).show();
         Spinner s = (Spinner) getActivity().findViewById(R.id.yamm_date_spinner);
-        ArrayAdapter<CharSequence> adapter = ((MainFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.main_fragment)).spinnerAdapter;
+        MainFragment mf = ((MainFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.main_fragment));
+
+        ArrayAdapter<CharSequence> adapter = mf.spinnerAdapter;
 
         //Add item
         list = new ArrayList<CharSequence>();
@@ -38,6 +38,10 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
         adapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
         s.setAdapter(adapter);
         s.setSelection(list.size()-1);
+
+        //Show Meal Picker Dialog
+        DialogFragment newFragment = new MealPickerDialog();
+        newFragment.show(mf.getChildFragmentManager(), "mealPicker");
     }
 
     public String dateToString(int year, int month, int day){
