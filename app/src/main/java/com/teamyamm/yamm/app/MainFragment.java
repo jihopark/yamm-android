@@ -26,15 +26,15 @@ import java.util.ArrayList;
  * Created by parkjiho on 5/15/14.
  */
 
-public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener  {
-    FrameLayout yammFrameLayout;
-    ListView streamListView;
-    LinearLayout yammLayout1, yammLayout2;
-    EditText yammFriendEditText;
-    StreamListAdapter adapter;
-    Button yammButton;
-    Spinner yammDateSpinner;
-
+public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+    public FrameLayout yammFrameLayout;
+    public ListView streamListView;
+    public LinearLayout yammLayout1, yammLayout2;
+    public EditText yammFriendEditText;
+    public StreamListAdapter adapter;
+    public Button yammButton;
+    public Spinner yammDateSpinner;
+    public ArrayAdapter<CharSequence> spinnerAdapter;
     public GestureDetector detector;
 
 
@@ -83,30 +83,16 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         return layout;
     }
 
-    /*
-    * For implementing AdapterView.OnItemSelectedListener
-    * For Date Spinner
-    * */
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
-            DialogFragment newFragment = new YammDatePickerFragment();
-            newFragment.show(getChildFragmentManager(), "timePicker");
-        }
-    }
 
-    public void onNothingSelected(AdapterView<?> parent) { }
 
     ////////////////////////////////Private Methods
     /*
     * Sets Date Spinner
     * */
     private void setDateSpinner(){
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        yammDateSpinner.setAdapter(adapter);
+        spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        yammDateSpinner.setAdapter(spinnerAdapter);
         yammDateSpinner.setOnItemSelectedListener(this);
     }
 
@@ -121,19 +107,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         streamListView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, b));
     }
 
-    /*
-    * Yamm Button OnClickListener
-    * */
 
-    private View.OnClickListener getYammButtonOnClickListener(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleYammLayoutVisibility();
-                Toast.makeText(getActivity(),"GONE",Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
 
     /*
     * Changes visibility of yammLayout1 and yammLayout2
@@ -151,41 +125,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         }
     }
 
-    /*
-    * Custom Scroll Listener that loads more items if end of scroll detected in ListView
-    * */
-    private class StreamScrollListener implements AbsListView.OnScrollListener{
-        private int visibleThreshold = 3; // how many items before loading new contents
-        private boolean loading = true;
-        private boolean data = true;
-        private int currentPage = 0;
-        private int previousTotal = 0;
-        private boolean toastShown = false;
 
-        public void onScrollStateChanged(AbsListView view, int scrollState){ }
-
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
-   //         Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
-
-            if (loading) {
-                if (totalItemCount > previousTotal) {
-                    loading = false;
-                    previousTotal = totalItemCount;
-                    currentPage++;
-                }
-            }
-            if (data && !loading && (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold)) {  //End of Scroll
-                // load more items
-                data = loadMoreItemsOnAdapter();
-                loading = true;
-            }
-            else if (!toastShown && !data && (totalItemCount - visibleItemCount) <= firstVisibleItem){
-                Log.v("ScrollListener","Toast should come");
-                Toast.makeText(getActivity().getApplicationContext(),R.string.stream_end_message,Toast.LENGTH_SHORT).show();
-                toastShown = true;
-            }
-        }
-    }
 
 
     private StreamListAdapter setStreamListAdapter(){
@@ -227,6 +167,38 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         return false;
     }
 
+    ////////////////////////////////Listeners
+    /*
+    * For implementing AdapterView.OnItemSelectedListener
+    * For Date Spinner
+    * */
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
+            DialogFragment newFragment = new YammDatePickerFragment();
+            newFragment.show(getChildFragmentManager(), "timePicker");
+        }
+    }
+    public void onNothingSelected(AdapterView<?> parent) { }
+
+    /*
+    * Yamm Button OnClickListener
+    * */
+    private View.OnClickListener getYammButtonOnClickListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleYammLayoutVisibility();
+                Toast.makeText(getActivity(),"GONE",Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    /*
+    * Detects Scroll and manipulates yammlayout1 & 2
+    * */
     private class StreamGestureListener extends GestureDetector.SimpleOnGestureListener{
         final int SCROLL_TOLERANCE = 100;
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
@@ -242,6 +214,42 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 }
             }
             return true;
+        }
+    }
+
+    /*
+   * Custom Scroll Listener that loads more items if end of scroll detected in ListView
+   * */
+    private class StreamScrollListener implements AbsListView.OnScrollListener{
+        private int visibleThreshold = 3; // how many items before loading new contents
+        private boolean loading = true;
+        private boolean data = true;
+        private int currentPage = 0;
+        private int previousTotal = 0;
+        private boolean toastShown = false;
+
+        public void onScrollStateChanged(AbsListView view, int scrollState){ }
+
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
+            //         Log.v("ScrollListener","data "+ data + " firstVisibleItem "+ firstVisibleItem + "/visibleItemCount - " + visibleItemCount + "/totalItemCount - " + totalItemCount);
+
+            if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                    currentPage++;
+                }
+            }
+            if (data && !loading && (totalItemCount - visibleItemCount) < (firstVisibleItem + visibleThreshold)) {  //End of Scroll
+                // load more items
+                data = loadMoreItemsOnAdapter();
+                loading = true;
+            }
+            else if (!toastShown && !data && (totalItemCount - visibleItemCount) <= firstVisibleItem){
+                Log.v("ScrollListener","Toast should come");
+                Toast.makeText(getActivity().getApplicationContext(),R.string.stream_end_message,Toast.LENGTH_SHORT).show();
+                toastShown = true;
+            }
         }
     }
 }
