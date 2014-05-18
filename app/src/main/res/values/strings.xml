@@ -70,7 +70,8 @@
     <!-- Main Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="yamm_button_text">친구랑 밥먹기</string>
-    <string name="yamm_friend_edit_text_hint">같이 먹을 사람을 선택하세요</string>
+    <string name="friend_pick_edit_text">같이 먹을 사람을 선택하세요</string>
+    <string name="place_pick_edit_text">현재 위치</string>
 
     <!-- Yamm Date Spinner -->
     <string-array name="date_spinner_array">
@@ -79,4 +80,17 @@
         <item>지금 당장</item>
         <item>날짜 선택</item>
     </string-array>
+
+    <!-- Place Pick Autocomplete -->
+    <string-array name="places_array">
+        <item>강남</item>
+        <item>홍대</item>
+        <item>상수</item>
+        <item>이태원</item>
+        <item>압구정</item>
+        <item>가로수길</item>
+        <item>건대입구</item>
+        <item>신촌</item>
+    </string-array>
+
 </resources>

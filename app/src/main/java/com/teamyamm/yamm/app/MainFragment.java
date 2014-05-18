@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -32,7 +33,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public FrameLayout yammFrameLayout;
     public ListView streamListView;
     public LinearLayout yammLayout1, yammLayout2;
-    public EditText yammFriendEditText;
+    public EditText friendPickEditText;
+    public AutoCompleteTextView placePickEditText;
     public StreamListAdapter adapter;
     public Button yammButton;
     public Spinner yammDateSpinner;
@@ -40,11 +42,12 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public GestureDetector detector;
     public DialogFragment datePickerFragment;
     public boolean yammLayoutToggling = false;
+    public LinearLayout layout;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.v("MainFragment/onCreateView", "onCreateView started");
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.main_fragment, container, false);
+        layout = (LinearLayout) inflater.inflate(R.layout.main_fragment, container, false);
 
         Log.v("MainFragment/onCreateView", "xml inflated");
         yammFrameLayout = (FrameLayout) layout.findViewById(R.id.yamm_framelayout);
@@ -60,7 +63,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         yammLayout1 = (LinearLayout) layout.findViewById(R.id.yamm_layout1);
         yammLayout2 = (LinearLayout) layout.findViewById(R.id.yamm_layout2);
 
-        yammFriendEditText = (EditText) layout.findViewById(R.id.yamm_friend_edit_text);
+        friendPickEditText = (EditText) layout.findViewById(R.id.friend_pick_edit_text);
+
+        //Set Place Pick Edit Text - autocomplete
+        setPlacePickEditText();
 
         yammButton = (Button) layout.findViewById(R.id.yamm_button);
         yammButton.setOnClickListener(getYammButtonOnClickListener());
@@ -89,6 +95,22 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
 
     ////////////////////////////////Private Methods
+
+    private void setPlacePickEditText(){
+        placePickEditText = (AutoCompleteTextView) layout.findViewById(R.id.place_pick_edit_text);
+        ArrayAdapter<String> place_adapter =
+                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.places_array));
+        placePickEditText.setAdapter(place_adapter);
+        placePickEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+
+                }
+            }
+        });
+    }
+
     /*
     * Sets Date Spinner
     * */
@@ -277,4 +299,5 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             }
         }
     }
+
 }
