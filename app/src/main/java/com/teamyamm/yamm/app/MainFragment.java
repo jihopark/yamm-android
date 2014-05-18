@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,6 +39,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public ArrayAdapter<CharSequence> spinnerAdapter;
     public GestureDetector detector;
     public DialogFragment datePickerFragment;
+    public boolean yammLayoutToggling = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,12 +116,20 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Changes visibility of yammLayout1 and yammLayout2
     * */
     private void toggleYammLayoutVisibility(){
+        Animation alpha = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha);
+        Animation slide_down = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
+        Animation slide_up = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+
         if (yammLayout1.getVisibility()==LinearLayout.GONE){
+            yammLayout2.startAnimation(alpha);
+            yammLayout1.startAnimation(slide_up);
             yammLayout2.setVisibility(LinearLayout.GONE);
             yammLayout1.setVisibility(LinearLayout.VISIBLE);
             setLayoutWeights(1f,7f);
         }
         else{
+            yammLayout1.startAnimation(alpha);
+            yammLayout2.startAnimation(slide_down);
             yammLayout1.setVisibility(LinearLayout.GONE);
             yammLayout2.setVisibility(LinearLayout.VISIBLE);
             setLayoutWeights(1f,3f);
@@ -154,14 +165,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         Log.v("MainFragment/loadMoreItemsOnAdapter","More Items loaded");
         adapter.addDishItem(new DishItem(11,"샐러드"));
         adapter.addDishItem(new DishItem(12,"국밥"));
-        adapter.addDishItem(new DishItem(13,"해장국"));
-        adapter.addDishItem(new DishItem(14,"짜장면"));
-        adapter.addDishItem(new DishItem(15,"짬뽕"));
-        adapter.addDishItem(new DishItem(16,"탕수육"));
-        adapter.addDishItem(new DishItem(17,"우동"));
-        adapter.addDishItem(new DishItem(18,"라면"));
-        adapter.addDishItem(new DishItem(19,"쫄면"));
-        adapter.addDishItem(new DishItem(20,"막국수"));
+        adapter.addDishItem(new DishItem(13, "해장국"));
+        adapter.addDishItem(new DishItem(14, "짜장면"));
+        adapter.addDishItem(new DishItem(15, "짬뽕"));
+        adapter.addDishItem(new DishItem(16, "탕수육"));
+        adapter.addDishItem(new DishItem(17, "우동"));
+        adapter.addDishItem(new DishItem(18, "라면"));
+        adapter.addDishItem(new DishItem(19, "쫄면"));
+        adapter.addDishItem(new DishItem(20, "막국수"));
 
         adapter.notifyDataSetChanged();
         return false;
@@ -200,9 +211,27 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Detects Scroll and manipulates yammlayout1 & 2
     * */
     private class StreamGestureListener extends GestureDetector.SimpleOnGestureListener{
-        final int SCROLL_TOLERANCE = 100;
+        final int SCROLL_TOLERANCE = 10;
+        float dX=0, dY=0;
+
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
+            Log.i("onScroll","dX " + dX + " dY " + dY + " x " +e1.getX() + " y " +e1.getY());
+            if (dX == 0 && dY == 0){
+                dX = e1.getX();
+                dY = e1.getY();
+            }
+            else{
+                if (dX == e1.getX() && dY == e1.getY()){
+                    dX = e1.getX();
+                    dY = e1.getY();
+                    return true;
+                }
+                dX = e1.getX();
+                dY = e1.getY();
+            }
+
             if (Math.abs(e1.getY() - e2.getY()) > SCROLL_TOLERANCE) {
+                Log.i("onScroll","fired");
                 if (e1.getY() < e2.getY()) {
                     Log.i("StreamGestureListener", "scroll up");
                     if (yammLayout2.getVisibility() == LinearLayout.GONE)
