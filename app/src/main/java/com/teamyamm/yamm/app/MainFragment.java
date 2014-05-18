@@ -215,7 +215,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         float dX=0, dY=0;
 
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
-            Log.i("onScroll","dX " + dX + " dY " + dY + " x " +e1.getX() + " y " +e1.getY());
             if (dX == 0 && dY == 0){
                 dX = e1.getX();
                 dY = e1.getY();
@@ -231,13 +230,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             }
 
             if (Math.abs(e1.getY() - e2.getY()) > SCROLL_TOLERANCE) {
-                Log.i("onScroll","fired");
                 if (e1.getY() < e2.getY()) {
-                    Log.i("StreamGestureListener", "scroll up");
                     if (yammLayout2.getVisibility() == LinearLayout.GONE)
                         toggleYammLayoutVisibility();
                 } else {
-                    Log.i("StreamGestureListener", "scroll down");
                     if (yammLayout1.getVisibility() == LinearLayout.GONE)
                         toggleYammLayoutVisibility();
                 }

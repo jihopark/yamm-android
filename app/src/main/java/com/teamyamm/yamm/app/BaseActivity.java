@@ -22,7 +22,7 @@ public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    public static String baseURL = "http://54.178.134.69";
+    public static String baseURL = "http://img.yamm.me";
     public final static float imageRatio = 1.5f;
 
     @Override
