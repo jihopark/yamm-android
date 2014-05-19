@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener{
     private final float YAMM_STREAM_RATIO = (1f/4f);
-    private final float YAMM_FRIEND_LIST_RATIO = (1f/4f);
 
     public FrameLayout yammFrameLayout;
     public ListView streamListView;
@@ -129,7 +128,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         //Animation
         layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,
-                FriendsListAnimation.COLLAPSE, this, YAMM_FRIEND_LIST_RATIO));
+                FriendsListAnimation.COLLAPSE, this, YAMM_STREAM_RATIO));
 
     }
 
@@ -147,7 +146,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         //Animation
         layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,
-                FriendsListAnimation.EXPAND, this, YAMM_FRIEND_LIST_RATIO));
+                FriendsListAnimation.EXPAND, this, YAMM_STREAM_RATIO));
     }
 
 
