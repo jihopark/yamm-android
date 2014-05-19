@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -46,6 +50,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public boolean yammLayoutToggling = false;
     public LinearLayout layout;
 
+    public RelativeLayout friendsFragmentContainer;
+    public FragmentManager fragmentManager;
+    public FriendsFragment friendsFragment;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.v("MainFragment/onCreateView", "onCreateView started");
@@ -64,8 +72,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         //Set YammLayout
         yammLayout1 = (LinearLayout) layout.findViewById(R.id.yamm_layout1);
         yammLayout2 = (LinearLayout) layout.findViewById(R.id.yamm_layout2);
+        friendsFragmentContainer = (RelativeLayout) layout.findViewById(R.id.friends_fragment_container);
 
         friendPickEditText = (EditText) layout.findViewById(R.id.friend_pick_edit_text);
+        friendPickEditText.setOnTouchListener(setFriendPickEditTextOnTouchListener());
 
         //Set Place Pick Edit Text - autocomplete
         setPlacePickEditText();
@@ -90,6 +100,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
 
+        //Fragment manager
+        fragmentManager = getChildFragmentManager();
 
         return layout;
     }
@@ -97,6 +109,25 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
 
     ////////////////////////////////Private Methods
+    private View.OnTouchListener setFriendPickEditTextOnTouchListener(){
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //disable keyboard
+                ((EditText)v).setInputType(InputType.TYPE_NULL);
+
+                //create fragment
+                FragmentTransaction t = fragmentManager.beginTransaction();
+                friendsFragment = new FriendsFragment();
+                t.add(R.id.friends_fragment_container, friendsFragment);
+                t.commit();
+
+                v.onTouchEvent(event);
+                return true;
+            }
+        };
+    }
+
 
     private void setPlacePickEditText(){
         placePickEditText = (AutoCompleteTextView) layout.findViewById(R.id.place_pick_edit_text);
