@@ -34,6 +34,9 @@ import java.util.ArrayList;
  */
 
 public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+    private final float YAMM_STREAM_RATIO = (1f/4f);
+    private final float YAMM_FRIEND_LIST_RATIO = (1f/4f);
+
     public FrameLayout yammFrameLayout;
     public ListView streamListView;
     public LinearLayout yammLayout1, yammLayout2;
@@ -90,7 +93,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         spinnerAutocompleteContainer = (LinearLayout) layout.findViewById(R.id.spinner_autocomplete_container);
 
         //Set Layout Weight of yammFrameLayout & streamListView
-        setYammAndStreamLayoutWeights(1f, 3f);
+        setYammAndStreamLayoutWeights(YAMM_STREAM_RATIO, 1-YAMM_STREAM_RATIO);
 
         //Add Gesture Detector to streamListView
         detector = new GestureDetector(getActivity(), new StreamGestureListener());
@@ -125,7 +128,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
-        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED, FriendsListAnimation.COLLAPSE, this));
+        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,
+                FriendsListAnimation.COLLAPSE, this, YAMM_FRIEND_LIST_RATIO));
 
     }
 
@@ -142,7 +146,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
-        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED, FriendsListAnimation.EXPAND, this));
+        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,
+                FriendsListAnimation.EXPAND, this, YAMM_FRIEND_LIST_RATIO));
     }
 
 
@@ -215,11 +220,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     private void toggleYammLayoutVisibility(){
 
         if (yammLayout1.getVisibility()==LinearLayout.GONE){
-            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.COLLAPSE, this);
+            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.COLLAPSE, this, YAMM_STREAM_RATIO);
             yammFrameLayout.startAnimation(animation);
         }
         else{
-            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.EXPAND, this);
+            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.EXPAND, this, YAMM_STREAM_RATIO);
             yammFrameLayout.startAnimation(animation);
         }
     }
