@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -127,7 +125,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
-        layout.startAnimation(new FriendsListAnimation(layout, 500, FriendsListAnimation.COLLAPSE, this));
+        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED, FriendsListAnimation.COLLAPSE, this));
 
     }
 
@@ -144,7 +142,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
-        layout.startAnimation(new FriendsListAnimation(layout, 500, FriendsListAnimation.EXPAND, this));
+        layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED, FriendsListAnimation.EXPAND, this));
     }
 
 
@@ -215,23 +213,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Changes visibility of yammLayout1 and yammLayout2
     * */
     private void toggleYammLayoutVisibility(){
-        Animation alpha = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha);
-        Animation slide_down = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
-        Animation slide_up = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
 
         if (yammLayout1.getVisibility()==LinearLayout.GONE){
-            yammLayout2.startAnimation(alpha);
-            yammLayout1.startAnimation(slide_up);
-            yammLayout2.setVisibility(LinearLayout.GONE);
-            yammLayout1.setVisibility(LinearLayout.VISIBLE);
-            setYammAndStreamLayoutWeights(1f, 7f);
+            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.COLLAPSE, this);
+            yammFrameLayout.startAnimation(animation);
         }
         else{
-            yammLayout1.startAnimation(alpha);
-            yammLayout2.startAnimation(slide_down);
-            yammLayout1.setVisibility(LinearLayout.GONE);
-            yammLayout2.setVisibility(LinearLayout.VISIBLE);
-            setYammAndStreamLayoutWeights(1f, 3f);
+            YammLayoutAnimation animation = new YammLayoutAnimation(yammFrameLayout, BaseActivity.ANIMATION_SPEED, YammLayoutAnimation.EXPAND, this);
+            yammFrameLayout.startAnimation(animation);
         }
     }
 
