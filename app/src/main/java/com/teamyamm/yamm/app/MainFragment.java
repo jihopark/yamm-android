@@ -51,6 +51,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public LinearLayout layout;
 
     public RelativeLayout friendsFragmentContainer;
+    public LinearLayout spinnerAutocompleteContainer;
     public FragmentManager fragmentManager;
     public FriendsFragment friendsFragment;
     private boolean friendDown = false;
@@ -88,6 +89,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         yammDateSpinner = (Spinner) layout.findViewById(R.id.yamm_date_spinner);
         setDateSpinner();
 
+        spinnerAutocompleteContainer = (LinearLayout) layout.findViewById(R.id.spinner_autocomplete_container);
+
         //Set Layout Weight of yammFrameLayout & streamListView
         setYammAndStreamLayoutWeights(1f, 3f);
 
@@ -117,10 +120,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         friendDown = false;
 
-        //change layout weight
-        setYammAndStreamLayoutWeights(1f, 3f);
-        friendsFragmentContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
-
         //create fragment
         FragmentTransaction t = fragmentManager.beginTransaction();
         friendsFragment = new FriendsFragment();
@@ -128,17 +127,15 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
+        layout.startAnimation(new FriendsListAnimation(layout, 500, FriendsListAnimation.COLLAPSE, this));
+
     }
 
     public void putFriendsListDown(){
         if (isFriendsListDown())
             return ;
 
-        friendDown =true;
-
-        //change layout weight
-        setYammAndStreamLayoutWeights(7f, 1f);
-        friendsFragmentContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 5f));
+        friendDown = true;
 
         //create fragment
         FragmentTransaction t = fragmentManager.beginTransaction();
@@ -147,6 +144,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         t.commit();
 
         //Animation
+        layout.startAnimation(new FriendsListAnimation(layout, 500, FriendsListAnimation.EXPAND, this));
     }
 
 
@@ -201,9 +199,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Set Layout weights of yammFrameLayout and streamListView
     * */
 
-    private void setYammAndStreamLayoutWeights(float a, float b){
+    public void setYammAndStreamLayoutWeights(float a, float b){
         yammFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, a));
         streamListView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, b));
+    }
+    public void setYammLayout2Weights(float a, float b, float c){
+        friendPickEditText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, a));
+        friendsFragmentContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, b));
+        spinnerAutocompleteContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, c));
     }
 
 
@@ -325,8 +328,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 dY = e1.getY();
             }
             //Put Friends List Up if Down
-            if (isFriendsListDown())
+            if (isFriendsListDown()) {
                 putFriendsListUp();
+                return true;
+            }
 
             //Toggle Layout
             if (Math.abs(e1.getY() - e2.getY()) > SCROLL_TOLERANCE) {
