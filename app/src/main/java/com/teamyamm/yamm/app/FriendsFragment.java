@@ -17,11 +17,12 @@ import java.util.List;
  */
 public class FriendsFragment extends Fragment {
     ListView yammTeamList, yammFriendsList;
-    FriendsListAdapter yammFriendsListAdapter;
+    YammItemsListAdapter yammFriendsListAdapter, yammTeamListAdapter;
+    LinearLayout layout;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
+        layout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
         yammTeamList = (ListView) layout.findViewById(R.id.yamm_team_list);
         yammFriendsList = (ListView) layout.findViewById(R.id.yamm_friends_list);
@@ -34,28 +35,32 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setYammTeamList(){
-        TextView tv = new TextView(getActivity());
+        TextView tv = (TextView) layout.findViewById(R.id.team_list_empty_text);
 
         //Set Empty TextView
         tv.setText(getString(R.string.team_list_empty));
         yammTeamList.setEmptyView(tv);
 
+        //Set Team Adapter
+        yammTeamListAdapter = new YammItemsListAdapter(getActivity(),loadTeamList());
+        yammTeamList.setAdapter(yammTeamListAdapter);
+
     }
 
     private void setYammFriendsList(){
-        TextView tv = new TextView(getActivity());
+        TextView tv = (TextView) layout.findViewById(R.id.friends_list_empty_text);
 
         //Set Empty TextView
         tv.setText(getString(R.string.friends_list_empty));
         yammFriendsList.setEmptyView(tv);
 
         //Set Friend Adapter
-        yammFriendsListAdapter = new FriendsListAdapter(getActivity(),loadFriendsList());
+        yammFriendsListAdapter = new YammItemsListAdapter(getActivity(),loadFriendsList());
         yammFriendsList.setAdapter(yammFriendsListAdapter);
     }
 
-    private List<Friend> loadFriendsList(){
-        ArrayList<Friend> friendsList = new ArrayList<Friend>();
+    private List<YammItem> loadFriendsList(){
+        ArrayList<YammItem> friendsList = new ArrayList<YammItem>();
 
         friendsList.add(new Friend(1,"양영직"));
         friendsList.add(new Friend(2,"박지호"));
@@ -63,5 +68,11 @@ public class FriendsFragment extends Fragment {
         friendsList.add(new Friend(4,"고서우"));
 
         return friendsList;
+    }
+
+    private List<YammItem> loadTeamList(){
+        ArrayList<YammItem> teamList = new ArrayList<YammItem>();
+
+        return teamList;
     }
 }

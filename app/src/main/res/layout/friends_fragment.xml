@@ -14,6 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/yamm_team_list"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/team_list_empty_text"
+        />
 
     <!-- Yamm Friend -->
     <TextView
@@ -24,5 +30,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/yamm_friends_list"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/friends_list_empty_text"/>
 
 </LinearLayout>
