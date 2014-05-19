@@ -1,10 +1,15 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,22 +21,67 @@ import java.util.List;
  * Created by parkjiho on 5/19/14.
  */
 public class FriendsFragment extends Fragment {
-    ListView yammTeamList, yammFriendsList;
-    YammItemsListAdapter yammFriendsListAdapter, yammTeamListAdapter;
-    LinearLayout layout;
+    public ListView yammTeamList, yammFriendsList;
+    public YammItemsListAdapter yammFriendsListAdapter, yammTeamListAdapter;
+    public LinearLayout layout, teamLayout, friendsLayout;
+    public AutoCompleteTextView searchText;
+    public GestureDetector detector;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         layout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
+        teamLayout = (LinearLayout) layout.findViewById(R.id.yam_team_layout);
+        friendsLayout = (LinearLayout) layout.findViewById(R.id.yam_friends_layout);
         yammTeamList = (ListView) layout.findViewById(R.id.yamm_team_list);
         yammFriendsList = (ListView) layout.findViewById(R.id.yamm_friends_list);
+        searchText = (AutoCompleteTextView) layout.findViewById(R.id.yamm_item_search_text);
+
+        //Sets Gesture Detector to close soft keyboard of search text
+        setGestureDetector();
+
         setYammTeamList();
         setYammFriendsList();
 
-
-
         return layout;
+    }
+    /*
+    * Closes keyboard if other lists is scrolled
+    * */
+    private void setGestureDetector(){
+        detector = new GestureDetector(getActivity(), new FriendsGestureListener());
+        yammTeamList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                detector.onTouchEvent(event);
+                return getActivity().onTouchEvent(event);
+            }
+        });
+        yammFriendsList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                detector.onTouchEvent(event);
+                return getActivity().onTouchEvent(event);
+            }
+        });
+    }
+
+    private class FriendsGestureListener extends GestureDetector.SimpleOnGestureListener {
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            closeSoftKeyboard();
+            return false;
+        }
+
+        public boolean onDown(MotionEvent e){
+            closeSoftKeyboard();
+            return false;
+        }
+
+        private void closeSoftKeyboard(){
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+        }
     }
 
     private void setYammTeamList(){
