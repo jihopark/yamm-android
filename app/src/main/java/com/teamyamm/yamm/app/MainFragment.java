@@ -119,6 +119,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         //change layout weight
         setYammAndStreamLayoutWeights(1f, 3f);
+        friendsFragmentContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 0));
 
         //create fragment
         FragmentTransaction t = fragmentManager.beginTransaction();
@@ -323,7 +324,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 dX = e1.getX();
                 dY = e1.getY();
             }
+            //Put Friends List Up if Down
+            if (isFriendsListDown())
+                putFriendsListUp();
 
+            //Toggle Layout
             if (Math.abs(e1.getY() - e2.getY()) > SCROLL_TOLERANCE) {
                 if (e1.getY() < e2.getY()) {
                     if (yammLayout2.getVisibility() == LinearLayout.GONE)
