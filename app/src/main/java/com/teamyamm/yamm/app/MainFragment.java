@@ -53,6 +53,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public RelativeLayout friendsFragmentContainer;
     public FragmentManager fragmentManager;
     public FriendsFragment friendsFragment;
+    private boolean friendDown = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         setDateSpinner();
 
         //Set Layout Weight of yammFrameLayout & streamListView
-        setLayoutWeights(1f,3f);
+        setYammAndStreamLayoutWeights(1f, 3f);
 
         //Add Gesture Detector to streamListView
         detector = new GestureDetector(getActivity(), new StreamGestureListener());
@@ -106,6 +107,46 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         return layout;
     }
 
+    public boolean isFriendsListDown(){
+        return friendDown;
+    }
+
+    public void putFriendsListUp(){
+        if (!isFriendsListDown())
+            return ;
+
+        friendDown = false;
+
+        //change layout weight
+        setYammAndStreamLayoutWeights(1f, 3f);
+
+        //create fragment
+        FragmentTransaction t = fragmentManager.beginTransaction();
+        friendsFragment = new FriendsFragment();
+        t.remove(friendsFragment);
+        t.commit();
+
+        //Animation
+    }
+
+    public void putFriendsListDown(){
+        if (isFriendsListDown())
+            return ;
+
+        friendDown =true;
+
+        //change layout weight
+        setYammAndStreamLayoutWeights(7f, 1f);
+        friendsFragmentContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 5f));
+
+        //create fragment
+        FragmentTransaction t = fragmentManager.beginTransaction();
+        friendsFragment = new FriendsFragment();
+        t.add(R.id.friends_fragment_container, friendsFragment);
+        t.commit();
+
+        //Animation
+    }
 
 
     ////////////////////////////////Private Methods
@@ -113,14 +154,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         return new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 //disable keyboard
                 ((EditText)v).setInputType(InputType.TYPE_NULL);
 
-                //create fragment
-                FragmentTransaction t = fragmentManager.beginTransaction();
-                friendsFragment = new FriendsFragment();
-                t.add(R.id.friends_fragment_container, friendsFragment);
-                t.commit();
+                putFriendsListDown();
 
                 v.onTouchEvent(event);
                 return true;
@@ -162,7 +200,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     * Set Layout weights of yammFrameLayout and streamListView
     * */
 
-    private void setLayoutWeights(float a, float b){
+    private void setYammAndStreamLayoutWeights(float a, float b){
         yammFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, a));
         streamListView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, b));
     }
@@ -182,14 +220,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             yammLayout1.startAnimation(slide_up);
             yammLayout2.setVisibility(LinearLayout.GONE);
             yammLayout1.setVisibility(LinearLayout.VISIBLE);
-            setLayoutWeights(1f,7f);
+            setYammAndStreamLayoutWeights(1f, 7f);
         }
         else{
             yammLayout1.startAnimation(alpha);
             yammLayout2.startAnimation(slide_down);
             yammLayout1.setVisibility(LinearLayout.GONE);
             yammLayout2.setVisibility(LinearLayout.VISIBLE);
-            setLayoutWeights(1f,3f);
+            setYammAndStreamLayoutWeights(1f, 3f);
         }
     }
 

@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -37,6 +36,13 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mainFragment.isFriendsListDown())
+            mainFragment.putFriendsListUp();
+        else
+            goBackHome();
+    }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
