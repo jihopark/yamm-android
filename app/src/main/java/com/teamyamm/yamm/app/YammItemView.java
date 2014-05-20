@@ -19,7 +19,7 @@ public class YammItemView extends LinearLayout {
     private YammItem item;
     private TextView itemNameText, itemSelectedText;
     private boolean selected = false;
-    private TextView searchText;
+    private TextView pickText;
     private FriendsFragment fragment;
     private Context activity;
 
@@ -44,7 +44,7 @@ public class YammItemView extends LinearLayout {
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
 
-        searchText = (TextView) ((Activity)context).findViewById(R.id.yamm_item_search_text);
+        pickText = (TextView) ((Activity)context).findViewById(R.id.friend_pick_edit_text);
 
         itemNameText.setText(i.getName());
 
@@ -78,7 +78,7 @@ public class YammItemView extends LinearLayout {
             itemSelectedText.setVisibility(TextView.GONE);
 
         //Change SearchText
-        if (searchText!=null && activity instanceof MainActivity){
+        if (pickText !=null && activity instanceof MainActivity){
             MainActivity act = ((MainActivity)activity);
             if (selected)
                 act.addItemToSelectedList(item);
@@ -90,7 +90,7 @@ public class YammItemView extends LinearLayout {
                 s = s + getResources().getString(R.string.selected_item_html_tag_start) + i.getName()
                         + getResources().getString(R.string.selected_item_html_tag_end) + " ";
             }
-            searchText.setText(Html.fromHtml(s));
+            pickText.setText(Html.fromHtml(s));
         }
         else{
             Log.e("YammItemView","cannot find yamm item search text");
