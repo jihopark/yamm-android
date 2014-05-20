@@ -120,11 +120,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         friendDown = false;
 
-        //create fragment
-        FragmentTransaction t = fragmentManager.beginTransaction();
-        friendsFragment = new FriendsFragment();
-        t.remove(friendsFragment);
-        t.commit();
+        Log.i("MainFragment","Hide fragment");
+
+        //hide fragment
+        friendsFragmentContainer.setVisibility(RelativeLayout.GONE);
 
         //Animation
         layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,
@@ -138,11 +137,18 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
         friendDown = true;
 
-        //create fragment
-        FragmentTransaction t = fragmentManager.beginTransaction();
-        friendsFragment = new FriendsFragment();
-        t.add(R.id.friends_fragment_container, friendsFragment);
-        t.commit();
+
+
+        if (friendsFragment == null) {
+            Log.i("MainFragment","Create fragment");
+            //create fragment
+            FragmentTransaction t = fragmentManager.beginTransaction();
+            friendsFragment = new FriendsFragment();
+            t.add(R.id.friends_fragment_container, friendsFragment);
+            t.commit();
+        }
+        friendsFragmentContainer.setVisibility(RelativeLayout.VISIBLE);
+
 
         //Animation
         layout.startAnimation(new FriendsListAnimation(layout, BaseActivity.ANIMATION_SPEED,

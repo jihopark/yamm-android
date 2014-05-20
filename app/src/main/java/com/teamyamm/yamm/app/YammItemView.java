@@ -18,7 +18,6 @@ import android.widget.TextView;
 public class YammItemView extends LinearLayout {
     private YammItem item;
     private TextView itemNameText, itemSelectedText;
-    private boolean selected = false;
     private TextView pickText;
     private FriendsFragment fragment;
     private Context activity;
@@ -44,15 +43,20 @@ public class YammItemView extends LinearLayout {
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
 
+        //If item is selected
+        if (isSelected())
+            itemSelectedText.setVisibility(TextView.VISIBLE);
+        else
+            itemSelectedText.setVisibility(TextView.GONE);
+
         pickText = (TextView) ((Activity)context).findViewById(R.id.friend_pick_edit_text);
 
         itemNameText.setText(i.getName());
-
+        Log.i("YammItemView",i.getName() + "created");
         //On Touch Listener that toggles view
         layout.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 toggle();
                 return false;
             }
@@ -62,17 +66,21 @@ public class YammItemView extends LinearLayout {
     public void setItem(YammItem f){
         item = f;
         itemNameText.setText(item.getName());
+        if (isSelected())
+            itemSelectedText.setVisibility(TextView.VISIBLE);
+        else
+            itemSelectedText.setVisibility(TextView.GONE);
     }
 
     public boolean isSelected(){
-        return selected;
+        return item.getSelected();
     }
 
     public void toggle(){
-        selected = !selected;
+        item.toggle();
 
         //Change Visibility of Selected Text
-        if (selected)
+        if (item.getSelected())
             itemSelectedText.setVisibility(TextView.VISIBLE);
         else
             itemSelectedText.setVisibility(TextView.GONE);
@@ -80,7 +88,7 @@ public class YammItemView extends LinearLayout {
         //Change SearchText
         if (pickText !=null && activity instanceof MainActivity){
             MainActivity act = ((MainActivity)activity);
-            if (selected)
+            if (item.getSelected())
                 act.addItemToSelectedList(item);
             else
                 act.removeItemToSelectedList(item);

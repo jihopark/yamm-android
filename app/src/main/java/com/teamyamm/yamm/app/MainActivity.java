@@ -52,7 +52,6 @@ public class MainActivity extends BaseActivity {
         if (selectedYammItems==null){
             selectedYammItems = new Vector<YammItem>();
         }
-        Log.i("MainActivity","sorted");
         Collections.sort(selectedYammItems);
         return selectedYammItems;
     }
@@ -60,7 +59,8 @@ public class MainActivity extends BaseActivity {
     public boolean addItemToSelectedList(YammItem a){
         if (selectedYammItems == null)
             selectedYammItems = new Vector<YammItem>();
-        selectedYammItems.add(a);
+        if (!selectedYammItems.contains(a))
+            selectedYammItems.add(a);
         return true;
     }
 

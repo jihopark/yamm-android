@@ -116,6 +116,15 @@ public class FriendsFragment extends Fragment {
         friendsList.add(new Friend(2,"박지호"));
         friendsList.add(new Friend(3,"이찬"));
         friendsList.add(new Friend(4,"고서우"));
+        friendsList.add(new Friend(5,"방소정"));
+        friendsList.add(new Friend(6,"황준식"));
+        friendsList.add(new Friend(7,"임창균"));
+        friendsList.add(new Friend(8,"한고은"));
+        friendsList.add(new Friend(9,"한지은"));
+        friendsList.add(new Friend(10,"박성호"));
+        friendsList.add(new Friend(11,"박민선"));
+        friendsList.add(new Friend(12,"임아람"));
+        friendsList.add(new Friend(13,"김미정"));
 
         return friendsList;
     }
