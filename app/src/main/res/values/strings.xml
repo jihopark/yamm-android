@@ -79,6 +79,7 @@
     <string name="team_list_empty">Yamm 팀이 없으시네요</string>
     <string name="friends_list_empty">Yamm 친이 없으시네요</string>
     <string name="yamm_item_search_text">이름 또는 그룹명 검색</string>
+    <string name="yamm_item_selected_text">얌</string>
 
     <!-- Yamm Date Spinner -->
     <string-array name="date_spinner_array">

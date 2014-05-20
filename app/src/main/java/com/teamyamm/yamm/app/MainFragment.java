@@ -294,7 +294,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             @Override
             public void onClick(View v) {
                 toggleYammLayoutVisibility();
-                Toast.makeText(getActivity(),"GONE",Toast.LENGTH_SHORT).show();
             }
         };
     }

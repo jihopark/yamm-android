@@ -18,11 +18,6 @@
         android:layout_height="match_parent"
         android:id="@+id/grid_item_selected"
         android:visibility="invisible"
-        android:background="#aa181818"
-        android:textColor="#ffffff"
-        android:text="@string/grid_item_selected_text"
-        android:textSize="16dp"
-        android:gravity="center"/>
-
-
+        style="@style/SelectedText"
+        android:text="@string/grid_item_selected_text"/>
 </FrameLayout>
