@@ -123,6 +123,13 @@ public class FriendsFragment extends Fragment {
     private List<YammItem> loadTeamList(){
         ArrayList<YammItem> teamList = new ArrayList<YammItem>();
 
+
+        teamList.add(new Team(1,"가족"));
+        teamList.add(new Team(2,"얌팀"));
+        teamList.add(new Team(3,"민사12기"));
+        teamList.add(new Team(4,"맛집투어"));
+
+
         return teamList;
     }
 }

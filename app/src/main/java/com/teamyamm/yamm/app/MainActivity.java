@@ -6,13 +6,17 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
 
 public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
     private MainFragment mainFragment;
-
+    private List<YammItem> selectedYammItems;
 
 
     @Override
@@ -44,6 +48,27 @@ public class MainActivity extends BaseActivity {
             goBackHome();
     }
 
+    public List<YammItem> getYammItemSelectedList(){
+        if (selectedYammItems==null){
+            selectedYammItems = new Vector<YammItem>();
+        }
+        Log.i("MainActivity","sorted");
+        Collections.sort(selectedYammItems);
+        return selectedYammItems;
+    }
+
+    public boolean addItemToSelectedList(YammItem a){
+        if (selectedYammItems == null)
+            selectedYammItems = new Vector<YammItem>();
+        selectedYammItems.add(a);
+        return true;
+    }
+
+    public boolean removeItemToSelectedList(YammItem a){
+        if (selectedYammItems == null)
+            return false;
+        return selectedYammItems.remove(a);
+    }
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
 

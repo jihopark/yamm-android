@@ -13,4 +13,7 @@ public class Friend extends YammItem {
         return "";
     }
 
+    public int compareTo(Friend i){
+        return super.compareTo(i);
+    }
 }

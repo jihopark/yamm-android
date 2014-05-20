@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by parkjiho on 5/19/14.
  */
-public class Team extends YammItem {
+public class Team extends YammItem{
     List<Friend> teamList;
 
     public Team(int id, String name){
@@ -25,6 +25,10 @@ public class Team extends YammItem {
 
     public String getProfileImageURL(){
         return "";
+    }
+
+    public int compareTo(Team i){
+        return super.compareTo(i);
     }
 
 }
