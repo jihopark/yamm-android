@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
@@ -19,6 +20,7 @@ public class FriendsListAnimation  extends Animation {
 
     public FriendsListAnimation(View view, int duration, int type, MainFragment f, float kay) {
 
+        setInterpolator(new AccelerateDecelerateInterpolator());
         setDuration(duration);
         mView = view;
         mType = type;

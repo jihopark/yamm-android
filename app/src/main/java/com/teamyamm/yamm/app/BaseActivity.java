@@ -24,7 +24,7 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialog internetAlert;
     public static String baseURL = "http://img.yamm.me";
     public final static float imageRatio = 1.5f;
-    public final static int ANIMATION_SPEED = 100;
+    public final static int ANIMATION_SPEED = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

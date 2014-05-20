@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ public class YammLayoutAnimation  extends Animation {
 
     public YammLayoutAnimation(View view, int duration, int type, MainFragment f, float kay) {
 
+        setInterpolator(new AccelerateDecelerateInterpolator());
         setDuration(duration);
         mView = view;
         mType = type;
@@ -31,11 +33,11 @@ public class YammLayoutAnimation  extends Animation {
         layout2 = (LinearLayout) fragment.getActivity().findViewById(R.id.yamm_layout2);
 
         if(mType == EXPAND) {
-            fragment.setYammAndStreamLayoutWeights(k/2f,1f-(k/2f));
+            fragment.setYammAndStreamLayoutWeights(k / 2f, 1f - (k / 2f));
             layout1.setVisibility(LinearLayout.GONE);
             layout2.setVisibility(LinearLayout.VISIBLE);
         } else {
-            fragment.setYammAndStreamLayoutWeights(k, 1f-k);
+            fragment.setYammAndStreamLayoutWeights(k, 1f - k);
 
         }
 
