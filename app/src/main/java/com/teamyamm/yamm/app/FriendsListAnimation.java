@@ -45,7 +45,7 @@ public class FriendsListAnimation  extends Animation {
                 fragment.setYammAndStreamLayoutWeights(k+(7f/8f-k)*interpolatedTime, 1f - (k+(7f/8f-k)*interpolatedTime) );
                 fragment.setYammLayout2Weights(1f/(2f+5*interpolatedTime), 1f - 2f/(2f+5*interpolatedTime), 1f/(2f+5*interpolatedTime));
             } else {
-                fragment.setYammAndStreamLayoutWeights(1-(k/2)+(1f-3f/2f*k)*interpolatedTime, (k/2)+(1f-3f/2f*k)*interpolatedTime);
+                fragment.setYammAndStreamLayoutWeights(1-(k/2)-(1f-3f/2f*k)*interpolatedTime, (k/2)+(1f-3f/2f*k)*interpolatedTime);
                 fragment.setYammLayout2Weights(1f/(7f-5*interpolatedTime), 1f - 2f/(7f-5*interpolatedTime), 1f/(7f-5*interpolatedTime));
             }
         } else {
