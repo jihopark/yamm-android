@@ -6,7 +6,6 @@ import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,11 +53,10 @@ public class YammItemView extends LinearLayout {
         itemNameText.setText(i.getName());
         Log.i("YammItemView",i.getName() + "created");
         //On Touch Listener that toggles view
-        layout.setOnTouchListener(new OnTouchListener() {
+        layout.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 toggle();
-                return false;
             }
         });
     }
