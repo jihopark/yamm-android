@@ -31,8 +31,8 @@ public class FriendsListAnimation  extends Animation {
             fragment.setYammAndStreamLayoutWeights(k,1f-k);
             fragment.setYammLayout2Weights(1,0,1);
         } else {
-            fragment.setYammAndStreamLayoutWeights(1-k/2f, k/2f);
-            fragment.setYammLayout2Weights(1f/7f, 5f/7f, 1f/7f);
+            fragment.setYammAndStreamLayoutWeights(1, 0);
+            fragment.setYammLayout2Weights(1, 7, 0);
         }
         view.setVisibility(View.VISIBLE);
     }
@@ -42,16 +42,16 @@ public class FriendsListAnimation  extends Animation {
 
         if (interpolatedTime < 1.0f) {
             if(mType == EXPAND) {
-                fragment.setYammAndStreamLayoutWeights(k+(7f/8f-k)*interpolatedTime, 1f - (k+(7f/8f-k)*interpolatedTime) );
-                fragment.setYammLayout2Weights(1f/(2f+5*interpolatedTime), 1f - 2f/(2f+5*interpolatedTime), 1f/(2f+5*interpolatedTime));
+                fragment.setYammAndStreamLayoutWeights(k+ (1f-k)*interpolatedTime, 1f - (k+(1f-k)*interpolatedTime) );
+                fragment.setYammLayout2Weights((1f/8f)*4f/(1+3*interpolatedTime), interpolatedTime*7f/8f*4f/(1+3*interpolatedTime), (1- interpolatedTime)/2f/(1+3*interpolatedTime));
             } else {
-                fragment.setYammAndStreamLayoutWeights(1-(k/2)-(1f-3f/2f*k)*interpolatedTime, (k/2)+(1f-3f/2f*k)*interpolatedTime);
-                fragment.setYammLayout2Weights(1f/(7f-5*interpolatedTime), 1f - 2f/(7f-5*interpolatedTime), 1f/(7f-5*interpolatedTime));
+                fragment.setYammAndStreamLayoutWeights(1f-(1-k)*interpolatedTime, (1-k)*interpolatedTime);
+                fragment.setYammLayout2Weights(1f/8f*4f/(4f-3*interpolatedTime), 7f/8f*(1-interpolatedTime)*4f/(4f-3*interpolatedTime), interpolatedTime*1f/8f*4f/(4f-3*interpolatedTime));
             }
         } else {
             if(mType == EXPAND) {
-                fragment.setYammAndStreamLayoutWeights(1-k/2f, k/2f);
-                fragment.setYammLayout2Weights(1f/7f, 5f/7f, 1f/7f);
+                fragment.setYammAndStreamLayoutWeights(1, 0);
+                fragment.setYammLayout2Weights(1, 7, 0);
             }else{
                 fragment.setYammAndStreamLayoutWeights(k,1f-k);
                 fragment.setYammLayout2Weights(1,0,1);
