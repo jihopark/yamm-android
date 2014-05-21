@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!-- Team View -->
+
+    <!-- searchText deleted for later
 
     <AutoCompleteTextView
         android:layout_width="match_parent"
@@ -13,6 +14,7 @@
         android:completionThreshold="1"
         android:selectAllOnFocus="true"
         android:text="@string/yamm_item_search_text"/>
+      -->
 
     <!-- Yamm Team -->
     <LinearLayout
