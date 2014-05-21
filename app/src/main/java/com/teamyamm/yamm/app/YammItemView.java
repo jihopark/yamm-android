@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -34,23 +35,15 @@ public class YammItemView extends LinearLayout {
 
         activity = context;
 
-        item = i;
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
 
-        //If item is selected
-        if (isSelected())
-            itemSelectedText.setVisibility(TextView.VISIBLE);
-        else
-            itemSelectedText.setVisibility(TextView.GONE);
-
         pickText = (TextView) ((Activity)context).findViewById(R.id.friend_pick_edit_text);
 
-        itemNameText.setText(i.getName());
+        setItem(i);
         Log.i("YammItemView",i.getName() + "created");
         //On Touch Listener that toggles view
         layout.setOnClickListener(new OnClickListener() {
@@ -64,6 +57,7 @@ public class YammItemView extends LinearLayout {
     public void setItem(YammItem f){
         item = f;
         itemNameText.setText(item.getName());
+        itemNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP,getResources().getDimension(R.dimen.yamm_item_text_size));
         if (isSelected())
             itemSelectedText.setVisibility(TextView.VISIBLE);
         else

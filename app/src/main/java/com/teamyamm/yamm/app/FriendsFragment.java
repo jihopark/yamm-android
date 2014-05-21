@@ -11,14 +11,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by parkjiho on 5/19/14.
  */
 public class FriendsFragment extends Fragment {
-    public ListView yammTeamList, yammFriendsList;
-    public YammItemsListAdapter yammFriendsListAdapter, yammTeamListAdapter;
+    public ListView yammItemList;
+    public YammItemsListAdapter yammFriendsListAdapter, yammItemListAdapter;
     public LinearLayout layout, teamLayout, friendsLayout;
 //    public AutoCompleteTextView searchText;
     public GestureDetector detector;
@@ -27,10 +28,8 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         layout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
-        teamLayout = (LinearLayout) layout.findViewById(R.id.yam_team_layout);
-        friendsLayout = (LinearLayout) layout.findViewById(R.id.yam_friends_layout);
-        yammTeamList = (ListView) layout.findViewById(R.id.yamm_team_list);
-        yammFriendsList = (ListView) layout.findViewById(R.id.yamm_friends_list);
+        teamLayout = (LinearLayout) layout.findViewById(R.id.yamm_item_layout);
+        yammItemList = (ListView) layout.findViewById(R.id.yamm_item_list);
 //      searchText = (AutoCompleteTextView) layout.findViewById(R.id.yamm_item_search_text);
 //      searchText Deleted for later
 
@@ -38,8 +37,7 @@ public class FriendsFragment extends Fragment {
         //searchText Deleted for later
 //        setGestureDetector();
 
-        setYammTeamList();
-        setYammFriendsList();
+        setYammItemList();
 
         return layout;
     }
@@ -84,61 +82,43 @@ public class FriendsFragment extends Fragment {
         }
     }*/
 
-    private void setYammTeamList(){
-        TextView tv = (TextView) layout.findViewById(R.id.team_list_empty_text);
+    private void setYammItemList(){
+        TextView tv = (TextView) layout.findViewById(R.id.item_list_empty_text);
 
         //Set Empty TextView
-        tv.setText(getString(R.string.team_list_empty));
-        yammTeamList.setEmptyView(tv);
+        tv.setText(getString(R.string.item_list_empty));
+        yammItemList.setEmptyView(tv);
 
         //Set Team Adapter
-        yammTeamListAdapter = new YammItemsListAdapter(getActivity(),loadTeamList());
-        yammTeamList.setAdapter(yammTeamListAdapter);
+        yammItemListAdapter = new YammItemsListAdapter(getActivity(),loadItemList());
+        yammItemList.setAdapter(yammItemListAdapter);
 
     }
 
-    private void setYammFriendsList(){
-        TextView tv = (TextView) layout.findViewById(R.id.friends_list_empty_text);
-
-        //Set Empty TextView
-        tv.setText(getString(R.string.friends_list_empty));
-        yammFriendsList.setEmptyView(tv);
-
-        //Set Friend Adapter
-        yammFriendsListAdapter = new YammItemsListAdapter(getActivity(),loadFriendsList());
-        yammFriendsList.setAdapter(yammFriendsListAdapter);
-    }
-
-    private List<YammItem> loadFriendsList(){
-        ArrayList<YammItem> friendsList = new ArrayList<YammItem>();
-
-        friendsList.add(new Friend(1,"양영직"));
-        friendsList.add(new Friend(2,"박지호"));
-        friendsList.add(new Friend(3,"이찬"));
-        friendsList.add(new Friend(4,"고서우"));
-        friendsList.add(new Friend(5,"방소정"));
-        friendsList.add(new Friend(6,"황준식"));
-        friendsList.add(new Friend(7,"임창균"));
-        friendsList.add(new Friend(8,"한고은"));
-        friendsList.add(new Friend(9,"한지은"));
-        friendsList.add(new Friend(10,"박성호"));
-        friendsList.add(new Friend(11,"박민선"));
-        friendsList.add(new Friend(12,"임아람"));
-        friendsList.add(new Friend(13,"김미정"));
-
-        return friendsList;
-    }
-
-    private List<YammItem> loadTeamList(){
-        ArrayList<YammItem> teamList = new ArrayList<YammItem>();
+    private List<YammItem> loadItemList(){
+        ArrayList<YammItem> itemList = new ArrayList<YammItem>();
 
 
-        teamList.add(new Team(1,"가족"));
-        teamList.add(new Team(2,"얌팀"));
-        teamList.add(new Team(3,"민사12기"));
-        teamList.add(new Team(4,"맛집투어"));
+        itemList.add(new Team(1,"가족"));
+        itemList.add(new Team(2,"얌팀"));
+        itemList.add(new Team(3,"민사12기"));
+        itemList.add(new Team(4,"맛집투어"));
+        itemList.add(new Friend(1, "양영직"));
+        itemList.add(new Friend(2, "박지호"));
+        itemList.add(new Friend(3, "이찬"));
+        itemList.add(new Friend(4, "고서우"));
+        itemList.add(new Friend(5, "방소정"));
+        itemList.add(new Friend(6, "황준식"));
+        itemList.add(new Friend(7, "임창균"));
+        itemList.add(new Friend(8, "한고은"));
+        itemList.add(new Friend(9, "한지은"));
+        itemList.add(new Friend(10, "박성호"));
+        itemList.add(new Friend(11, "박민선"));
+        itemList.add(new Friend(12, "임아람"));
+        itemList.add(new Friend(13, "김미정"));
 
+        Collections.sort(itemList);
 
-        return teamList;
+        return itemList;
     }
 }
