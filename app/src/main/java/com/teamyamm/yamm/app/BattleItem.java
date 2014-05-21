@@ -60,7 +60,7 @@ public class BattleItem {
 
     //BattleItem.toString = (firstdishitem.id),(seconddishitem.id),(result)
     public String toString(){
-        return getFirst().getId() + "," + getSecond().getId() + "," + getResult();
+        return getFirst().getId() + "." + getSecond().getId() + "." + getResult();
     }
 
 }

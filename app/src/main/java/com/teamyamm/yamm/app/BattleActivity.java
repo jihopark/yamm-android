@@ -182,9 +182,9 @@ public class BattleActivity extends BaseActivity {
 
         for (i=0; i<items.size() - 1 ; i++) {
             BattleItem item = items.get(i);
-            saved = saved + item + ";";
+            saved = saved + item + "_";
         }
-        saved = saved + items.get(i) + "|";
+        saved = saved + items.get(i) + "~";
 
         BaseActivity.putInPref(prefs,getString(R.string.BATTLE_RESULTS),saved);
         Log.v("BattleActivity/saveBattleResults","BattleItems saved" + saved);
