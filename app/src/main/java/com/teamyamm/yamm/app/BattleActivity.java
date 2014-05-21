@@ -174,15 +174,20 @@ public class BattleActivity extends BaseActivity {
     * Returns saved string
     * */
     private String saveBattleResults(){
+        int i;
+
         Log.v("BattleActivity/saveBattleResults", "saveBattleResults Started");
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         String saved = prefs.getString(getString(R.string.BATTLE_RESULTS),"");
 
-        for (BattleItem i : items)
-            saved = saved + i +";";
+        for (i=0; i<items.size() - 1 ; i++) {
+            BattleItem item = items.get(i);
+            saved = saved + item + ";";
+        }
+        saved = saved + items.get(i) + "|";
 
         BaseActivity.putInPref(prefs,getString(R.string.BATTLE_RESULTS),saved);
-        Log.v("BattleActivity/saveBattleResults","BattleItems saved");
+        Log.v("BattleActivity/saveBattleResults","BattleItems saved" + saved);
         return saved;
     }
 
