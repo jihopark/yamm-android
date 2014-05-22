@@ -1,61 +1,90 @@
 package com.applidium.headerlistview;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class SectionAdapter extends BaseAdapter implements OnItemClickListener {
+    private List<List<?>> items;
+    private List<String> headerItems;
+    private int section_n;
+    protected Context context;
+    /*
+    * If two sections
+    * */
+    public SectionAdapter(Context context, List<?> firstSection, List<?> secondSection, List<String> headerItems) {
+        items = new ArrayList<List<?>>();
+        items.add(firstSection);
+        items.add(secondSection);
+        this.context = context;
+        section_n = 2;
+        this.headerItems = headerItems;
+    }
+
+    /*
+    * If n sections
+    * */
+    public SectionAdapter(List<List<?>> items, int n, List<String> headerItems) {
+        this.items = items;
+        this.headerItems = headerItems;
+        section_n = n;
+    }
+
 
     private int mCount = -1;
 
-    public abstract int numberOfSections();
+    public int numberOfSections() {
+        return section_n;
+    }
 
-    public abstract int numberOfRows(int section);
+    public int numberOfRows(int section){
+        return items.get(section).size();
+    }
 
     public abstract View getRowView(int section, int row, View convertView, ViewGroup parent);
 
-    public abstract Object getRowItem(int section, int row);
+    public Object getRowItem(int section, int row){
+        return items.get(section).get(row);
+    }
 
     public boolean hasSectionHeaderView(int section) {
-        return false;
+        return true;
     }
 
-    public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
-        return null;
-    }
+    public abstract View getSectionHeaderView(int section, View convertView, ViewGroup parent);
 
     public Object getSectionHeaderItem(int section) {
-        return null;
-    }
-
-    public int getRowViewTypeCount() {
-        return 1;
-    }
-
-    public int getSectionHeaderViewTypeCount() {
-        return 0;
+        return headerItems.get(section);
     }
 
     /**
      * Must return a value between 0 and getRowViewTypeCount() (excluded)
      */
-    public int getRowItemViewType(int section, int row) {
-        return 0;
+    public int getRowItemViewType(int section, int row) { return 0; }
+
+    public int getRowViewTypeCount() { return 1; }
+
+    public int getSectionHeaderViewTypeCount() {
+            return 0;
     }
 
     /**
      * Must return a value between 0 and getSectionHeaderViewTypeCount() (excluded, if > 0)
      */
-    public int getSectionHeaderItemViewType(int section) {
-        return 0;
-    }
+    public int getSectionHeaderItemViewType(int section) { return 0; }
+
+
 
     @Override
     /**
      * Dispatched to call onRowItemClick
-     */
+    */
     public final void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         onRowItemClick(parent, view, getSection(position), getRowInSection(position), id);
     }

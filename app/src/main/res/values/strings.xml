@@ -74,7 +74,10 @@
     <string name="place_pick_edit_text">현재 위치</string>
 
     <!-- Friends Fragment -->
-    <string name="item_list_empty">Yamm 팀이나 Yamm친 없으시네요</string>
+    <string name="yamm_list_header_1">Yamm팀</string>
+    <string name="yamm_list_header_2">Yamm친</string>
+    <string name="item_team_list_empty">Yamm 팀이 없으시네요</string>
+    <string name="item_friends_list_empty">Yamm 친이 없으시네요</string>
     <string name="yamm_item_search_text">이름 또는 그룹명 검색</string>
     <string name="yamm_item_selected_text">얌</string>
     <string name="selected_item_html_tag_start"><Data><![CDATA[ <b> ]]> </Data></string>
