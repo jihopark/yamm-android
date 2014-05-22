@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/HeaderListView/HeaderListView.iml" filepath="$PROJECT_DIR$/HeaderListView/HeaderListView.iml" />
       <module fileurl="file://$PROJECT_DIR$/Papreeca.iml" filepath="$PROJECT_DIR$/Papreeca.iml" />
       <module fileurl="file://$PROJECT_DIR$/Papreeca.iml" filepath="$PROJECT_DIR$/Papreeca.iml" />
       <module fileurl="file://$PROJECT_DIR$/Yamm.iml" filepath="$PROJECT_DIR$/Yamm.iml" />
