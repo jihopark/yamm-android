@@ -7,12 +7,8 @@ public abstract class YammItem implements Comparable<YammItem> {
     protected int id;
     protected String name;
     private boolean selected = false;
-    private boolean isDummy = false;
     public YammItem(int id){
-        //Dummy item
-        if (id == -1){
-            isDummy = true;
-        }
+        this.id = id;
     }
 
     public YammItem(int id, String name){
@@ -22,7 +18,7 @@ public abstract class YammItem implements Comparable<YammItem> {
     public int getID(){ return id; }
     public String getName(){ return name; }
     public abstract String getProfileImageURL();
-
+    public boolean isDummy(){ return id==-1; }
     /*
     * Put Team Objects first and then Friend
     * */

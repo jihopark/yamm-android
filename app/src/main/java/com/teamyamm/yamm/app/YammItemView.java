@@ -48,11 +48,12 @@ public class YammItemView extends LinearLayout {
 
         //On Touch Listener that toggles view
         //if dummy item, make non selectable
-        if (item.id != -1)
-            layout.setOnClickListener(new OnClickListener() {
+        layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggle();
+                if (!item.isDummy()) {
+                    toggle();
+                }
             }
         });
     }
@@ -61,6 +62,7 @@ public class YammItemView extends LinearLayout {
         item = f;
         itemNameText.setText(item.getName());
         itemNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP,getResources().getDimension(R.dimen.yamm_item_text_size));
+
         if (isSelected())
             itemSelectedText.setVisibility(TextView.VISIBLE);
         else

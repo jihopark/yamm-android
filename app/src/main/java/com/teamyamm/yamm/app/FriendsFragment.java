@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -158,7 +157,6 @@ public class FriendsFragment extends Fragment {
             @Override
             public View getRowView(int section, int row, View convertView, ViewGroup parent) {
                 YammItemView view = null;
-                Log.i("SectionAdapter","adapter");
                 if (convertView == null)
                     view = new YammItemView(context, (YammItem) getRowItem(section,row));
                 else{
