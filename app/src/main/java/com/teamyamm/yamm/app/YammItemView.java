@@ -45,8 +45,11 @@ public class YammItemView extends LinearLayout {
 
         setItem(i);
         Log.i("YammItemView",i.getName() + "created");
+
         //On Touch Listener that toggles view
-        layout.setOnClickListener(new OnClickListener() {
+        //if dummy item, make non selectable
+        if (item.id != -1)
+            layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggle();

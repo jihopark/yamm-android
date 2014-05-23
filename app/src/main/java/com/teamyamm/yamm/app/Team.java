@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class Team extends YammItem{
     List<Friend> teamList;
+    public Team(int id){
+        super(id);
+        this.name = "Yamm팀이 없으시네요";
+    }
 
     public Team(int id, String name){
         super(id,name);
@@ -18,7 +22,6 @@ public class Team extends YammItem{
         super(id,name);
         teamList = list;
     }
-
     public void setName(String s){
         name = s;
     }

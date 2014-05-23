@@ -5,6 +5,11 @@ package com.teamyamm.yamm.app;
  */
 public class Friend extends YammItem {
 
+    public Friend(int id){
+        super(id);
+        this.name = "Yamm친이 없으시네요";
+    }
+
     public Friend(int id, String name){
         super(id,name);
     }
@@ -16,4 +21,5 @@ public class Friend extends YammItem {
     public int compareTo(Friend i){
         return super.compareTo(i);
     }
+
 }

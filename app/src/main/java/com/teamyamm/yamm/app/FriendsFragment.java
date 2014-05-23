@@ -37,7 +37,7 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         layout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
-        yammItemList = (ListView) layout.findViewById(R.id.yamm_item_list);
+//        yammItemList = (ListView) layout.findViewById(R.id.yamm_item_list);
 
         headerView = new HeaderListView(getActivity());
         yammItemLayout = (RelativeLayout) layout.findViewById(R.id.yamm_item_list_layout);
@@ -95,7 +95,7 @@ public class FriendsFragment extends Fragment {
     }*/
 
     private void setYammItemList(){
-        TextView tv = (TextView) layout.findViewById(R.id.item_list_empty_text);
+     /*   TextView tv = (TextView) layout.findViewById(R.id.item_list_empty_text);
 
         //Set Empty TextView
         tv.setText(getString(R.string.item_friends_list_empty));
@@ -103,7 +103,7 @@ public class FriendsFragment extends Fragment {
 
         //Set Team Adapter
         yammItemListAdapter = new YammItemsListAdapter(getActivity(),loadItemList());
-        yammItemList.setAdapter(yammItemListAdapter);
+        yammItemList.setAdapter(yammItemListAdapter);*/
 
         /////////////////////////////////////////////////////////
         ArrayList<YammItem> teamList = new ArrayList<YammItem>();
@@ -114,7 +114,13 @@ public class FriendsFragment extends Fragment {
         teamList.add(new Team(2, "얌팀"));
         teamList.add(new Team(3, "민사12기"));
         teamList.add(new Team(4, "맛집투어"));
-        friendList.add(new Friend(1, "양영직"));
+        teamList.add(new Team(4, "맛집투어"));
+        teamList.add(new Team(5, "맛집투어"));
+        teamList.add(new Team(6, "맛집투어"));
+        teamList.add(new Team(7, "맛집투어"));
+        teamList.add(new Team(8, "맛집투어"));
+
+        /*friendList.add(new Friend(1, "양영직"));
         friendList.add(new Friend(2, "박지호"));
         friendList.add(new Friend(3, "김홍"));
         friendList.add(new Friend(4, "고서우"));
@@ -126,8 +132,15 @@ public class FriendsFragment extends Fragment {
         friendList.add(new Friend(10, "박성호"));
         friendList.add(new Friend(11, "박민선"));
         friendList.add(new Friend(12, "임아람"));
-        friendList.add(new Friend(13, "김미정"));
-        Collections.sort(friendList);
+        friendList.add(new Friend(13, "김미정"));*/
+        //Collections.sort(friendList);
+
+        if (teamList.size() == 0){
+            teamList.add(new Team(-1));
+        }
+        else if (friendList.size() == 0)
+            friendList.add(new Friend(-1));
+
         headerList.add(getString(R.string.yamm_list_header_1));
         headerList.add(getString(R.string.yamm_list_header_2));
 
@@ -160,20 +173,10 @@ public class FriendsFragment extends Fragment {
             public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
                 if (convertView == null)
                     convertView = getActivity().getLayoutInflater()
-                            .inflate(getActivity().getResources().getLayout(android.R.layout.simple_list_item_2), null);
+                            .inflate(getActivity().getResources().getLayout(android.R.layout.simple_list_item_1), null);
 
                 //Set Main Text
                 ((TextView) convertView.findViewById(android.R.id.text1)).setText(getSectionHeaderItem(section).toString());
-
-                //Set Sub Text if empty
-
-                if (section == 0 && numberOfRows(section)==0) {
-                    ((TextView) convertView.findViewById(android.R.id.text2))
-                            .setText(getActivity().getResources().getString(R.string.item_team_list_empty));
-                }
-                else if (section == 1 && numberOfRows(section)==0)
-                    ((TextView) convertView.findViewById(android.R.id.text2))
-                            .setText(getActivity().getResources().getString(R.string.item_friends_list_empty));
 
                 //must set BackGround Color
                 convertView.setBackgroundColor(Color.WHITE);

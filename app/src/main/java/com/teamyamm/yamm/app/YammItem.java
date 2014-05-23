@@ -7,7 +7,13 @@ public abstract class YammItem implements Comparable<YammItem> {
     protected int id;
     protected String name;
     private boolean selected = false;
-
+    private boolean isDummy = false;
+    public YammItem(int id){
+        //Dummy item
+        if (id == -1){
+            isDummy = true;
+        }
+    }
 
     public YammItem(int id, String name){
         this.id = id;
