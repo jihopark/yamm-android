@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+
 
 /**
  * Created by parkjiho on 5/7/14.
@@ -34,6 +37,8 @@ public class BaseActivity extends ActionBarActivity {
 
         //Set Dialog for Internet Connection
         setInternetConnectionAlert();
+        setActionBarTransparent();
+
     }
 
 
@@ -45,6 +50,7 @@ public class BaseActivity extends ActionBarActivity {
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
     }
+
     /*
     * returns screen width
     * */
@@ -63,7 +69,13 @@ public class BaseActivity extends ActionBarActivity {
 
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
-
+    /*
+    * Changes Action Bar Transparent
+    * */
+    protected void setActionBarTransparent(){
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0x64000000));
+    }
 
     /*
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
