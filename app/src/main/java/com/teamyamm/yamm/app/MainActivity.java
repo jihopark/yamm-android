@@ -15,7 +15,7 @@ public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
-    private MainFragment mainFragment;
+    private NewMainFragment mainFragment;
     private List<YammItem> selectedYammItems;
 
 
@@ -24,28 +24,25 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.v("MainActivity/onCreate", "onCreate started");
+        Log.i("MainActivity/onCreate", "onCreate started");
 
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         leftDrawer = (ListView) findViewById(R.id.left_drawer);
 
-        Log.v("MainActivity/onCreate","Drawer Initialized");
+        Log.i("MainActivity/onCreate","Drawer Initialized");
         // Set the adapter for the list view
         leftDrawer.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.left_drawer_item, navMenuTitles));
 
         //Set up Main Fragment
-        //mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
+        mainFragment = (NewMainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
 
     }
 
     @Override
     public void onBackPressed() {
-        if (mainFragment.isFriendsListDown())
-            mainFragment.putFriendsListUp();
-        else
-            goBackHome();
+        goBackHome();
     }
 
     public List<YammItem> getYammItemSelectedList(){
