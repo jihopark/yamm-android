@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
                 R.layout.left_drawer_item, navMenuTitles));
 
         //Set up Main Fragment
-        mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+        //mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
 
     }
 
