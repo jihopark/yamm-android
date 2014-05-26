@@ -10,8 +10,12 @@ import android.widget.RelativeLayout;
  * Created by parkjiho on 5/26/14.
  */
 public class FriendActivity extends BaseActivity {
-    FriendsFragment friendsFragment;
-    RelativeLayout friendFragmentContainer;
+    public final static String FRIEND_FRAGMENT = "ff";
+    public final static String FRIEND_LIST = "fl";
+
+    private FriendsFragment friendsFragment;
+    private RelativeLayout friendFragmentContainer;
+
 
 
     @Override
@@ -22,7 +26,7 @@ public class FriendActivity extends BaseActivity {
         friendsFragment = new FriendsFragment();
 
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-        tact.add(R.id.friends_fragment_container, friendsFragment, "ff");
+        tact.add(R.id.friends_fragment_container, friendsFragment, FRIEND_FRAGMENT);
         tact.commit();
     }
 
@@ -33,8 +37,8 @@ public class FriendActivity extends BaseActivity {
 
     private void finishActivity(){
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("list",friendsFragment.getSelectedItems().toString());
-        setResult(BaseActivity.SUCCESS_RESULT_CODE,resultIntent);
+        resultIntent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, friendsFragment.selectedItemsInteger);
+        setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
         finish();
     }
 

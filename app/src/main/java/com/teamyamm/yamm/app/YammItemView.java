@@ -36,7 +36,7 @@ public class YammItemView extends LinearLayout {
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
 
-        fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag("ff");
+        fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag(FriendActivity.FRIEND_FRAGMENT);
 
 
         setItem(i);

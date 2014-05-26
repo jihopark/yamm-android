@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by parkjiho on 5/24/14.
  */
@@ -20,6 +22,7 @@ public class NewMainFragment extends Fragment {
     private FrameLayout main_layout;
     private ImageView main_imageview;
     private Button friendPickButton;
+    private ArrayList<Integer> selectedFriendList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +50,13 @@ public class NewMainFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
+
+                selectedFriendList = new ArrayList<Integer>();
+                selectedFriendList.add(1);
+                selectedFriendList.add(2);
+
+
+                intent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, selectedFriendList); //send previously selected friend list
                 startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
                 Log.i("MainFragment/onClick","FriendActivity called");
             }
@@ -61,7 +71,12 @@ public class NewMainFragment extends Fragment {
             Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
 
             friendPickButton.setEnabled(true);
-            Toast.makeText(getActivity(),"Got Back from Friend " + data.getStringExtra("list"), Toast.LENGTH_LONG).show();
+
+            //Get Friend List
+
+            selectedFriendList = data.getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+
+            Toast.makeText(getActivity(),"Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
         }
     }
 

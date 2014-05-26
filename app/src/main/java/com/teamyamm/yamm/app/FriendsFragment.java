@@ -3,6 +3,7 @@ package com.teamyamm.yamm.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,12 @@ import java.util.List;
  */
 public class FriendsFragment extends Fragment {
 
-    RelativeLayout yammItemLayout;
-    List<YammItem> selectedItems;
-    public HeaderListView headerView;
+    private RelativeLayout yammItemLayout;
+    public ArrayList<YammItem> selectedItems;
+    public ArrayList<Integer> selectedItemsInteger;
 
+    public HeaderListView headerView;
+    public List<YammItem> teamList, friendList;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         yammItemLayout = (RelativeLayout) inflater.inflate(R.layout.friends_fragment, container, false);
@@ -53,13 +56,21 @@ public class FriendsFragment extends Fragment {
 
 
     private void setSelectedItems(){
+        selectedItemsInteger = getActivity().getIntent().getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+
+        Log.i("FriendFragment/setSelectedItems","Previous List " + selectedItemsInteger);
+
+        if (selectedItemsInteger!=null){
+
+        }
         selectedItems = new ArrayList<YammItem>();
+
     }
 
     private void setYammItemList(){
         ArrayList<String> headerList = new ArrayList<String>();
-        List<YammItem> teamList = loadTeamList();
-        List<YammItem> friendList = loadFriendList();
+        teamList = loadTeamList();
+        friendList = loadFriendList();
 
         //Adding Dummy Item if size is 0 for any list
 
@@ -136,15 +147,15 @@ public class FriendsFragment extends Fragment {
 
     private List<YammItem> loadTeamList(){
         ArrayList<YammItem> teamList = new ArrayList<YammItem>();
-        teamList.add(new Team(1, "가족"));
-        teamList.add(new Team(2, "얌팀"));
-        teamList.add(new Team(3, "민사12기"));
-        teamList.add(new Team(4, "맛집투어"));
-        teamList.add(new Team(4, "맛집투어"));
-        teamList.add(new Team(5, "맛집투어"));
-        teamList.add(new Team(6, "맛집투어"));
-        teamList.add(new Team(7, "맛집투어"));
-        teamList.add(new Team(8, "맛집투어"));
+        teamList.add(new Team(14, "가족"));
+        teamList.add(new Team(15, "얌팀"));
+        teamList.add(new Team(16, "민사12기"));
+        teamList.add(new Team(17, "맛집투어"));
+        teamList.add(new Team(18, "맛집투어"));
+        teamList.add(new Team(19, "맛집투어"));
+        teamList.add(new Team(20, "맛집투어"));
+        teamList.add(new Team(21, "맛집투어"));
+        teamList.add(new Team(22, "맛집투어"));
 
         return teamList;
     }
