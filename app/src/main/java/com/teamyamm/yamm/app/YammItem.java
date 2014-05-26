@@ -49,4 +49,8 @@ public abstract class YammItem implements Comparable<YammItem> {
     public boolean getSelected(){
         return selected;
     }
+
+    public String toString(){
+        return getID()+ ":" + getName();
+    }
 }

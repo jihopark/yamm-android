@@ -33,9 +33,9 @@ public class FriendsFragment extends Fragment {
         yammItemLayout = (RelativeLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
         headerView = new HeaderListView(getActivity());
+        setSelectedItems();
         setYammItemList();
         yammItemLayout.addView(headerView);
-        setSelectedItems();
 
         return yammItemLayout;
     }
@@ -43,10 +43,12 @@ public class FriendsFragment extends Fragment {
     public void addSelectedItem(YammItem yammItem){
         if (!selectedItems.contains(yammItem)){
             selectedItems.add(yammItem);
+            selectedItemsInteger.add(yammItem.getID());
         }
     }
 
     public boolean removeSelectedItem(YammItem yammItem){
+        selectedItemsInteger.remove((Integer)yammItem.getID());
         return selectedItems.remove(yammItem);
     }
 
@@ -60,9 +62,6 @@ public class FriendsFragment extends Fragment {
 
         Log.i("FriendFragment/setSelectedItems","Previous List " + selectedItemsInteger);
 
-        if (selectedItemsInteger!=null){
-
-        }
         selectedItems = new ArrayList<YammItem>();
 
     }
@@ -142,6 +141,15 @@ public class FriendsFragment extends Fragment {
         friendList.add(new Friend(13, "김미정"));
         Collections.sort(friendList);
 
+        //Check for previously selected items
+        for (YammItem i : friendList){
+            if (selectedItemsInteger.contains(i.getID())) {
+                i.setSelected(true);
+                if (!selectedItems.contains(i))
+                    selectedItems.add(i);
+                Log.i("FriendsFragment",i.getName()+" previously selected");
+            }
+        }
         return friendList;
     }
 
@@ -156,6 +164,16 @@ public class FriendsFragment extends Fragment {
         teamList.add(new Team(20, "맛집투어"));
         teamList.add(new Team(21, "맛집투어"));
         teamList.add(new Team(22, "맛집투어"));
+
+        //Check for previously selected items
+        for (YammItem i : teamList){
+            if (selectedItemsInteger.contains(i.getID())) {
+                i.setSelected(true);
+                if (!selectedItems.contains(i))
+                    selectedItems.add(i);
+                Log.i("FriendsFragment",i.getName()+" previously selected ");
+            }
+        }
 
         return teamList;
     }

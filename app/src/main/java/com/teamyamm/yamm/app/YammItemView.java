@@ -87,6 +87,7 @@ public class YammItemView extends LinearLayout {
                 fragment.addSelectedItem(item);
             else
                 fragment.removeSelectedItem(item);
+            Log.i("YammItemView",fragment.getSelectedItems()+"");
         }
     }
 }

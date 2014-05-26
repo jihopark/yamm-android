@@ -22,7 +22,7 @@ public class NewMainFragment extends Fragment {
     private FrameLayout main_layout;
     private ImageView main_imageview;
     private Button friendPickButton;
-    private ArrayList<Integer> selectedFriendList;
+    private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,11 +50,6 @@ public class NewMainFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
-
-                selectedFriendList = new ArrayList<Integer>();
-                selectedFriendList.add(1);
-                selectedFriendList.add(2);
-
 
                 intent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, selectedFriendList); //send previously selected friend list
                 startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
