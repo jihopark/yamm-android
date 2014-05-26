@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -83,7 +82,7 @@ public class YammItemView extends LinearLayout {
             itemSelectedText.setVisibility(TextView.GONE);
 
         //Change SearchText
-        if (pickText !=null && activity instanceof MainActivity){
+       /* if (pickText !=null && activity instanceof MainActivity){
             MainActivity act = ((MainActivity)activity);
             if (item.getSelected())
                 act.addItemToSelectedList(item);
@@ -99,6 +98,6 @@ public class YammItemView extends LinearLayout {
         }
         else{
             Log.e("YammItemView","cannot find yamm item search text");
-        }
+        }*/
     }
 }

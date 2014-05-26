@@ -37,7 +37,6 @@ public class BaseActivity extends ActionBarActivity {
 
         //Set Dialog for Internet Connection
         setInternetConnectionAlert();
-        setActionBarTransparent();
 
     }
 

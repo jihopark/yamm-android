@@ -6,9 +6,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 
 public class MainActivity extends BaseActivity {
@@ -22,7 +20,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActionBarTransparent();
         setContentView(R.layout.activity_main);
+
 
         Log.i("MainActivity/onCreate", "onCreate started");
 
@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity {
         //Set up Main Fragment
         mainFragment = (NewMainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
 
+        goToActivity(FriendActivity.class);
     }
 
     @Override
@@ -45,27 +46,6 @@ public class MainActivity extends BaseActivity {
         goBackHome();
     }
 
-    public List<YammItem> getYammItemSelectedList(){
-        if (selectedYammItems==null){
-            selectedYammItems = new Vector<YammItem>();
-        }
-        Collections.sort(selectedYammItems);
-        return selectedYammItems;
-    }
-
-    public boolean addItemToSelectedList(YammItem a){
-        if (selectedYammItems == null)
-            selectedYammItems = new Vector<YammItem>();
-        if (!selectedYammItems.contains(a))
-            selectedYammItems.add(a);
-        return true;
-    }
-
-    public boolean removeItemToSelectedList(YammItem a){
-        if (selectedYammItems == null)
-            return false;
-        return selectedYammItems.remove(a);
-    }
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
 

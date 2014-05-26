@@ -5,41 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- searchText deleted for later
-
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/yamm_item_search_text"
-        android:completionThreshold="1"
-        android:selectAllOnFocus="true"
-        android:text="@string/yamm_item_search_text"/>
-      -->
-
     <!-- Yamm Item List-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/yamm_item_list_layout"/>
 
-<!--
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/yamm_item_layout">
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/yamm_item_list"
-            android:visibility="gone"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:id="@+id/item_list_empty_text"
-            />
-    </LinearLayout>
-
-    -->
 </LinearLayout>
