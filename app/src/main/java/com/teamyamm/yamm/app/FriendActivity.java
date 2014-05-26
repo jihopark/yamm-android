@@ -22,7 +22,7 @@ public class FriendActivity extends BaseActivity {
         friendsFragment = new FriendsFragment();
 
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-        tact.add(R.id.friends_fragment_container, friendsFragment);
+        tact.add(R.id.friends_fragment_container, friendsFragment, "ff");
         tact.commit();
     }
 
@@ -33,6 +33,7 @@ public class FriendActivity extends BaseActivity {
 
     private void finishActivity(){
         Intent resultIntent = new Intent();
+        resultIntent.putExtra("list",friendsFragment.getSelectedItems().toString());
         setResult(BaseActivity.SUCCESS_RESULT_CODE,resultIntent);
         finish();
     }

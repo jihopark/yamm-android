@@ -1,6 +1,5 @@
 package com.teamyamm.yamm.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,15 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+
 /**
  * Created by parkjiho on 5/19/14.
  */
 public class YammItemView extends LinearLayout {
     private YammItem item;
     private TextView itemNameText, itemSelectedText;
-    private TextView pickText;
     private FriendsFragment fragment;
-    private Context activity;
 
     public YammItemView(Context context) {
         super(context);
@@ -32,15 +30,14 @@ public class YammItemView extends LinearLayout {
     public YammItemView(Context context, YammItem i) {
         super(context);
 
-        activity = context;
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
 
-        pickText = (TextView) ((Activity)context).findViewById(R.id.friend_pick_edit_text);
+        fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag("ff");
+
 
         setItem(i);
         Log.i("YammItemView",i.getName() + "created");
@@ -81,23 +78,15 @@ public class YammItemView extends LinearLayout {
         else
             itemSelectedText.setVisibility(TextView.GONE);
 
-        //Change SearchText
-       /* if (pickText !=null && activity instanceof MainActivity){
-            MainActivity act = ((MainActivity)activity);
-            if (item.getSelected())
-                act.addItemToSelectedList(item);
-            else
-                act.removeItemToSelectedList(item);
-
-            String s = "";
-            for (YammItem i : act.getYammItemSelectedList()){
-                s = s + getResources().getString(R.string.selected_item_html_tag_start) + i.getName()
-                        + getResources().getString(R.string.selected_item_html_tag_end) + " ";
-            }
-            pickText.setText(Html.fromHtml(s));
+        //Put Selected Item to List
+        if (fragment == null){
+            Log.e("YammItemView/constructor","Cannot find friendfragment");
         }
         else{
-            Log.e("YammItemView","cannot find yamm item search text");
-        }*/
+            if (item.getSelected())
+                fragment.addSelectedItem(item);
+            else
+                fragment.removeSelectedItem(item);
+        }
     }
 }

@@ -61,7 +61,7 @@ public class NewMainFragment extends Fragment {
             Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
 
             friendPickButton.setEnabled(true);
-            Toast.makeText(getActivity(),"Got Back from Friend " + resultCode, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Got Back from Friend " + data.getStringExtra("list"), Toast.LENGTH_LONG).show();
         }
     }
 

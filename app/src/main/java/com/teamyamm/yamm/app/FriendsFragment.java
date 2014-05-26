@@ -22,7 +22,7 @@ import java.util.List;
 public class FriendsFragment extends Fragment {
 
     RelativeLayout yammItemLayout;
-
+    List<YammItem> selectedItems;
     public HeaderListView headerView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,14 +30,31 @@ public class FriendsFragment extends Fragment {
         yammItemLayout = (RelativeLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
         headerView = new HeaderListView(getActivity());
-
-
         setYammItemList();
         yammItemLayout.addView(headerView);
+        setSelectedItems();
 
         return yammItemLayout;
     }
 
+    public void addSelectedItem(YammItem yammItem){
+        if (!selectedItems.contains(yammItem)){
+            selectedItems.add(yammItem);
+        }
+    }
+
+    public boolean removeSelectedItem(YammItem yammItem){
+        return selectedItems.remove(yammItem);
+    }
+
+    public List<YammItem> getSelectedItems(){
+        return selectedItems;
+    }
+
+
+    private void setSelectedItems(){
+        selectedItems = new ArrayList<YammItem>();
+    }
 
     private void setYammItemList(){
         ArrayList<String> headerList = new ArrayList<String>();
