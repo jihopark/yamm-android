@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -11,6 +12,8 @@ import java.util.List;
 
 
 public class MainActivity extends BaseActivity {
+    public final static String MAIN_FRAGMENT = "mf";
+
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
@@ -37,7 +40,10 @@ public class MainActivity extends BaseActivity {
                 R.layout.left_drawer_item, navMenuTitles));
 
         //Set up Main Fragment
-        mainFragment = (NewMainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
+        mainFragment = new NewMainFragment();
+        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+        tact.add(R.id.main_content_frame, mainFragment, MAIN_FRAGMENT);
+        tact.commit();
     }
 
     @Override

@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,12 +20,18 @@ import java.util.ArrayList;
 /**
  * Created by parkjiho on 5/24/14.
  */
-public class NewMainFragment extends Fragment {
+public class NewMainFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
     private FrameLayout main_layout;
     private ImageView imageOne, imageTwo;
     private int currentImage = 1;
+
     private Button friendPickButton, nextButton;
+    private Spinner datePickSpinner;
+    public ArrayAdapter<CharSequence> spinnerAdapter;
+    public YammDatePickerFragment datePickerFragment;
+
+
     private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,13 +41,38 @@ public class NewMainFragment extends Fragment {
         main_layout = (FrameLayout) inflater.inflate(R.layout.new_main_fragment, container, false);
         friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
         nextButton = (Button) main_layout.findViewById(R.id.next_button);
+        datePickSpinner = (Spinner) main_layout.findViewById(R.id.date_pick_spinner);
 
         setYammImageView();
         setFriendPickButton();
         setNextButton();
+        setDatePickSpinner();
 
         return main_layout;
     }
+
+    private void setDatePickSpinner(){
+        spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        datePickSpinner.setAdapter(spinnerAdapter);
+        datePickSpinner.setOnItemSelectedListener(this);
+    }
+
+    /*
+    * For implementing AdapterView.OnItemSelectedListener
+    * For Date Pick Spinner
+    * */
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
+            datePickerFragment = new YammDatePickerFragment();
+            datePickerFragment.show(getChildFragmentManager(), "timePicker");
+        }
+    }
+    public void onNothingSelected(AdapterView<?> parent) { }
+
 
     private void setYammImageView(){
         imageOne = (ImageView) main_layout.findViewById(R.id.main_image_view_one);
