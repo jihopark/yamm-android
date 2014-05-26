@@ -20,8 +20,9 @@ import java.util.ArrayList;
 public class NewMainFragment extends Fragment {
     private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
     private FrameLayout main_layout;
-    private ImageView main_imageview;
-    private Button friendPickButton;
+    private ImageView imageOne, imageTwo;
+    private int currentImage = 1;
+    private Button friendPickButton, nextButton;
     private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,18 +31,53 @@ public class NewMainFragment extends Fragment {
 
         main_layout = (FrameLayout) inflater.inflate(R.layout.new_main_fragment, container, false);
         friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
+        nextButton = (Button) main_layout.findViewById(R.id.next_button);
 
         setYammImageView();
         setFriendPickButton();
+        setNextButton();
 
         return main_layout;
     }
 
     private void setYammImageView(){
-        main_imageview = (ImageView) main_layout.findViewById(R.id.main_image_view);
-        main_imageview.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.example));
-        main_imageview.setAdjustViewBounds(true);
-        main_imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageOne = (ImageView) main_layout.findViewById(R.id.main_image_view_one);
+        imageOne.setAdjustViewBounds(true);
+        imageOne.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageTwo = (ImageView) main_layout.findViewById(R.id.main_image_view_two);
+        imageTwo.setAdjustViewBounds(true);
+        imageTwo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageTwo.setVisibility(View.GONE);
+
+        imageOne.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.example2));
+        imageTwo.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.example));
+    }
+
+    private void setNextButton(){
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentImage == 1){
+                    imageOne.setVisibility(View.GONE);
+                    imageTwo.setVisibility(View.VISIBLE);
+                    loadNextImage();
+                    currentImage = 2;
+                }
+                else{
+                    imageTwo.setVisibility(View.GONE);
+                    imageOne.setVisibility(View.VISIBLE);
+                    loadNextImage();
+                    currentImage = 1;
+                }
+            }
+        });
+    }
+
+    /*
+    * Loads next image on main imageview
+    * */
+    private void loadNextImage(){
+
     }
 
     private void setFriendPickButton(){
@@ -68,7 +104,6 @@ public class NewMainFragment extends Fragment {
             friendPickButton.setEnabled(true);
 
             //Get Friend List
-
             selectedFriendList = data.getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
 
             Toast.makeText(getActivity(),"Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
