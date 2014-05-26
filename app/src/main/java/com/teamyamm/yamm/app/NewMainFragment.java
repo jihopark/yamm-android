@@ -1,30 +1,35 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * Created by parkjiho on 5/24/14.
  */
 public class NewMainFragment extends Fragment {
-    FrameLayout main_layout;
-    ImageView main_imageview;
-    Spinner yammDateSpinner;
+    private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
+    private FrameLayout main_layout;
+    private ImageView main_imageview;
+    private Button friendPickButton;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("MainFragment/onCreateView", "onCreateView started");
 
         main_layout = (FrameLayout) inflater.inflate(R.layout.new_main_fragment, container, false);
+        friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
 
         setYammImageView();
+        setFriendPickButton();
 
         return main_layout;
     }
@@ -35,4 +40,29 @@ public class NewMainFragment extends Fragment {
         main_imageview.setAdjustViewBounds(true);
         main_imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
+
+    private void setFriendPickButton(){
+        friendPickButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendActivity.class);
+                v.setEnabled(false); //To prevent double fire
+                startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
+                Log.i("MainFragment/onClick","FriendActivity called");
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FRIEND_ACTIVITY_REQUEST_CODE){
+            Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
+
+            friendPickButton.setEnabled(true);
+            Toast.makeText(getActivity(),"Got Back from Friend " + resultCode, Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.RelativeLayout;
@@ -24,4 +25,16 @@ public class FriendActivity extends BaseActivity {
         tact.add(R.id.friends_fragment_container, friendsFragment);
         tact.commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity();
+    }
+
+    private void finishActivity(){
+        Intent resultIntent = new Intent();
+        setResult(BaseActivity.SUCCESS_RESULT_CODE,resultIntent);
+        finish();
+    }
+
 }

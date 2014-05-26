@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -37,13 +38,16 @@ public class MainActivity extends BaseActivity {
 
         //Set up Main Fragment
         mainFragment = (NewMainFragment) getSupportFragmentManager().findFragmentById(R.id.new_main_fragment);
-
-        goToActivity(FriendActivity.class);
     }
 
     @Override
     public void onBackPressed() {
         goBackHome();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////

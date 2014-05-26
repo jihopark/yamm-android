@@ -28,6 +28,8 @@ public class BaseActivity extends ActionBarActivity {
     public static String baseURL = "http://img.yamm.me";
     public final static float imageRatio = 1.5f;
     public final static int ANIMATION_SPEED = 100;
+    public final static int SUCCESS_RESULT_CODE = 200;
+    public final static int FAILURE_RESULT_CODE = 400;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
