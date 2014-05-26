@@ -3,7 +3,9 @@ package com.teamyamm.yamm.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.RelativeLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 
 /**
@@ -14,9 +16,6 @@ public class FriendActivity extends BaseActivity {
     public final static String FRIEND_LIST = "fl";
 
     private FriendsFragment friendsFragment;
-    private RelativeLayout friendFragmentContainer;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +31,32 @@ public class FriendActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        finishActivity();
+        Intent resultIntent = new Intent();
+        setResult(BaseActivity.FAILURE_RESULT_CODE, resultIntent);
+        finish();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.friend_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.friend_pick_confirm_button:
+                finishActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
     private void finishActivity(){
         Intent resultIntent = new Intent();

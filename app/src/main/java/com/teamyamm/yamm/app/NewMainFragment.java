@@ -137,10 +137,12 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
 
             friendPickButton.setEnabled(true);
 
-            //Get Friend List
-            selectedFriendList = data.getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+            if (resultCode == BaseActivity.SUCCESS_RESULT_CODE) {
+                //Get Friend List
+                selectedFriendList = data.getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
 
-            Toast.makeText(getActivity(),"Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
