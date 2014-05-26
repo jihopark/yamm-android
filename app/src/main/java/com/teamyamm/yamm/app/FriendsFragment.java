@@ -56,11 +56,17 @@ public class FriendsFragment extends Fragment {
         return selectedItems;
     }
 
+    public void setConfirmButtonEnabled(boolean b){
+        ((FriendActivity)getActivity()).setConfirmButtonEnabled(b);
+    }
 
     private void setSelectedItems(){
         selectedItemsInteger = getActivity().getIntent().getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
 
         Log.i("FriendFragment/setSelectedItems","Previous List " + selectedItemsInteger);
+
+        if (selectedItemsInteger.size()==0)
+            setConfirmButtonEnabled(false);
 
         selectedItems = new ArrayList<YammItem>();
 

@@ -18,7 +18,7 @@ public class YammItemView extends LinearLayout {
     private YammItem item;
     private TextView itemNameText, itemSelectedText;
     private FriendsFragment fragment;
-
+    private Context context;
     public YammItemView(Context context) {
         super(context);
     }
@@ -29,6 +29,8 @@ public class YammItemView extends LinearLayout {
 
     public YammItemView(Context context, YammItem i) {
         super(context);
+
+        this.context = context;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
@@ -87,6 +89,15 @@ public class YammItemView extends LinearLayout {
                 fragment.addSelectedItem(item);
             else
                 fragment.removeSelectedItem(item);
+
+            //Change Enabled of Confirm Button in FriendActivity
+            int selectedItemSize = fragment.getSelectedItems().size();
+            if (selectedItemSize == 0){
+                fragment.setConfirmButtonEnabled(false);
+            }
+            else if (selectedItemSize == 1){
+                fragment.setConfirmButtonEnabled(true);
+            }
             Log.i("YammItemView",fragment.getSelectedItems()+"");
         }
     }

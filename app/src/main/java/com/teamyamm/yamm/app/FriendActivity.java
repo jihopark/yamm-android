@@ -15,6 +15,7 @@ public class FriendActivity extends BaseActivity {
     public final static String FRIEND_FRAGMENT = "ff";
     public final static String FRIEND_LIST = "fl";
 
+    private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
 
     @Override
@@ -41,6 +42,14 @@ public class FriendActivity extends BaseActivity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.friend_activity_actions, menu);
+
+        if (enableButtonFlag) {
+            menu.findItem(R.id.friend_pick_confirm_button).setEnabled(true);
+        } else {
+            menu.findItem(R.id.friend_pick_confirm_button).setEnabled(false);
+        }
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -56,7 +65,12 @@ public class FriendActivity extends BaseActivity {
         }
     }
 
-
+    public void setConfirmButtonEnabled(boolean b){
+        if (enableButtonFlag != b) {
+            enableButtonFlag = b;
+            supportInvalidateOptionsMenu();
+        }
+    }
 
     private void finishActivity(){
         Intent resultIntent = new Intent();
