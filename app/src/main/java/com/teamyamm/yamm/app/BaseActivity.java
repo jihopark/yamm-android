@@ -17,6 +17,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+
 
 /**
  * Created by parkjiho on 5/7/14.
@@ -183,4 +187,23 @@ public class BaseActivity extends ActionBarActivity {
     private void setDefaultOrientation(){
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
-}
+
+    /*
+    * Converts Map into JsonString
+    * */
+    protected String fromHashMapToString(HashMap<String,String> map){
+        Gson gson = new Gson();
+        return gson.toJson(map);
+    }
+
+    /*
+    * Converts JsonString into Hashmap
+    * */
+    protected HashMap<String,String> fromStringToHashMap(String s){
+        Gson gson = new Gson();
+        HashMap<String,String> map = new HashMap<String, String>();
+        map = gson.fromJson(s, map.getClass());
+        return map;
+    }
+
+ }

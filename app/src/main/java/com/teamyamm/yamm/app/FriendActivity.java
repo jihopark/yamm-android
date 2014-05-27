@@ -7,14 +7,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by parkjiho on 5/26/14.
  */
 public class FriendActivity extends BaseActivity {
+
+
+
     public final static String FRIEND_FRAGMENT = "ff";
     public final static String FRIEND_LIST = "fl";
 
+    private ArrayList<String> contactNameList = new ArrayList<String>(), contactPhoneList = new ArrayList<String>();
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
 
@@ -72,11 +78,14 @@ public class FriendActivity extends BaseActivity {
         }
     }
 
+
+
     private void finishActivity(){
         Intent resultIntent = new Intent();
         resultIntent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, friendsFragment.selectedItemsInteger);
         setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
         finish();
     }
+
 
 }
