@@ -200,6 +200,9 @@ public class BaseActivity extends ActionBarActivity {
     * Converts JsonString into Hashmap
     * */
     protected HashMap<String,String> fromStringToHashMap(String s){
+        if (s=="none")
+            return null;
+
         Gson gson = new Gson();
         HashMap<String,String> map = new HashMap<String, String>();
         map = gson.fromJson(s, map.getClass());

@@ -118,9 +118,11 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
         friendPickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Read Contact for update
+                ((MainActivity)getActivity()).readContacts();
+
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
-
                 intent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, selectedFriendList); //send previously selected friend list
                 startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
                 Log.i("MainFragment/onClick","FriendActivity called");

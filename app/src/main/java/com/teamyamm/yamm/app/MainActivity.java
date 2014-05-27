@@ -22,6 +22,7 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
     public final static String MAIN_FRAGMENT = "mf";
 
+    private HashMap<String, String> phoneNameMap;
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
             ContactsContract.CommonDataKinds.Phone.DATA
     };
 
-    private void readContacts(){
+    public void readContacts(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
         String value = prefs.getString(getString(R.string.CONTACT_READ_TIME),"none");
@@ -94,14 +95,13 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        //long diff = (now.getTime() - previousDate.getTime()) / (60 * 60 * 1000) % 24;
         long diff = (now.getTime() - previousDate.getTime()) / (60 * 1000) % 60; // 1minute
 
         Log.i("MainActivity/readContacts","Time Difference " + diff +" mins");
 
-        // if date is less than 12hours  CHANGE THIS WHEN PRODUCTION
-        if (value=="none" ||  diff > 1 ){
-            HashMap<String, String> phoneNameMap = new HashMap<String, String>();
+        // if date is less than 1 hours  CHANGE THIS WHEN PRODUCTION
+        if (value=="none" ||  diff > 60 ){
+            phoneNameMap = new HashMap<String, String>();
 
             ContentResolver cr = getContentResolver();
             Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION, null, null, null);
@@ -131,7 +131,17 @@ public class MainActivity extends BaseActivity {
 
             //Save Time
             BaseActivity.putInPref(prefs, getString(R.string.CONTACT_READ_TIME),format.format(new Date()));
+        }
 
+        if (phoneNameMap == null){
+            phoneNameMap = fromStringToHashMap(prefs.getString(getString(R.string.PHONE_NAME_MAP),"none"));
+
+            if (phoneNameMap == null)
+                Log.e("FriendActivity/loadContacts","Failed to load contacts from shared pref");
+            else{
+                Log.i("FriendActivity/loadContacts","Successfully loaded contacts from shared pref");
+                Log.i("FriendActivity/loadContacts",phoneNameMap.toString());
+            }
         }
     }
     private String parsePhoneNumber(String s){
