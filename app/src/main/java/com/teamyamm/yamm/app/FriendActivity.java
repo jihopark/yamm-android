@@ -1,12 +1,15 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import java.util.HashMap;
 
 
 /**
@@ -19,6 +22,7 @@ public class FriendActivity extends BaseActivity {
     public final static String FRIEND_FRAGMENT = "ff";
     public final static String FRIEND_LIST = "fl";
 
+    private HashMap<String, String> friendNameMap;
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
 
@@ -37,7 +41,8 @@ public class FriendActivity extends BaseActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        Log.i("FriendActivity/onResume","onResume");
+        loadContacts();
+        Log.i("FriendActivity/onResume","Load Contacts and Check new friends");
     }
 
     @Override
@@ -93,7 +98,18 @@ public class FriendActivity extends BaseActivity {
 
     private void loadContacts(){
         //Load Contacts From SharedPrefs
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
+        friendNameMap = fromStringToHashMap(prefs.getString(getString(R.string.PHONE_NAME_MAP),"none"));
+
+        if (friendNameMap == null)
+            Log.e("FriendActivity/loadContacts","Failed to load contacts from shared pref");
+        else{
+            Log.i("FriendActivity/loadContacts","Successfully loaded contacts");
+            Log.i("FriendActivity/loadContacts",friendNameMap.toString());
+
+            //Send to Server
+        }
     }
 
 
