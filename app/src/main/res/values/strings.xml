@@ -82,7 +82,7 @@
 
     <string name="yamm_item_selected_text">얌</string>
     <string name="friend_pick_confirm_button">확인</string>
-    <string name="item_friends_list_empty">Yamm 친이 없으시네요</string>
+    <string name="friends_list_empty">Yamm 친이 없으시네요</string>
 
 
     <!-- Yamm Date Spinner -->

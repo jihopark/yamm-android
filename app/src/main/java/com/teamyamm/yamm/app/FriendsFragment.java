@@ -1,17 +1,14 @@
 package com.teamyamm.yamm.app;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.applidium.headerlistview.HeaderListView;
-import com.applidium.headerlistview.SectionAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,16 +23,25 @@ public class FriendsFragment extends Fragment {
     public ArrayList<YammItem> selectedItems;
     public ArrayList<Integer> selectedItemsInteger;
 
-    public HeaderListView headerView;
-    public List<YammItem> teamList, friendList;
+
+    public ListView friendListView;
+    private YammItemsListAdapter adapter;
+    private TextView friendsListEmptyText;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         yammItemLayout = (RelativeLayout) inflater.inflate(R.layout.friends_fragment, container, false);
 
-        headerView = new HeaderListView(getActivity());
+        friendListView = new ListView(getActivity());
+        friendsListEmptyText = new TextView(getActivity());
+        friendsListEmptyText.setText(getActivity().getResources().getString(R.string.friends_list_empty));
+        friendListView.setEmptyView(friendsListEmptyText);
+
         setSelectedItems();
         setYammItemList();
-        yammItemLayout.addView(headerView);
+
+        yammItemLayout.addView(friendListView);
+        yammItemLayout.addView(friendsListEmptyText);
 
         return yammItemLayout;
     }
@@ -73,61 +79,9 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setYammItemList(){
-        ArrayList<String> headerList = new ArrayList<String>();
-        teamList = loadTeamList();
-        friendList = loadFriendList();
-
-        //Adding Dummy Item if size is 0 for any list
-
-        if (teamList.size() == 0){
-            teamList.add(new Team(-1));
-        }
-        else if (friendList.size() == 0)
-            friendList.add(new Friend(-1));
-
-        headerList.add(getString(R.string.yamm_list_header_1));
-        headerList.add(getString(R.string.yamm_list_header_2));
-
-        headerView.setAdapter(new SectionAdapter(getActivity(), teamList, friendList, headerList) {
-            @Override
-            public int getSectionHeaderViewTypeCount() {
-                return 2;
-            }
-
-            @Override
-            public int getSectionHeaderItemViewType(int section) {
-                return section % 2;
-            }
-
-            @Override
-            public View getRowView(int section, int row, View convertView, ViewGroup parent) {
-                YammItemView view = null;
-                if (convertView == null)
-                    view = new YammItemView(context, (YammItem) getRowItem(section,row));
-                else{
-                    view = (YammItemView) convertView;
-                }
-                view.setItem((YammItem) getRowItem(section,row));
-
-                return view;
-            }
-
-            @Override
-            public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
-                if (convertView == null)
-                    convertView = getActivity().getLayoutInflater()
-                            .inflate(getActivity().getResources().getLayout(android.R.layout.simple_list_item_1), null);
-
-                //Set Main Text
-                ((TextView) convertView.findViewById(android.R.id.text1)).setText(getSectionHeaderItem(section).toString());
-
-                //must set BackGround Color
-                convertView.setBackgroundColor(Color.WHITE);
-                return convertView;
-
-
-            }
-        });
+        List<YammItem> list = loadFriendList();
+        adapter = new YammItemsListAdapter(getActivity(), list);
+        friendListView.setAdapter(adapter);
     }
 
     private List<YammItem> loadFriendList(){
@@ -157,31 +111,6 @@ public class FriendsFragment extends Fragment {
             }
         }
         return friendList;
-    }
-
-    private List<YammItem> loadTeamList(){
-        ArrayList<YammItem> teamList = new ArrayList<YammItem>();
-        teamList.add(new Team(14, "가족"));
-        teamList.add(new Team(15, "얌팀"));
-        teamList.add(new Team(16, "민사12기"));
-        teamList.add(new Team(17, "맛집투어"));
-        teamList.add(new Team(18, "맛집투어"));
-        teamList.add(new Team(19, "맛집투어"));
-        teamList.add(new Team(20, "맛집투어"));
-        teamList.add(new Team(21, "맛집투어"));
-        teamList.add(new Team(22, "맛집투어"));
-
-        //Check for previously selected items
-        for (YammItem i : teamList){
-            if (selectedItemsInteger.contains(i.getID())) {
-                i.setSelected(true);
-                if (!selectedItems.contains(i))
-                    selectedItems.add(i);
-                Log.i("FriendsFragment",i.getName()+" previously selected ");
-            }
-        }
-
-        return teamList;
     }
 
 }
