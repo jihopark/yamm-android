@@ -2,6 +2,9 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
@@ -24,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by parkjiho on 5/24/14.
@@ -33,13 +37,15 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
     private FrameLayout main_layout;
     private ImageView imageOne, imageTwo;
     private int currentImage = 1;
+    private DishItem currentDishItem;
 
-    private Button friendPickButton, nextButton;
+    private Button friendPickButton, nextButton, searchMapButton;
     private Spinner datePickSpinner;
     public ArrayAdapter<CharSequence> spinnerAdapter;
     public YammDatePickerFragment datePickerFragment;
     private AutoCompleteTextView placePickEditText;
     private RelativeLayout mainButtonsContainer;
+
     private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,14 +57,54 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
         nextButton = (Button) main_layout.findViewById(R.id.next_button);
         datePickSpinner = (Spinner) main_layout.findViewById(R.id.date_pick_spinner);
         mainButtonsContainer = (RelativeLayout) main_layout.findViewById(R.id.main_buttons_container);
+        searchMapButton = (Button) main_layout.findViewById(R.id.search_map_button);
 
+        currentDishItem = new DishItem(1,"쌀국수");
         setYammImageView();
         setFriendPickButton();
         setNextButton();
         setDatePickSpinner();
         setPlacePickEditText();
+        setSearchMapButton();
 
         return main_layout;
+    }
+
+    private void setSearchMapButton(){
+        searchMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri location = getLocationURI();
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+
+                //Verify Intent
+                PackageManager packageManager = getActivity().getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+
+                if (isIntentSafe)
+                    startActivity(mapIntent);
+                else
+                    Log.e("NewMainfragment","Intent not safe");
+
+            }
+        });
+    }
+
+    private Uri getLocationURI(){
+        String place = placePickEditText.getText().toString();
+        Uri uri = null;
+        if (place.equals(getString(R.string.place_pick_edit_text))){
+            //Should get current location
+            Log.i("NewMainFragment/getLocationURI","Current Location Search");
+        }
+        else{
+            Log.i("NewMainFragment/getLocationURI","Location: " + place + " Dish:" + currentDishItem.getName() );
+            uri = Uri.parse("geo:0,0?q=" + place + " " + currentDishItem.getName());
+        }
+
+        return uri;
     }
 
     private void setPlacePickEditText(){
