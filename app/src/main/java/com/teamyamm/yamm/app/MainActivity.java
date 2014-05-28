@@ -95,8 +95,7 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        long diff = (now.getTime() - previousDate.getTime()) / (60 * 1000) % 60; // 1minute
-
+        long diff = (now.getTime() - previousDate.getTime()) / (60 * 1000); // 1minute
         Log.i("MainActivity/readContacts","Time Difference " + diff +" mins");
 
         // if date is less than 1 hours  CHANGE THIS WHEN PRODUCTION
@@ -131,17 +130,6 @@ public class MainActivity extends BaseActivity {
 
             //Save Time
             BaseActivity.putInPref(prefs, getString(R.string.CONTACT_READ_TIME),format.format(new Date()));
-        }
-
-        if (phoneNameMap == null){
-            phoneNameMap = fromStringToHashMap(prefs.getString(getString(R.string.PHONE_NAME_MAP),"none"));
-
-            if (phoneNameMap == null)
-                Log.e("FriendActivity/loadContacts","Failed to load contacts from shared pref");
-            else{
-                Log.i("FriendActivity/loadContacts","Successfully loaded contacts from shared pref");
-                Log.i("FriendActivity/loadContacts",phoneNameMap.toString());
-            }
         }
     }
     private String parsePhoneNumber(String s){
