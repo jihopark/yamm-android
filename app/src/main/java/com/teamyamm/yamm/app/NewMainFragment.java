@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,12 +33,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by parkjiho on 5/24/14.
  */
 public class NewMainFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
+    private final static long LOCATION_MIN_TIME = 100; //0.1sec
+    private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
     private FrameLayout main_layout;
     private ImageView imageOne, imageTwo;
     private int currentImage = 1;
@@ -43,10 +53,14 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
     private Spinner datePickSpinner;
     public ArrayAdapter<CharSequence> spinnerAdapter;
     public YammDatePickerFragment datePickerFragment;
-    private AutoCompleteTextView placePickEditText;
     private RelativeLayout mainButtonsContainer;
 
     private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
+
+    //For Place Pick
+    private AutoCompleteTextView placePickEditText;
+    LocationManager locationManager;
+    LocationListener locationListener;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,8 +80,32 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
         setDatePickSpinner();
         setPlacePickEditText();
         setSearchMapButton();
+        setLocationManagerListener();
 
         return main_layout;
+    }
+
+    private void setLocationManagerListener(){
+        //Set Location Listener
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                Log.i("LocationListener/onLocationChanged","Location Changed " + location.toString());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        Log.i("NewMainFragment/setLocationManagerListener","Location Manager and Listener Set");
+
+
     }
 
     private void setSearchMapButton(){
@@ -76,6 +114,10 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
             public void onClick(View v) {
 
                 Uri location = getLocationURI();
+                if (location == null){
+                    Toast.makeText(getActivity(),getString(R.string.location_error),Toast.LENGTH_LONG).show();
+                    location = Uri.parse("geo:0,0?q="+ currentDishItem.getName());
+                }
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
 
                 //Verify Intent
@@ -86,25 +128,73 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
                 if (isIntentSafe)
                     startActivity(mapIntent);
                 else
-                    Log.e("NewMainfragment","Intent not safe");
+                    Log.e("NewMainfragment", "Intent not safe");
 
             }
         });
     }
 
     private Uri getLocationURI(){
+        int count = 0;
         String place = placePickEditText.getText().toString();
+        Location lastKnownLocation;
         Uri uri = null;
         if (place.equals(getString(R.string.place_pick_edit_text))){
             //Should get current location
             Log.i("NewMainFragment/getLocationURI","Current Location Search");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
+            lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            while(lastKnownLocation.getAccuracy() > 500){
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
+                lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.i("NewMainFragment/getLocationURI","Location Accuracy " + lastKnownLocation.getAccuracy());
+                if (count++ > 30){
+                    Log.e("NewMainFragment/getLocationURI", "Location Accuracy failed");
+                    break;
+                }
+            }
+            locationManager.removeUpdates(locationListener);
+            place = getAddressFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
         }
-        else{
-            Log.i("NewMainFragment/getLocationURI","Location: " + place + " Dish:" + currentDishItem.getName() );
-            uri = Uri.parse("geo:0,0?q=" + place + " " + currentDishItem.getName());
+        if (place == null){
+            Log.e("NewMainFragment/getLocationURI","Unable to locate user");
+            return null;
         }
+        Log.i("NewMainFragment/getLocationURI","Location: " + place + " Dish:" + currentDishItem.getName() );
+        uri = Uri.parse("geo:0,0?q=" + place + " " + currentDishItem.getName());
 
         return uri;
+    }
+
+    private String getAddressFromLocation(double latitude, double longitude){
+        Geocoder geoCoder = new Geocoder(getActivity(), Locale.KOREAN);
+        String area = null;
+        String match = null;
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 5);
+            if (addresses.size() > 0) {
+                Address mAddress = addresses.get(0);
+                area = null;
+                StringBuilder strbuf = new StringBuilder();
+                String buf;
+
+                for (int i = 0; (buf = mAddress.getAddressLine(i)) != null; i++) {
+                    strbuf.append(buf + "\n");
+                }
+                area = strbuf.toString();
+
+                //Extract DONG
+                Pattern p = Pattern.compile("(\\S+)동 ");
+                Matcher m = p.matcher(area);
+                while (m.find()) { // Find each match in turn; String can't do this.
+                    match = m.group(1); // Access a submatch group; String can't do this.
+                }
+                return match+"동";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return area;
     }
 
     private void setPlacePickEditText(){

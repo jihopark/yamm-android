@@ -12,6 +12,9 @@
     <string name="title_activity_join">JoinActivity</string>
     <string name="title_activity_friend">같이 먹을 친구를 선택해주세요</string>
 
+
+    <!-- Error Messages -->
+    <string name="location_error">위치를 확인할 수가 없어요</string>
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
