@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
 
@@ -207,6 +209,11 @@ public class BaseActivity extends ActionBarActivity {
         HashMap<String,String> map = new HashMap<String, String>();
         map = gson.fromJson(s, map.getClass());
         return map;
+    }
+
+    protected static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
  }
