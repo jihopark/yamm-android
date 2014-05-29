@@ -144,11 +144,11 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
             Log.i("NewMainFragment/getLocationURI","Current Location Search");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
             lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            while(lastKnownLocation.getAccuracy() > 500){
+            Log.i("NewMainFragment/getLocationURI","Location Accuracy " + lastKnownLocation.toString());
+            while(lastKnownLocation.getAccuracy() > 500 || count < 20){
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
                 lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Log.i("NewMainFragment/getLocationURI","Location Accuracy " + lastKnownLocation.getAccuracy());
-                if (count++ > 30){
+                if (count++ > 100){
                     Log.e("NewMainFragment/getLocationURI", "Location Accuracy failed");
                     break;
                 }
@@ -168,33 +168,54 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
 
     private String getAddressFromLocation(double latitude, double longitude){
         Geocoder geoCoder = new Geocoder(getActivity(), Locale.KOREAN);
-        String area = null;
         String match = null;
+
+
+        ArrayList<Pattern> patternList = new ArrayList<Pattern>();
+        patternList.add(Pattern.compile("(\\S+)동 "));
+        patternList.add(Pattern.compile("(\\S+)구 "));
+        patternList.add(Pattern.compile("(\\S+)시 "));
+
+
+        int count = 0, p = 0;
         try {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 5);
             if (addresses.size() > 0) {
-                Address mAddress = addresses.get(0);
-                area = null;
-                StringBuilder strbuf = new StringBuilder();
-                String buf;
+                while (count < 5) {
+                    Address mAddress = addresses.get(count);
+                    String s = mAddress.getLocality() + " " + mAddress.getThoroughfare() + " " + mAddress.getFeatureName();
 
-                for (int i = 0; (buf = mAddress.getAddressLine(i)) != null; i++) {
-                    strbuf.append(buf + "\n");
-                }
-                area = strbuf.toString();
+                    Log.i("NewMainFragment/getAddressFromLocation","Address " + count + ": " + s);
 
-                //Extract DONG
-                Pattern p = Pattern.compile("(\\S+)동 ");
-                Matcher m = p.matcher(area);
-                while (m.find()) { // Find each match in turn; String can't do this.
-                    match = m.group(1); // Access a submatch group; String can't do this.
+
+                    //Extract pattern
+                    Pattern pattern = patternList.get(p);
+                    Matcher m = pattern.matcher(s);
+                    while (m.find()) { // Find each match in turn; String can't do this.
+                        match = m.group(1); // Access a submatch group; String can't do this.
+                    }
+                    Log.i("NewMainFragment/getAddressFromLocation","Match " + match);
+                    if (match != null) {
+                        if (p == 0)
+                            return match+"동";
+                        if (p == 1)
+                            return match;
+                        if (p == 2)
+                            return match;
+                    }
+                    count++;
+
+                    if (count == 5   && p < 2) {
+                        //get new pattern
+                        p++;
+                        count = 0;
+                    }
                 }
-                return match+"동";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return area;
+        return null;
     }
 
     private void setPlacePickEditText(){
