@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/Users/parkjiho/AndroidStudioProjects/Papreeca/sdk/assets" />
+    </dataSet>
+    <dataSet config="release" >
+        <source path="/Users/parkjiho/AndroidStudioProjects/Papreeca/sdk/build-types/release/assets" />
+    </dataSet>
+
+</merger>

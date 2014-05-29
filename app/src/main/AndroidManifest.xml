@@ -74,6 +74,10 @@
             android:label="@string/title_activity_friend"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
+        <!-- For KaKao SDK -->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
     </application>
 
 </manifest>

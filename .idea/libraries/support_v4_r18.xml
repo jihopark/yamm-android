@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="support-v4-r18">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/exploded-aar/Papreeca/sdk/unspecified/libs/support-v4-r18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

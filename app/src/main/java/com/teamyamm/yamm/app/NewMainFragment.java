@@ -31,12 +31,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kakao.KakaoLink;
+import com.kakao.KakaoParameterException;
+import com.kakao.KakaoTalkLinkMessageBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 /**
  * Created by parkjiho on 5/24/14.
  */
@@ -49,7 +52,7 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
     private int currentImage = 1;
     private DishItem currentDishItem;
 
-    private Button friendPickButton, nextButton, searchMapButton;
+    private Button friendPickButton, nextButton, searchMapButton, pokeFriendButton;
     private Spinner datePickSpinner;
     public ArrayAdapter<CharSequence> spinnerAdapter;
     public YammDatePickerFragment datePickerFragment;
@@ -59,8 +62,9 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
 
     //For Place Pick
     private AutoCompleteTextView placePickEditText;
-    LocationManager locationManager;
-    LocationListener locationListener;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
         datePickSpinner = (Spinner) main_layout.findViewById(R.id.date_pick_spinner);
         mainButtonsContainer = (RelativeLayout) main_layout.findViewById(R.id.main_buttons_container);
         searchMapButton = (Button) main_layout.findViewById(R.id.search_map_button);
+        pokeFriendButton = (Button) main_layout.findViewById(R.id.poke_friend_button);
 
         currentDishItem = new DishItem(1,"쌀국수");
         setYammImageView();
@@ -81,8 +86,37 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
         setPlacePickEditText();
         setSearchMapButton();
         setLocationManagerListener();
+        setPokeFriendButton();
 
         return main_layout;
+    }
+
+    private void setPokeFriendButton(){
+        pokeFriendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendKakaoLink();
+            }
+        });
+    }
+
+    private void sendKakaoLink(){
+        try {
+            final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getActivity());
+            final KakaoTalkLinkMessageBuilder msgBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            msgBuilder.addText(currentDishItem.getName() + " 같이 먹을래요?");
+
+            final String linkContents = msgBuilder.build();
+            kakaoLink.sendMessage(linkContents, getActivity());
+
+        }catch(KakaoParameterException e){
+            Log.e("NewMainFragment/sendKakaLink", "Kakao link init error");
+            e.printStackTrace();
+        }
+
+
+
     }
 
     private void setLocationManagerListener(){

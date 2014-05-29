@@ -46,6 +46,12 @@
             android:layout_toLeftOf="@+id/next_button"
             android:layout_alignParentBottom="true"
             />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/poke_friend_button"
+            android:text="카톡"
+            android:layout_above="@+id/next_button" />
 
     </RelativeLayout>
 
