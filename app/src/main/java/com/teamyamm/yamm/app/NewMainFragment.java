@@ -136,25 +136,44 @@ public class NewMainFragment extends Fragment implements AdapterView.OnItemSelec
 
     private Uri getLocationURI(){
         int count = 0;
+        String default_provider = LocationManager.NETWORK_PROVIDER; //default provider
         String place = placePickEditText.getText().toString();
         Location lastKnownLocation;
         Uri uri = null;
         if (place.equals(getString(R.string.place_pick_edit_text))){
             //Should get current location
             Log.i("NewMainFragment/getLocationURI","Current Location Search");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
-            lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.i("NewMainFragment/getLocationURI","Location Accuracy " + lastKnownLocation.toString());
-            while(lastKnownLocation.getAccuracy() > 500 || count < 20){
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
-                lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (count++ > 100){
+
+            List<String> providers = new ArrayList<String>();
+            providers.add(default_provider);
+            providers.add(LocationManager.GPS_PROVIDER);
+
+            for (String provider : providers){
+                locationManager.requestLocationUpdates(provider, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
+                lastKnownLocation = locationManager.getLastKnownLocation(provider);
+                if (lastKnownLocation!=null && lastKnownLocation.getAccuracy() < 1000) {
+                    Log.i("NewMainFragment/getLocationURI","Appropriate Provider Found " + provider);
+                    default_provider = provider;
+                    break;
+                }
+            }
+
+            lastKnownLocation = locationManager.getLastKnownLocation(default_provider);
+            while(lastKnownLocation==null || lastKnownLocation.getAccuracy() > 500 || count < 20){
+                locationManager.requestLocationUpdates(default_provider, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, locationListener);
+
+                lastKnownLocation = locationManager.getLastKnownLocation(default_provider);
+                if (count++ > 150){
                     Log.e("NewMainFragment/getLocationURI", "Location Accuracy failed");
+                    Toast.makeText(getActivity(),getString(R.string.gps_accuracy_warning_text), Toast.LENGTH_LONG).show();
                     break;
                 }
             }
             locationManager.removeUpdates(locationListener);
-            place = getAddressFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            if (lastKnownLocation != null)
+                place = getAddressFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            else
+                place = null;
         }
         if (place == null){
             Log.e("NewMainFragment/getLocationURI","Unable to locate user");
