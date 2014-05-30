@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +22,7 @@ import android.widget.Toast;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class IntroActivity extends BaseActivity {
-    private ViewPager introPager;
+    private IntroViewPager introPager;
     private PagerAdapter adapter;
     private GridFragment gridFragment;
     protected final int NUMBER_OF_PAGE = 4;
@@ -40,8 +43,6 @@ public class IntroActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-
-
 
         hideActionBar();
         configViewPager();
@@ -65,7 +66,7 @@ public class IntroActivity extends BaseActivity {
     * */
 
     private void configViewPager(){
-        introPager = (ViewPager)findViewById(R.id.intro_pager);
+        introPager = (IntroViewPager)findViewById(R.id.intro_pager);
         adapter = new IntroPagerAdapter(getApplicationContext());
 
         introPager.setAdapter(adapter);
@@ -85,15 +86,10 @@ public class IntroActivity extends BaseActivity {
                     finishIntro();
                 }
 
-                if (position == INTRO_JOIN_PAGE){
-                    Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
-                    joinLayout = (LinearLayout)findViewById(R.id.join_layout);
-                    configSendButton();
-                }
-
                 if (position == INTRO_VERI_PAGE){
                     Log.i("IntroActivity/onPageSelected", "Intro Verification Page Initiated");
                     verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
+                    setVerificationLayout();
                 }
 
             }
@@ -107,6 +103,7 @@ public class IntroActivity extends BaseActivity {
             }
         });
         indicator.setViewPager(introPager);
+        indicator.onPageSelected(0);
     }
     /*
     * Finshes Intro and saves&sends gridresults and go to BattleActivity
@@ -221,6 +218,15 @@ public class IntroActivity extends BaseActivity {
             View view = inflater.inflate(resId, null);
 
             ((ViewPager) collection).addView(view, 0);
+            Log.i("IntroActivity/instantiateItem", "Pager Item " + position + " inflated");
+
+            if (position == INTRO_JOIN_PAGE){
+                Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
+                joinLayout = (LinearLayout)view.findViewById(R.id.join_layout);
+                ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
+                configSendButton(joinLayout);
+                introPager.setPagingEnabled(false);
+            }
 
             return view;
         }
@@ -244,21 +250,15 @@ public class IntroActivity extends BaseActivity {
     * When SendVerificationCode Button is pressed, inflates next frame
     * */
 
-    private void configSendButton(){
-        Button sendV = (Button) findViewById(R.id.send_verification_code);
+    private void configSendButton(LinearLayout layout){
+        Button sendV = (Button) layout.findViewById(R.id.send_verification_code);
 
-/*        sendV.setOnClickListener(new View.OnClickListener() {
+        sendV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),R.string.verification_sent,Toast.LENGTH_SHORT).show();
-
-                if (!isVerificationLayoutInflated) {
-                    inflateVerificationLayout();
-                    isVerificationLayoutInflated = true;
-                }
-                changeFrame();
+                introPager.setCurrentItem(INTRO_VERI_PAGE, true);
             }
-        });*/
+        });
     }
 
     /*
@@ -278,14 +278,10 @@ public class IntroActivity extends BaseActivity {
     }
 
     /*
-    * Inflates next frame - showing verification code textfield and buttons (phone_verification.xml)
+    * Set VerificationLayout
     * */
 
-    private void inflateVerificationLayout(){
-        LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        mInflater.inflate(R.layout.phone_verification, verificationLayout,true);
-
+    private void setVerificationLayout(){
         configVeriConfirmButton();
         configVeriAgainButton();
         configVeriResendButton();
@@ -303,7 +299,6 @@ public class IntroActivity extends BaseActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
 
-                goToActivity(MainActivity.class);
             }
         });
     }
@@ -318,7 +313,7 @@ public class IntroActivity extends BaseActivity {
         veriAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeFrame();
+                introPager.setCurrentItem(INTRO_JOIN_PAGE, true);
             }
         });
     }
@@ -343,5 +338,50 @@ public class IntroActivity extends BaseActivity {
                         R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
             }
         });
+    }
+
+    /*
+    * To show the last character of password
+    * */
+    private class HiddenPassTransformationMethod implements TransformationMethod {
+
+        private char DOT = '\u2022';
+
+        @Override
+        public CharSequence getTransformation(final CharSequence charSequence, final View view) {
+            return new PassCharSequence(charSequence);
+        }
+
+        @Override
+        public void onFocusChanged(final View view, final CharSequence charSequence, final boolean b, final int i,
+                                   final Rect rect) {
+            //nothing to do here
+        }
+
+        private class PassCharSequence implements CharSequence {
+
+            private final CharSequence charSequence;
+
+            public PassCharSequence(final CharSequence charSequence) {
+                this.charSequence = charSequence;
+            }
+
+            @Override
+            public char charAt(final int index) {
+                if (index == length() - 1)
+                    return charSequence.charAt(index);
+                return DOT;
+            }
+
+            @Override
+            public int length() {
+                return charSequence.length();
+            }
+
+            @Override
+            public CharSequence subSequence(final int start, final int end) {
+                return new PassCharSequence(charSequence.subSequence(start, end));
+            }
+        }
     }
 }

@@ -20,19 +20,46 @@
         android:id="@+id/name_field"
         style="@style/EditText"
         />
-
     <EditText
-        android:hint="@string/verification_phone"
-        android:id="@+id/phone_field"
+        android:hint="@string/verification_email"
+        android:id="@+id/email_field"
+        style="@style/EditText"
+        android:inputType="textEmailAddress"
+        />
+    <EditText
+        android:hint="@string/verification_pw"
+        android:id="@+id/pw_field"
+        style="@style/EditText"
+        android:inputType="textPassword"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:hint="@string/verification_phone"
+            android:id="@+id/phone_field"
+            style="@style/EditText"
+            android:inputType="phone"
+            />
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            style="@style/MyButton"
+            android:text="@string/verification_button"
+            android:id="@+id/send_verification_code"
+            />
+        </LinearLayout>
+    <EditText
+        android:hint="@string/verification_field"
+        android:id="@+id/verification_field"
         style="@style/EditText"
         android:inputType="phone"
         />
 
-    <Button
-        style="@style/MyButton"
-        android:text="@string/verification_button"
-        android:id="@+id/send_verification_code"
-        />
 
     <TextView
         android:layout_width="match_parent"
