@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -18,15 +22,29 @@ public class IntroActivity extends BaseActivity {
     private ViewPager introPager;
     private PagerAdapter adapter;
     private GridFragment gridFragment;
-    protected final int NUMBER_OF_PAGE = 4;
+    protected final int NUMBER_OF_PAGE = 5;
+    protected final int INTRO_JOIN_PAGE = 1;
+
+    //For intro_join
+
+    private LinearLayout verificationLayout;
+    private LinearLayout joinLayout;
+    private boolean isVerificationLayoutInflated = false;
+    private final int JOIN_LAYOUT = 1;
+    private final int VERI_LAYOUT = 2;
+    private int currentFrame = JOIN_LAYOUT;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+
+
         hideActionBar();
         configViewPager();
+
     }
 
 
@@ -61,12 +79,18 @@ public class IntroActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == NUMBER_OF_PAGE - 1) {
-                    Toast.makeText(getApplicationContext(), "인트로 끝", Toast.LENGTH_SHORT).show(); //To be deleted
-
                     //Save Grid Result to pref & Send GridResult to Server & Go To Battle Activity
                     gridFragment = (GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment);
                     finishIntro();
                 }
+
+                if (position == INTRO_JOIN_PAGE){
+                    Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
+                    verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
+                    joinLayout = (LinearLayout)findViewById(R.id.join_layout);
+                    configSendButton();
+                }
+
             }
 
             @Override
@@ -84,7 +108,7 @@ public class IntroActivity extends BaseActivity {
     * */
     private void finishIntro(){
         boolean resultSent = true;
-        Log.v("IntroActivity/finishBattle", "FinishIntro Started");
+        Log.i("IntroActivity/finishBattle", "FinishIntro Started");
 
         //Save to Shared Pref
         String result = saveGridResult(gridFragment);
@@ -107,7 +131,7 @@ public class IntroActivity extends BaseActivity {
     * Only executed right before stating Battle Activity
     * */
     private boolean sendGridResult(String s){
-        Log.v("IntroActivity/sendGridResults", "sendGridResults Started");
+        Log.i("IntroActivity/sendGridResults", "sendGridResults Started");
         //Check internet connection
         if (!checkInternetConnection()){
             return false;
@@ -125,9 +149,9 @@ public class IntroActivity extends BaseActivity {
         }
         @Override
         public void onClick(View v) {
-            Log.v("IntroActivity/CustomInternetListener", "Listener activated");
+            Log.i("IntroActivity/CustomInternetListener", "Listener activated");
             if (checkInternetConnection()) {
-                Log.v("IntroActivity/CustomInternetListener","Internet came back");
+                Log.i("IntroActivity/CustomInternetListener","Internet came back");
                 dialog.dismiss();
                 finishIntro();
             }
@@ -144,12 +168,12 @@ public class IntroActivity extends BaseActivity {
         for (GridItem i : f.getSelectedItems())
             s = s +i.getId()+",";
         BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),s);
-        Log.v("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
+        Log.i("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
         return s;
     }
 
     /**
-     * A pager adapter that represents 4 ScreenSlidePageFragment objects, in
+     * A pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
     private class IntroPagerAdapter extends PagerAdapter {
@@ -176,12 +200,15 @@ public class IntroActivity extends BaseActivity {
                     resId = R.layout.intro_one;
                     break;
                 case 1:
-                    resId = R.layout.intro_grid;
+                    resId = R.layout.intro_join;
                     break;
                 case 2:
-                    resId = R.layout.intro_three;
+                    resId = R.layout.intro_grid;
                     break;
                 case 3:
+                    resId = R.layout.intro_three;
+                    break;
+                case 4:
                     resId = R.layout.intro_final;
                     break;
             }
@@ -202,5 +229,114 @@ public class IntroActivity extends BaseActivity {
         public boolean isViewFromObject(View pager, Object obj) {
             return pager == obj;
         }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //For intro_join
+
+    /*
+    * When SendVerificationCode Button is pressed, inflates next frame
+    * */
+
+    private void configSendButton(){
+        Button sendV = (Button) findViewById(R.id.send_verification_code);
+
+        sendV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),R.string.verification_sent,Toast.LENGTH_SHORT).show();
+
+                if (!isVerificationLayoutInflated) {
+                    inflateVerificationLayout();
+                    isVerificationLayoutInflated = true;
+                }
+                changeFrame();
+            }
+        });
+    }
+
+    /*
+    * Changes Frame
+    * */
+    private void changeFrame(){
+        if (currentFrame==JOIN_LAYOUT){
+            verificationLayout.setVisibility(View.VISIBLE);
+            joinLayout.setVisibility(View.INVISIBLE);
+            currentFrame = VERI_LAYOUT;
+        }
+        else{
+            verificationLayout.setVisibility(View.INVISIBLE);
+            joinLayout.setVisibility(View.VISIBLE);
+            currentFrame = JOIN_LAYOUT;
+        }
+    }
+
+    /*
+    * Inflates next frame - showing verification code textfield and buttons (phone_verification.xml)
+    * */
+
+    private void inflateVerificationLayout(){
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mInflater.inflate(R.layout.phone_verification, verificationLayout,true);
+
+        configVeriConfirmButton();
+        configVeriAgainButton();
+        configVeriResendButton();
+    }
+
+    /*
+    * Config Verification Confirm Button that goes to next activity
+    * */
+
+    private void configVeriConfirmButton(){
+        Button veriConfirmButton = (Button) findViewById(R.id.verification_confirm_button);
+
+        veriConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
+
+                goToActivity(MainActivity.class);
+            }
+        });
+    }
+
+    /*
+    * Config Verification Again Button that goes back to previous stage
+    * */
+
+    private void configVeriAgainButton(){
+        TextView veriAgainButton = (TextView) findViewById(R.id.verification_again_button);
+
+        veriAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeFrame();
+            }
+        });
+    }
+
+    /*
+    * Config Verification Resend Button that resends veri code sms
+    * */
+    private void configVeriResendButton(){
+        TextView veriResendButton = (TextView) findViewById(R.id.verification_resend_button);
+        veriResendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.verification_resend_message),Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                createDialog(IntroActivity.this, R.string.verification_dialog_title, R.string.verification_dialog_message,
+                        R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
+            }
+        });
     }
 }
