@@ -22,8 +22,9 @@ public class IntroActivity extends BaseActivity {
     private ViewPager introPager;
     private PagerAdapter adapter;
     private GridFragment gridFragment;
-    protected final int NUMBER_OF_PAGE = 5;
-    protected final int INTRO_JOIN_PAGE = 1;
+    protected final int NUMBER_OF_PAGE = 4;
+    protected final int INTRO_JOIN_PAGE = 0;
+    protected final int INTRO_VERI_PAGE = 1;
 
     //For intro_join
 
@@ -86,9 +87,13 @@ public class IntroActivity extends BaseActivity {
 
                 if (position == INTRO_JOIN_PAGE){
                     Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
-                    verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
                     joinLayout = (LinearLayout)findViewById(R.id.join_layout);
                     configSendButton();
+                }
+
+                if (position == INTRO_VERI_PAGE){
+                    Log.i("IntroActivity/onPageSelected", "Intro Verification Page Initiated");
+                    verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
                 }
 
             }
@@ -197,10 +202,10 @@ public class IntroActivity extends BaseActivity {
             int resId = 0;
             switch (position) {
                 case 0:
-                    resId = R.layout.intro_one;
+                    resId = R.layout.intro_join;
                     break;
                 case 1:
-                    resId = R.layout.intro_join;
+                    resId = R.layout.intro_veri;
                     break;
                 case 2:
                     resId = R.layout.intro_grid;
@@ -242,7 +247,7 @@ public class IntroActivity extends BaseActivity {
     private void configSendButton(){
         Button sendV = (Button) findViewById(R.id.send_verification_code);
 
-        sendV.setOnClickListener(new View.OnClickListener() {
+/*        sendV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),R.string.verification_sent,Toast.LENGTH_SHORT).show();
@@ -253,7 +258,7 @@ public class IntroActivity extends BaseActivity {
                 }
                 changeFrame();
             }
-        });
+        });*/
     }
 
     /*
