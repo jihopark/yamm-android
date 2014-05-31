@@ -2,22 +2,15 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -89,7 +82,6 @@ public class IntroActivity extends BaseActivity {
                 if (position == INTRO_VERI_PAGE){
                     Log.i("IntroActivity/onPageSelected", "Intro Verification Page Initiated");
                     verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
-                    setVerificationLayout();
                 }
 
             }
@@ -223,8 +215,6 @@ public class IntroActivity extends BaseActivity {
             if (position == INTRO_JOIN_PAGE){
                 Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
                 joinLayout = (LinearLayout)view.findViewById(R.id.join_layout);
-                ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-                configSendButton(joinLayout);
                 introPager.setPagingEnabled(false);
             }
 
@@ -243,145 +233,7 @@ public class IntroActivity extends BaseActivity {
     }
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //For intro_join
 
-    /*
-    * When SendVerificationCode Button is pressed, inflates next frame
-    * */
 
-    private void configSendButton(LinearLayout layout){
-        Button sendV = (Button) layout.findViewById(R.id.send_verification_code);
 
-        sendV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                introPager.setCurrentItem(INTRO_VERI_PAGE, true);
-            }
-        });
-    }
-
-    /*
-    * Changes Frame
-    * */
-    private void changeFrame(){
-        if (currentFrame==JOIN_LAYOUT){
-            verificationLayout.setVisibility(View.VISIBLE);
-            joinLayout.setVisibility(View.INVISIBLE);
-            currentFrame = VERI_LAYOUT;
-        }
-        else{
-            verificationLayout.setVisibility(View.INVISIBLE);
-            joinLayout.setVisibility(View.VISIBLE);
-            currentFrame = JOIN_LAYOUT;
-        }
-    }
-
-    /*
-    * Set VerificationLayout
-    * */
-
-    private void setVerificationLayout(){
-        configVeriConfirmButton();
-        configVeriAgainButton();
-        configVeriResendButton();
-    }
-
-    /*
-    * Config Verification Confirm Button that goes to next activity
-    * */
-
-    private void configVeriConfirmButton(){
-        Button veriConfirmButton = (Button) findViewById(R.id.verification_confirm_button);
-
-        veriConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    /*
-    * Config Verification Again Button that goes back to previous stage
-    * */
-
-    private void configVeriAgainButton(){
-        TextView veriAgainButton = (TextView) findViewById(R.id.verification_again_button);
-
-        veriAgainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                introPager.setCurrentItem(INTRO_JOIN_PAGE, true);
-            }
-        });
-    }
-
-    /*
-    * Config Verification Resend Button that resends veri code sms
-    * */
-    private void configVeriResendButton(){
-        TextView veriResendButton = (TextView) findViewById(R.id.verification_resend_button);
-        veriResendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.verification_resend_message),Toast.LENGTH_SHORT).show();
-                    }
-                };
-
-                createDialog(IntroActivity.this, R.string.verification_dialog_title, R.string.verification_dialog_message,
-                        R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
-            }
-        });
-    }
-
-    /*
-    * To show the last character of password
-    * */
-    private class HiddenPassTransformationMethod implements TransformationMethod {
-
-        private char DOT = '\u2022';
-
-        @Override
-        public CharSequence getTransformation(final CharSequence charSequence, final View view) {
-            return new PassCharSequence(charSequence);
-        }
-
-        @Override
-        public void onFocusChanged(final View view, final CharSequence charSequence, final boolean b, final int i,
-                                   final Rect rect) {
-            //nothing to do here
-        }
-
-        private class PassCharSequence implements CharSequence {
-
-            private final CharSequence charSequence;
-
-            public PassCharSequence(final CharSequence charSequence) {
-                this.charSequence = charSequence;
-            }
-
-            @Override
-            public char charAt(final int index) {
-                if (index == length() - 1)
-                    return charSequence.charAt(index);
-                return DOT;
-            }
-
-            @Override
-            public int length() {
-                return charSequence.length();
-            }
-
-            @Override
-            public CharSequence subSequence(final int start, final int end) {
-                return new PassCharSequence(charSequence.subSequence(start, end));
-            }
-        }
-    }
 }

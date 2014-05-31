@@ -1,64 +1,78 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!-- Join Layout -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.teamyamm.yamm.app.JoinActivity">
-    <FrameLayout
+    tools:context="com.teamyamm.yamm.app.JoinActivity"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/join_layout"
+    >
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="@string/join_message"
+        android:textSize="20dp"
+        android:padding="15dp"
+        android:gravity="center_horizontal"
+        />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/join_layout"
-            android:visibility="visible">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/join_message"
-                android:textSize="20dp"
-                android:padding="15dp"
-                android:gravity="center_horizontal"
-                />
-
-            <EditText
-                android:hint="@string/verification_name"
-                android:id="@+id/name_field"
-                style="@style/EditText"
-                />
-
-            <EditText
-                android:hint="@string/verification_phone"
-                android:id="@+id/phone_field"
-                style="@style/EditText"
-                android:inputType="phone"
-                />
-
-            <Button
-                style="@style/MyButton"
-                android:text="@string/verification_button"
-                android:id="@+id/send_verification_code"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/verification_explanation"
-                android:id="@+id/textView"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/verification_layout"
-            android:orientation="vertical"
-            android:visibility="invisible">
-        </LinearLayout>
-    </FrameLayout>
+    <EditText
+        android:hint="@string/verification_name"
+        android:id="@+id/name_field"
+        style="@style/EditText"
+        />
+    <EditText
+        android:hint="@string/verification_email"
+        android:id="@+id/email_field"
+        style="@style/EditText"
+        android:inputType="textEmailAddress"
+        />
+    <EditText
+        android:hint="@string/verification_pw"
+        android:id="@+id/pw_field"
+        style="@style/EditText"
+        android:inputType="textPassword"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:hint="@string/verification_phone"
+            android:id="@+id/phone_field"
+            style="@style/EditText"
+            android:inputType="phone"
+            />
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            style="@style/MyButton"
+            android:text="@string/verification_button"
+            android:id="@+id/send_verification_code"
+            />
+    </LinearLayout>
+    <EditText
+        android:hint="@string/verification_field"
+        android:id="@+id/verification_field"
+        style="@style/EditText"
+        android:inputType="phone"
+        />
 
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/verification_explanation"
+        android:id="@+id/textView"/>
+</LinearLayout>
+
+
