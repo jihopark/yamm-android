@@ -47,6 +47,13 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
+        <activity
+            android:name="com.teamyamm.yamm.app.NewIntroActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_intro"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+
         <!-- Battle Screen -->
         <activity
             android:name="com.teamyamm.yamm.app.BattleActivity"
