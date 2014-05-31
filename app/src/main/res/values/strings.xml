@@ -10,6 +10,7 @@
     <string name="title_activity_battle">BattleActivity</string>
     <string name="title_activity_battle_result">BattleResult</string>
     <string name="title_activity_join">서비스 가입</string>
+    <string name="title_activity_login">로그인</string>
     <string name="title_activity_friend">같이 먹을 친구를 선택해주세요</string>
 
 

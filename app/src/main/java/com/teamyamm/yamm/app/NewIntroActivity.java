@@ -30,5 +30,12 @@ public class NewIntroActivity extends BaseActivity {
             }
         });
 
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToActivity(LoginActivity.class);
+            }
+        });
+
     }
 }

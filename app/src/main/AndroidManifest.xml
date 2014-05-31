@@ -54,6 +54,15 @@
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
 
+        <!-- Login Screen -->
+
+        <activity
+            android:name="com.teamyamm.yamm.app.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+
         <!-- Battle Screen -->
         <activity
             android:name="com.teamyamm.yamm.app.BattleActivity"
