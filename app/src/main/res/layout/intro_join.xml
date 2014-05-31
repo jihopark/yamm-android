@@ -54,16 +54,9 @@
             />
         </LinearLayout>
     <EditText
-        android:hint="@string/verification_field"
+        android:hint="@string/verification_phone"
         android:id="@+id/verification_field"
         style="@style/EditText"
         android:inputType="phone"
         />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/verification_explanation"
-        android:id="@+id/textView"/>
 </LinearLayout>

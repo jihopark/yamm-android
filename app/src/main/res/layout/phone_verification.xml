@@ -29,7 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/verification_resend_button"
-        android:id="@+id/verification_resend_button"
         android:textColor="#ff0000" />
 
     <TextView

@@ -1,12 +1,17 @@
 package com.teamyamm.yamm.app;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.method.TransformationMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,62 +28,40 @@ public class JoinActivity extends BaseActivity {
         Log.i("JoinActivity/OnCreate", "JoinActivity onCreate");
 
         joinLayout = (LinearLayout)findViewById(R.id.join_layout);
-
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-        configSendButton();
 
+
+        configSendButton();
+        configAgreementCheckBox();
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
-    /*
-    * When SendVerificationCode Button is pressed, inflates next frame
-    * */
+    private void configAgreementCheckBox(){
+        CheckBox agreementCheckBox = (CheckBox) joinLayout.findViewById(R.id.agreement_checkbox);
+        TextView agreementTextView = (TextView) joinLayout.findViewById(R.id.agreement_textview);
+
+        //Set span for blue color
+        Spannable span = new SpannableString(getString(R.string.agreement_textview));
+        span.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 16, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        agreementTextView.setText(span);
+
+    }
 
     private void configSendButton() {
-        Button sendV = (Button) findViewById(R.id.send_verification_code);
+        final Button sendVButton = (Button) findViewById(R.id.verification_button);
+        final Button resendVButton = (Button) findViewById(R.id.verification_resend_button);
 
-        sendV.setOnClickListener(new View.OnClickListener() {
+        sendVButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
-
-
+                resendVButton.setVisibility(View.VISIBLE);
+                sendVButton.setVisibility(View.GONE);
             }
         });
-    }
-    /*
-    * Config Verification Confirm Button that goes to next activity
-    * */
 
-    private void configVeriConfirmButton(){
-        Button veriConfirmButton = (Button) findViewById(R.id.verification_confirm_button);
-
-        veriConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"인증되었습니다",Toast.LENGTH_SHORT).show();
-
-                goToActivity(MainActivity.class);
-            }
-        });
-    }
-
-    /*
-    * Config Verification Again Button that goes back to previous stage
-    * */
-
-    private void configVeriAgainButton(){
-        TextView veriAgainButton = (TextView) findViewById(R.id.verification_again_button);
-
-    }
-
-    /*
-    * Config Verification Resend Button that resends veri code sms
-    * */
-    private void configVeriResendButton(){
-        TextView veriResendButton = (TextView) findViewById(R.id.verification_resend_button);
-        veriResendButton.setOnClickListener(new View.OnClickListener() {
+        resendVButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
