@@ -9,6 +9,9 @@ import android.text.SpannableString;
 import android.text.method.TransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
+    private boolean enableButtonFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,41 @@ public class JoinActivity extends BaseActivity {
 
         configSendButton();
         configAgreementCheckBox();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.join_activity_actions, menu);
+
+        if (enableButtonFlag) {
+            menu.findItem(R.id.join_confirm_button).setEnabled(true);
+        } else {
+            menu.findItem(R.id.join_confirm_button).setEnabled(false);
+        }
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.join_confirm_button:
+                Log.i("JoinActivity/OnOptionsItemSelected","Confirm Join Button Clicked");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void setConfirmButtonEnabled(boolean b){
+        if (enableButtonFlag != b) {
+            enableButtonFlag = b;
+            supportInvalidateOptionsMenu();
+        }
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
