@@ -8,11 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -216,4 +218,50 @@ public class BaseActivity extends ActionBarActivity {
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
- }
+
+    /*
+    * To show the last character of password
+    * */
+    protected class HiddenPassTransformationMethod implements TransformationMethod {
+
+        private char DOT = '\u2022';
+
+        @Override
+        public CharSequence getTransformation(final CharSequence charSequence, final View view) {
+            return new PassCharSequence(charSequence);
+        }
+
+        @Override
+        public void onFocusChanged(final View view, final CharSequence charSequence, final boolean b, final int i,
+                                   final Rect rect) {
+            //nothing to do here
+        }
+
+        private class PassCharSequence implements CharSequence {
+
+            private final CharSequence charSequence;
+
+            public PassCharSequence(final CharSequence charSequence) {
+                this.charSequence = charSequence;
+            }
+
+            @Override
+            public char charAt(final int index) {
+                if (index == length() - 1)
+                    return charSequence.charAt(index);
+                return DOT;
+            }
+
+            @Override
+            public int length() {
+                return charSequence.length();
+            }
+
+            @Override
+            public CharSequence subSequence(final int start, final int end) {
+                return new PassCharSequence(charSequence.subSequence(start, end));
+            }
+        }
+    }
+
+}

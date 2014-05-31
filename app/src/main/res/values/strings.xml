@@ -75,6 +75,9 @@
     <!-- To be deleted -->
     <string name="verification_again_button">ㅇㅇ</string>
 
+    <!-- Login Button -->
+    <string name="login_button">로그인</string>
+
     <!--Battle Result -->
     <string name="battleagain_dialog_title">재도전</string>
     <string name="battleagain_dialog_message">다시 한번 해보시겠습니까</string>

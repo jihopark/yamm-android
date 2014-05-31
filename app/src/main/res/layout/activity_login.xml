@@ -3,5 +3,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <EditText
+        android:hint="@string/verification_email"
+        android:id="@+id/email_field"
+        style="@style/EditText"
+        android:inputType="textEmailAddress"
+        />
+    <EditText
+        android:hint="@string/verification_pw"
+        android:id="@+id/pw_field"
+        style="@style/EditText"
+        android:inputType="textPassword"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="login error text view"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_button"
+        android:id="@+id/login_button"/>
 
 </LinearLayout>
