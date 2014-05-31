@@ -87,6 +87,15 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     /*
+    * Set ActionBar Back Button
+    * */
+    protected void setActionBarBackButton(boolean b){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(b);
+
+    }
+
+
+    /*
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
     * */
 

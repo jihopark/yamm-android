@@ -31,7 +31,7 @@ public class JoinActivity extends BaseActivity {
 
         joinLayout = (LinearLayout)findViewById(R.id.join_layout);
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-
+        setActionBarBackButton(true);
 
         configSendButton();
         configAgreementCheckBox();

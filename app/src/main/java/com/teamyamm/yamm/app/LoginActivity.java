@@ -17,7 +17,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         ((EditText) findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-
+        setActionBarBackButton(true);
         setLoginButton();
     }
 
