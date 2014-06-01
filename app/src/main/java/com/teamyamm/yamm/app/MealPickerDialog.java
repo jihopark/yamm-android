@@ -34,7 +34,7 @@ public class MealPickerDialog extends DialogFragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("onItemClick", "onItemClick called");
-                NewMainFragment mf = ((NewMainFragment)getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MAIN_FRAGMENT));
+                MainFragment mf = ((MainFragment)getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MAIN_FRAGMENT));
                 Spinner s = (Spinner) getActivity().findViewById(R.id.date_pick_spinner);
 
                 ArrayAdapter<CharSequence> adapter = mf.spinnerAdapter;

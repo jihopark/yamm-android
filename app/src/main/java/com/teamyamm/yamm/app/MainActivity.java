@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
-    private NewMainFragment mainFragment;
+    private MainFragment mainFragment;
     private List<YammItem> selectedYammItems;
 
 
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity {
                 R.layout.left_drawer_item, navMenuTitles));
 
         //Set up Main Fragment
-        mainFragment = new NewMainFragment();
+        mainFragment = new MainFragment();
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         tact.add(R.id.main_content_frame, mainFragment, MAIN_FRAGMENT);
         tact.commit();

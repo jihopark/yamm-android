@@ -35,7 +35,7 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
         }
 
         Log.i("onDateSet","onDateSet called");
-        final NewMainFragment mf = ((NewMainFragment)getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MAIN_FRAGMENT));
+        final MainFragment mf = ((MainFragment)getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MAIN_FRAGMENT));
 
         //Date Validation
         if (!isDateValid(year, month, day)){
