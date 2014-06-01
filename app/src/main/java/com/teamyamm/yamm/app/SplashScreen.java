@@ -65,8 +65,6 @@ public class SplashScreen extends Activity {
         }
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
             activity = new Intent(getBaseContext(), BattleActivity.class);
-        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLERESULT)))
-            activity = new Intent(getBaseContext(), BattleResultActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_JOIN)))
             activity = new Intent(getBaseContext(), JoinActivity.class);
 

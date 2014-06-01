@@ -67,11 +67,6 @@
         </activity>
 
         <!-- Battle Result Screen -->
-        <activity
-            android:name=".BattleResultActivity"
-            android:label="@string/title_activity_battle_result"
-            android:theme="@style/Theme.AppCompat.Light" >
-        </activity>
 
         <!-- Join Screen -->
         <activity

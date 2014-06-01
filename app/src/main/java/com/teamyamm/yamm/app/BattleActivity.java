@@ -22,7 +22,6 @@ public class BattleActivity extends BaseActivity {
     public boolean isFinished = false;
 
     public final boolean FRAGMENT_ONE_SHOWN = true;
-    public final boolean FRAGMENT_TWO_SHOWN = false;
 
     public boolean fragmentShown = FRAGMENT_ONE_SHOWN;
 
@@ -46,17 +45,6 @@ public class BattleActivity extends BaseActivity {
         DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Deleted because after battle activity, it shouldn't go back to intro activity
-               /*
-                //Save Previous Activity
-                BaseActivity.putInPref(getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE)
-                        ,getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_INTRO));
-
-                //Go to IntroActivity
-                Intent introActivity = new Intent(getBaseContext(), IntroActivity.class);
-                introActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-                startActivity(introActivity);*/
                 goBackHome();
             }
         };
@@ -131,7 +119,7 @@ public class BattleActivity extends BaseActivity {
 
         //If sendBattle Result Failed, don't go to Battle Result
         if (resultSent!=false) {
-            goToActivity(BattleResultActivity.class);
+            goToActivity(MainActivity.class);
         }
     }
 

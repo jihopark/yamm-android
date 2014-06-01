@@ -82,12 +82,6 @@
     <string name="login_button">로그인</string>
     <string name="join_button">서비스 둘러보기</string>
 
-    <!--Battle Result -->
-    <string name="battleagain_dialog_title">재도전</string>
-    <string name="battleagain_dialog_message">다시 한번 해보시겠습니까</string>
-    <string name="battleagain_dialog_positive">한번 더</string>
-    <string name="battleagain_dialog_negative">이제 그만</string>
-
     <!-- Main Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="yamm_button_text">친구랑 밥먹기</string>
