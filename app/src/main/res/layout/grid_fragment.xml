@@ -3,31 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grid_introduction"/>
+    <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/grid_introduction"/>
-        </LinearLayout>
-
-        <CheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/grid_checkbox_text"
-            android:id="@+id/grid_checkbox"/>
-    </LinearLayout>
-    <ScrollView
+        android:text="@string/grid_checkbox_text"
+        android:id="@+id/grid_checkbox"/>
+    <com.teamyamm.yamm.app.GridSelectionListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#111111"
-        android:id="@+id/grid_scroll_view">
-    </ScrollView>
-
+        android:layout_height="wrap_content"
+        android:id="@+id/grid_selection_list_view"/>
 </LinearLayout>

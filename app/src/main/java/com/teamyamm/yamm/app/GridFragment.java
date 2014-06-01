@@ -22,6 +22,8 @@ import java.util.ArrayList;
 public class GridFragment extends Fragment {
     private GridSelectionListView listView;
     private GridSelectionListAdapter adapter;
+    private LinearLayout mainLayout;
+
     private ScrollView sv;
     private CheckBox checkbox;
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
@@ -31,26 +33,19 @@ public class GridFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.grid_fragment, container, false);
+        mainLayout = (LinearLayout) inflater.inflate(R.layout.grid_fragment, container, false);
 
         listView = initGridSelectionListView();
 
         //In fragment, getActivity.findViewById won't work. Get layout directly from inflater instead
 
         //Set Checkbox
-        checkbox = (CheckBox) layout.findViewById(R.id.grid_checkbox);
+        checkbox = (CheckBox) mainLayout.findViewById(R.id.grid_checkbox);
         checkbox.setChecked(false);
         checkbox.setOnCheckedChangeListener(initCheckBoxChangeListener());
         vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id),"채식");
 
-        //Set ScrollView & ListView
-        sv = (ScrollView) layout.findViewById(R.id.grid_scroll_view);
-        sv.addView(listView);
-
-        //This stretches Scroll View according to its child
-        sv.setFillViewport(true);
-
-        return layout;
+        return mainLayout;
     }
 
 
@@ -71,7 +66,7 @@ public class GridFragment extends Fragment {
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.v("GridFragment/onCheckedChanged","isChecked "+ isChecked + ", add " + vegi);
+                Log.i("GridFragment/onCheckedChanged","isChecked "+ isChecked + ", add " + vegi);
                 if (isChecked)
                     selectedItems.add(vegi);
                 else
@@ -84,16 +79,22 @@ public class GridFragment extends Fragment {
     * Initiate GridSelectionListView
     * */
     private GridSelectionListView initGridSelectionListView(){
-        GridSelectionListView view = new GridSelectionListView(getActivity());
+        //GridSelectionListView view = new GridSelectionListView(getActivity());
+        GridSelectionListView view = (GridSelectionListView) mainLayout.findViewById(R.id.grid_selection_list_view);
+
         view.setAdapter(initiateAdapter());
             view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     //Change Clicked Status ofGridItemView
                     ((GridItemView) v).toggle();
-                    if (((GridItemView) v).getChecked())
+                    if (((GridItemView) v).getChecked()) {
+                        Log.i("GridFragment/onItemClickListener","Add " + ((GridItemView) v).getGridItem().getName());
                         selectedItems.add(((GridItemView) v).getGridItem());
-                    else
+                    }
+                    else {
+                        Log.i("GridFragment/onItemClickListener","Removed " + ((GridItemView) v).getGridItem().getName());
                         selectedItems.remove(((GridItemView) v).getGridItem());
+                    }
                 }
             });
         return view;
