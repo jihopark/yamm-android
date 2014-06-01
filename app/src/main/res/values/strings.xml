@@ -42,13 +42,15 @@
     <string name="invalid_date_message">오늘 이후의 날짜를 입력해주세요</string>
     <string name="invalid_date_title">과거</string>
 
-    <!--Grid Fragment -->
+    <!--Grid Activity & Fragment -->
+    <string name="grid_confirm_button">확인</string>
     <string name="grid_introduction">못 먹는 음식 다 골라</string>
     <string name="grid_button">없는데요</string>
     <string name="grid_item_selected_text">윀</string>
     <string name="grid_selected_none">없는데요</string>
     <string name="grid_selected_some">다 골랐어요</string>
     <string name="grid_checkbox_text">나는 채식주의자얌</string>
+
 
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>
