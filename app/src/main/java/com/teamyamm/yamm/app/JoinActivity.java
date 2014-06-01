@@ -59,6 +59,14 @@ public class JoinActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.join_confirm_button:
                 Log.i("JoinActivity/OnOptionsItemSelected","Confirm Join Button Clicked");
+                boolean validInput = true;
+
+                //If all input is valid and registration is complete
+
+                if (validInput){
+                    goToActivity(GridActivity.class);
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

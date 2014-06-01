@@ -90,6 +90,12 @@
                 android:value="com.teamyamm.yamm.app.NewIntroActivity" />
         </activity>
 
+        <!-- Grid Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.GridActivity"
+            android:label="@string/title_activity_grid"
+            android:theme="@style/Theme.AppCompat.Light" />
+
         <!-- Friend Activity -->
         <activity
             android:name="com.teamyamm.yamm.app.FriendActivity"
