@@ -22,7 +22,7 @@
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
-    <string name="PREVIOUS_ACTIVITY_INTRO">NewIntroActivity</string>
+    <string name="PREVIOUS_ACTIVITY_INTRO">IntroActivity</string>
     <string name="PREVIOUS_ACTIVITY_BATTLE">BattleActivity</string>
     <string name="PREVIOUS_ACTIVITY_BATTLERESULT">BattleResultActivity</string>
     <string name="PREVIOUS_ACTIVITY_JOIN">JoinActivity</string>
@@ -80,6 +80,7 @@
 
     <!-- Login Button -->
     <string name="login_button">로그인</string>
+    <string name="join_button">서비스 둘러보기</string>
 
     <!--Battle Result -->
     <string name="battleagain_dialog_title">재도전</string>

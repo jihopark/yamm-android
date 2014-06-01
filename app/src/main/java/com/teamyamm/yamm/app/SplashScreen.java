@@ -61,7 +61,7 @@ public class SplashScreen extends Activity {
         if (value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
             //Save Previous activity to shared preference
             BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
-            activity = new Intent(getBaseContext(), NewIntroActivity.class);
+            activity = new Intent(getBaseContext(), IntroActivity.class);
         }
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
             activity = new Intent(getBaseContext(), BattleActivity.class);

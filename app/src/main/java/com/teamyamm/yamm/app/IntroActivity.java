@@ -1,176 +1,59 @@
 package com.teamyamm.yamm.app;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
+/**
+ * Created by parkjiho on 5/31/14.
+ */
 public class IntroActivity extends BaseActivity {
-    private IntroViewPager introPager;
-    private PagerAdapter adapter;
-    private GridFragment gridFragment;
-    protected final int NUMBER_OF_PAGE = 4;
-    protected final int INTRO_JOIN_PAGE = 0;
-    protected final int INTRO_VERI_PAGE = 1;
 
-    //For intro_join
-
-    private LinearLayout verificationLayout;
-    private LinearLayout joinLayout;
-    private boolean isVerificationLayoutInflated = false;
-    private final int JOIN_LAYOUT = 1;
-    private final int VERI_LAYOUT = 2;
-    private int currentFrame = JOIN_LAYOUT;
-
+    private Button joinButton, loginButton;
+    private final static int NUMBER_OF_PAGE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intro);
+        setContentView(R.layout.activity_new_intro);
 
+        setButtons();
+        setViewPager();
         hideActionBar();
-        configViewPager();
-
     }
 
-
-    /*
-    * Go to Home Screen When Back Button of IntroActivity
-    * */
-    @Override
-    public void onBackPressed() {
-        goBackHome();
-    }
-
-    ////////////////////////////////Private Methods/////////////////////////////////////////////////
-
-    /*
-    * Config ViewPager and Indicator(OnPageChangeListener to config intro_button
-    * https://github.com/JakeWharton/Android-ViewPagerIndicator
-    * */
-
-    private void configViewPager(){
-        introPager = (IntroViewPager)findViewById(R.id.intro_pager);
-        adapter = new IntroPagerAdapter(getApplicationContext());
-
-        introPager.setAdapter(adapter);
-
-        //Bind the title indicator to the adapter
-        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
-
-        //Set Indicator Color
+    private void setViewPager(){
+    /*    ViewPager pager = (ViewPager) findViewById(R.id.intro_view_pager);
+        pager.setAdapter(new IntroPagerAdapter(getApplicationContext()));
+        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.intro_view_pager_indicator);
         indicator.setFillColor(Color.BLACK);
+        indicator.setViewPager(pager);*/
+    }
 
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+    private void setButtons(){
+        joinButton = (Button) findViewById(R.id.join_button);
+        loginButton = (Button) findViewById(R.id.login_button);
+
+        joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                if (position == NUMBER_OF_PAGE - 1) {
-                    //Save Grid Result to pref & Send GridResult to Server & Go To Battle Activity
-                    gridFragment = (GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment);
-                    finishIntro();
-                }
-
-                if (position == INTRO_VERI_PAGE){
-                    Log.i("IntroActivity/onPageSelected", "Intro Verification Page Initiated");
-                    verificationLayout = (LinearLayout)findViewById(R.id.verification_layout);
-                }
-
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onClick(View v) {
+                goToActivity(JoinActivity.class);
             }
         });
-        indicator.setViewPager(introPager);
-        indicator.onPageSelected(0);
-    }
-    /*
-    * Finshes Intro and saves&sends gridresults and go to BattleActivity
-    * */
-    private void finishIntro(){
-        boolean resultSent = true;
-        Log.i("IntroActivity/finishBattle", "FinishIntro Started");
 
-        //Save to Shared Pref
-        String result = saveGridResult(gridFragment);
-
-        //Send to Server
-
-        if (!sendGridResult(result)){
-            Log.e("Server Communication Error", "Sending Battle Results Failed");
-            showInternetConnectionAlert(new CustomInternetListener(internetAlert));
-            resultSent=false;
-        }
-        //If sendBattle Result Failed, don't go to Battle Activity
-        if (resultSent!=false) {
-            goToActivity(BattleActivity.class);
-        }
-    }
-
-    /*
-    * Send Grid Selected Result to server
-    * Only executed right before stating Battle Activity
-    * */
-    private boolean sendGridResult(String s){
-        Log.i("IntroActivity/sendGridResults", "sendGridResults Started");
-        //Check internet connection
-        if (!checkInternetConnection()){
-            return false;
-        }
-        return true;
-    }
-
-    /*
-   * Custom Listener for Intro Activity InternetDialog
-   * */
-    private class CustomInternetListener implements View.OnClickListener {
-        private final Dialog dialog;
-        public CustomInternetListener(Dialog dialog) {
-            this.dialog = dialog;
-        }
-        @Override
-        public void onClick(View v) {
-            Log.i("IntroActivity/CustomInternetListener", "Listener activated");
-            if (checkInternetConnection()) {
-                Log.i("IntroActivity/CustomInternetListener","Internet came back");
-                dialog.dismiss();
-                finishIntro();
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToActivity(LoginActivity.class);
             }
-        }
-    }
-
-     /*
-    * Save Grid Selected Result to shared preferences
-    * Only executed right before stating Battle Activity
-    * */
-    private String saveGridResult(GridFragment f){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-        String s = "";
-        for (GridItem i : f.getSelectedItems())
-            s = s +i.getId()+",";
-        BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),s);
-        Log.i("IntroActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
-        return s;
+        });
     }
 
     /**
-     * A pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * A pager adapter that represents 3 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    private class IntroPagerAdapter extends PagerAdapter {
+    /*private class IntroPagerAdapter extends PagerAdapter {
         private LayoutInflater mInflater;
 
         public IntroPagerAdapter(Context c){
@@ -230,10 +113,5 @@ public class IntroActivity extends BaseActivity {
         public boolean isViewFromObject(View pager, Object obj) {
             return pager == obj;
         }
-    }
-
-
-
-
-
+    }*/
 }
