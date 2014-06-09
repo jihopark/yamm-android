@@ -18,6 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
@@ -64,7 +69,7 @@ public class JoinActivity extends BaseActivity {
                 //If all input is valid and registration is complete
 
                 if (validInput){
-                    goToActivity(GridActivity.class);
+                    postRegistrationToServer();
                 }
 
                 return true;
@@ -81,6 +86,32 @@ public class JoinActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private void postRegistrationToServer(){
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("https://api.yamm.me")
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        String name = ((EditText) joinLayout.findViewById(R.id.name_field)).getText().toString();
+        String email = ((EditText) joinLayout.findViewById(R.id.email_field)).getText().toString();
+        String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
+        String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
+
+        service.userRegistration(name, email, password, phone, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("JoinActivity/postRegistrationToServer","Registration " + s);
+                goToActivity(GridActivity.class);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i("JoinActivity/postRegistrationToServer","Registration Failure ");
+                retrofitError.printStackTrace();
+            }
+        });
+    }
 
     private void configAgreementCheckBox(){
         CheckBox agreementCheckBox = (CheckBox) joinLayout.findViewById(R.id.agreement_checkbox);
