@@ -31,6 +31,8 @@ public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
     private boolean flag_name = false, flag_email= false, flag_phone= false, flag_check= false, flag_pwd= false, flag_veri = false;
+    private YammAPIService service;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,13 @@ public class JoinActivity extends BaseActivity {
         configSendButton();
         configAgreementCheckBox();
         configEditTexts();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("https://api.yamm.me")
+                .build();
+
+        service = restAdapter.create(YammAPIService.class);
+
     }
 
     @Override
@@ -185,20 +194,15 @@ public class JoinActivity extends BaseActivity {
     }
 
     private void postRegistrationToServer(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://api.yamm.me")
-                .build();
-
-        YammAPIService service = restAdapter.create(YammAPIService.class);
-
         String name = ((EditText) joinLayout.findViewById(R.id.name_field)).getText().toString();
         String email = ((EditText) joinLayout.findViewById(R.id.email_field)).getText().toString();
         String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
         String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
+        String veri = ((EditText) joinLayout.findViewById(R.id.verification_field)).getText().toString();
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
-        service.userRegistration(name, email, password, phone, new Callback<String>() {
+        service.userRegistration(name, email, password, phone, veri, new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
@@ -243,9 +247,26 @@ public class JoinActivity extends BaseActivity {
         sendVButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
-                resendVButton.setVisibility(View.VISIBLE);
-                sendVButton.setVisibility(View.GONE);
+                String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
+
+                if (phone!=null) {
+                    service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>(){
+                                @Override
+                                public void success(YammAPIService.VeriExp s, Response response) {
+                                    Log.i("JoinActivity/configSendButton", "VeriExpires at " + s);
+                                    Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
+                                    resendVButton.setVisibility(View.VISIBLE);
+                                    sendVButton.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    Log.e("JoinActivity/configSendButton", "Veri Failed");
+                                    retrofitError.printStackTrace();
+                                }
+                    });
+                }
+
             }
         });
 

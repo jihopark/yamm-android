@@ -13,5 +13,21 @@ public interface YammAPIService {
     @FormUrlEncoded
     @POST("/registration/user")
     void userRegistration(@Field("name") String name, @Field("email") String email,
-                            @Field("password") String password, @Field("phone") String phone, Callback<String> cb);
+                            @Field("password") String password, @Field("phone") String phone, @Field("authcode") String authcode, Callback<String> cb);
+
+    @FormUrlEncoded
+    @POST("/registration/phone/generate-auth-code")
+    void phoneVerification(@Field("phone") String phone, Callback<VeriExp> cb);
+
+    public static class VeriExp{
+        String expires;
+
+        public VeriExp(String expires){
+            this.expires = expires;
+        }
+
+        public String toString(){
+            return expires;
+        }
+    }
 }
