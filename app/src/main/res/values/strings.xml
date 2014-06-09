@@ -75,6 +75,8 @@
     <string name="agreement_textview">서비스 약관와 개인정보 보호정책에 동의합니다</string>
     <string name="join_confirm_button">확인</string>
 
+    <string name="join_error_message">잘못된 정보가 있어요. 확인해주세요</string>
+
     <!-- To be deleted -->
     <string name="verification_again_button">ㅇㅇ</string>
 

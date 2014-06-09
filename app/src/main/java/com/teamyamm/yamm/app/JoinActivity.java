@@ -3,8 +3,10 @@ package com.teamyamm.yamm.app;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +29,8 @@ import retrofit.client.Response;
 
 public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
-    private boolean enableButtonFlag = true;
-
+    private boolean enableButtonFlag = false;
+    private boolean flag_name = false, flag_email= false, flag_phone= false, flag_check= false, flag_pwd= false, flag_veri = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class JoinActivity extends BaseActivity {
 
         configSendButton();
         configAgreementCheckBox();
+        configEditTexts();
     }
 
     @Override
@@ -78,14 +82,108 @@ public class JoinActivity extends BaseActivity {
         }
     }
 
-    public void setConfirmButtonEnabled(boolean b){
-        if (enableButtonFlag != b) {
-            enableButtonFlag = b;
+    public void setConfirmButtonEnabled(){
+        boolean tmp = enableButtonFlag;
+        enableButtonFlag = calculateFlag();
+        Log.i("JoinActivity/setConfirmButtonEnabled","enableButtonFlag from " + tmp + " to " + enableButtonFlag);
+        if (enableButtonFlag != tmp) {
             supportInvalidateOptionsMenu();
         }
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private boolean calculateFlag(){
+        return flag_check && flag_email && flag_name && flag_pwd && flag_phone && flag_veri;
+    }
+
+    private void configEditTexts(){
+        ((EditText) joinLayout.findViewById(R.id.name_field)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                flag_name = !( s.length() == 0 );
+                setConfirmButtonEnabled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ((EditText) joinLayout.findViewById(R.id.email_field)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                flag_email = !(s.length() == 0);
+                setConfirmButtonEnabled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ((EditText) joinLayout.findViewById(R.id.pw_field)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                flag_pwd = !(s.length() == 0);
+                setConfirmButtonEnabled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ((EditText) joinLayout.findViewById(R.id.phone_field)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                flag_phone = !(s.length() == 0);
+                setConfirmButtonEnabled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ((EditText) joinLayout.findViewById(R.id.verification_field)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                flag_veri = !( s.length() == 0 );
+                setConfirmButtonEnabled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     private void postRegistrationToServer(){
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://api.yamm.me")
@@ -98,17 +196,25 @@ public class JoinActivity extends BaseActivity {
         String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
         String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
 
+        Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
+
         service.userRegistration(name, email, password, phone, new Callback<String>() {
             @Override
             public void success(String s, Response response) {
-                Log.i("JoinActivity/postRegistrationToServer","Registration " + s);
+                Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 goToActivity(GridActivity.class);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i("JoinActivity/postRegistrationToServer","Registration Failure ");
                 retrofitError.printStackTrace();
+                if (retrofitError.isNetworkError()) {
+                    Log.e("JoinActivity/postRegistrationToServer", "Retrofit Network Error");
+                    Toast.makeText(getApplicationContext(), getString(R.string.internet_alert_message), Toast.LENGTH_LONG);
+                } else {
+                    Log.e("JoinActivity/postRegistrationToServer", "Registration Failure");
+                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG);
+                }
             }
         });
     }
@@ -121,7 +227,13 @@ public class JoinActivity extends BaseActivity {
         Spannable span = new SpannableString(getString(R.string.agreement_textview));
         span.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 16, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         agreementTextView.setText(span);
-
+        agreementCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                flag_check = isChecked;
+                setConfirmButtonEnabled();
+            }
+        });
     }
 
     private void configSendButton() {
@@ -153,5 +265,7 @@ public class JoinActivity extends BaseActivity {
             }
         });
     }
+
+
 
 }
