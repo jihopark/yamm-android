@@ -278,23 +278,10 @@ public class JoinActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
                         Log.i("JoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
-                        Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
                         resendVButton.setVisibility(View.VISIBLE);
                         sendVButton.setVisibility(View.GONE);
 
-                        service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
-                            @Override
-                            public void success(YammAPIService.VeriExp s, Response response) {
-                                Log.i("JoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
-
-                            }
-
-                            @Override
-                            public void failure(RetrofitError retrofitError) {
-                                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed");
-                                retrofitError.printStackTrace();
-                            }
-                        });
+                        sendVeriMessage(phone);
                     }
                 };
             }
@@ -307,12 +294,31 @@ public class JoinActivity extends BaseActivity {
                 DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), getString(R.string.verification_resend_message),Toast.LENGTH_SHORT).show();
+                        String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
+                        sendVeriMessage(phone);
                     }
                 };
 
                 createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
                         R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
+            }
+        });
+    }
+
+    private void sendVeriMessage(String phone){
+        service = BaseActivity.setYammAPIService(null);
+        service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
+            @Override
+            public void success(YammAPIService.VeriExp s, Response response) {
+                Log.i("JoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
+                Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed");
+                retrofitError.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.verification_error_message, Toast.LENGTH_SHORT).show();
             }
         });
     }

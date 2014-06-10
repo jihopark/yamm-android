@@ -16,7 +16,7 @@ public interface YammAPIService {
                             @Field("password") String password, @Field("phone") String phone, @Field("authcode") String authcode, Callback<String> cb);
 
     @FormUrlEncoded
-    @POST("/registration/phone/generate-auth-code")
+    @POST("/registration/generate-phone-auth-code")
     void phoneVerification(@Field("phone") String phone, Callback<VeriExp> cb);
 
     public static class VeriExp{

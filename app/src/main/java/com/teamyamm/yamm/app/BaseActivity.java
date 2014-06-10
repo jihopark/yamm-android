@@ -236,7 +236,7 @@ public class BaseActivity extends ActionBarActivity {
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
-    protected YammAPIService setYammAPIService(ErrorHandler handler){
+    protected static YammAPIService setYammAPIService(ErrorHandler handler){
         Log.i("BaseActivity/setYammAPIService","Yamm API Service Set @" + apiURL);
         RestAdapter restAdapter = null;
 
