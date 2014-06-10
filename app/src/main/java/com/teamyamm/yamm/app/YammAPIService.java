@@ -30,4 +30,10 @@ public interface YammAPIService {
             return expires;
         }
     }
+
+    public class YammJoinException extends Exception{
+        public YammJoinException(String message){
+            super(message);
+        }
+    }
 }

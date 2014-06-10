@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -42,7 +43,7 @@ public class JoinActivity extends BaseActivity {
 
         joinLayout = (LinearLayout)findViewById(R.id.join_layout);
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-        service = setYammAPIService();
+        service = setYammAPIService(new JoinErrorHandler());
         setActionBarBackButton(true);
         configSendButton();
         configAgreementCheckBox();
@@ -90,7 +91,6 @@ public class JoinActivity extends BaseActivity {
     public void setConfirmButtonEnabled(){
         boolean tmp = enableButtonFlag;
         enableButtonFlag = calculateFlag();
-        Log.i("JoinActivity/setConfirmButtonEnabled","enableButtonFlag from " + tmp + " to " + enableButtonFlag);
         if (enableButtonFlag != tmp) {
             supportInvalidateOptionsMenu();
         }
@@ -207,13 +207,15 @@ public class JoinActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                retrofitError.printStackTrace();
+                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG).show();
+
                 if (retrofitError.isNetworkError()) {
                     Log.e("JoinActivity/postRegistrationToServer", "Retrofit Network Error");
                     Toast.makeText(getApplicationContext(), getString(R.string.internet_alert_message), Toast.LENGTH_LONG);
-                } else {
+                }
+                else if (retrofitError.getMessage() == "Yamm Error"){
                     Log.e("JoinActivity/postRegistrationToServer", "Registration Failure");
-                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -315,6 +317,24 @@ public class JoinActivity extends BaseActivity {
         });
     }
 
+    //Error Handler
+    public class JoinErrorHandler implements ErrorHandler {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("JoinErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammJoinException("Retrofit Network Error");
+            }
+            if (r != null && r.getStatus() == 400) {
+                Log.e("JoinErrorHandler/handleError","Handling 400 Error");
+                return new YammAPIService.YammJoinException("Yamm Error");
+            }
+            Log.e("JoinErrorHandler/handleError","Handling Unidentified Error");
+            return cause;
+        }
+    }
 
 
 }
