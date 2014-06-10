@@ -25,6 +25,8 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
+import retrofit.RestAdapter;
+
 
 /**
  * Created by parkjiho on 5/7/14.
@@ -34,6 +36,7 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
     public static String baseURL = "http://img.yamm.me";
+    public static String apiURL = "https://api.yamm.me";
     public final static float imageRatio = 1.5f;
     public final static int ANIMATION_SPEED = 100;
     public final static int SUCCESS_RESULT_CODE = 200;
@@ -225,6 +228,20 @@ public class BaseActivity extends ActionBarActivity {
     protected static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    protected String phoneNumberFormat(String phone){
+        return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
+    }
+
+    protected YammAPIService setYammAPIService(){
+        Log.i("BaseActivity/setYammAPIService","Yamm API Service Set @" + apiURL);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .build();
+
+        return restAdapter.create(YammAPIService.class);
     }
 
 

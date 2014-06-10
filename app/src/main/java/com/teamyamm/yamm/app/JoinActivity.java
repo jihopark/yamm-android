@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -41,17 +42,12 @@ public class JoinActivity extends BaseActivity {
 
         joinLayout = (LinearLayout)findViewById(R.id.join_layout);
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
+        service = setYammAPIService();
         setActionBarBackButton(true);
-
         configSendButton();
         configAgreementCheckBox();
         configEditTexts();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://api.yamm.me")
-                .build();
-
-        service = restAdapter.create(YammAPIService.class);
 
     }
 
@@ -202,7 +198,7 @@ public class JoinActivity extends BaseActivity {
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
-        service.userRegistration(name, email, password, phone, veri, new Callback<String>() {
+        service.userRegistration(name.toString(), email.toString(), password.toString(), phone.toString(), veri.toString(), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
@@ -249,24 +245,56 @@ public class JoinActivity extends BaseActivity {
             public void onClick(View v) {
                 String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
 
-                if (phone!=null) {
-                    service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>(){
-                                @Override
-                                public void success(YammAPIService.VeriExp s, Response response) {
-                                    Log.i("JoinActivity/configSendButton", "VeriExpires at " + s);
-                                    Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
-                                    resendVButton.setVisibility(View.VISIBLE);
-                                    sendVButton.setVisibility(View.GONE);
-                                }
+                if (phone!=null && (phone.length() == 10 || phone.length() == 11)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
 
-                                @Override
-                                public void failure(RetrofitError retrofitError) {
-                                    Log.e("JoinActivity/configSendButton", "Veri Failed");
-                                    retrofitError.printStackTrace();
-                                }
-                    });
+                    AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive), getVeriDialogPositiveListener())
+                            .setNegativeButton(getString(R.string.dialog_negative), null)
+                            .setTitle(getString(R.string.verification_dialog_title))
+                            .setMessage(getVeriDialogMessage(phone))
+                            .create();
+                    alert.show();
+
+                    //Center Text
+                    TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+                    messageView.setGravity(Gravity.CENTER);
                 }
+                else{
+                    Toast.makeText(getApplicationContext(), R.string.phone_number_error_message, Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            // Set Message
+            private String getVeriDialogMessage(String phone){
+                return phoneNumberFormat(phone) + "\n\n" + getString(R.string.verification_dialog_message);
+            }
+
+            // Positive OnClick Listener
+            private DialogInterface.OnClickListener getVeriDialogPositiveListener(){
+                return new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
+                        Log.i("JoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
+                        Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
+                        resendVButton.setVisibility(View.VISIBLE);
+                        sendVButton.setVisibility(View.GONE);
+
+                        service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
+                            @Override
+                            public void success(YammAPIService.VeriExp s, Response response) {
+                                Log.i("JoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed");
+                                retrofitError.printStackTrace();
+                            }
+                        });
+                    }
+                };
             }
         });
 
@@ -281,7 +309,7 @@ public class JoinActivity extends BaseActivity {
                     }
                 };
 
-                createDialog(JoinActivity.this, R.string.verification_dialog_title, R.string.verification_dialog_message,
+                createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
                         R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
             }
         });

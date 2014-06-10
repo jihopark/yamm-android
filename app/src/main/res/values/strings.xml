@@ -67,16 +67,17 @@
     <string name="verification_phone">전화번호</string>
     <string name="verification_button">인증</string>
     <string name="verification_sent">인증번호 문자가 발송되었습니다</string>
-    <string name="verification_confirm_button">확인</string>
     <string name="verification_resend_button">재전송</string>
-    <string name="verification_dialog_message">인증 문자를 다시 보낼까요?</string>
-    <string name="verification_dialog_title">재전송?</string>
+    <string name="verification_resend_dialog_message">인증 문자를 다시 보낼까요?</string>
+    <string name="verification_resend_dialog_title">재전송?</string>
     <string name="verification_resend_message">문자 재전송했슴</string>
+    <string name="verification_dialog_title">전화번호 인증</string>
+    <string name="verification_dialog_message">이 번호로 인증번호를 보낼께요</string>
     <string name="agreement_textview">서비스 약관와 개인정보 보호정책에 동의합니다</string>
     <string name="join_confirm_button">확인</string>
 
     <string name="join_error_message">잘못된 정보가 있어요. 확인해주세요</string>
-
+    <string name="phone_number_error_message">전화번호 형식이 잘못되었어요</string>
     <!-- To be deleted -->
     <string name="verification_again_button">ㅇㅇ</string>
 
