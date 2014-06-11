@@ -29,8 +29,16 @@ public interface YammAPIService {
     }
 
     public class YammRetrofitException extends RuntimeException{
-        public static final String NETWORK_ERROR = "NET";
-        public static final String AUTHENTICATION_ERROR = "AUT";
+        public static final String UNIDENTIFIED = "WTF"; //unidentified
+        public static final String NETWORK = "NET"; //network error
+        public static final String AUTHENTICATION = "AUT"; //authentication is wrong
+        public static final String DUPLICATE_ACCOUNT = "DUP"; // same email or phone
+        public static final String INCORRECT_AUTHCODE = "SMS"; //wrong sms authcode
+        public static final String PASSWORD_MIN = "PWM"; //password is too short
+        public static final String PASSWORD_FORMAT = "PWF"; //password should contain at least one number or special char
+        public static final String EMAIL_FORMAT = "EMF"; //email format is wrong
+        public static final String PHONE_FORMAT = "PHF"; //phone format is wrong
+
 
         public YammRetrofitException(Throwable e, String message){
             super(message, e);
@@ -73,6 +81,26 @@ public interface YammAPIService {
     }
 
 
+    /*
+    * Error
+    * */
 
+    public class YammRetrofitError{
+        private String code;
+        private String message;
 
+        public YammRetrofitError(){
+            code = "";
+            message = "";
+        }
+        public YammRetrofitError(String code, String message){
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getCode(){ return code; }
+        public String getMessage(){ return message; }
+
+        public String toString(){ return code + " " + message; }
+    }
 }

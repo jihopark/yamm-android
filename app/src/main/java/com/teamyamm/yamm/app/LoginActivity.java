@@ -73,9 +73,9 @@ public class LoginActivity extends BaseActivity {
                 String msg = retrofitError.getCause().getMessage();
                 Log.e("LoginActivity/userLogin", "ERROR CODE" + msg);
 
-                if (msg == YammAPIService.YammRetrofitException.AUTHENTICATION_ERROR)
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
                     Toast.makeText(getApplicationContext(), getString(R.string.login_authentication_error_message), Toast.LENGTH_LONG).show();
-                else if (msg == YammAPIService.YammRetrofitException.NETWORK_ERROR)
+                else if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
@@ -107,14 +107,14 @@ public class LoginActivity extends BaseActivity {
 
             if (cause.isNetworkError()){
                 Log.e("LoginErrorHandler/handleError","Handling Network Error");
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK_ERROR);
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
             }
             if (r != null && r.getStatus() == 401) {
                 Log.e("LoginErrorHandler/handleError","Handling 401 Error");
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION_ERROR);
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
             }
             Log.e("LoginErrorHandler/handleError","Unidentified Error");
-            return cause;
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
     }
 

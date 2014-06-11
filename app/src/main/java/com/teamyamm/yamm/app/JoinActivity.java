@@ -23,6 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
@@ -200,6 +206,8 @@ public class JoinActivity extends BaseActivity {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setErrorHandler(new JoinErrorHandler())
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
@@ -212,16 +220,25 @@ public class JoinActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG).show();
+                String msg = retrofitError.getCause().getMessage();
+                Log.e("JoinActivity/userRegistration", "ERROR CODE " + msg);
 
-                if (retrofitError.isNetworkError()) {
-                    Log.e("JoinActivity/postRegistrationToServer", "Retrofit Network Error");
-                    Toast.makeText(getApplicationContext(), getString(R.string.internet_alert_message), Toast.LENGTH_LONG);
-                }
-                else if (retrofitError.getMessage() == "Yamm Error"){
-                    Log.e("JoinActivity/postRegistrationToServer", "Registration Failure");
-                    Toast.makeText(getApplicationContext(), getString(R.string.join_error_message), Toast.LENGTH_LONG).show();
-                }
+                if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT))
+                    Toast.makeText(getApplicationContext(), getString(R.string.duplicate_account_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE))
+                    Toast.makeText(getApplicationContext(), getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT))
+                    Toast.makeText(getApplicationContext(), getString(R.string.email_format_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT))
+                    Toast.makeText(getApplicationContext(), getString(R.string.password_format_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN))
+                    Toast.makeText(getApplicationContext(), getString(R.string.password_min_error_message), Toast.LENGTH_LONG).show();
+                else if (msg.equals(YammAPIService.YammRetrofitException.PHONE_FORMAT))
+                    Toast.makeText(getApplicationContext(), getString(R.string.phone_number_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -339,15 +356,55 @@ public class JoinActivity extends BaseActivity {
             Response r = cause.getResponse();
 
             if (cause.isNetworkError()){
-                Log.e("JoinErrorHandler/handleError","Handling Network Error");
-                return new YammAPIService.YammRetrofitException(cause, "Retrofit Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
             }
-            if (r != null && r.getStatus() == 400) {
-                Log.e("JoinErrorHandler/handleError","Handling 400 Error " + r.getBody());
-                return new YammAPIService.YammRetrofitException(cause, "Yamm Error");
+            YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
+            Gson gson = new Gson();
+
+            error = gson.fromJson(responseToString(r), error.getClass());
+            Log.e("JoinErrorHandler/handleError",error.getMessage());
+
+
+            if (error.getCode().equals("DuplicateAccount")) {
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
             }
-            Log.e("JoinErrorHandler/handleError","Handling Unidentified Error");
-            return cause;
+            else if (error.getCode().equals("IncorrectAuthCode"))
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE);
+            else if (error.getCode().equals("InvalidParam:password:numchars"))
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_MIN);
+            else if (error.getCode().equals("InvalidParam:password:specialchars"))
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_FORMAT);
+            else if (error.getCode().equals("InvalidParam:email"))
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.EMAIL_FORMAT);
+            else if (error.getCode().equals("InvalidParam:phone"))
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PHONE_FORMAT);
+
+            Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+
+        private String responseToString(Response result){
+            //Try to get response body
+            BufferedReader reader = null;
+            StringBuilder sb = new StringBuilder();
+            try {
+
+                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+
+                String line;
+
+                try {
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return sb.toString();
         }
     }
 
