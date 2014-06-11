@@ -28,9 +28,12 @@ public interface YammAPIService {
         public String toString(){ return access_token; }
     }
 
-    public class YammJoinException extends Exception{
-        public YammJoinException(String message){
-            super(message);
+    public class YammRetrofitException extends RuntimeException{
+        public static final String NETWORK_ERROR = "NET";
+        public static final String AUTHENTICATION_ERROR = "AUT";
+
+        public YammRetrofitException(Throwable e, String message){
+            super(message, e);
         }
     }
 

@@ -340,11 +340,11 @@ public class JoinActivity extends BaseActivity {
 
             if (cause.isNetworkError()){
                 Log.e("JoinErrorHandler/handleError","Handling Network Error");
-                return new YammAPIService.YammJoinException("Retrofit Network Error");
+                return new YammAPIService.YammRetrofitException(cause, "Retrofit Network Error");
             }
             if (r != null && r.getStatus() == 400) {
                 Log.e("JoinErrorHandler/handleError","Handling 400 Error " + r.getBody());
-                return new YammAPIService.YammJoinException("Yamm Error");
+                return new YammAPIService.YammRetrofitException(cause, "Yamm Error");
             }
             Log.e("JoinErrorHandler/handleError","Handling Unidentified Error");
             return cause;

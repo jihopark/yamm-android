@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -35,6 +36,7 @@ public class LoginActivity extends BaseActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard(LoginActivity.this);
                 postLoginToServer(((EditText) findViewById(R.id.email_field)).getText().toString(),
                         ((EditText) findViewById(R.id.pw_field)).getText().toString());
             }
@@ -47,6 +49,7 @@ public class LoginActivity extends BaseActivity {
                 .setLog(setRestAdapterLog())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(setRequestInterceptorForLogin(email, pw))
+                .setErrorHandler(new LoginErrorHandler())
                 .build();
 
 
@@ -67,10 +70,17 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Toast.makeText(getApplicationContext(), "로그인이 실패하였습니다", Toast.LENGTH_SHORT).show();
-                Log.e("LoginActivity/userLogin", "Logged in Failed");
-                Log.e("LoginActivity/userLogin", "Body " + retrofitError.getResponse().getBody().toString());
-                retrofitError.printStackTrace();
+                String msg = retrofitError.getCause().getMessage();
+                Log.e("LoginActivity/userLogin", "ERROR CODE" + msg);
+
+                if (msg == YammAPIService.YammRetrofitException.AUTHENTICATION_ERROR)
+                    Toast.makeText(getApplicationContext(), getString(R.string.login_authentication_error_message), Toast.LENGTH_LONG).show();
+                else if (msg == YammAPIService.YammRetrofitException.NETWORK_ERROR)
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+
+
             }
         });
     }
@@ -87,6 +97,25 @@ public class LoginActivity extends BaseActivity {
                 request.addHeader("Authorization", "Basic " + Base64.encodeToString(cred.getBytes(), Base64.NO_WRAP));
             }
         };
+    }
+
+    //Error Handler
+    public class LoginErrorHandler implements ErrorHandler {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("LoginErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK_ERROR);
+            }
+            if (r != null && r.getStatus() == 401) {
+                Log.e("LoginErrorHandler/handleError","Handling 401 Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION_ERROR);
+            }
+            Log.e("LoginErrorHandler/handleError","Unidentified Error");
+            return cause;
+        }
     }
 
 }
