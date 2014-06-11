@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.ErrorHandler;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -33,7 +34,6 @@ public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
     private boolean flag_name = false, flag_email= false, flag_phone= false, flag_check= false, flag_pwd= false, flag_veri = false;
-    private YammAPIService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,6 @@ public class JoinActivity extends BaseActivity {
 
         joinLayout = (LinearLayout)findViewById(R.id.join_layout);
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
-        service = setYammAPIService(new JoinErrorHandler());
         setActionBarBackButton(true);
         configSendButton();
         configAgreementCheckBox();
@@ -198,6 +197,12 @@ public class JoinActivity extends BaseActivity {
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setErrorHandler(new JoinErrorHandler())
+                .build();
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
         service.userRegistration(name.toString(), email.toString(), password.toString(), phone.toString(), veri.toString(), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
@@ -306,7 +311,11 @@ public class JoinActivity extends BaseActivity {
     }
 
     private void sendVeriMessage(String phone){
-        service = BaseActivity.setYammAPIService(null);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .build();
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
         service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
             @Override
             public void success(YammAPIService.VeriExp s, Response response) {
@@ -316,7 +325,7 @@ public class JoinActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed");
+                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed " + retrofitError.getBody());
                 retrofitError.printStackTrace();
                 Toast.makeText(getApplicationContext(), R.string.verification_error_message, Toast.LENGTH_SHORT).show();
             }
@@ -334,7 +343,7 @@ public class JoinActivity extends BaseActivity {
                 return new YammAPIService.YammJoinException("Retrofit Network Error");
             }
             if (r != null && r.getStatus() == 400) {
-                Log.e("JoinErrorHandler/handleError","Handling 400 Error");
+                Log.e("JoinErrorHandler/handleError","Handling 400 Error " + r.getBody());
                 return new YammAPIService.YammJoinException("Yamm Error");
             }
             Log.e("JoinErrorHandler/handleError","Handling Unidentified Error");

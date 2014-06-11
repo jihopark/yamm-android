@@ -14,7 +14,6 @@
     <string name="title_activity_friend">같이 먹을 친구를 선택해주세요</string>
     <string name="title_activity_grid">못 먹는 음식 고르기</string>
 
-
     <!-- Error Messages -->
     <string name="location_error">위치를 확인할 수가 없어요</string>
     <string name="gps_accuracy_warning_text">GPS가 부정확해요</string>
@@ -30,6 +29,7 @@
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
+    <string name="AUTH_TOKEN">authtoken</string>
 
 
     <!-- Dialog -->

@@ -26,8 +26,6 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 
 import retrofit.RestAdapter;
-import retrofit.ErrorHandler;
-
 
 
 /**
@@ -236,27 +234,30 @@ public class BaseActivity extends ActionBarActivity {
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
-    protected static YammAPIService setYammAPIService(ErrorHandler handler){
-        Log.i("BaseActivity/setYammAPIService","Yamm API Service Set @" + apiURL);
-        RestAdapter restAdapter = null;
+    /*
+    * NETWORKING ISSUE METHODS
+    *
+    * */
 
-        if (handler!=null) {
-            restAdapter = new RestAdapter.Builder()
-                    .setEndpoint(apiURL)
-                    .setErrorHandler(handler)
-                    .build();
-        }
-        else{
-            restAdapter = new RestAdapter.Builder()
-                    .setEndpoint(apiURL)
-                    .build();
-        }
+    protected String getAuthToken(){
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        String value = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
 
-        if (restAdapter!=null)
-            return restAdapter.create(YammAPIService.class);
-        else
+        if (value.equals("none"))
             return null;
+
+        return value;
     }
+
+    protected RestAdapter.Log setRestAdapterLog(){
+        return new RestAdapter.Log() {
+            @Override
+            public void log(String s) {
+                Log.i("YammAPIServiceLog", s);
+            }
+        };
+    }
+
 
 
     /*

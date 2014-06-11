@@ -50,15 +50,36 @@ public class SplashScreen extends Activity {
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Intent activity = null;
 
-        // To Remove later
+
+
+       /*
+        *
+        * REMOVES TOKEN TO NULL - NEED TO BE DELETED FOR PRODUCTION
+        */
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getString(R.string.AUTH_TOKEN));
+        editor.commit();
+
+        Log.i("SplashScreen","Auth Token Reset For Development ");
+
         BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
-        prefs.edit().remove(getString(R.string.BATTLE_RESULTS)).commit();
-    //    Log.w("SplashScreen","Delete SharedPreference manipulation in production");
 
+        /*
+        *
+        *
+        *
+        * */
         String value = prefs.getString(getString(R.string.PREVIOUS_ACTIVITY),"none");
-        Log.v("SplashScreen","Activity Pref value:"+value);
+        String token = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
 
-        if (value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
+        Log.i("SplashScreen","Activity Pref value:"+value);
+
+
+        if (token == "none" || value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
+            if (token == "none")
+                Log.i("SplashScreen/checkPreviousActivity","Access Token is null. Proceed to Intro");
+
             //Save Previous activity to shared preference
             BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
             activity = new Intent(getBaseContext(), IntroActivity.class);
@@ -67,6 +88,8 @@ public class SplashScreen extends Activity {
             activity = new Intent(getBaseContext(), BattleActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_JOIN)))
             activity = new Intent(getBaseContext(), JoinActivity.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_MAIN)))
+            activity = new Intent(getBaseContext(), MainActivity.class);
 
         if (activity!=null){
             Log.v("SplashScreen","Activity Start");
