@@ -4,6 +4,7 @@ package com.teamyamm.yamm.app;
  * Created by parkjiho on 5/10/14.
  */
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class GridFragment extends Fragment {
     private CheckBox checkbox;
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
     private GridItem vegi;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +89,12 @@ public class GridFragment extends Fragment {
     private GridSelectionListView initGridSelectionListView(){
         //GridSelectionListView view = new GridSelectionListView(getActivity());
         GridSelectionListView view = (GridSelectionListView) mainLayout.findViewById(R.id.grid_selection_list_view);
+
+        progressDialog = ((BaseActivity)getActivity()).createProgressDialog(getActivity(),
+                R.string.join_progress_dialog_title,
+                R.string.join_progress_dialog_message);
+        progressDialog.show();
+
         view.setAdapter(initiateAdapter());
             view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -132,7 +140,7 @@ public class GridFragment extends Fragment {
 
                 adapter.notifyDataSetChanged();
                 listView.invalidateViews();
-
+                progressDialog.dismiss();
             }
 
             @Override

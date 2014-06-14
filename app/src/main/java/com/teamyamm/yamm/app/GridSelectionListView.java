@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -31,7 +30,6 @@ public class GridSelectionListView extends GridView {
         ViewGroup.LayoutParams scrollParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 
         this.setLayoutParams(scrollParams);
-        this.setBackgroundColor(Color.WHITE);
         this.setNumColumns(GridSelectionListView.COLUMN);
         this.setVerticalSpacing(GridSelectionListView.VERTICAL_SPACING);
         this.setHorizontalSpacing(GridSelectionListView.HORIZONTAL_SPACING);
