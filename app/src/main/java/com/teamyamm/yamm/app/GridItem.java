@@ -15,6 +15,7 @@ public class GridItem {
         name = a.getName();
         id = a.getId();
     }
+
     public GridItem(int ID){
         id = ID;
     }

@@ -1,9 +1,12 @@
 package com.teamyamm.yamm.app;
 
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 public interface YammAPIService {
@@ -69,7 +72,7 @@ public interface YammAPIService {
     * MUST set RequestInterceptor for Basic AUTH through HEADER Manipulation
     * */
 
-     @POST("/token")
+    @POST("/token")
     void userLogin(@Body GrantType type, Callback<YammToken> cb);
 
     public static class GrantType{
@@ -80,6 +83,29 @@ public interface YammAPIService {
         }
     }
 
+    /*
+    * Gets GridItems from Server in GridActivity
+    * */
+
+    @GET("/cannot-eat-choices")
+    void getGridItems(Callback<Choices> cb);
+
+    public static class Choices{
+        public List<GridItem> griditems;
+
+        public Choices(List<GridItem> list){
+            griditems = list;
+        }
+    }
+
+    /*
+    * POST GridItems to Server in GridActivity
+    * */
+
+    @FormUrlEncoded
+    @POST("/preferences/cannot-eat-choices")
+    void postGridItems(@Field("items") List<Integer> items, Callback<String> cb);
+    //need to fix field
 
     /*
     * Error

@@ -4,7 +4,6 @@ package com.teamyamm.yamm.app;
  * Created by parkjiho on 5/10/14.
  */
 
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,8 +15,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class GridFragment extends Fragment {
     private GridSelectionListView listView;
@@ -81,7 +87,6 @@ public class GridFragment extends Fragment {
     private GridSelectionListView initGridSelectionListView(){
         //GridSelectionListView view = new GridSelectionListView(getActivity());
         GridSelectionListView view = (GridSelectionListView) mainLayout.findViewById(R.id.grid_selection_list_view);
-
         view.setAdapter(initiateAdapter());
             view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -97,6 +102,7 @@ public class GridFragment extends Fragment {
                     }
                 }
             });
+        Log.i("GridFragment/initGridSelectionListView","GridListView Initiated");
         return view;
     }
 
@@ -105,10 +111,41 @@ public class GridFragment extends Fragment {
     * */
     private GridSelectionListAdapter initiateAdapter(){
         adapter = new GridSelectionListAdapter(getActivity());
-        TypedArray array = getResources().obtainTypedArray(R.array.grid_items);
 
-        for (int i=1;i<=array.length();i++)
-            adapter.addItem(new GridItem(i,array.getString(i-1)));
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(((BaseActivity)getActivity()).apiURL)
+                .setLog(((BaseActivity)getActivity()).setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.getGridItems(new Callback<YammAPIService.Choices>() {
+            @Override
+            public void success(YammAPIService.Choices list, Response response) {
+                List<GridItem> gridItems = list.griditems;
+                Log.i("GridFragment/initiateAdapter",gridItems.size() + " items loaded");
+                Log.i("GridFragment/initiateAdapter",gridItems.toString());
+
+                for (GridItem i : gridItems)
+                    adapter.addItem(i);
+
+                adapter.notifyDataSetChanged();
+                listView.invalidateViews();
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("GridFragment/initiateAdapter","Loading Adapter Failed");
+                retrofitError.printStackTrace();
+
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getActivity(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getActivity(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+            }
+        });
 
         return adapter;
     }

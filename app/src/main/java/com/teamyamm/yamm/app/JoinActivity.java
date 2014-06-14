@@ -84,7 +84,8 @@ public class JoinActivity extends BaseActivity {
                 //If all input is valid and registration is complete
 
                 if (validInput){
-                    postRegistrationToServer();
+                    //postRegistrationToServer();
+                    goToActivity(GridActivity.class);
                 }
 
                 return true;
