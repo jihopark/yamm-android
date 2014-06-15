@@ -1,13 +1,13 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 /**
  * Created by parkjiho on 6/1/14.
@@ -22,7 +22,7 @@ public class GridActivity extends BaseActivity {
         setContentView(R.layout.activity_grid);
 
         gridFragment = (GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment);
-
+        setGridAllButton();
     }
 
     @Override
@@ -53,6 +53,16 @@ public class GridActivity extends BaseActivity {
     }
 
     ////Private Methods
+    private void setGridAllButton(){
+        Button gridAllButton = (Button) findViewById(R.id.grid_all_button);
+        gridAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("GridActivity/OnClickListener","All Button Clicked");
+                finishGridActivity();
+            }
+        });
+    }
 
     /*
     * Finshes GridActivity and saves&sends gridresults and go to BattleActivity
@@ -82,7 +92,7 @@ public class GridActivity extends BaseActivity {
     * Only executed right before stating Battle Activity
     * */
     private boolean sendGridResult(String s){
-        Log.i("GridActivity/sendGridResults", "sendGridResults Started");
+        Log.i("GridActivity/sendGridResults", "Sending " + s);
         //Check internet connection
         if (!checkInternetConnection()){
             return false;
@@ -114,12 +124,15 @@ public class GridActivity extends BaseActivity {
    * Only executed right before stating Battle Activity
    * */
     private String saveGridResult(GridFragment f){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-        String s = "";
+        if (f.getSelectedItems().size() == 0)
+            return "[]";
+
+        String s = "[";
         for (GridItem i : f.getSelectedItems())
             s = s +i.getId()+",";
-        BaseActivity.putInPref(prefs,getString(R.string.GRID_RESULT),s);
+        s = s.substring(0, s.length()-2) + ']';
         Log.i("GridActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
+
         return s;
     }
 

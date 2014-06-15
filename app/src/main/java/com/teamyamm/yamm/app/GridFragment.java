@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ public class GridFragment extends Fragment {
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
     private GridItem vegi;
     private ProgressDialog progressDialog;
+    private Button gridAllButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +84,9 @@ public class GridFragment extends Fragment {
             }
         };
     }
+
+
+
 
     /*
     * Initiate GridSelectionListView
