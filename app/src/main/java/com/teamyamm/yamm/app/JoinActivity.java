@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -216,6 +217,7 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
+                logInAfterJoin();
                 goToActivity(GridActivity.class);
             }
 
@@ -240,6 +242,43 @@ public class JoinActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.phone_number_error_message), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void logInAfterJoin(){
+        String email = ((EditText) joinLayout.findViewById(R.id.email_field)).getText().toString();
+        String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(LoginActivity.setRequestInterceptorForLogin(email, password))
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.userLogin(new YammAPIService.GrantType(), new Callback<YammAPIService.YammToken>() {
+            @Override
+            public void success(YammAPIService.YammToken yammToken, Response response) {
+                Log.i("LoginActivity/userLogin", "Logged in " + yammToken);
+
+                //Save Token to Shared Pref
+                SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
+                putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("JoinActivity/userLogin", "ERROR");
+
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+
+
             }
         });
     }

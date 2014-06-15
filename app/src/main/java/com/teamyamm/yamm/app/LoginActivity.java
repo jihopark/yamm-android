@@ -85,7 +85,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private RequestInterceptor setRequestInterceptorForLogin(String email, String pw){
+    public static RequestInterceptor setRequestInterceptorForLogin(String email, String pw){
         final String username = email;
         final String pwd = pw;
         return new RequestInterceptor() {

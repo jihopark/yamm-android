@@ -57,11 +57,11 @@ public class SplashScreen extends Activity {
         * REMOVES TOKEN TO NULL - NEED TO BE DELETED FOR PRODUCTION
         */
 
-        SharedPreferences.Editor editor = prefs.edit();
+        /*SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.commit();
 
-        Log.i("SplashScreen","Auth Token Reset For Development ");
+        Log.i("SplashScreen","Auth Token Reset For Development ");*/
 
         BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
 
@@ -74,6 +74,7 @@ public class SplashScreen extends Activity {
         String token = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
 
         Log.i("SplashScreen","Activity Pref value:"+value);
+        Log.i("SplashScreen","Token Pref value:"+token);
 
 
         if (token == "none" || value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
