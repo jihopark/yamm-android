@@ -135,8 +135,8 @@ public class GridFragment extends Fragment {
 
         service.getGridItems(new Callback<YammAPIService.Choices>() {
             @Override
-            public void success(YammAPIService.Choices list, Response response) {
-                List<GridItem> gridItems = list.griditems;
+            public void success(YammAPIService.Choices choices, Response response) {
+                List<GridItem> gridItems = choices.getList();
                 Log.i("GridFragment/initiateAdapter",gridItems.size() + " items loaded");
                 Log.i("GridFragment/initiateAdapter",gridItems.toString());
 

@@ -91,11 +91,12 @@ public interface YammAPIService {
     void getGridItems(Callback<Choices> cb);
 
     public static class Choices{
-        public List<GridItem> griditems;
+        public List<GridItem> choices;
 
         public Choices(List<GridItem> list){
-            griditems = list;
+            choices = list;
         }
+        public List<GridItem> getList() { return choices; }
     }
 
     /*
