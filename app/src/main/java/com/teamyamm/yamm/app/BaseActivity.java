@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 
@@ -266,6 +267,27 @@ public class BaseActivity extends ActionBarActivity {
             @Override
             public void log(String s) {
                 Log.i("YammAPIServiceLog", s);
+            }
+        };
+    }
+
+    /*
+    * Sets Request Header with Auth token
+    * */
+    public RequestInterceptor setRequestInterceptorWithToken(){
+        return new RequestInterceptor() {
+            @Override
+            public void intercept(RequestFacade request) {
+                SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+                String token = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
+
+                if (token == "none"){
+                    Log.e("BaseActivity/setRequestInterceptor","Token does not exist");
+                }
+
+                token = "Bearer " + token;
+                Log.i("BaseActivity/setRequestInterceptor", token);
+                request.addHeader("Authorization", token);
             }
         };
     }

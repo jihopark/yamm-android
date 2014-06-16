@@ -105,7 +105,7 @@ public interface YammAPIService {
 
     @FormUrlEncoded
     @POST("/preferences/cannot-eat-choices")
-    void postGridItems(@Field("items") List<Integer> items, Callback<String> cb);
+    void postGridItems(@Field("choices") String items, Callback<String> cb);
     //need to fix field
 
     /*

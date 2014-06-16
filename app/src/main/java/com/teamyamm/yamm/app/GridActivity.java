@@ -8,6 +8,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 6/1/14.
@@ -92,11 +98,35 @@ public class GridActivity extends BaseActivity {
     * Only executed right before stating Battle Activity
     * */
     private boolean sendGridResult(String s){
-        Log.i("GridActivity/sendGridResults", "Sending " + s);
         //Check internet connection
         if (!checkInternetConnection()){
             return false;
         }
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(setRequestInterceptorWithToken())
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.postGridItems(s, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("GridActivity/sendGridResults", "Sending " + s);
+                goToActivity(BattleActivity.class);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("GridActivity/sendGridResults","Sending Error");
+                retrofitError.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+            }
+        });
+
         return true;
     }
 
@@ -125,13 +155,14 @@ public class GridActivity extends BaseActivity {
    * */
     private String saveGridResult(GridFragment f){
         if (f.getSelectedItems().size() == 0)
-            return "[]";
+            return "";
 
-        String s = "[";
+        String s = "";
         for (GridItem i : f.getSelectedItems())
             s = s +i.getId()+",";
-        s = s.substring(0, s.length()-2) + ']';
+        s = s.substring(0, s.length()-1);
         Log.i("GridActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
+        Log.i("GridActivity/saveGridResult", s);
 
         return s;
     }
