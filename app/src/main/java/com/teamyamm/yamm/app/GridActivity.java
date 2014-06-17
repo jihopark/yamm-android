@@ -65,7 +65,12 @@ public class GridActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Log.i("GridActivity/OnClickListener","All Button Clicked");
-                finishGridActivity();
+                if (gridFragment.getSelectedItems().size()!=0){
+                    Toast.makeText(getApplicationContext(), getString(R.string.grid_all_button_message), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    finishGridActivity();
+                }
             }
         });
     }
