@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by parkjiho on 5/12/14.
@@ -11,28 +12,24 @@ public class BattleItem {
     public static final int FIRST = 1;
     public static final int SECOND = -1;
 
-    private ArrayList<DishItem> list;
-    private String battleName = "defaultBattle";
+    private List<DishItem> list;
     private int result = BattleItem.NO_RESPONSE;
 
-    public BattleItem(ArrayList<DishItem> l){
+    public BattleItem(List<DishItem> l){
         list = l;
-    }
-
-    public BattleItem(ArrayList<DishItem> l, String s){
-        this(l);
-        battleName = s;
+        result = NO_RESPONSE;
     }
 
     public BattleItem(DishItem a, DishItem b){
-        ArrayList<DishItem> l = new ArrayList<DishItem>();
+        List<DishItem> l = new ArrayList<DishItem>();
         l.add(a); l.add(b);
         list = l;
+        result = NO_RESPONSE;
     }
 
-    public BattleItem(DishItem a, DishItem b, String s){
+    public BattleItem(DishItem a, DishItem b, int c){
         this(a,b);
-        battleName = s;
+        result = c;
     }
 
     public void setResult(int r){
@@ -43,7 +40,7 @@ public class BattleItem {
         return result;
     }
 
-    public ArrayList<DishItem> getList(){
+    public List<DishItem> getList(){
         return list;
     }
 

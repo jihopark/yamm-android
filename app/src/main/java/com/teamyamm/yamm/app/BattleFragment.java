@@ -24,7 +24,7 @@ public class BattleFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
 
-        Log.v("BattleFragment", "BattleFragment onCreateView Started");
+        Log.i("BattleFragment", "BattleFragment onCreateView Started");
 
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.battle_fragment, container, false);
 
@@ -33,15 +33,13 @@ public class BattleFragment extends Fragment{
 
     public void setDishItemView(BattleItem i){
         item = i;
-        Log.v("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
+        Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         fragmentLayout = (LinearLayout) getView().findViewById(R.id.battle_fragment_layout);
         FrameLayout layout1 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout1);
         FrameLayout layout2 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout2);
 
         first = new DishBattleView(getActivity(),item.getFirst(), layout1);
-        Log.v("BattleFragment setDishItemView", "First DishItemView made " +first);
         second = new DishBattleView(getActivity(),item.getSecond(), layout2);
-        Log.v("BattleFragment setDishItemView", "Second DishItemView made " +second);
 
         //Set Battle Non Button
         battleNoneButton = (Button) fragmentLayout.findViewById(R.id.battle_none_button);
@@ -53,17 +51,17 @@ public class BattleFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.FIRST);
-                Log.v("BattleFragment onClickListener", "First Dish Selected " +item.getFirst());
+                Log.i("BattleFragment onClickListener", "First Dish Selected " +item.getFirst());
+                ((BattleActivity)getActivity()).loadNextItem(item);
 
-                ((BattleActivity)getActivity()).switchFragment();
             }
         });
         layout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.SECOND);
-                Log.v("BattleFragment onClickListener", "Second Dish Selected " +item.getSecond());
-                ((BattleActivity)getActivity()).switchFragment();
+                Log.i("BattleFragment onClickListener", "Second Dish Selected " +item.getSecond());
+                ((BattleActivity)getActivity()).loadNextItem(item);
             }
         });
     }
@@ -73,8 +71,8 @@ public class BattleFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.NONE);
-                Log.v("BattleFragment onClickListener", "No Dish Selected");
-                ((BattleActivity)getActivity()).switchFragment();
+                Log.i("BattleFragment onClickListener", "No Dish Selected");
+                ((BattleActivity)getActivity()).loadNextItem(item);
             }
         };
     }

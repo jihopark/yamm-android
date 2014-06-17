@@ -8,6 +8,7 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Query;
 
 public interface YammAPIService {
 
@@ -108,6 +109,31 @@ public interface YammAPIService {
     void postGridItems(@Field("choices") String items, Callback<String> cb);
     //need to fix field
 
+    /*
+    * GET BattleItem Result & Get Next Battle Item
+    * To start battle, send ""
+    * */
+
+    @GET("/battle/next-round")
+    void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
+
+    public static class RawBattleItem{
+        private int rounds;
+        private List<DishItem> dishes;
+
+        public RawBattleItem(int rounds, List<DishItem> dishes){
+            this.rounds = rounds;
+            this.dishes = dishes;
+        }
+
+        public BattleItem getBattleItem(){
+            return new BattleItem(dishes.get(0), dishes.get(1));
+        }
+
+        public int getRounds(){
+            return rounds;
+        }
+    }
     /*
     * Error
     * */

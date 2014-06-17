@@ -68,11 +68,13 @@
     <string name="grid_all_button">못 먹는거 없어요</string>
     <string name="grid_empty_text">로딩 중 입니다</string>
     <string name="grid_all_button_message">이미 몇개 고르셨는데요?</string>
+
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>
     <string name="battle_dialog_title">왜 하다말고</string>
     <string name="battle_none_button">둘다 싫어</string>
-
+    <string name="battle_progress_dialog_title">배틀 시작</string>
+    <string name="battle_progress_dialog_message">당신의 입맛을 분석해볼까요?</string>
     <!-- Join Activity-->
     <string name="join_message">가입을 위해 이름과 전화번호를</string>
     <string name="verification_text">인증번호 문자를 보냈슴</string>
@@ -90,9 +92,6 @@
     <string name="verification_dialog_message">이 번호로 인증번호를 보낼께요</string>
     <string name="agreement_textview">서비스 약관와 개인정보 보호정책에 동의합니다</string>
     <string name="join_confirm_button">확인</string>
-
-    <!-- To be deleted -->
-    <string name="verification_again_button">ㅇㅇ</string>
 
     <!-- Login Button -->
     <string name="login_button">로그인</string>
