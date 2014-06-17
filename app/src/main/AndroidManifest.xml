@@ -56,7 +56,7 @@
             android:theme="@style/Theme.AppCompat.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.teamyamm.yamm.app.NewIntroActivity" />
+                android:value="com.teamyamm.yamm.app.IntroActivity" />
         </activity>
 
         <!-- Battle Screen -->

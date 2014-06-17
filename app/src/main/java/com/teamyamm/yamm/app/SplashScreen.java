@@ -19,6 +19,7 @@ public class SplashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(new Runnable() {
@@ -34,7 +35,7 @@ public class SplashScreen extends Activity {
                 // Start your app main activity
 
                 if (!checkPreviousActivity()) { // If first execution of the app, go to IntroActivity
-                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    Intent i = new Intent(SplashScreen.this, IntroActivity.class);
                     startActivity(i);
                 }
                 // close this activity
@@ -91,6 +92,8 @@ public class SplashScreen extends Activity {
             activity = new Intent(getBaseContext(), JoinActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_MAIN)))
             activity = new Intent(getBaseContext(), MainActivity.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_LOGIN)))
+            activity = new Intent(getBaseContext(), LoginActivity.class);
 
         if (activity!=null){
             Log.v("SplashScreen","Activity Start");

@@ -34,9 +34,9 @@
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
     <string name="PREVIOUS_ACTIVITY_INTRO">IntroActivity</string>
     <string name="PREVIOUS_ACTIVITY_BATTLE">BattleActivity</string>
-    <string name="PREVIOUS_ACTIVITY_BATTLERESULT">BattleResultActivity</string>
     <string name="PREVIOUS_ACTIVITY_JOIN">JoinActivity</string>
     <string name="PREVIOUS_ACTIVITY_MAIN">MainActivity</string>
+    <string name="PREVIOUS_ACTIVITY_LOGIN">LoginActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
