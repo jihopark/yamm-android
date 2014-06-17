@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import java.util.ArrayList;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -18,24 +18,20 @@ import retrofit.client.Response;
 public class BattleActivity extends BaseActivity {
     BattleFragment bf;
 
-    public ArrayList<BattleItem> items = new ArrayList<BattleItem>();
-    public BattleItem currentFirstItem, currentSecondItem;
     public int battleCount = 0;
     public int totalBattle;
     private ProgressDialog progressDialog;
-    public boolean isFinished = false;
+    private String result = "";
     private YammAPIService service;
-
-    public final boolean FRAGMENT_ONE_SHOWN = true;
-
-    public boolean fragmentShown = FRAGMENT_ONE_SHOWN;
+    private TextView battleCountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_battle);
+
+        battleCountText = (TextView) findViewById(R.id.battle_count_text);
 
         hideActionBar();
         setAPIService();
@@ -71,35 +67,7 @@ public class BattleActivity extends BaseActivity {
     }
 
     /*
-    * Saves Battle Result and Proceed to Battle Result Activity
-    * */
-    private void finishBattle(){
-/*        boolean resultSent = true;
-
-        Log.v("BattleActivity/finishBattle", "FinishBattle Started");
-        Log.v("BattleActivity/finishBattle","Items Selected : " + items);
-        //Save items to Shared Preferences
-
-        //BattleItem.toString = (firstdishitem.id),(seconddishitem.id),(result)
-        //list will be saved in String like this  ex. 1,2,2;2,3,-1;3,4,5;
-        String result = saveBattleResults();
-
-        //Send to Server, sleeps if internet isn't connected
-        if (!sendBattleResults(result)){
-            Log.e("Server Communication Error", "Sending Battle Results Failed");
-            showInternetConnectionAlert(new CustomInternetListener(internetAlert));
-            resultSent=false;
-        }
-
-        //If sendBattle Result Failed, don't go to Battle Result
-        if (resultSent!=false) {
-            goToActivity(MainActivity.class);
-        }
-        */
-    }
-
-    /*
-    * Custom Listener for Battle Activity InternetDialog
+    * Custom Listener for Battle Activity InternetDialog for getInitialBattleItem
     * */
     private class CustomInternetListener implements View.OnClickListener {
         private final Dialog dialog;
@@ -108,51 +76,14 @@ public class BattleActivity extends BaseActivity {
         }
         @Override
         public void onClick(View v) {
-            Log.v("BattleActivity/CustomInternetListener", "Listener activated");
+            Log.e("BattleActivity/CustomInternetListener", "Listener activated");
             if (checkInternetConnection()) {
-                Log.v("BattleActivity/CustomInternetListener","Internet came back");
+                Log.e("BattleActivity/CustomInternetListener","Internet came back");
                 dialog.dismiss();
-                finishBattle();
+                getInitialBattleItem();
             }
         }
     }
-
-
-
-    /*
-    * Sends result string to server
-    * returns false if sending fails
-    * */
-    private boolean sendBattleResults(String s){
-        Log.v("BattleActivity/sendBattleResults", "sendBattleResults Started");
-
-        //Check internet connection
-        if (!checkInternetConnection()){
-            return false;
-        }
-        return true;
-    }
-    /*
-    * Save battle results to sharedpref
-    * Returns saved string
-    * */
-    /*private String saveBattleResults(){
-        int i;
-
-        Log.v("BattleActivity/saveBattleResults", "saveBattleResults Started");
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-        String saved = prefs.getString(getString(R.string.BATTLE_RESULTS),"");
-
-        for (i=0; i<items.size() - 1 ; i++) {
-            BattleItem item = items.get(i);
-            saved = saved + item + "_";
-        }
-        saved = saved + items.get(i) + "~";
-
-        BaseActivity.putInPref(prefs,getString(R.string.BATTLE_RESULTS),saved);
-        Log.v("BattleActivity/saveBattleResults","BattleItems saved" + saved);
-        return saved;
-    }*/
 
      /*
     * Setup Battle Fragments
@@ -173,8 +104,6 @@ public class BattleActivity extends BaseActivity {
     * Set totalBattleCount and get InitialBattleItem
     * */
     private void getInitialBattleItem(){
-        BattleItem item = null;
-
         service.getBattleItem("",new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
@@ -183,12 +112,20 @@ public class BattleActivity extends BaseActivity {
                 Log.i("BattleActivity/getBattleItem","Total Rounds: " + totalBattle);
 
                 bf.setDishItemView(rawBattleItem.getBattleItem());
+                battleCountText.setText("1 out of " + totalBattle);
                 progressDialog.dismiss();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("BattleActivity/getBattleItem", "Fail ");
+                Log.e("BattleActivity/getBattleItem", "Fail");
+                retrofitError.printStackTrace();
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+
+                showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             }
         });
     }
@@ -199,16 +136,82 @@ public class BattleActivity extends BaseActivity {
     * Change current item to next one, returns null if end of list
     * */
     public void loadNextItem(BattleItem item){
-        //Send Item to Server
+        battleCount++;
+        result = result + item;
 
         //If Last Item, Finish this
-        if (++battleCount == totalBattle){
-
+        if (battleCount == totalBattle){
             finishBattle();
+            return ;
         }
-        //Load Next Item
+        Log.i("BattleActivity/loadNextItem","Query param " + result);
+        //Send Item to Server
+        service.getBattleItem(result,new Callback<YammAPIService.RawBattleItem>() {
+            @Override
+            public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
+                Log.i("BattleActivity/getBattleItem","Success " + rawBattleItem.getBattleItem());
 
+                bf.setDishItemView(rawBattleItem.getBattleItem());
+                battleCountText.setText( (battleCount+1) + " out of " + totalBattle);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("BattleActivity/getBattleItem", "Fail");
+                retrofitError.printStackTrace();
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+
+                retrieveResult();
+            }
+        });
     }
+
+    /*
+    * When error, reduce battleCount & cut result
+    * */
+    private void retrieveResult(){
+        battleCount--;
+        result = result.substring(0, result.length()-6);
+        Log.e("BattleActivity/retrieveResult", "BattleCount to " + battleCount + "& Result : " + result);
+    }
+
+    /*
+* Saves Battle Result and Proceed
+* */
+    private void finishBattle(){
+        Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ result);
+        final ProgressDialog finalDialog =  createProgressDialog(this,
+                R.string.battle_final_dialog_title,
+                R.string.battle_final_dialog_message);
+
+        finalDialog.show();
+
+        service.postBattleItem(result,new Callback<String>() {
+            @Override
+            public void success(String msg, Response response) {
+                Log.i("BattleActivity/getBattleItem",msg);
+                finalDialog.dismiss();
+                goToActivity(MainActivity.class);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("BattleActivity/postBattleItem", "Fail");
+                retrofitError.printStackTrace();
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+
+                retrieveResult();
+                finalDialog.dismiss();
+            }
+        });
+    }
+
 
 
 

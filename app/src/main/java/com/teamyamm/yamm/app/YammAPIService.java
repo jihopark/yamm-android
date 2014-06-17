@@ -117,6 +117,11 @@ public interface YammAPIService {
     @GET("/battle/next-round")
     void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
 
+    @FormUrlEncoded
+    @POST("/battle/results")
+    void postBattleItem(@Field("results") String result, Callback<String> callback);
+
+
     public static class RawBattleItem{
         private int rounds;
         private List<DishItem> dishes;
