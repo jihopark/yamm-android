@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.HashMap;
-import java.util.List;
 
 
 public class MainActivity extends BaseActivity {
@@ -25,7 +24,6 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
     private MainFragment mainFragment;
-    private List<YammItem> selectedYammItems;
     private ReadContactAsyncTask readContactAsyncTask;
 
     @Override
@@ -34,16 +32,16 @@ public class MainActivity extends BaseActivity {
         setActionBarTransparent();
         setContentView(R.layout.activity_main);
 
-        Log.i("MainActivity/onCreate", "onCreate started");
 
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         leftDrawer = (ListView) findViewById(R.id.left_drawer);
+        Log.i("MainActivity/onCreate", "onCreate started");
 
-        Log.i("MainActivity/onCreate","Drawer Initialized");
         // Set the adapter for the list view
         leftDrawer.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.left_drawer_item, navMenuTitles));
+        Log.i("MainActivity/onCreate","Drawer Initialized");
 
         //Set up Main Fragment
         mainFragment = new MainFragment();
@@ -59,6 +57,9 @@ public class MainActivity extends BaseActivity {
 
         readContactAsyncTask = new ReadContactAsyncTask();
         readContactAsyncTask.execute();
+
+        //Get Friend List by Sending Contacts
+
     }
 
     @Override
@@ -71,10 +72,10 @@ public class MainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public boolean isContactLoaded(){
+    public boolean isFriendLoaded(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
-        String value = prefs.getString(getString(R.string.PHONE_NAME_MAP),"none");
+        String value = prefs.getString(getString(R.string.FRIEND_LIST),"none");
 
         return value != "none";
     }

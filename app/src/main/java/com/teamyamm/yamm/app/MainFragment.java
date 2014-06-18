@@ -413,9 +413,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         friendPickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Read Contact for update
-                ((MainActivity)getActivity()).readContacts();
-
+                if (!((MainActivity)getActivity()).isFriendLoaded()){
+                    Toast.makeText(getActivity(), R.string.friend_not_loaded_message, Toast.LENGTH_LONG).show();
+                    return ;
+                }
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
                 intent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, selectedFriendList); //send previously selected friend list

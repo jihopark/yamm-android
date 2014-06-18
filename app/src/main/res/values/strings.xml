@@ -41,7 +41,7 @@
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
     <string name="AUTH_TOKEN">authtoken</string>
-
+    <string name="FRIEND_LIST">friendlist</string>
 
     <!-- Dialog -->
     <string name="dialog_positive">네</string>
@@ -105,6 +105,7 @@
     <string name="yamm_button_text">친구랑 밥먹기</string>
     <string name="friend_pick_edit_text">같이 먹을 사람을 선택하세요</string>
     <string name="place_pick_edit_text">현재 위치</string>
+    <string name="friend_not_loaded_message">아직 로딩 중이에요</string>
 
     <!-- Friends Fragment -->
     <string name="yamm_list_header_1">Yamm팀</string>
