@@ -83,6 +83,7 @@ public class JoinActivity extends BaseActivity {
 
 
                 if (agreementCheckBox.isChecked()){
+                    hideSoftKeyboard(this);
                     //postRegistrationToServer();
                     goToActivity(GridActivity.class);
                 }

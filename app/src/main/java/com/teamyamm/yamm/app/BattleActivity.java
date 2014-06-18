@@ -20,7 +20,6 @@ public class BattleActivity extends BaseActivity {
 
     public int battleCount = 0;
     public int totalBattle;
-    private ProgressDialog progressDialog;
     private String result = "";
     private YammAPIService service;
     private TextView battleCountText;
@@ -91,12 +90,6 @@ public class BattleActivity extends BaseActivity {
     private void setBattleFragments() {
         bf = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment);
 
-        // Show Progress Dialog
-        progressDialog = createProgressDialog(this,
-                R.string.battle_progress_dialog_title,
-                R.string.battle_progress_dialog_message);
-        progressDialog.show();
-
         getInitialBattleItem();
     }
 
@@ -113,7 +106,6 @@ public class BattleActivity extends BaseActivity {
 
                 bf.setDishItemView(rawBattleItem.getBattleItem());
                 battleCountText.setText("1 out of " + totalBattle);
-                progressDialog.dismiss();
             }
 
             @Override

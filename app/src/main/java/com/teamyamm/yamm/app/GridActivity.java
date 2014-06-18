@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -117,15 +118,24 @@ public class GridActivity extends BaseActivity {
 
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
+        final ProgressDialog progressDialog;
+        // Show Progress Dialog
+        progressDialog = createProgressDialog(this,
+                R.string.battle_progress_dialog_title,
+                R.string.battle_progress_dialog_message);
+        progressDialog.show();
+
         service.postGridItems(s, new Callback<String>() {
             @Override
             public void success(String s, Response response) {
+                progressDialog.dismiss();
                 Log.i("GridActivity/sendGridResults", "Sending " + s);
                 goToActivity(BattleActivity.class);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                progressDialog.dismiss();
                 Log.e("GridActivity/sendGridResults","Sending Error");
                 retrofitError.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
