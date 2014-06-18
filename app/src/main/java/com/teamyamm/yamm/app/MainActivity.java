@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentTransaction;
@@ -12,9 +13,6 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,14 +26,13 @@ public class MainActivity extends BaseActivity {
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private List<YammItem> selectedYammItems;
-
+    private ReadContactAsyncTask readContactAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setActionBarTransparent();
         setContentView(R.layout.activity_main);
-        readContacts();
 
         Log.i("MainActivity/onCreate", "onCreate started");
 
@@ -56,6 +53,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        Log.i("MainActivity","Execute Read Contact Async Task");
+
+        readContactAsyncTask = new ReadContactAsyncTask();
+        readContactAsyncTask.execute();
+    }
+
+    @Override
     public void onBackPressed() {
         goBackHome();
     }
@@ -63,6 +69,14 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public boolean isContactLoaded(){
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+
+        String value = prefs.getString(getString(R.string.PHONE_NAME_MAP),"none");
+
+        return value != "none";
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
@@ -77,60 +91,34 @@ public class MainActivity extends BaseActivity {
     public void readContacts(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
-        String value = prefs.getString(getString(R.string.CONTACT_READ_TIME),"none");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date previousDate = new Date();
-        Date now = new Date();
+        phoneNameMap = new HashMap<String, String>();
 
-
-        //Parse previous contact read time
-        if (value!="none") {
+        ContentResolver cr = getContentResolver();
+        Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION, null, null, null);
+        if (cursor != null) {
             try {
-                previousDate = format.parse(value);
-                Log.i("MainActivity/readContacts", "Previous Date Parsed " + value);
-            }
-            catch (ParseException e) {
-                Log.e("MainActivity/readContacts","Previous Contact Read Parsing Failed");
-                value = "none";
-            }
-        }
+                final int contactIdIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID);
+                final int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                final int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
+                long contactId;
+                String displayName, phone;
+                while (cursor.moveToNext()) {
+                    displayName = cursor.getString(displayNameIndex);
+                    phone = parsePhoneNumber(cursor.getString(phoneIndex)); //parse phone number
 
-        long diff = (now.getTime() - previousDate.getTime()) / (60 * 1000); // 1minute
-        Log.i("MainActivity/readContacts","Time Difference " + diff +" mins");
-
-        // if date is less than 1 hours  CHANGE THIS WHEN PRODUCTION
-        if (value=="none" ||  diff > 60 ){
-            phoneNameMap = new HashMap<String, String>();
-
-            ContentResolver cr = getContentResolver();
-            Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION, null, null, null);
-            if (cursor != null) {
-                try {
-                    final int contactIdIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID);
-                    final int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-                    final int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
-                    long contactId;
-                    String displayName, phone;
-                    while (cursor.moveToNext()) {
-                        displayName = cursor.getString(displayNameIndex);
-                        phone = parsePhoneNumber(cursor.getString(phoneIndex)); //parse phone number
-
-                        //Put into ArrayList
-                        if (phone.startsWith("01")) { //figure out mobile phone numbers
-                            phoneNameMap.put(phone, displayName);
-                        }
+                    //Put into ArrayList
+                    if (phone.startsWith("01")) { //figure out mobile phone numbers
+                        phoneNameMap.put(phone, displayName);
                     }
-                } finally {
-                    cursor.close();
                 }
+            } finally {
+                cursor.close();
             }
-            //Save HashMap
-            BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
-            Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
-
-            //Save Time
-            BaseActivity.putInPref(prefs, getString(R.string.CONTACT_READ_TIME),format.format(new Date()));
         }
+        //Save HashMap
+        BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
+        Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
+
     }
     private String parsePhoneNumber(String s){
         //Remove Korean National Code
@@ -139,6 +127,29 @@ public class MainActivity extends BaseActivity {
         s = s.replaceAll("\\D+","");
 
         return s;
+    }
+
+    public class ReadContactAsyncTask extends AsyncTask<Integer, Integer, Integer>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            readContacts();
+            return 1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+        }
     }
 }
 
