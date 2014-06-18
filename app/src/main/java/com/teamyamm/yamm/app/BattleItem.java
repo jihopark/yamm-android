@@ -7,10 +7,10 @@ import java.util.List;
  * Created by parkjiho on 5/12/14.
  */
 public class BattleItem {
-    public static final int NO_RESPONSE = 3;
+    public static final int NO_RESPONSE = 2;
     public static final int NONE = 0;
     public static final int FIRST = 1;
-    public static final int SECOND = 2;
+    public static final int SECOND = -1;
 
     private List<DishItem> list;
     private int result = BattleItem.NO_RESPONSE;
