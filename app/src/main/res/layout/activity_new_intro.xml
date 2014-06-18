@@ -4,21 +4,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- Intro View Pager -->
-    <!--
-    <ViewPager
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
-        android:id="@+id/intro_view_pager"/>
-
-    <com.viewpagerindicator.CirclePageIndicator
-        android:id="@+id/intro_view_pager_indicator"
-        android:padding="10dip"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_weight="1"
-        />
-    -->
+        android:layout_weight="6">
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/intro_view_pager"/>
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/intro_view_pager_indicator"
+            android:padding="10dip"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal|bottom"
+            />
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,13 +27,13 @@
         android:layout_weight="1">
         <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="3"
             android:text="@string/join_button"
             android:id="@+id/join_button"/>
         <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/login_button"
             android:id="@+id/login_button"/>

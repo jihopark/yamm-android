@@ -1,8 +1,15 @@
 package com.teamyamm.yamm.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
+
+import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by parkjiho on 5/31/14.
@@ -10,7 +17,8 @@ import android.widget.Button;
 public class IntroActivity extends BaseActivity {
 
     private Button joinButton, loginButton;
-    private final static int NUMBER_OF_PAGE = 3;
+    private final static int NUM_PAGES = 3;
+    private ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +31,11 @@ public class IntroActivity extends BaseActivity {
     }
 
     private void setViewPager(){
-    /*    ViewPager pager = (ViewPager) findViewById(R.id.intro_view_pager);
-        pager.setAdapter(new IntroPagerAdapter(getApplicationContext()));
+        pager = (ViewPager) findViewById(R.id.intro_view_pager);
+        pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
         CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.intro_view_pager_indicator);
         indicator.setFillColor(Color.BLACK);
-        indicator.setViewPager(pager);*/
+        indicator.setViewPager(pager);
     }
 
     private void setButtons(){
@@ -49,69 +57,19 @@ public class IntroActivity extends BaseActivity {
         });
     }
 
-    /**
-     * A pager adapter that represents 3 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    /*private class IntroPagerAdapter extends PagerAdapter {
-        private LayoutInflater mInflater;
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-        public IntroPagerAdapter(Context c){
-            super();
-            mInflater = LayoutInflater.from(c);
+        @Override
+        public Fragment getItem(int position) {
+            return new IntroImageFragment(position);
         }
 
         @Override
         public int getCount() {
-            return NUMBER_OF_PAGE;
+            return NUM_PAGES;
         }
-
-        @Override
-        public Object instantiateItem(View collection, int position) {
-
-            LayoutInflater inflater = (LayoutInflater) collection.getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            int resId = 0;
-            switch (position) {
-                case 0:
-                    resId = R.layout.intro_join;
-                    break;
-                case 1:
-                    resId = R.layout.intro_veri;
-                    break;
-                case 2:
-                    resId = R.layout.intro_grid;
-                    break;
-                case 3:
-                    resId = R.layout.intro_three;
-                    break;
-                case 4:
-                    resId = R.layout.intro_final;
-                    break;
-            }
-
-            View view = inflater.inflate(resId, null);
-
-            ((ViewPager) collection).addView(view, 0);
-            Log.i("IntroActivity/instantiateItem", "Pager Item " + position + " inflated");
-
-            if (position == INTRO_JOIN_PAGE){
-                Log.i("IntroActivity/onPageSelected", "Intro Join Page Initiated");
-                joinLayout = (LinearLayout)view.findViewById(R.id.join_layout);
-                introPager.setPagingEnabled(false);
-            }
-
-            return view;
-        }
-
-        @Override
-        public void destroyItem(View pager, int position, Object view) {
-            ((ViewPager)pager).removeView((View)view);
-        }
-
-        @Override
-        public boolean isViewFromObject(View pager, Object obj) {
-            return pager == obj;
-        }
-    }*/
+    }
 }
