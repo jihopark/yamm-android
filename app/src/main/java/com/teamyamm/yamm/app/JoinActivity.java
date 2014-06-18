@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +39,8 @@ import retrofit.client.Response;
 public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
-    private boolean flag_name = false, flag_email= false, flag_phone= false, flag_check= false, flag_pwd= false, flag_veri = false;
+    private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false;
+    private CheckBox agreementCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +80,15 @@ public class JoinActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.join_confirm_button:
                 Log.i("JoinActivity/OnOptionsItemSelected","Confirm Join Button Clicked");
-                boolean validInput = true;
 
-                //If all input is valid and registration is complete
 
-                if (validInput){
+                if (agreementCheckBox.isChecked()){
                     //postRegistrationToServer();
                     goToActivity(GridActivity.class);
+                }
+                else{
+                    hideSoftKeyboard(this);
+                    Toast.makeText(this, R.string.join_checkbox_message, Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -105,7 +107,7 @@ public class JoinActivity extends BaseActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     private boolean calculateFlag(){
-        return flag_check && flag_email && flag_name && flag_pwd && flag_phone && flag_veri;
+        return flag_email && flag_name && flag_pwd && flag_phone && flag_veri;
     }
 
     private void configEditTexts(){
@@ -284,20 +286,13 @@ public class JoinActivity extends BaseActivity {
     }
 
     private void configAgreementCheckBox(){
-        CheckBox agreementCheckBox = (CheckBox) joinLayout.findViewById(R.id.agreement_checkbox);
+        agreementCheckBox = (CheckBox) joinLayout.findViewById(R.id.agreement_checkbox);
         TextView agreementTextView = (TextView) joinLayout.findViewById(R.id.agreement_textview);
 
         //Set span for blue color
         Spannable span = new SpannableString(getString(R.string.agreement_textview));
         span.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 16, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         agreementTextView.setText(span);
-        agreementCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                flag_check = isChecked;
-                setConfirmButtonEnabled();
-            }
-        });
     }
 
     private void configSendButton() {
