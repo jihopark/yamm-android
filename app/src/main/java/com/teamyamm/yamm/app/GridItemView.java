@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -13,11 +12,12 @@ import android.widget.TextView;
  */
 public class GridItemView extends FrameLayout {
     private TextView itemText;
-    private ImageView imageView;
+    private YammImageView imageView;
     private TextView selectedText;
 
     private boolean mChecked = false;
     private GridItem item;
+    private Context context;
 
     public GridItemView(Context context){
         super(context);
@@ -31,19 +31,24 @@ public class GridItemView extends FrameLayout {
     public GridItemView(Context context,  GridItem aItem){
         super(context);
         item = aItem;
+        this.context = context;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.grid_item, this, true);
-        setGridItemImage((ImageView) findViewById(R.id.grid_item_image));
+        setGridItemImage();
         setGridItemText((TextView) findViewById(R.id.grid_item_text));
         selectedText = (TextView)findViewById(R.id.grid_item_selected);
+
 
     }
 
     public void setChecked(boolean checked){
         mChecked = checked;
-        if (checked)
+        if (checked) {
             selectedText.setVisibility(View.VISIBLE);
+            selectedText.bringToFront();
+            selectedText.invalidate();
+        }
         else
             selectedText.setVisibility(View.INVISIBLE);
     }
@@ -74,10 +79,13 @@ public class GridItemView extends FrameLayout {
 
     /////////////////////Private method
     private void setGridItemText(TextView view){
+        view.bringToFront();
+        view.invalidate();
         view.setText(item.getName());
     }
 
-    private void setGridItemImage(ImageView view){
-        view.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholer));
+    private void setGridItemImage(){
+        imageView = new YammImageView(context, YammImageView.GRID, 100, 100, item.getId());
+        addView(imageView, 0);
     }
 }

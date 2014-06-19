@@ -37,9 +37,7 @@ public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    public static String baseURL = "http://img.yamm.me";
     public static String apiURL = "https://api.yamm.me";
-    public final static float imageRatio = 1.5f;
     public final static int ANIMATION_SPEED = 100;
     public final static int SUCCESS_RESULT_CODE = 200;
     public final static int FAILURE_RESULT_CODE = 400;
@@ -73,14 +71,6 @@ public class BaseActivity extends ActionBarActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
-
-    /*
-   * Create Image Server URL for Dish
-   * */
-    public static String getDishImageURL(int id, int width, int height){
-        return baseURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
-    }
-
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
