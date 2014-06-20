@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
@@ -44,6 +45,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void postLoginToServer(String email, String pw){
+        final ProgressDialog progressDialog;
+        // Show Progress Dialog
+        progressDialog = createProgressDialog(this,
+                R.string.progress_dialog_title,
+                R.string.progress_dialog_message);
+        progressDialog.show();
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setLog(setRestAdapterLog())
@@ -60,6 +68,8 @@ public class LoginActivity extends BaseActivity {
             public void success(YammAPIService.YammToken yammToken, Response response) {
                 Log.i("LoginActivity/userLogin", "Logged in " + yammToken);
 
+                progressDialog.dismiss();
+
                 //Save Token to Shared Pref
                 SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
@@ -72,6 +82,8 @@ public class LoginActivity extends BaseActivity {
             public void failure(RetrofitError retrofitError) {
                 String msg = retrofitError.getCause().getMessage();
                 Log.e("LoginActivity/userLogin", "ERROR CODE" + msg);
+
+                progressDialog.dismiss();
 
                 if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
                     Toast.makeText(getApplicationContext(), getString(R.string.login_authentication_error_message), Toast.LENGTH_LONG).show();
