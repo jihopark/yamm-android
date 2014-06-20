@@ -84,8 +84,8 @@ public class JoinActivity extends BaseActivity {
 
                 if (agreementCheckBox.isChecked()){
                     hideSoftKeyboard(this);
-                    //postRegistrationToServer();
-                    goToActivity(GridActivity.class);
+                    postRegistrationToServer();
+                    //goToActivity(GridActivity.class);
                 }
                 else{
                     hideSoftKeyboard(this);
@@ -244,7 +244,6 @@ public class JoinActivity extends BaseActivity {
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 logInAfterJoin();
-                goToActivity(GridActivity.class);
             }
 
             @Override
@@ -293,6 +292,10 @@ public class JoinActivity extends BaseActivity {
                 //Save Token to Shared Pref
                 SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
+
+                //Move onto Next Activity
+                goToActivity(GridActivity.class);
+
             }
 
             @Override

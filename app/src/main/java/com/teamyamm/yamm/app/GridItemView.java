@@ -36,10 +36,9 @@ public class GridItemView extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.grid_item, this, true);
         setGridItemImage();
-        setGridItemText((TextView) findViewById(R.id.grid_item_text));
+        itemText = (TextView) findViewById(R.id.grid_item_text);
+        setGridItemText(itemText);
         selectedText = (TextView)findViewById(R.id.grid_item_selected);
-
-
     }
 
     public void setChecked(boolean checked){
@@ -67,6 +66,9 @@ public class GridItemView extends FrameLayout {
 
     public void setGridItem(GridItem i){
         item = new GridItem(i);
+        setGridItemText(itemText);
+        imageView.setID(i.getId());
+        imageView.loadImage();
     }
     /*
      * To make square

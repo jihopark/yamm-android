@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -10,6 +11,8 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -18,6 +21,7 @@ import java.util.HashMap;
 
 public class MainActivity extends BaseActivity {
     public final static String MAIN_FRAGMENT = "mf";
+    public final static int DRAWER_LOGOUT = 0;
 
     private HashMap<String, String> phoneNameMap;
     private String[] navMenuTitles;
@@ -32,16 +36,9 @@ public class MainActivity extends BaseActivity {
         setActionBarTransparent();
         setContentView(R.layout.activity_main);
 
-
-        navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        leftDrawer = (ListView) findViewById(R.id.left_drawer);
+        setLeftDrawer();
         Log.i("MainActivity/onCreate", "onCreate started");
 
-        // Set the adapter for the list view
-        leftDrawer.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.left_drawer_item, navMenuTitles));
-        Log.i("MainActivity/onCreate","Drawer Initialized");
 
         //Set up Main Fragment
         mainFragment = new MainFragment();
@@ -82,6 +79,44 @@ public class MainActivity extends BaseActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
+    private void setLeftDrawer(){
+        navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        leftDrawer = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        leftDrawer.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.left_drawer_item, navMenuTitles));
+
+        //Set Item Click Listener
+
+        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("MainActivity/onItemClick","Left Drawer Item Clicked at " + position);
+                if (position == DRAWER_LOGOUT){
+                    createDialog(MainActivity.this,
+                            R.string.logout_dialog_title, R.string.logout_dialog_message,
+                            R.string.dialog_positive, R.string.dialog_negative,
+                            setPositiveListener(), null).show();
+                }
+            }
+
+            private DialogInterface.OnClickListener setPositiveListener(){
+                return new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeAuthToken();
+                        goToActivity(IntroActivity.class);
+                    }
+                };
+            }
+        });
+
+        Log.i("MainActivity/onCreate","Drawer Initialized");
+
+
+    }
     //For Contact Reading
     private static final String[] PROJECTION = new String[] {
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,

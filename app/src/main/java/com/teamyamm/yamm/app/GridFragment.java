@@ -140,8 +140,9 @@ public class GridFragment extends Fragment {
                 Log.i("GridFragment/initiateAdapter",gridItems.size() + " items loaded");
                 Log.i("GridFragment/initiateAdapter",gridItems.toString());
 
-                for (GridItem i : gridItems)
+                for (GridItem i : gridItems) {
                     adapter.addItem(i);
+                }
 
                 adapter.notifyDataSetChanged();
                 listView.invalidateViews();

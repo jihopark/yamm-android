@@ -64,7 +64,7 @@ public class SplashScreen extends Activity {
 
         Log.i("SplashScreen","Auth Token Reset For Development ");*/
 
-        BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+        //BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
 
         /*
         *

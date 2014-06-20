@@ -86,6 +86,10 @@ public class YammImageView extends FrameLayout {
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }
 
+    public void setID(int id){
+        this.id = id;
+    }
+
     public ImageView getImageView(){
         return image;
     }

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="nav_menu_titles">
-        <item>Menu1</item>
-        <item>Menu2</item>
-        <item>Menu3</item>
+        <item>로그아웃</item>
     </array>
 
     <array name="grid_items">

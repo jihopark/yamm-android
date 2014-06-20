@@ -93,10 +93,6 @@ public class GridActivity extends BaseActivity {
             showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             resultSent=false;
         }
-        //If sendBattle Result Failed, don't go to Battle Activity
-        if (resultSent!=false) {
-            goToActivity(BattleActivity.class);
-        }
     }
 
     /*

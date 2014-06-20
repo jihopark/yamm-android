@@ -238,8 +238,7 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     /*
-    * NETWORKING ISSUE METHODS
-    *
+    * Login Auth Token Issues
     * */
 
     protected String getAuthToken(){
@@ -251,6 +250,20 @@ public class BaseActivity extends ActionBarActivity {
 
         return value;
     }
+
+    protected void removeAuthToken(){
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getString(R.string.AUTH_TOKEN));
+        editor.commit();
+        Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
+    }
+
+    /*
+    * NETWORKING ISSUE METHODS
+    *
+    * */
 
     protected RestAdapter.Log setRestAdapterLog(){
         return new RestAdapter.Log() {
