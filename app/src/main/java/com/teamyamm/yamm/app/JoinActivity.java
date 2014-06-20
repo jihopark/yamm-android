@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class JoinActivity extends BaseActivity {
     private boolean enableButtonFlag = false;
     private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false;
     private CheckBox agreementCheckBox;
+    private SmsListener smsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +56,6 @@ public class JoinActivity extends BaseActivity {
         configSendButton();
         configAgreementCheckBox();
         configEditTexts();
-
-
     }
 
     @Override
@@ -98,6 +98,19 @@ public class JoinActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        configSmsListener();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        unregisterReceiver(smsListener);
+        Log.i("JoinActivity/configSmsListener","SMS Listener Unregistered");
+    }
+
     public void setConfirmButtonEnabled(){
         boolean tmp = enableButtonFlag;
         enableButtonFlag = calculateFlag();
@@ -107,6 +120,16 @@ public class JoinActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private void configSmsListener(){
+        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+       // filter.addCategory(Intent.CATEGORY_DEFAULT);
+        filter.setPriority(10000);
+        smsListener = new SmsListener(((EditText) joinLayout.findViewById(R.id.verification_field)));
+        registerReceiver(smsListener, filter);
+        Log.i("JoinActivity/configSmsListener","SMS Listener Registered");
+    }
+
+
     private boolean calculateFlag(){
         return flag_email && flag_name && flag_pwd && flag_phone && flag_veri;
     }
@@ -303,6 +326,8 @@ public class JoinActivity extends BaseActivity {
         sendVButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard(JoinActivity.this);
+
                 String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
 
                 if (phone!=null && (phone.length() == 10 || phone.length() == 11)) {
@@ -352,6 +377,7 @@ public class JoinActivity extends BaseActivity {
                 DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        hideSoftKeyboard(JoinActivity.this);
                         String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
                         sendVeriMessage(phone);
                     }

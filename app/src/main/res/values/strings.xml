@@ -24,7 +24,7 @@
     <string name="verification_error_message">문자가 안갔어요. 재전송 한번 눌러주세요</string>
     <string name="unidentified_error_message">무언가 잘못됬어요. 다시 한번 해주세요</string>
     <string name="duplicate_account_error_message">이미 같은 이메일이나 번호로 가입되어 있어요</string>
-    <string name="incorrect_authcode_error_message">인증번호가 잘못 되었어요</string>
+    <string name="incorrect_authcode_error_message">인증번호를 다시 확인하세요</string>
     <string name="email_format_error_message">이메일 형식이 잘못 되었어요</string>
     <string name="password_format_error_message">비밀번호에 숫자나 특수문자가 포함되어야 되요</string>
     <string name="password_min_error_message">비밀번호는 최소한 8자이어야 해요</string>
@@ -96,6 +96,8 @@
     <string name="agreement_textview">서비스 약관와 개인정보 보호정책에 동의합니다</string>
     <string name="join_confirm_button">확인</string>
     <string name="join_checkbox_message">서비스 약관와 개인정보 보호정책에 동의하시나요?</string>
+    <string name="verification_done_message">인증왔어요! 진짜 번호가 맞네요</string>
+
     <!-- Login Button -->
     <string name="login_button">로그인</string>
     <string name="join_button">서비스 둘러보기</string>
