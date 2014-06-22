@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -121,7 +122,6 @@ public interface YammAPIService {
     @POST("/battle/results")
     void postBattleItem(@Field("results") String result, Callback<String> callback);
 
-
     public static class RawBattleItem{
         private int rounds;
         private List<DishItem> dishes;
@@ -137,6 +137,33 @@ public interface YammAPIService {
 
         public int getRounds(){
             return rounds;
+        }
+    }
+
+
+
+    /*
+    * POST phone numbers and get yamm_friends
+    * */
+    @POST("/friends/from-phone")
+    void findFriendsFromPhone(@Body RawPhones phones, Callback<RawFriends> callback);
+
+    public static class RawPhones{
+        private Set<String> phones;
+
+        public RawPhones(Set<String> phones){
+            this.phones = phones;
+        }
+    }
+    public static class RawFriends{
+        private List<Friend> yamm_users;
+
+        public RawFriends(List<Friend> yamm_users){
+            this.yamm_users = yamm_users;
+        }
+
+        public List<Friend> getFriendsList(){
+            return yamm_users;
         }
     }
     /*

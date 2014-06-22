@@ -8,17 +8,13 @@ import java.util.List;
  */
 public class Team extends YammItem{
     List<Friend> teamList;
-    public Team(int id){
-        super(id);
-        this.name = "Yamm팀이 없으시네요";
-    }
 
-    public Team(int id, String name){
+    public Team(String id, String name){
         super(id,name);
         teamList = new ArrayList<Friend>();
     }
 
-    public Team(int id, String name, List<Friend> list){
+    public Team(String id, String name, List<Friend> list){
         super(id,name);
         teamList = list;
     }

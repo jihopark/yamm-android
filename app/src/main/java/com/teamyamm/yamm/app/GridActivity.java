@@ -165,8 +165,10 @@ public class GridActivity extends BaseActivity {
    * Only executed right before stating Battle Activity
    * */
     private String saveGridResult(GridFragment f){
-        if (f.getSelectedItems().size() == 0)
+        if (f.getSelectedItems().size() == 0) {
+            Log.i("GridActivity/saveGridResult", "No item selected, returning blank string");
             return "";
+        }
 
         String s = "";
         for (GridItem i : f.getSelectedItems())

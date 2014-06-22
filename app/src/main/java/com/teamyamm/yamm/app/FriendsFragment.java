@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,7 +19,7 @@ public class FriendsFragment extends Fragment {
 
     private RelativeLayout yammItemLayout;
     public ArrayList<YammItem> selectedItems;
-    public ArrayList<Integer> selectedItemsInteger;
+    public ArrayList<String> selectedItemsInteger;
 
 
     public ListView friendListView;
@@ -54,7 +52,7 @@ public class FriendsFragment extends Fragment {
     }
 
     public boolean removeSelectedItem(YammItem yammItem){
-        selectedItemsInteger.remove((Integer)yammItem.getID());
+        selectedItemsInteger.remove((String)yammItem.getID());
         return selectedItems.remove(yammItem);
     }
 
@@ -67,7 +65,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setSelectedItems(){
-        selectedItemsInteger = getActivity().getIntent().getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+       /* selectedItemsInteger = getActivity().getIntent().getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
 
         Log.i("FriendFragment/setSelectedItems","Previous List " + selectedItemsInteger);
 
@@ -75,7 +73,7 @@ public class FriendsFragment extends Fragment {
             setConfirmButtonEnabled(false);
 
         selectedItems = new ArrayList<YammItem>();
-
+        */
     }
 
     private void setYammItemList(){
@@ -85,7 +83,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private List<YammItem> loadFriendList(){
-        ArrayList<YammItem> friendList = new ArrayList<YammItem>();
+     /*   ArrayList<YammItem> friendList = new ArrayList<YammItem>();
         friendList.add(new Friend(1, "양영직"));
         friendList.add(new Friend(2, "박지호"));
         friendList.add(new Friend(3, "김홍"));
@@ -110,7 +108,8 @@ public class FriendsFragment extends Fragment {
                 Log.i("FriendsFragment",i.getName()+" previously selected");
             }
         }
-        return friendList;
+        return friendList;*/
+        return null;
     }
 
 }

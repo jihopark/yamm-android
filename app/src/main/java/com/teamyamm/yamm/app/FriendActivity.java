@@ -91,7 +91,7 @@ public class FriendActivity extends BaseActivity {
 
     private void finishActivity(){
         Intent resultIntent = new Intent();
-        resultIntent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, friendsFragment.selectedItemsInteger);
+    //    resultIntent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, friendsFragment.selectedItemsInteger);
         setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
         finish();
     }

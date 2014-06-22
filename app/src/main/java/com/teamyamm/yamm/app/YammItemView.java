@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,17 +42,6 @@ public class YammItemView extends LinearLayout {
 
         setItem(i);
         Log.i("YammItemView",i.getName() + "created");
-
-        //On Touch Listener that toggles view
-        //if dummy item, make non selectable
-        layout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!item.isDummy()) {
-                    toggle();
-                }
-            }
-        });
     }
 
     public void setItem(YammItem f){

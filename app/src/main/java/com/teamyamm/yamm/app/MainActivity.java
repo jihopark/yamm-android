@@ -17,6 +17,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.HashMap;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends BaseActivity {
@@ -24,6 +30,7 @@ public class MainActivity extends BaseActivity {
     public final static int DRAWER_LOGOUT = 0;
 
     private HashMap<String, String> phoneNameMap;
+    private List<Friend> friendsList;
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
     private ListView leftDrawer;
@@ -154,8 +161,35 @@ public class MainActivity extends BaseActivity {
         //Save HashMap
         BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
         Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
-
     }
+
+    private void sendContactsToServer(){
+        Log.i("MainActivity/sendContactsToServer","Phone List " + phoneNameMap.keySet());
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(setRequestInterceptorWithToken())
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.findFriendsFromPhone(new YammAPIService.RawPhones(phoneNameMap.keySet()),
+                new Callback<YammAPIService.RawFriends>() {
+            @Override
+            public void success(YammAPIService.RawFriends rawFriends, Response response) {
+                friendsList = rawFriends.getFriendsList();
+                Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("MainActivity/sendContactsToServer", "Sending Failed");
+            }
+        });
+    }
+
     private String parsePhoneNumber(String s){
         //Remove Korean National Code
         s = s.replace("+82","0");
@@ -174,6 +208,7 @@ public class MainActivity extends BaseActivity {
         @Override
         protected Integer doInBackground(Integer... params) {
             readContacts();
+            sendContactsToServer();
             return 1;
         }
 
