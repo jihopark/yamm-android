@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity {
             }
         }
         //Save HashMap
-        BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromObjectToString(phoneNameMap));
+        BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
         Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
     }
 
@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity {
             public void success(YammAPIService.RawFriends rawFriends, Response response) {
                 friendsList = rawFriends.getFriendsList();
                 Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
-                BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromObjectToString(friendsList));
+                BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
             }
 
             @Override

@@ -23,8 +23,11 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -208,6 +211,14 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     /*
+    * Converts Map into JsonString
+    * */
+    protected String fromHashMapToString(HashMap<String,String> map){
+        Gson gson = new Gson();
+        return gson.toJson(map);
+    }
+
+    /*
     * Converts JsonString into Hashmap
     * */
     protected HashMap<String,String> fromStringToHashMap(String s){
@@ -215,30 +226,32 @@ public class BaseActivity extends ActionBarActivity {
             return null;
 
         Gson gson = new Gson();
-        HashMap<String,String> map = new HashMap<String, String>();
-        map = gson.fromJson(s, map.getClass());
-        return map;
+        Type typeOfDest = new TypeToken<HashMap<String,String>>() {
+        }.getType();
+        return gson.fromJson(s, typeOfDest);
     }
 
     /*
     * Converts Object into JsonString
     * */
-    protected String fromObjectToString(Object obj){
+    protected String fromFriendListToString(List<Friend> list){
         Gson gson = new Gson();
-        return gson.toJson(obj);
+        return gson.toJson(list);
     }
+
 
     /*
     * Converts JsonString into Object
     * */
-    protected Object fromStringToObject(String s){
+    protected List<Friend> fromStringToFriendList(String s){
         if (s=="none")
             return null;
 
         Gson gson = new Gson();
-        Object obj = new Object();
-        obj = gson.fromJson(s, obj.getClass());
-        return obj;
+        Type typeOfDest = new TypeToken<List<Friend>>() {
+        }.getType();
+
+        return gson.fromJson(s, typeOfDest);
     }
 
     protected static void hideSoftKeyboard(Activity activity) {

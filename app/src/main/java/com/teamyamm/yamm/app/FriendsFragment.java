@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ public class FriendsFragment extends Fragment {
 
     private RelativeLayout yammItemLayout;
     public ArrayList<YammItem> selectedItems;
-    public ArrayList<String> selectedItemsInteger;
+    public ArrayList<String> selectedItemsID;
 
 
     public ListView friendListView;
@@ -47,12 +48,12 @@ public class FriendsFragment extends Fragment {
     public void addSelectedItem(YammItem yammItem){
         if (!selectedItems.contains(yammItem)){
             selectedItems.add(yammItem);
-            selectedItemsInteger.add(yammItem.getID());
+            selectedItemsID.add(yammItem.getID());
         }
     }
 
     public boolean removeSelectedItem(YammItem yammItem){
-        selectedItemsInteger.remove((String)yammItem.getID());
+        selectedItemsID.remove(yammItem.getID());
         return selectedItems.remove(yammItem);
     }
 
@@ -65,51 +66,27 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setSelectedItems(){
-       /* selectedItemsInteger = getActivity().getIntent().getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+        selectedItemsID = getActivity().getIntent().getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
 
-        Log.i("FriendFragment/setSelectedItems","Previous List " + selectedItemsInteger);
+        Log.i("FriendFragment/setSelectedItems", "Previous List " + selectedItemsID);
 
-        if (selectedItemsInteger.size()==0)
+        if (selectedItemsID.size()==0)
             setConfirmButtonEnabled(false);
 
         selectedItems = new ArrayList<YammItem>();
-        */
     }
 
     private void setYammItemList(){
-        List<YammItem> list = loadFriendList();
-        adapter = new YammItemsListAdapter(getActivity(), list);
+        List<Friend> list = ((FriendActivity) getActivity()).getFriends();
+
+        adapter = new YammItemsListAdapter(getActivity(), setFriendListToYammItemList(list));
         friendListView.setAdapter(adapter);
     }
 
-    private List<YammItem> loadFriendList(){
-     /*   ArrayList<YammItem> friendList = new ArrayList<YammItem>();
-        friendList.add(new Friend(1, "양영직"));
-        friendList.add(new Friend(2, "박지호"));
-        friendList.add(new Friend(3, "김홍"));
-        friendList.add(new Friend(4, "고서우"));
-        friendList.add(new Friend(5, "방소정"));
-        friendList.add(new Friend(6, "황준식"));
-        friendList.add(new Friend(7, "임창균"));
-        friendList.add(new Friend(8, "한고은"));
-        friendList.add(new Friend(9, "한지은"));
-        friendList.add(new Friend(10, "박성호"));
-        friendList.add(new Friend(11, "박민선"));
-        friendList.add(new Friend(12, "임아람"));
-        friendList.add(new Friend(13, "김미정"));
-        Collections.sort(friendList);
-
-        //Check for previously selected items
-        for (YammItem i : friendList){
-            if (selectedItemsInteger.contains(i.getID())) {
-                i.setSelected(true);
-                if (!selectedItems.contains(i))
-                    selectedItems.add(i);
-                Log.i("FriendsFragment",i.getName()+" previously selected");
-            }
-        }
-        return friendList;*/
-        return null;
+    private List<YammItem> setFriendListToYammItemList(List<Friend> list){
+        List<YammItem> newList = new ArrayList<YammItem>();
+        for (Friend i : list)
+            newList.add(i);
+        return newList;
     }
-
 }

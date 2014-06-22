@@ -58,7 +58,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public YammDatePickerFragment datePickerFragment;
     private RelativeLayout mainButtonsContainer;
 
-    private ArrayList<Integer> selectedFriendList = new ArrayList<Integer>();
+    private ArrayList<String> selectedFriendList = new ArrayList<String>();
 
     //For Place Pick
     private AutoCompleteTextView placePickEditText;
@@ -419,7 +419,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 }
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
-                intent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, selectedFriendList); //send previously selected friend list
+                intent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, selectedFriendList); //send previously selected friend list
                 startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
                 Log.i("MainFragment/onClick","FriendActivity called");
             }
@@ -437,7 +437,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
             if (resultCode == BaseActivity.SUCCESS_RESULT_CODE) {
                 //Get Friend List
-                selectedFriendList = data.getIntegerArrayListExtra(FriendActivity.FRIEND_LIST);
+                selectedFriendList = data.getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
 
                 Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
             }

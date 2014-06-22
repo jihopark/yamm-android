@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -20,29 +22,26 @@ public class FriendActivity extends BaseActivity {
 
 
     public final static String FRIEND_FRAGMENT = "ff";
-    public final static String FRIEND_LIST = "fl";
+    public final static String SELECTED_FRIEND_LIST = "fl";
 
     private HashMap<String, String> friendNameMap;
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
+    private List<Friend> friends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
 
+        friends = loadFriends();
+        Log.i("FriendActivity/onResume","Loaded Friends");
+
         friendsFragment = new FriendsFragment();
 
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         tact.add(R.id.friends_fragment_container, friendsFragment, FRIEND_FRAGMENT);
         tact.commit();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        loadContacts();
-        Log.i("FriendActivity/onResume","Load Contacts and Check new friends");
     }
 
     @Override
@@ -87,29 +86,36 @@ public class FriendActivity extends BaseActivity {
         }
     }
 
+    public List<Friend> getFriends(){
+        return friends;
+    }
+
 
 
     private void finishActivity(){
         Intent resultIntent = new Intent();
-    //    resultIntent.putIntegerArrayListExtra(FriendActivity.FRIEND_LIST, friendsFragment.selectedItemsInteger);
+        resultIntent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, friendsFragment.selectedItemsID);
         setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
         finish();
     }
 
-    private void loadContacts(){
+    private List<Friend> loadFriends(){
         //Load Contacts From SharedPrefs
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
-        friendNameMap = fromStringToHashMap(prefs.getString(getString(R.string.PHONE_NAME_MAP),"none"));
+        List<Friend> list = fromStringToFriendList(prefs.getString(getString(R.string.FRIEND_LIST),"none"));
 
-        if (friendNameMap == null)
+        if (list == null){
             Log.e("FriendActivity/loadContacts","Failed to load contacts from shared pref");
-        else{
-            Log.i("FriendActivity/loadContacts","Successfully loaded contacts");
-            Log.i("FriendActivity/loadContacts",friendNameMap.toString());
-
-            //Send to Server
+            Toast.makeText(this, getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
+            finish();
         }
+        else{
+            Log.i("FriendActivity/loadContacts", "Successfully loaded friends");
+            Log.i("FriendActivity/loadContacts",list.toString());
+
+        }
+        return list;
     }
 
 
