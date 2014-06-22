@@ -36,6 +36,7 @@ public class MainActivity extends BaseActivity {
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private ReadContactAsyncTask readContactAsyncTask;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends BaseActivity {
 
         setLeftDrawer();
         Log.i("MainActivity/onCreate", "onCreate started");
-
+        prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
         //Set up Main Fragment
         mainFragment = new MainFragment();
@@ -132,8 +133,6 @@ public class MainActivity extends BaseActivity {
     };
 
     public void readContacts(){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-
         phoneNameMap = new HashMap<String, String>();
 
         ContentResolver cr = getContentResolver();
@@ -159,7 +158,7 @@ public class MainActivity extends BaseActivity {
             }
         }
         //Save HashMap
-        BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
+        BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromObjectToString(phoneNameMap));
         Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
     }
 
@@ -181,6 +180,7 @@ public class MainActivity extends BaseActivity {
             public void success(YammAPIService.RawFriends rawFriends, Response response) {
                 friendsList = rawFriends.getFriendsList();
                 Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+                BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromObjectToString(friendsList));
             }
 
             @Override

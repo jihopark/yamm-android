@@ -208,14 +208,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     /*
-    * Converts Map into JsonString
-    * */
-    protected String fromHashMapToString(HashMap<String,String> map){
-        Gson gson = new Gson();
-        return gson.toJson(map);
-    }
-
-    /*
     * Converts JsonString into Hashmap
     * */
     protected HashMap<String,String> fromStringToHashMap(String s){
@@ -226,6 +218,27 @@ public class BaseActivity extends ActionBarActivity {
         HashMap<String,String> map = new HashMap<String, String>();
         map = gson.fromJson(s, map.getClass());
         return map;
+    }
+
+    /*
+    * Converts Object into JsonString
+    * */
+    protected String fromObjectToString(Object obj){
+        Gson gson = new Gson();
+        return gson.toJson(obj);
+    }
+
+    /*
+    * Converts JsonString into Object
+    * */
+    protected Object fromStringToObject(String s){
+        if (s=="none")
+            return null;
+
+        Gson gson = new Gson();
+        Object obj = new Object();
+        obj = gson.fromJson(s, obj.getClass());
+        return obj;
     }
 
     protected static void hideSoftKeyboard(Activity activity) {
