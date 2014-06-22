@@ -180,6 +180,7 @@ public class MainActivity extends BaseActivity {
             public void success(YammAPIService.RawFriends rawFriends, Response response) {
                 friendsList = rawFriends.getFriendsList();
                 Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+                setContactNames();
                 BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
             }
 
@@ -188,6 +189,14 @@ public class MainActivity extends BaseActivity {
                 Log.e("MainActivity/sendContactsToServer", "Sending Failed");
             }
         });
+    }
+
+    private void setContactNames(){
+        for (Friend i : friendsList){
+            if (phoneNameMap.containsKey(i.getPhone())){
+                i.setContactName(phoneNameMap.get(i.getPhone()));
+            }
+        }
     }
 
     private String parsePhoneNumber(String s){
@@ -207,6 +216,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         protected Integer doInBackground(Integer... params) {
+            friendsList = null;
             readContacts();
             sendContactsToServer();
             return 1;

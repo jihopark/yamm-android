@@ -5,14 +5,17 @@ package com.teamyamm.yamm.app;
  */
 public class Friend extends YammItem {
     private String phone;
+    private String contactName;
 
     public Friend(String id, String name){
         super(id,name);
+        contactName = "";
     }
 
     public Friend(String id, String name, String phone){
         super(id,name);
         this.phone = phone;
+        contactName = "";
     }
 
     public String getProfileImageURL(){
@@ -25,6 +28,16 @@ public class Friend extends YammItem {
 
     public String toString(){
         return name + ":" + phone + ":" + id;
+    }
+
+    public void setContactName(String s){ contactName = s; }
+
+    public String getPhone(){ return phone; }
+
+    public String getName(){
+        if (contactName == "")
+            return name;
+        return contactName;
     }
 
 }
