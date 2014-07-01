@@ -1,0 +1,32 @@
+<resources>
+    <!-- the theme applied to the application or activity -->
+    <style name="YammActionBarTheme"
+        parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/YammActionBar</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/YammActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="YammActionBar"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/default_color</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <item name="android:titleTextStyle">@style/YammActionBar.Title</item>
+        <item name="android:height">43dp</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/default_color</item>
+        <item name="icon">@android:color/transparent</item>
+        <item name="titleTextStyle">@style/YammActionBar.Title</item>
+        <item name="height">43dp</item>
+
+    </style>
+
+    <style name="YammActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+</resources>
