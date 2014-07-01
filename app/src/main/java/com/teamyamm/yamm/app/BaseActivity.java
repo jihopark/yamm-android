@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -75,11 +74,10 @@ public class BaseActivity extends ActionBarActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     /*
-    * Changes Action Bar Transparent
+    * Changes Action Bar Overlay
     * */
-    protected void setActionBarTransparent(){
+    protected void setActionBarOverlay(){
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0x64000000));
     }
 
     /*

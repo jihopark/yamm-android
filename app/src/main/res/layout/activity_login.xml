@@ -1,24 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:hint="@string/verification_email"
-        android:id="@+id/email_field"
-        style="@style/EditText"
-        android:inputType="textEmailAddress"
-        />
-    <EditText
-        android:hint="@string/verification_pw"
-        android:id="@+id/pw_field"
-        style="@style/EditText"
-        android:inputType="textPassword"
-        />
-    <Button
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_button"
-        android:id="@+id/login_button"/>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/login_background" />
 
-</LinearLayout>
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <EditText
+            android:hint="@string/verification_email"
+            android:id="@+id/email_field"
+            style="@style/LoginEditText"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="15dp"
+            />
+        <EditText
+            android:hint="@string/verification_pw"
+            android:id="@+id/pw_field"
+            style="@style/LoginEditText"
+            android:inputType="textPassword"
+            android:layout_marginBottom="16dp"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:id="@+id/login_button"
+            style="@style/LoginButton"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:id="@+id/forgot_password"
+            android:layout_marginTop="28dp"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:textColor="#ff033f8a"
+            android:shadowColor="#ffffffff"
+            android:shadowRadius="0.2"
+            />
+    </LinearLayout>
+</FrameLayout>

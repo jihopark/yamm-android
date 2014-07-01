@@ -30,6 +30,8 @@ public class LoginActivity extends BaseActivity {
         ((EditText) findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
         setActionBarBackButton(true);
         setLoginButton();
+
+
     }
 
     private void setLoginButton(){

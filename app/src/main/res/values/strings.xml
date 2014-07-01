@@ -101,7 +101,7 @@
     <!-- Login Button -->
     <string name="login_button">로그인</string>
     <string name="join_button">서비스 둘러보기</string>
-
+    <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>
     <!-- Main Activty & Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="yamm_button_text">친구랑 밥먹기</string>
