@@ -3,6 +3,8 @@ package com.teamyamm.yamm.app;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +23,46 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/31/14.
  */
 public class LoginActivity extends BaseActivity {
+    private EditText emailField, pwdField;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ((EditText) findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
+        setEditTexts();
         setActionBarBackButton(true);
         setLoginButton();
+    }
 
+    private void setEditTexts(){
+        emailField = ((EditText) findViewById(R.id.email_field));
+        pwdField = ((EditText) findViewById(R.id.pw_field));
+        pwdField.setTransformationMethod(new HiddenPassTransformationMethod());
 
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!(emailField.getText().toString().equals("") || pwdField.getText().toString().equals(""))){
+                    changeLoginButtonState(true);
+                }
+                else{
+                    changeLoginButtonState(false);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+
+        emailField.addTextChangedListener(textWatcher);
+        pwdField.addTextChangedListener(textWatcher);
     }
 
     private void setLoginButton(){
@@ -39,11 +70,28 @@ public class LoginActivity extends BaseActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(LoginActivity.this);
-                postLoginToServer(((EditText) findViewById(R.id.email_field)).getText().toString(),
-                        ((EditText) findViewById(R.id.pw_field)).getText().toString());
+                String email = emailField.getText().toString();
+                String pwd = pwdField.getText().toString();
+
+                if (!(email.equals("") || pwd.equals(""))) {
+                    hideSoftKeyboard(LoginActivity.this);
+                    postLoginToServer(email, pwd);
+                }
             }
         });
+    }
+
+    private void changeLoginButtonState(boolean b){
+        Button loginButton = (Button) findViewById(R.id.login_button);
+
+        if (b){
+            loginButton.setTextColor(getResources().getColor(R.color.login_button_enabled_text));
+            loginButton.setBackgroundColor(getResources().getColor(R.color.login_button_enabled_background));
+        }
+        else{
+            loginButton.setTextColor(getResources().getColor(R.color.login_button_disabled_text));
+            loginButton.setBackgroundColor(getResources().getColor(R.color.login_button_disabled_background));
+        }
     }
 
     private void postLoginToServer(String email, String pw){

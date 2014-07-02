@@ -37,15 +37,15 @@
         <item name="android:paddingLeft">15dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">#66ffffff</item>
-        <item name="android:textColor">#99ffffff</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:textColorHint">#99ffffff</item>
     </style>
 
     <style name="LoginButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">#99ff6000</item>
-        <item name="android:textColor">#99ffffff</item>
+        <item name="android:background">@color/login_button_disabled_background</item>
+        <item name="android:textColor">@color/login_button_disabled_text</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center</item>
     </style>

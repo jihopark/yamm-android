@@ -83,7 +83,7 @@
     <string name="verification_text">인증번호 문자를 보냈슴</string>
     <string name="verification_field">인증번호</string>
     <string name="verification_name">이름</string>
-    <string name="verification_email">이메일</string>
+    <string name="verification_email">이메일 주소</string>
     <string name="verification_pw">비밀번호</string>
     <string name="verification_phone">전화번호</string>
     <string name="verification_button">인증</string>
@@ -99,7 +99,7 @@
     <string name="verification_done_message">인증왔어요! 진짜 번호가 맞네요</string>
 
     <!-- Login Button -->
-    <string name="login_button">로그인</string>
+    <string name="login_button">로그인 하기</string>
     <string name="join_button">서비스 둘러보기</string>
     <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>
     <!-- Main Activty & Fragment -->

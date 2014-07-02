@@ -2,4 +2,10 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="default_color">#FFFF6000</color>
+
+    <!--Login Activity -->
+    <color name="login_button_enabled_text">#ffffffff</color>
+    <color name="login_button_disabled_text">#99ffffff</color>
+    <color name="login_button_enabled_background">#e5ff6000</color>
+    <color name="login_button_disabled_background">#99ff6000</color>
 </resources>
