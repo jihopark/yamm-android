@@ -93,10 +93,10 @@
     <string name="verification_resend_dialog_title">재전송?</string>
     <string name="verification_dialog_title">전화번호 인증</string>
     <string name="verification_dialog_message">이 번호로 인증번호를 보낼께요</string>
-    <string name="agreement_textview">서비스 약관와 개인정보 보호정책에 동의합니다</string>
-    <string name="join_confirm_button">확인</string>
+    <string name="agreement_textview">서비스 약관과 개인정보 보호정책에 동의합니다.</string>
     <string name="join_checkbox_message">서비스 약관와 개인정보 보호정책에 동의하시나요?</string>
     <string name="verification_done_message">인증왔어요! 진짜 번호가 맞네요</string>
+    <string name="join_confirm_button">가입 하기</string>
 
     <!-- Login Button -->
     <string name="login_button">로그인 하기</string>

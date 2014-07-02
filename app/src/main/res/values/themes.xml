@@ -3,6 +3,7 @@
     <style name="YammActionBarTheme"
         parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/YammActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/YammActionBar</item>
@@ -21,6 +22,7 @@
         <item name="icon">@android:color/transparent</item>
         <item name="titleTextStyle">@style/YammActionBar.Title</item>
         <item name="height">43dp</item>
+
 
     </style>
 

@@ -74,7 +74,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.JoinActivity"
             android:label="@string/title_activity_join"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.IntroActivity" />

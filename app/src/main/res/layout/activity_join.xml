@@ -3,94 +3,125 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.teamyamm.yamm.app.JoinActivity"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/join_layout"
     >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/join_message"
-        android:textSize="20dp"
-        android:padding="15dp"
-        android:gravity="center_horizontal"
-        />
-
     <EditText
         android:hint="@string/verification_name"
         android:id="@+id/name_field"
-        style="@style/EditText"
+        style="@style/JoinEditText"
         android:inputType="textPersonName"
         />
-    <EditText
-        android:hint="@string/verification_email"
-        android:id="@+id/email_field"
-        style="@style/EditText"
-        android:inputType="textEmailAddress"
-        />
-    <EditText
-        android:hint="@string/verification_pw"
-        android:id="@+id/pw_field"
-        style="@style/EditText"
-        android:inputType="textPassword"
-        />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
         <EditText
-            android:layout_weight="4"
-            android:layout_width="0dp"
+            android:hint="@string/verification_email"
+            android:id="@+id/email_field"
+            style="@style/JoinEditText"
+            android:inputType="textEmailAddress"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/JoinErrorImage"
+            android:id="@+id/email_field_error"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="@string/verification_pw"
+            android:id="@+id/pw_field"
+            style="@style/JoinEditText"
+            android:inputType="textPassword"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/JoinErrorImage"
+            android:id="@+id/pw_field_error"
+            android:visibility="gone"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
             android:hint="@string/verification_phone"
             android:id="@+id/phone_field"
-            style="@style/EditText"
+            style="@style/JoinEditText"
             android:inputType="phone"
             />
         <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            style="@style/MyButton"
+            style="@style/VeriButton"
             android:text="@string/verification_button"
             android:id="@+id/verification_button"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_button_disabled"
+            android:textColor="@color/button_disabled_text"
             />
         <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            style="@style/MyButton"
+            style="@style/VeriButton"
             android:text="@string/verification_resend_button"
             android:id="@+id/verification_resend_button"
             android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_button_enabled"
+            android:textColor="@color/button_enabled_text"
             />
-    </LinearLayout>
-    <EditText
-        android:hint="@string/verification_field"
-        android:id="@+id/verification_field"
-        style="@style/EditText"
-        android:inputType="phone"
-        />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="@string/verification_field"
+            android:id="@+id/verification_field"
+            style="@style/JoinEditText"
+            android:inputType="phone"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/VeriSuccessImage"
+            android:id="@+id/veri_success_image"
+            android:visibility="gone"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/JoinErrorImage"
+            android:id="@+id/veri_field_error"
+            android:visibility="gone"/>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="49dp"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal"
+        >
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:id="@+id/agreement_checkbox"/>
+            android:id="@+id/agreement_checkbox"
+            android:button="@drawable/checkbox_selector"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:id="@+id/agreement_textview"/>
+            android:id="@+id/agreement_textview"
+            android:textColor="@color/agreement_text_color"/>
     </LinearLayout>
+    <Button
+        style="@style/JoinConfirmButton"
+        android:id="@+id/join_confirm_button"
+        android:text="@string/join_confirm_button"/>
 
 </LinearLayout>
 

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
@@ -13,13 +12,12 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +38,11 @@ import retrofit.client.Response;
 public class JoinActivity extends BaseActivity {
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
-    private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false;
+    private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false, flag_checkbox = false;
     private CheckBox agreementCheckBox;
     private SmsListener smsListener;
+    private Button joinConfirmButton;
+    private EditText emailText, nameText, pwText, phoneText, veriText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,46 +56,27 @@ public class JoinActivity extends BaseActivity {
         configSendButton();
         configAgreementCheckBox();
         configEditTexts();
+        configJoinConfirmButton();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.join_activity_actions, menu);
-
-        if (enableButtonFlag) {
-            menu.findItem(R.id.join_confirm_button).setEnabled(true);
-        } else {
-            menu.findItem(R.id.join_confirm_button).setEnabled(false);
-        }
 
 
-        return super.onCreateOptionsMenu(menu);
-    }
+    private void configJoinConfirmButton(){
+        joinConfirmButton = (Button) findViewById(R.id.join_confirm_button);
+        joinConfirmButton.setEnabled(false);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.join_confirm_button:
-                Log.i("JoinActivity/OnOptionsItemSelected","Confirm Join Button Clicked");
-
-
+        joinConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("JoinActivity/configJoinConfirmButton","Confirm Join Button Clicked");
                 if (agreementCheckBox.isChecked()){
-                    hideSoftKeyboard(this);
                     postRegistrationToServer();
-                    //goToActivity(GridActivity.class);
                 }
                 else{
-                    hideSoftKeyboard(this);
-                    Toast.makeText(this, R.string.join_checkbox_message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JoinActivity.this, R.string.join_checkbox_message, Toast.LENGTH_SHORT).show();
                 }
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+            }
+        });
     }
 
     @Override
@@ -108,34 +89,46 @@ public class JoinActivity extends BaseActivity {
     public void onPause(){
         super.onPause();
         unregisterReceiver(smsListener);
-        Log.i("JoinActivity/configSmsListener","SMS Listener Unregistered");
+        Log.i("JoinActivity/configSmsListener", "SMS Listener Unregistered");
     }
 
     public void setConfirmButtonEnabled(){
         boolean tmp = enableButtonFlag;
         enableButtonFlag = calculateFlag();
         if (enableButtonFlag != tmp) {
-            supportInvalidateOptionsMenu();
+            joinConfirmButton.setEnabled(enableButtonFlag);
+            if (enableButtonFlag){
+                joinConfirmButton.setBackgroundColor(getResources().getColor(R.color.button_enabled_background));
+                joinConfirmButton.setTextColor(getResources().getColor(R.color.button_enabled_text));
+            }
+            else{
+                joinConfirmButton.setBackgroundColor(getResources().getColor(R.color.button_disabled_background));
+                joinConfirmButton.setTextColor(getResources().getColor(R.color.button_disabled_text));
+            }
+
         }
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     private void configSmsListener(){
         IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-       // filter.addCategory(Intent.CATEGORY_DEFAULT);
+        // filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.setPriority(10000);
-        smsListener = new SmsListener(((EditText) joinLayout.findViewById(R.id.verification_field)));
+        smsListener = new SmsListener(((EditText) joinLayout.findViewById(R.id.verification_field)),
+                ((ImageView) joinLayout.findViewById(R.id.veri_success_image)));
         registerReceiver(smsListener, filter);
         Log.i("JoinActivity/configSmsListener","SMS Listener Registered");
     }
 
 
     private boolean calculateFlag(){
-        return flag_email && flag_name && flag_pwd && flag_phone && flag_veri;
+        return flag_email && flag_name && flag_pwd && flag_phone && flag_veri && flag_checkbox;
     }
 
     private void configEditTexts(){
-        ((EditText) joinLayout.findViewById(R.id.name_field)).addTextChangedListener(new TextWatcher() {
+
+        nameText = (EditText) joinLayout.findViewById(R.id.name_field);
+        nameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -152,7 +145,9 @@ public class JoinActivity extends BaseActivity {
 
             }
         });
-        ((EditText) joinLayout.findViewById(R.id.email_field)).addTextChangedListener(new TextWatcher() {
+
+        emailText = (EditText) joinLayout.findViewById(R.id.email_field);
+        emailText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -162,6 +157,9 @@ public class JoinActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 flag_email = !(s.length() == 0);
                 setConfirmButtonEnabled();
+
+                ((ImageView)findViewById(R.id.email_field_error)).setVisibility(View.GONE);
+                emailText.setTextColor(getResources().getColor(R.color.join_text_color));
             }
 
             @Override
@@ -169,7 +167,8 @@ public class JoinActivity extends BaseActivity {
 
             }
         });
-        ((EditText) joinLayout.findViewById(R.id.pw_field)).addTextChangedListener(new TextWatcher() {
+        pwText = (EditText) joinLayout.findViewById(R.id.pw_field);
+        pwText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -179,6 +178,9 @@ public class JoinActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 flag_pwd = !(s.length() == 0);
                 setConfirmButtonEnabled();
+
+                ((ImageView)findViewById(R.id.pw_field_error)).setVisibility(View.GONE);
+                pwText.setTextColor(getResources().getColor(R.color.join_text_color));
             }
 
             @Override
@@ -186,7 +188,8 @@ public class JoinActivity extends BaseActivity {
 
             }
         });
-        ((EditText) joinLayout.findViewById(R.id.phone_field)).addTextChangedListener(new TextWatcher() {
+        phoneText = (EditText) joinLayout.findViewById(R.id.phone_field);
+        phoneText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -196,6 +199,17 @@ public class JoinActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 flag_phone = !(s.length() == 0);
                 setConfirmButtonEnabled();
+
+                Button b = (Button) findViewById(R.id.verification_button);
+                if (s.toString().length() < 10){
+                    b.setBackgroundResource(R.drawable.rounded_button_disabled);
+                    b.setTextColor(getResources().getColor(R.color.button_disabled_text));
+
+                }
+                else{
+                    b.setBackgroundResource(R.drawable.rounded_button_enabled);
+                    b.setTextColor(getResources().getColor(R.color.button_enabled_text));
+                }
             }
 
             @Override
@@ -203,7 +217,8 @@ public class JoinActivity extends BaseActivity {
 
             }
         });
-        ((EditText) joinLayout.findViewById(R.id.verification_field)).addTextChangedListener(new TextWatcher() {
+        veriText = (EditText) joinLayout.findViewById(R.id.verification_field);
+        veriText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -213,6 +228,10 @@ public class JoinActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 flag_veri = !( s.length() == 0 );
                 setConfirmButtonEnabled();
+
+                ((ImageView)findViewById(R.id.veri_success_image)).setVisibility(View.GONE);
+                ((ImageView)findViewById(R.id.veri_field_error)).setVisibility(View.GONE);
+                veriText.setTextColor(getResources().getColor(R.color.join_text_color));
             }
 
             @Override
@@ -223,11 +242,15 @@ public class JoinActivity extends BaseActivity {
     }
 
     private void postRegistrationToServer(){
-        String name = ((EditText) joinLayout.findViewById(R.id.name_field)).getText().toString();
-        String email = ((EditText) joinLayout.findViewById(R.id.email_field)).getText().toString();
-        String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
-        String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
-        String veri = ((EditText) joinLayout.findViewById(R.id.verification_field)).getText().toString();
+        String name = nameText.getText().toString();
+        String email = emailText.getText().toString();
+        String password = pwText.getText().toString();
+        String phone = phoneText.getText().toString();
+        String veri = veriText.getText().toString();
+        final ImageView emailError = (ImageView) findViewById(R.id.email_field_error);
+        final ImageView pwError = (ImageView) findViewById(R.id.pw_field_error);
+        final ImageView veriError = (ImageView) findViewById(R.id.veri_field_error);
+
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
@@ -253,18 +276,36 @@ public class JoinActivity extends BaseActivity {
 
                 if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT))
+                else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.duplicate_account_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE))
+                    phoneText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    emailText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    emailError.setVisibility(View.VISIBLE);
+                }
+                else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT))
+                    veriText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    veriError.setVisibility(View.VISIBLE);
+                }
+                else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.email_format_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT))
+                    emailText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    emailError.setVisibility(View.VISIBLE);
+                }
+                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.password_format_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN))
+                    pwText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    pwError.setVisibility(View.VISIBLE);
+                }
+                else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.password_min_error_message), Toast.LENGTH_LONG).show();
-                else if (msg.equals(YammAPIService.YammRetrofitException.PHONE_FORMAT))
+                    pwText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    pwError.setVisibility(View.VISIBLE);
+                }
+                else if (msg.equals(YammAPIService.YammRetrofitException.PHONE_FORMAT)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.phone_number_error_message), Toast.LENGTH_LONG).show();
+                    phoneText.setTextColor(getResources().getColor(R.color.join_error_color));
+                }
                 else
                     Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
             }
@@ -314,11 +355,25 @@ public class JoinActivity extends BaseActivity {
 
     private void configAgreementCheckBox(){
         agreementCheckBox = (CheckBox) joinLayout.findViewById(R.id.agreement_checkbox);
+
+        agreementCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    hideSoftKeyboard(JoinActivity.this);
+                    flag_checkbox = true;
+                }
+                else
+                    flag_checkbox = false;
+                setConfirmButtonEnabled();
+            }
+        });
+
         TextView agreementTextView = (TextView) joinLayout.findViewById(R.id.agreement_textview);
 
         //Set span for blue color
         Spannable span = new SpannableString(getString(R.string.agreement_textview));
-        span.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 16, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.agreement_link_color)), 0, 17, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         agreementTextView.setText(span);
     }
 
@@ -387,7 +442,7 @@ public class JoinActivity extends BaseActivity {
                 };
 
                 createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
-                        R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
+                        R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
             }
         });
     }
