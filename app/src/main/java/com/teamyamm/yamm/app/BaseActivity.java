@@ -17,9 +17,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -94,7 +99,7 @@ public class BaseActivity extends ActionBarActivity {
     * */
 
     protected void goToActivity(Class<?> nextActivity){
-        Log.v("BaseActivity/goToActivity","Going to "+nextActivity.getSimpleName());
+        Log.v("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
 
         //Save Previous Activity
         putInPref(getSharedPreferences(packageName, MODE_PRIVATE)
@@ -257,6 +262,22 @@ public class BaseActivity extends ActionBarActivity {
 
     protected String phoneNumberFormat(String phone){
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
+    }
+
+    protected void makeErrorToast(String message, int duration){
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.yamm_error_toast,
+                (ViewGroup) findViewById(R.id.toast_layout));
+
+        TextView text = (TextView) layout.findViewById(R.id.toast_text);
+        // Set the Text to show in TextView
+        text.setText(message);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setDuration(duration);
+        toast.setView(layout);
+        toast.show();
     }
 
     /*
