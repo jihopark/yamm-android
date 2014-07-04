@@ -136,11 +136,11 @@ public class LoginActivity extends BaseActivity {
                 progressDialog.dismiss();
 
                 if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
-                    Toast.makeText(getApplicationContext(), getString(R.string.login_authentication_error_message), Toast.LENGTH_LONG).show();
+                    makeErrorToast(getString(R.string.login_authentication_error_message), Toast.LENGTH_LONG);
                 else if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
-                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                    makeErrorToast(getString(R.string.network_error_message), Toast.LENGTH_LONG);
                 else
-                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+                    makeErrorToast(getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
 
 
             }

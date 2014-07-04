@@ -274,7 +274,7 @@ public class BaseActivity extends ActionBarActivity {
         // Set the Text to show in TextView
         text.setText(message);
         Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
         toast.setDuration(duration);
         toast.setView(layout);
         toast.show();

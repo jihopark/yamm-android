@@ -109,7 +109,7 @@
     </style>
 
     <style name="ErrorToast">
-        <item name="android:background">#ffff0000</item>
+        <item name="android:background">#e5ff0000</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:layout_height">26dp</item>
         <item name="android:layout_width">match_parent</item>
