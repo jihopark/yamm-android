@@ -10,10 +10,10 @@ import android.widget.GridView;
  */
 public class GridSelectionListView extends GridView {
 
-    public static final int COLUMN = 3;
-    public static final int VERTICAL_SPACING = 5;
-    public static final int HORIZONTAL_SPACING = 5;
-    public static final int PADDING = 5;
+    public static final int COLUMN = 4;
+   // public static final int VERTICAL_SPACING = 5;
+   // public static final int HORIZONTAL_SPACING = 5;
+   // public static final int PADDING = 5;
 
     public GridSelectionListView(Context context){
         super(context);
@@ -31,9 +31,9 @@ public class GridSelectionListView extends GridView {
 
         this.setLayoutParams(scrollParams);
         this.setNumColumns(GridSelectionListView.COLUMN);
-        this.setVerticalSpacing(GridSelectionListView.VERTICAL_SPACING);
-        this.setHorizontalSpacing(GridSelectionListView.HORIZONTAL_SPACING);
-        this.setPadding(GridSelectionListView.PADDING, GridSelectionListView.PADDING, GridSelectionListView.PADDING, GridSelectionListView.PADDING);
+    //    this.setVerticalSpacing(GridSelectionListView.VERTICAL_SPACING);
+    //    this.setHorizontalSpacing(GridSelectionListView.HORIZONTAL_SPACING);
+    //    this.setPadding(GridSelectionListView.PADDING, GridSelectionListView.PADDING, GridSelectionListView.PADDING, GridSelectionListView.PADDING);
     }
 
 }

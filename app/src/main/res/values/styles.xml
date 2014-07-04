@@ -117,6 +117,27 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <!-- Grid Activity -->
+
+    <style name="GridIntroText">
+        <item name="android:textColor">#ff0e7078</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">34dp</item>
+    </style>
+
+    <style name="GridAllButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@color/button_enabled_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 
     <style name="MyButton">
         <item name="android:layout_width">wrap_content</item>

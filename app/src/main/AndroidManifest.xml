@@ -84,7 +84,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.GridActivity"
             android:label="@string/title_activity_grid"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/YammActionBarTheme" />
 
         <!-- Friend Activity -->
         <activity
