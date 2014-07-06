@@ -69,6 +69,7 @@
     <string name="grid_all_button">못 먹는 것 없어요</string>
     <string name="grid_empty_text">로딩 중 입니다</string>
     <string name="grid_all_button_message">이미 몇개 고르셨는데요?</string>
+    <string name="grid_all_button_finish">완료</string>
 
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>

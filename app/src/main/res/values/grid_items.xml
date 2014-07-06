@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="grid_item_names">
+    <string-array name="grid_item_names">
         <item>돼지고기</item>
         <item>회</item>
         <item>내장</item>
@@ -16,39 +16,28 @@
         <item>버섯</item>
         <item>김치</item>
         <item>콩</item>
-        <item>채식</item>
-    </array>
+        <item>채식2</item>
+    </string-array>
 
-    gridItems.add(new GridItem(523680,"돼지고기"));
-    gridItems.add(new GridItem(369943,"회"));
-    gridItems.add(new GridItem(705789,"내장"));
-    gridItems.add(new GridItem(298704,"갑각류"));
-    gridItems.add(new GridItem(517895,"고등어"));
-    gridItems.add(new GridItem(611143,"굴"));
-    gridItems.add(new GridItem(364076,"밀가루"));
-    gridItems.add(new GridItem(289652,"계란"));
-    gridItems.add(new GridItem(592682,"우유"));
-    gridItems.add(new GridItem(878326,"메밀"));
-    gridItems.add(new GridItem(479819,"토마토"));
-    gridItems.add(new GridItem(924635,"어패류"));
-    gridItems.add(new GridItem(895329,"버섯"));
-    gridItems.add(new GridItem(326059,"김치"));
-    gridItems.add(new GridItem(932687,"콩"));
-    gridItems.add(new GridItem(16,"채식"));
+    <integer-array name="grid_item_ids">
+        <item>523680</item>
+        <item>369943</item>
+        <item>705789</item>
+        <item>298704</item>
+        <item>517895</item>
+        <item>611143</item>
+        <item>364076</item>
+        <item>289652</item>
+        <item>592682</item>
+        <item>878326</item>
+        <item>479819</item>
+        <item>924635</item>
+        <item>895329</item>
+        <item>326059</item>
+        <item>932687</item>
+        <item>16</item>
+    </integer-array>
 
+    <integer name = "grid_vegi_id">111111</integer>
 
-    <array name="grid_item_ids">
-        <item>소고기</item>
-        <item>돼지고기</item>
-        <item>회</item>
-        <item>내장</item>
-        <item>게</item>
-        <item>어패류</item>
-        <item>새우</item>
-        <item>굴</item>
-        <item>두부</item>
-        <item>계란</item>
-        <item>버섯</item>
-        <item>우유</item>
-    </array>
 </resources>

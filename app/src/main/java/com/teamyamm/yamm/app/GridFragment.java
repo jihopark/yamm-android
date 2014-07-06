@@ -14,12 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GridFragment extends Fragment {
     private GridSelectionListView listView;
@@ -31,13 +29,15 @@ public class GridFragment extends Fragment {
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
     private GridItem vegi;
     private ProgressDialog progressDialog;
-    private Button gridAllButton;
+    private Button finishButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
         mainLayout = (LinearLayout) inflater.inflate(R.layout.grid_fragment, container, false);
+
+        initButtons();
 
         listView = initGridSelectionListView();
 
@@ -46,8 +46,10 @@ public class GridFragment extends Fragment {
         //Set Checkbox
         checkbox = (CheckBox) mainLayout.findViewById(R.id.grid_checkbox);
         checkbox.setChecked(false);
-        checkbox.setOnCheckedChangeListener(initCheckBoxChangeListener());
-        vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id),"채식");
+        checkbox.setClickable(false);
+             //  checkbox.setOnCheckedChangeListener(initCheckBoxChangeListener());
+
+
 
         return mainLayout;
     }
@@ -63,24 +65,42 @@ public class GridFragment extends Fragment {
     }
 
     ////////////////////////////////////Private Method
-    /*
-    * Initiate CheckBox OnclickListener
-    * */
-    private CompoundButton.OnCheckedChangeListener initCheckBoxChangeListener(){
-        return new CompoundButton.OnCheckedChangeListener() {
+
+    private void initButtons() {
+        Button vegiButton = (Button) mainLayout.findViewById(R.id.grid_checkbox_button);
+        finishButton = (Button) mainLayout.findViewById(R.id.grid_all_button);
+
+        vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id), "채식");
+
+        vegiButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.i("GridFragment/onCheckedChanged","isChecked "+ isChecked + ", add " + vegi);
-                if (isChecked)
-                    selectedItems.add(vegi);
-                else
+            public void onClick(View v) {
+                if (checkbox.isChecked()) {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 1) {
+                        finishButton.setText(getResources().getString(R.string.grid_all_button));
+                    }
                     selectedItems.remove(vegi);
+                    checkbox.setChecked(false);
+                } else {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 0) {
+                        finishButton.setText(getResources().getString(R.string.grid_all_button_finish));
+                    }
+                    selectedItems.add(vegi);
+                    checkbox.setChecked(true);
+                }
+                Log.i("GridFragment/onClick", selectedItems.toString());
             }
-        };
+        });
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
-
-
-
 
     /*
     * Initiate GridSelectionListView
@@ -97,16 +117,26 @@ public class GridFragment extends Fragment {
         view.setAdapter(initiateAdapter());
             view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+
                     //Change Clicked Status ofGridItemView
                     ((GridItemView) v).toggle();
                     if (((GridItemView) v).getChecked()) {
-                        Log.i("GridFragment/onItemClickListener","Add " + ((GridItemView) v).getGridItem().getName());
+                        //To change Grid All Button Text
+                        if (selectedItems.size() == 0){
+                            finishButton.setText(getResources().getString(R.string.grid_all_button_finish));
+                        }
+
                         selectedItems.add(((GridItemView) v).getGridItem());
                     }
                     else {
-                        Log.i("GridFragment/onItemClickListener","Removed " + ((GridItemView) v).getGridItem().getName());
+                        //To change Grid All Button Text
+                        if (selectedItems.size() == 1){
+                            finishButton.setText(getResources().getString(R.string.grid_all_button));
+                        }
                         selectedItems.remove(((GridItemView) v).getGridItem());
                     }
+                    Log.i("GridFragment/OnItemClick",selectedItems.toString());
                 }
             });
         Log.i("GridFragment/initGridSelectionListView","GridListView Initiated");
@@ -158,29 +188,11 @@ public class GridFragment extends Fragment {
         });
         */
 
-        List<GridItem> gridItems = new ArrayList<GridItem>();
-        gridItems.add(new GridItem(523680,"돼지고기"));
-        gridItems.add(new GridItem(369943,"회"));
-        gridItems.add(new GridItem(705789,"내장"));
-        gridItems.add(new GridItem(298704,"갑각류"));
-        gridItems.add(new GridItem(517895,"고등어"));
-        gridItems.add(new GridItem(611143,"굴"));
-        gridItems.add(new GridItem(364076,"밀가루"));
-        gridItems.add(new GridItem(289652,"계란"));
-        gridItems.add(new GridItem(592682,"우유"));
-        gridItems.add(new GridItem(878326,"메밀"));
-        gridItems.add(new GridItem(479819,"토마토"));
-        gridItems.add(new GridItem(924635,"어패류"));
-        gridItems.add(new GridItem(895329,"버섯"));
-        gridItems.add(new GridItem(326059,"김치"));
-        gridItems.add(new GridItem(932687,"콩"));
-        gridItems.add(new GridItem(16,"채식"));
+        String[] itemNames = getResources().getStringArray(R.array.grid_item_names);
+        int[] itemIds =  getResources().getIntArray(R.array.grid_item_ids);
 
-        for (GridItem i : gridItems) {
-            adapter.addItem(i);
-        }
-
-        Log.i("GridFragment/initiateAdapter",gridItems.toString());
+        for (int i=0; i<itemIds.length; i++)
+            adapter.addItem(new GridItem(itemIds[i], itemNames[i]));
 
         adapter.notifyDataSetChanged();
         progressDialog.dismiss();
