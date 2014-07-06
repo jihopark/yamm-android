@@ -123,7 +123,7 @@
         <item name="android:textColor">#ff0e7078</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginTop">34dp</item>
+        <item name="android:layout_marginTop">15dp</item>
     </style>
 
     <style name="GridAllButton">
