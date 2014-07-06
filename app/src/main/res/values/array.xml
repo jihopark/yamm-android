@@ -3,19 +3,4 @@
     <array name="nav_menu_titles">
         <item>로그아웃</item>
     </array>
-
-    <array name="grid_items">
-        <item>소고기</item>
-        <item>돼지고기</item>
-        <item>회</item>
-        <item>내장</item>
-        <item>게</item>
-        <item>어패류</item>
-        <item>새우</item>
-        <item>굴</item>
-        <item>두부</item>
-        <item>계란</item>
-        <item>버섯</item>
-        <item>우유</item>
-    </array>
 </resources>

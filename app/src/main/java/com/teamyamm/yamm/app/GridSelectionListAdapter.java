@@ -28,13 +28,14 @@ public class GridSelectionListAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent){
         GridItemView item;
-
-        if (convertView == null)
-            item = new GridItemView(mContext, getItem(position));
+        if (convertView == null) {
+            item = new GridItemView(mContext, getItem(position), position);
+        }
         else{
             item = (GridItemView) convertView;
         }
-        item.setGridItem(getItem(position));
+        item.setGridItem(getItem(position), position);
+
 
         return item;
     }

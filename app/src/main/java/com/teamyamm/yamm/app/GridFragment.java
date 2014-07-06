@@ -17,15 +17,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class GridFragment extends Fragment {
     private GridSelectionListView listView;
@@ -125,7 +119,9 @@ public class GridFragment extends Fragment {
     private GridSelectionListAdapter initiateAdapter(){
         adapter = new GridSelectionListAdapter(getActivity());
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+
+        ///Deleted because no need to retrieve items from server
+/*        RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(((BaseActivity)getActivity()).apiURL)
                 .setLog(((BaseActivity)getActivity()).setRestAdapterLog())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -160,6 +156,34 @@ public class GridFragment extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
             }
         });
+        */
+
+        List<GridItem> gridItems = new ArrayList<GridItem>();
+        gridItems.add(new GridItem(523680,"돼지고기"));
+        gridItems.add(new GridItem(369943,"회"));
+        gridItems.add(new GridItem(705789,"내장"));
+        gridItems.add(new GridItem(298704,"갑각류"));
+        gridItems.add(new GridItem(517895,"고등어"));
+        gridItems.add(new GridItem(611143,"굴"));
+        gridItems.add(new GridItem(364076,"밀가루"));
+        gridItems.add(new GridItem(289652,"계란"));
+        gridItems.add(new GridItem(592682,"우유"));
+        gridItems.add(new GridItem(878326,"메밀"));
+        gridItems.add(new GridItem(479819,"토마토"));
+        gridItems.add(new GridItem(924635,"어패류"));
+        gridItems.add(new GridItem(895329,"버섯"));
+        gridItems.add(new GridItem(326059,"김치"));
+        gridItems.add(new GridItem(932687,"콩"));
+        gridItems.add(new GridItem(16,"채식"));
+
+        for (GridItem i : gridItems) {
+            adapter.addItem(i);
+        }
+
+        Log.i("GridFragment/initiateAdapter",gridItems.toString());
+
+        adapter.notifyDataSetChanged();
+        progressDialog.dismiss();
 
         return adapter;
     }
