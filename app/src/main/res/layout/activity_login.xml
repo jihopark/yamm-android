@@ -45,7 +45,7 @@
             android:gravity="center_horizontal"
             android:textColor="#ff033f8a"
             android:shadowColor="#ffffffff"
-            android:shadowRadius="0.2"
+            android:shadowRadius="20"
             />
     </LinearLayout>
 </FrameLayout>
