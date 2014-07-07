@@ -4,12 +4,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -20,7 +21,14 @@ import retrofit.client.Response;
  * Created by parkjiho on 6/1/14.
  */
 public class GridActivity extends BaseActivity {
-    private GridFragment gridFragment;
+    private GridSelectionListView listView;
+    private GridSelectionListAdapter adapter;
+
+    private CheckBox checkbox;
+    private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
+    private GridItem vegi;
+    private ProgressDialog progressDialog;
+    private Button finishButton;
 
 
     @Override
@@ -28,52 +36,19 @@ public class GridActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid);
 
-        gridFragment = (GridFragment) getSupportFragmentManager().findFragmentById(R.id.grid_fragment);
-        setGridAllButton();
+        initButtons();
+
+        listView = initGridSelectionListView();
+
+        //Set Checkbox
+        checkbox = (CheckBox) findViewById(R.id.grid_checkbox);
+        checkbox.setChecked(false);
+        checkbox.setClickable(false);
     }
 
     @Override
     public void onBackPressed() {
         goBackHome();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.grid_activity_actions, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.grid_confirm_button:
-                Log.i("GridActivity/OnOptionsItemSelected","Confirm Grid Button Clicked");
-                finishGridActivity();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    ////Private Methods
-    private void setGridAllButton(){
-        Button gridAllButton = (Button) findViewById(R.id.grid_all_button);
-        gridAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("GridActivity/OnClickListener","All Button Clicked");
-                if (gridFragment.getSelectedItems().size()!=0){
-                    Toast.makeText(getApplicationContext(), getString(R.string.grid_all_button_message), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    finishGridActivity();
-                }
-            }
-        });
     }
 
     /*
@@ -84,7 +59,7 @@ public class GridActivity extends BaseActivity {
         Log.i("GridActivity/finishGridActivity", "FinishGridActivity Started");
 
         //Save to Shared Pref
-        String result = saveGridResult(gridFragment);
+        String result = saveGridResult();
 
         //Send to Server
 
@@ -164,22 +139,156 @@ public class GridActivity extends BaseActivity {
    * Save Grid Selected Result to shared preferences
    * Only executed right before stating Battle Activity
    * */
-    private String saveGridResult(GridFragment f){
-        if (f.getSelectedItems().size() == 0) {
+    private String saveGridResult(){
+        if (selectedItems.size() == 0) {
             Log.i("GridActivity/saveGridResult", "No item selected, returning blank string");
             return "";
         }
 
         String s = "";
-        for (GridItem i : f.getSelectedItems())
+        for (GridItem i : selectedItems)
             s = s +i.getId()+",";
         s = s.substring(0, s.length()-1);
-        Log.i("GridActivity/saveGridResult","Grid Result Saved - "+ f.getSelectedItems());
-        Log.i("GridActivity/saveGridResult", s);
+        Log.i("GridActivity/saveGridResult", "Items: "+ selectedItems);
+        Log.i("GridActivity/saveGridResult", "Result String: " + s);
 
         return s;
     }
 
+    ////////////////////////////////////Private Method
 
+    private void initButtons() {
+        Button vegiButton = (Button) findViewById(R.id.grid_checkbox_button);
+        finishButton = (Button) findViewById(R.id.grid_all_button);
+
+        vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id), "채식");
+
+        vegiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkbox.isChecked()) {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 1) {
+                        finishButton.setText(getResources().getString(R.string.grid_all_button));
+                    }
+                    selectedItems.remove(vegi);
+                    checkbox.setChecked(false);
+                } else {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 0) {
+                        finishButton.setText(getResources().getString(R.string.grid_all_button_finish));
+                    }
+                    selectedItems.add(vegi);
+                    checkbox.setChecked(true);
+                }
+                Log.i("GridActivity/onClick", selectedItems.toString());
+            }
+        });
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("GridActivity/onClick", "Finishing Activity");
+                finishGridActivity();
+            }
+        });
+    }
+
+    /*
+    * Initiate GridSelectionListView
+    * */
+    private GridSelectionListView initGridSelectionListView(){
+        GridSelectionListView view = (GridSelectionListView) findViewById(R.id.grid_selection_list_view);
+
+        progressDialog = createProgressDialog(this,
+                R.string.join_progress_dialog_title,
+                R.string.join_progress_dialog_message);
+        progressDialog.show();
+
+        view.setAdapter(initiateAdapter());
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+
+                //Change Clicked Status ofGridItemView
+                ((GridItemView) v).toggle();
+                if (((GridItemView) v).getChecked()) {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 0){
+                        finishButton.setText(getResources().getString(R.string.grid_all_button_finish));
+                    }
+
+                    selectedItems.add(((GridItemView) v).getGridItem());
+                }
+                else {
+                    //To change Grid All Button Text
+                    if (selectedItems.size() == 1){
+                        finishButton.setText(getResources().getString(R.string.grid_all_button));
+                    }
+                    selectedItems.remove(((GridItemView) v).getGridItem());
+                }
+                Log.i("GridActivity/OnItemClick",selectedItems.toString());
+            }
+        });
+        Log.i("GridActivity/initGridSelectionListView","GridListView Initiated");
+        return view;
+    }
+
+    /*
+   * Adds Grid Item to GridSelectionListAdapter and to GridSelectionListView
+   * */
+    private GridSelectionListAdapter initiateAdapter(){
+        adapter = new GridSelectionListAdapter(this);
+
+
+        ///Deleted because no need to retrieve items from server
+/*        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(((BaseActivity)getActivity()).apiURL)
+                .setLog(((BaseActivity)getActivity()).setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.getGridItems(new Callback<YammAPIService.Choices>() {
+            @Override
+            public void success(YammAPIService.Choices choices, Response response) {
+                List<GridItem> gridItems = choices.getList();
+                Log.i("GridActivity/initiateAdapter",gridItems.size() + " items loaded");
+                Log.i("GridActivity/initiateAdapter",gridItems.toString());
+
+                for (GridItem i : gridItems) {
+                    adapter.addItem(i);
+                }
+
+                adapter.notifyDataSetChanged();
+                listView.invalidateViews();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("GridFragment/initiateAdapter","Loading Adapter Failed");
+                retrofitError.printStackTrace();
+
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getActivity(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getActivity(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+            }
+        });
+        */
+
+        String[] itemNames = getResources().getStringArray(R.array.grid_item_names);
+        int[] itemIds =  getResources().getIntArray(R.array.grid_item_ids);
+
+        for (int i=0; i<itemIds.length; i++)
+            adapter.addItem(new GridItem(itemIds[i], itemNames[i]));
+
+        adapter.notifyDataSetChanged();
+        progressDialog.dismiss();
+
+        return adapter;
+    }
 
 }
