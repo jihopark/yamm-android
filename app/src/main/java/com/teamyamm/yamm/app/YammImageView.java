@@ -79,9 +79,9 @@ public class YammImageView extends FrameLayout {
     }
 
     public String getURL(){
-        if (path == DISH)
-            return "http://cdn.entwellbeing.com.au/wp-content/uploads/2013/08/artificial-food-colors.jpg";
+        if (path == DISH){
 
+        }
         return exampleURL;
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grid_item_names">
+        <item>돼지고기</item>
+        <item>회</item>
+        <item>내장</item>
+        <item>갑각류</item>
+        <item>고등어</item>
+        <item>굴</item>
+        <item>밀가루</item>
+        <item>계란</item>
+        <item>우유</item>
+        <item>메밀</item>
+        <item>토마토</item>
+        <item>어패류</item>
+        <item>버섯</item>
+        <item>김치</item>
+        <item>콩</item>
+        <item>채식2</item>
+    </string-array>
+
+    <integer-array name="grid_item_ids">
+        <item>523680</item>
+        <item>369943</item>
+        <item>705789</item>
+        <item>298704</item>
+        <item>517895</item>
+        <item>611143</item>
+        <item>364076</item>
+        <item>289652</item>
+        <item>592682</item>
+        <item>878326</item>
+        <item>479819</item>
+        <item>924635</item>
+        <item>895329</item>
+        <item>326059</item>
+        <item>932687</item>
+        <item>16</item>
+    </integer-array>
+
+    <integer name = "grid_vegi_id">111111</integer>
+
+</resources>

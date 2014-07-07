@@ -12,7 +12,7 @@
     <string name="title_activity_join">서비스 가입</string>
     <string name="title_activity_login">로그인</string>
     <string name="title_activity_friend">같이 먹을 친구를 선택해주세요</string>
-    <string name="title_activity_grid">못 먹는 음식 고르기</string>
+    <string name="title_activity_grid">못먹는 음식 선택</string>
 
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정해요</string>
@@ -37,6 +37,7 @@
     <string name="PREVIOUS_ACTIVITY_JOIN">JoinActivity</string>
     <string name="PREVIOUS_ACTIVITY_MAIN">MainActivity</string>
     <string name="PREVIOUS_ACTIVITY_LOGIN">LoginActivity</string>
+    <string name="PREVIOUS_ACTIVITY_GRID">GridActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
@@ -58,16 +59,11 @@
     <string name="join_progress_dialog_message">좀만 기다려주세요</string>
 
     <!--Grid Activity & Fragment -->
-    <string name="grid_confirm_button">확인</string>
-    <string name="grid_introduction">못 먹는 음식 다 골라</string>
-    <string name="grid_button">없는데요</string>
-    <string name="grid_item_selected_text">윀</string>
-    <string name="grid_selected_none">없는데요</string>
-    <string name="grid_selected_some">다 골랐어요</string>
+    <string name="grid_introduction">절대로 못먹는 음식이 있으면 선택하세요.</string>
     <string name="grid_checkbox_text">나는 채식주의자얌</string>
-    <string name="grid_all_button">못 먹는거 없어요</string>
+    <string name="grid_all_button">못 먹는 것 없어요</string>
     <string name="grid_empty_text">로딩 중 입니다</string>
-    <string name="grid_all_button_message">이미 몇개 고르셨는데요?</string>
+    <string name="grid_all_button_finish">완료</string>
 
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>

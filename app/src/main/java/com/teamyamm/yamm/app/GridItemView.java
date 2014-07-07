@@ -1,23 +1,22 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
+import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 /**
  * Created by parkjiho on 5/10/14.
  */
 public class GridItemView extends FrameLayout {
-    private TextView itemText;
-    private YammImageView imageView;
-    private TextView selectedText;
+    private ImageView imageView;
 
     private boolean mChecked = false;
     private GridItem item;
     private Context context;
+    private int position;
 
     public GridItemView(Context context){
         super(context);
@@ -28,28 +27,20 @@ public class GridItemView extends FrameLayout {
         super(context, attrs);
     }
 
-    public GridItemView(Context context,  GridItem aItem){
+    public GridItemView(Context context,  GridItem aItem, int position){
         super(context);
         item = aItem;
         this.context = context;
+        this.position = position;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.grid_item, this, true);
-        setGridItemImage();
-        itemText = (TextView) findViewById(R.id.grid_item_text);
-        setGridItemText(itemText);
-        selectedText = (TextView)findViewById(R.id.grid_item_selected);
+        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.grid_item, this, true);
+
+        imageView = (ImageView) layout.findViewById(R.id.grid_item_image);
     }
 
     public void setChecked(boolean checked){
         mChecked = checked;
-        if (checked) {
-            selectedText.setVisibility(View.VISIBLE);
-            selectedText.bringToFront();
-            selectedText.invalidate();
-        }
-        else
-            selectedText.setVisibility(View.INVISIBLE);
     }
 
     public boolean getChecked(){
@@ -57,6 +48,7 @@ public class GridItemView extends FrameLayout {
     }
 
     public void toggle(){
+        imageView.setSelected(!mChecked);
         setChecked(!mChecked);
     }
 
@@ -64,11 +56,10 @@ public class GridItemView extends FrameLayout {
         return item;
     }
 
-    public void setGridItem(GridItem i){
+    public void setGridItem(GridItem i, int position){
         item = new GridItem(i);
-        setGridItemText(itemText);
-        imageView.setID(i.getId());
-        imageView.loadImage();
+        this.position = position;
+        setGridItemImage();
     }
     /*
      * To make square
@@ -80,14 +71,21 @@ public class GridItemView extends FrameLayout {
     }
 
     /////////////////////Private method
-    private void setGridItemText(TextView view){
-        view.bringToFront();
-        view.invalidate();
-        view.setText(item.getName());
+    private void setGridItemImage(){
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_selected},
+                context.getResources().
+                        getDrawable(getResources().getIdentifier("@drawable/hate_" + getDrawableID(position + 1) + "_sel", "drawable", context.getPackageName())));
+        states.addState(new int[] { },
+                context.getResources().
+                        getDrawable(getResources().getIdentifier("@drawable/hate_" + getDrawableID(position + 1) + "_nml", "drawable", context.getPackageName())));
+        imageView.setImageDrawable(states);
     }
 
-    private void setGridItemImage(){
-        imageView = new YammImageView(context, YammImageView.GRID, 100, 100, item.getId());
-        addView(imageView, 0);
+    private String getDrawableID(int id){
+        if (id < 10)
+            return "0"+id;
+        else
+            return ""+id;
     }
 }

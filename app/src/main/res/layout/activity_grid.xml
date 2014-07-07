@@ -2,10 +2,45 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <fragment
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true">
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.teamyamm.yamm.app.GridFragment"
-        android:id="@+id/grid_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/grid_introduction"
+        style="@style/GridIntroText"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp">
+        <Button
+            style="@style/GridAllButton"
+            android:text="@string/grid_checkbox_text"
+            android:id="@+id/grid_checkbox_button"
+            android:background="#ff34a1aa"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/grid_checkbox"
+            android:button="@drawable/checkbox_selector"
+            android:layout_marginLeft="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+
+    <com.teamyamm.yamm.app.GridSelectionListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="2dp"
+        android:id="@+id/grid_selection_list_view"/>
+    <Button
+        style="@style/GridAllButton"
+        android:text="@string/grid_all_button"
+        android:id="@+id/grid_all_button"/>
 </LinearLayout>

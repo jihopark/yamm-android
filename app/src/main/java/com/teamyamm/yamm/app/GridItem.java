@@ -25,6 +25,15 @@ public class GridItem {
         name = n;
     }
 
+    @Override
+    public boolean equals(Object i){
+        if (!(i instanceof GridItem))
+            return false;
+        if (this.getId() == ((GridItem)i).getId())
+            return true;
+        return false;
+    }
+
     public String getName(){
         return name;
     }
@@ -44,4 +53,6 @@ public class GridItem {
     public String getImageURL(){
         return "";
     }
+
+
 }
