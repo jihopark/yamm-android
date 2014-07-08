@@ -12,11 +12,11 @@
         <item>우유</item>
         <item>메밀</item>
         <item>토마토</item>
-        <item>어패류</item>
+        <item>조개류</item>
         <item>버섯</item>
         <item>김치</item>
         <item>콩</item>
-        <item>채식2</item>
+        <item>견과류</item>
     </string-array>
 
     <integer-array name="grid_item_ids">
@@ -35,7 +35,7 @@
         <item>895329</item>
         <item>326059</item>
         <item>932687</item>
-        <item>16</item>
+        <item>654777</item>
     </integer-array>
 
     <integer name = "grid_vegi_id">111111</integer>
