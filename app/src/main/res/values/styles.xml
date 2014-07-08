@@ -37,6 +37,15 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <!-- Intro Activity -->
+    <style name="IntroButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <!-- Login Activity -->
 
     <style name="LoginEditText">

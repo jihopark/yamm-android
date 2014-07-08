@@ -292,33 +292,33 @@ public class JoinActivity extends BaseActivity {
                     makeErrorToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
                 else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT)) {
                     makeErrorToast(getString(R.string.duplicate_account_error_message), Toast.LENGTH_SHORT);
-                    phoneText.setTextColor(getResources().getColor(R.color.join_error_color));
-                    emailText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    phoneText.setTextColor(getResources().getColor(R.color.error_color));
+                    emailText.setTextColor(getResources().getColor(R.color.error_color));
                     emailError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE)) {
                     makeErrorToast(getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_SHORT);
-                    veriText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    veriText.setTextColor(getResources().getColor(R.color.error_color));
                     veriError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT)) {
                     makeErrorToast(getString(R.string.email_format_error_message), Toast.LENGTH_SHORT);
-                    emailText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    emailText.setTextColor(getResources().getColor(R.color.error_color));
                     emailError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT)) {
                     makeErrorToast(getString(R.string.password_format_error_message), Toast.LENGTH_SHORT);
-                    pwText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    pwText.setTextColor(getResources().getColor(R.color.error_color));
                     pwError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN)) {
                     makeErrorToast(getString(R.string.password_min_error_message), Toast.LENGTH_SHORT);
-                    pwText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    pwText.setTextColor(getResources().getColor(R.color.error_color));
                     pwError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PHONE_FORMAT)) {
                     makeErrorToast(getString(R.string.phone_number_error_message), Toast.LENGTH_SHORT);
-                    phoneText.setTextColor(getResources().getColor(R.color.join_error_color));
+                    phoneText.setTextColor(getResources().getColor(R.color.error_color));
                 }
                 else
                     makeErrorToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);

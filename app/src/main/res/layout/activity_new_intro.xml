@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- Intro View Pager -->
-    <FrameLayout
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6">
-        <android.support.v4.view.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/intro_view_pager"/>
-        <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/intro_view_pager_indicator"
-            android:padding="10dip"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal|bottom"
-            />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/intro_view_pager"/>
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/intro_view_pager_indicator"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="2dp"
+        android:layout_above="@+id/intro_button_layout"
+        android:layout_marginBottom="34dp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/intro_button_layout">
         <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:text="@string/join_button"
+            style="@style/IntroButton"
+            android:layout_marginBottom="14dp"
+            android:textColor="#ffd55000"
+            android:background="#99ffffff"
+            android:text="@string/intro_join_button"
             android:id="@+id/join_button"/>
         <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/login_button"
+            style="@style/IntroButton"
+            android:layout_marginBottom="18dp"
+            android:textColor="#ffffffff"
+            android:background="#ccff6000"
+            android:text="@string/intro_login_button"
             android:id="@+id/login_button"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

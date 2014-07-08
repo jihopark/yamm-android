@@ -58,7 +58,12 @@
     <string name="join_progress_dialog_title">가입 처리 중</string>
     <string name="join_progress_dialog_message">좀만 기다려주세요</string>
 
-    <!--Grid Activity & Fragment -->
+
+    <!-- Intro Activity -->
+    <string name="intro_join_button">가입하기</string>
+    <string name="intro_login_button">로그인</string>
+
+    <!--Grid Activity -->
     <string name="grid_introduction">절대로 못먹는 음식이 있으면 선택하세요.</string>
     <string name="grid_checkbox_text">나는 채식주의자얌</string>
     <string name="grid_all_button">못 먹는 것 없어요</string>
@@ -94,10 +99,10 @@
     <string name="verification_done_message">인증왔어요! 진짜 번호가 맞네요</string>
     <string name="join_confirm_button">가입 하기</string>
 
-    <!-- Login Button -->
+    <!-- Login Activity -->
     <string name="login_button">로그인 하기</string>
-    <string name="join_button">서비스 둘러보기</string>
     <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>
+
     <!-- Main Activty & Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="yamm_button_text">친구랑 밥먹기</string>

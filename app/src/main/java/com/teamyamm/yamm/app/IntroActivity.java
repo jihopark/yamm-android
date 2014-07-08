@@ -34,7 +34,11 @@ public class IntroActivity extends BaseActivity {
         pager = (ViewPager) findViewById(R.id.intro_view_pager);
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
         CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.intro_view_pager_indicator);
-        indicator.setFillColor(Color.BLACK);
+
+        indicator.setFillColor(Color.WHITE);
+        indicator.setStrokeColor(Color.WHITE);
+        indicator.setPageColor(Color.BLACK);
+        indicator.setRadius(8.0f);
         indicator.setViewPager(pager);
     }
 
@@ -64,7 +68,11 @@ public class IntroActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new IntroImageFragment(position);
+            Fragment f = new IntroImageFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("position",position);
+            f.setArguments(bundle);
+            return f;
         }
 
         @Override
