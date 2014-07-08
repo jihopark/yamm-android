@@ -57,7 +57,7 @@
     <string name="progress_dialog_message">좀만 기다려주세요</string>
     <string name="join_progress_dialog_title">가입 처리 중</string>
     <string name="join_progress_dialog_message">좀만 기다려주세요</string>
-
+    <string name="poke_method_dialog_title">어떻게 찌를까요?</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
@@ -121,6 +121,8 @@
     <string name="yamm_item_selected_text">얌</string>
     <string name="friend_pick_confirm_button">확인</string>
     <string name="friends_list_empty">Yamm 친이 없으시네요</string>
+
+
 
 
     <!-- Yamm Date Spinner -->

@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,10 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.kakao.KakaoLink;
-import com.kakao.KakaoParameterException;
-import com.kakao.KakaoTalkLinkMessageBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,28 +92,11 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         pokeFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendKakaoLink();
+                DialogFragment pokeMethodDialog = new PokeMethodDialog();
+                pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
+                //sendKakaoLink();
             }
         });
-    }
-
-    private void sendKakaoLink(){
-        try {
-            final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getActivity());
-            final KakaoTalkLinkMessageBuilder msgBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
-
-            msgBuilder.addText(currentDishItem.getName() + " 같이 먹을래요?");
-
-            final String linkContents = msgBuilder.build();
-            kakaoLink.sendMessage(linkContents, getActivity());
-
-        }catch(KakaoParameterException e){
-            Log.e("NewMainFragment/sendKakaLink", "Kakao link init error");
-            e.printStackTrace();
-        }
-
-
-
     }
 
     private void setLocationManagerListener(){
@@ -442,6 +422,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public DishItem getCurrentDishItem(){
+        return currentDishItem;
     }
 
 }
