@@ -92,7 +92,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.FriendActivity"
             android:label="@string/title_activity_friend"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/YammActionBarTheme" >
         </activity>
         <!-- For KaKao SDK -->
         <meta-data

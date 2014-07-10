@@ -97,8 +97,8 @@ public class SplashScreen extends Activity {
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_GRID)))
             activity = new Intent(getBaseContext(), GridActivity.class);
 
-        //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Grid
-        //activity = new Intent(getBaseContext(), GridActivity.class);
+        //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Friend
+        activity = new Intent(getBaseContext(), MainActivity.class);
 
         if (activity!=null){
             Log.v("SplashScreen","Activity Start");

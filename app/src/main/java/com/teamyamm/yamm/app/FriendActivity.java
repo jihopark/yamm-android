@@ -3,13 +3,17 @@ package com.teamyamm.yamm.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +32,7 @@ public class FriendActivity extends BaseActivity {
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
     private List<Friend> friends;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +42,50 @@ public class FriendActivity extends BaseActivity {
         friends = loadFriends();
         Log.i("FriendActivity/onResume","Loaded Friends");
 
-        friendsFragment = new FriendsFragment();
+        setTabViewPager();
 
-        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-        tact.add(R.id.friends_fragment_container, friendsFragment, FRIEND_FRAGMENT);
-        tact.commit();
+
+
+    }
+
+    private void setTabViewPager(){
+
+        //Set Fragment View Pager
+        FriendActivityPagerAdapter adapter =new FriendActivityPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.friend_fragment_pager);
+        viewPager.setAdapter(adapter);
+    }
+
+    private class FriendActivityPagerAdapter extends FragmentStatePagerAdapter {
+        ArrayList<String> tabNameList = new ArrayList<String>();
+
+
+        public FriendActivityPagerAdapter(FragmentManager fm){
+            super(fm);
+            tabNameList.add(getResources().getString(R.string.friend_activity_tab1));
+            tabNameList.add(getResources().getString(R.string.friend_activity_tab2));
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+           if (i==0){
+               return new FriendsFragment();
+           }
+           else{
+               return new InviteFragment();
+           }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabNameList.get(position);
+        }
+
     }
 
     @Override
