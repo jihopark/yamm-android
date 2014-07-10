@@ -2,10 +2,12 @@ package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -58,8 +60,22 @@ public class JoinActivity extends BaseActivity {
         configAgreementCheckBox();
         configEditTexts();
         configJoinConfirmButton();
+        getPhoneNumber();
     }
 
+    private void getPhoneNumber(){
+        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String phone = manager.getLine1Number();
+
+        phone = MainActivity.parsePhoneNumber(phone);
+
+        Log.i("JoinActivity/getPhoneNumber","Read Phone Number : " + phone);
+
+        if (phone.length() > 9){
+            //Set it on Phone Text
+            phoneText.setText(phone);
+        }
+    }
 
 
     private void configJoinConfirmButton(){

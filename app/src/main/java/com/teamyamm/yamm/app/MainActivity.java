@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private String parsePhoneNumber(String s){
+    public static String parsePhoneNumber(String s){
         //Remove Korean National Code
         s = s.replace("+82","0");
         //Remove non digits
