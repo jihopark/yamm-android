@@ -91,7 +91,7 @@ public class GridActivity extends BaseActivity {
 
         final ProgressDialog progressDialog;
         // Show Progress Dialog
-        progressDialog = createProgressDialog(this,
+        progressDialog = createProgressDialog(GridActivity.this,
                 R.string.battle_progress_dialog_title,
                 R.string.battle_progress_dialog_message);
         progressDialog.show();
@@ -200,7 +200,7 @@ public class GridActivity extends BaseActivity {
     private GridSelectionListView initGridSelectionListView(){
         GridSelectionListView view = (GridSelectionListView) findViewById(R.id.grid_selection_list_view);
 
-        progressDialog = createProgressDialog(this,
+        progressDialog = createProgressDialog(GridActivity.this,
                 R.string.join_progress_dialog_title,
                 R.string.join_progress_dialog_message);
         progressDialog.show();

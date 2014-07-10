@@ -97,7 +97,7 @@ public class LoginActivity extends BaseActivity {
     private void postLoginToServer(String email, String pw){
         final ProgressDialog progressDialog;
         // Show Progress Dialog
-        progressDialog = createProgressDialog(this,
+        progressDialog = createProgressDialog(LoginActivity.this,
                 R.string.progress_dialog_title,
                 R.string.progress_dialog_message);
         progressDialog.show();

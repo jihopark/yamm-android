@@ -281,7 +281,7 @@ public class JoinActivity extends BaseActivity {
 
         //To Prevent Double Fire
         joinConfirmButton.setEnabled(false);
-        final ProgressDialog progressDialog = createProgressDialog(this,
+        final ProgressDialog progressDialog = createProgressDialog(JoinActivity.this,
                 R.string.join_progress_dialog_title,
                 R.string.join_progress_dialog_message);
         progressDialog.show();

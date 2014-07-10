@@ -175,7 +175,7 @@ public class BattleActivity extends BaseActivity {
 * */
     private void finishBattle(){
         Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ result);
-        final ProgressDialog finalDialog =  createProgressDialog(this,
+        final ProgressDialog finalDialog =  createProgressDialog(BattleActivity.this,
                 R.string.battle_final_dialog_title,
                 R.string.battle_final_dialog_message);
 
