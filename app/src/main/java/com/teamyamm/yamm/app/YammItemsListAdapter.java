@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,8 +33,9 @@ public class YammItemsListAdapter extends BaseAdapter {
             view = new YammItemView(context, getItem(position));
         else{
             view = (YammItemView) convertView;
+            view.setItem(getItem(position));
         }
-        view.setItem(getItem(position));
+
         return view;
     }
 
@@ -53,7 +53,6 @@ public class YammItemsListAdapter extends BaseAdapter {
     }
 
     public long getItemId(int p){
-        Log.e("YammItemsListAdapter/getItemId","This method is not applicable");
-        return 0;
+        return items.get(p).getID();
     }
 }

@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ public class YammItemView extends LinearLayout {
         super(context);
 
         this.context = context;
+        this.item = i;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
@@ -40,14 +40,12 @@ public class YammItemView extends LinearLayout {
         fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag(FriendActivity.FRIEND_FRAGMENT);
 
 
-        setItem(i);
-        Log.i("YammItemView",i.getName() + "created");
+        setItem(item);
     }
 
     public void setItem(YammItem f){
         item = f;
         itemNameText.setText(item.getName());
-        itemNameText.setTextSize(TypedValue.COMPLEX_UNIT_SP,getResources().getDimension(R.dimen.yamm_item_text_size));
 
         if (isSelected())
             itemSelectedText.setVisibility(TextView.VISIBLE);

@@ -9,12 +9,12 @@ import java.util.List;
 public class Team extends YammItem{
     List<Friend> teamList;
 
-    public Team(String id, String name){
+    public Team(long id, String name){
         super(id,name);
         teamList = new ArrayList<Friend>();
     }
 
-    public Team(String id, String name, List<Friend> list){
+    public Team(long id, String name, List<Friend> list){
         super(id,name);
         teamList = list;
     }

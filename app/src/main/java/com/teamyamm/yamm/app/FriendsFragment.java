@@ -48,12 +48,12 @@ public class FriendsFragment extends Fragment {
     public void addSelectedItem(YammItem yammItem){
         if (!selectedItems.contains(yammItem)){
             selectedItems.add(yammItem);
-            selectedItemsID.add(yammItem.getID());
+            selectedItemsID.add(Long.toString(yammItem.getID()));
         }
     }
 
     public boolean removeSelectedItem(YammItem yammItem){
-        selectedItemsID.remove(yammItem.getID());
+        selectedItemsID.remove(Long.toString(yammItem.getID()));
         return selectedItems.remove(yammItem);
     }
 
@@ -68,6 +68,7 @@ public class FriendsFragment extends Fragment {
     private void setSelectedItems(){
         selectedItemsID = getActivity().getIntent().getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
 
+
         Log.i("FriendFragment/setSelectedItems", "Previous List " + selectedItemsID);
 
         if (selectedItemsID.size()==0)
@@ -78,7 +79,6 @@ public class FriendsFragment extends Fragment {
 
     private void setYammItemList(){
         List<Friend> list = ((FriendActivity) getActivity()).getFriends();
-
         adapter = new YammItemsListAdapter(getActivity(), setFriendListToYammItemList(list));
         friendListView.setAdapter(adapter);
     }
@@ -87,6 +87,7 @@ public class FriendsFragment extends Fragment {
         List<YammItem> newList = new ArrayList<YammItem>();
         for (Friend i : list)
             newList.add(i);
+
         return newList;
     }
 }

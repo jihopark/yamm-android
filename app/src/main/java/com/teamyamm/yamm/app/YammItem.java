@@ -4,19 +4,18 @@ package com.teamyamm.yamm.app;
  * Created by parkjiho on 5/19/14.
  */
 public abstract class YammItem implements Comparable<YammItem> {
-    protected String id;
+    protected long id;
     protected String name;
     private boolean selected = false;
-    public YammItem(String id){
+    public YammItem(long id){
         this.id = id;
     }
 
-    public YammItem(String id, String name){
+    public YammItem(long id, String name){
         this.id = id;
         this.name = name;
     }
-    public String getID(){ return id; }
-    public String getStringID(){ return id; }
+    public long getID(){ return id; }
     public String getName(){ return name; }
 
     public abstract String getProfileImageURL();

@@ -7,12 +7,12 @@ public class Friend extends YammItem {
     private String phone;
     private String contactName;
 
-    public Friend(String id, String name){
+    public Friend(long id, String name){
         super(id,name);
         contactName = "";
     }
 
-    public Friend(String id, String name, String phone){
+    public Friend(long id, String name, String phone){
         super(id,name);
         this.phone = phone;
         contactName = "";
@@ -35,7 +35,7 @@ public class Friend extends YammItem {
     public String getPhone(){ return phone; }
 
     public String getName(){
-        if (contactName == "")
+        if (contactName == null || contactName == "")
             return name;
         return contactName;
     }

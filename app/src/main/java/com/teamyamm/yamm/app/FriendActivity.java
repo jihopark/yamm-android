@@ -185,13 +185,13 @@ public class FriendActivity extends BaseActivity {
         List<Friend> list = fromStringToFriendList(prefs.getString(getString(R.string.FRIEND_LIST),"none"));
 
         if (list == null){
-            Log.e("FriendActivity/loadContacts","Failed to load contacts from shared pref");
+            Log.e("FriendActivity/loadFriends","Failed to load contacts from shared pref");
             Toast.makeText(this, getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
             finish();
         }
         else{
-            Log.i("FriendActivity/loadContacts", "Successfully loaded friends");
-            Log.i("FriendActivity/loadContacts",list.toString());
+            Log.i("FriendActivity/loadFriends", "Successfully loaded friends");
+            Log.i("FriendActivity/loadFriends",list.toString());
 
         }
         return list;
