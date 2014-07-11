@@ -30,6 +30,12 @@ public class IntroActivity extends BaseActivity {
         hideActionBar();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        goBackHome();
+    }
+
     private void setViewPager(){
         pager = (ViewPager) findViewById(R.id.intro_view_pager);
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
