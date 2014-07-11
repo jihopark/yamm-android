@@ -7,11 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,11 +20,12 @@ import java.util.List;
  */
 public class FriendsFragment extends Fragment {
 
-    private RelativeLayout yammItemLayout;
+    private LinearLayout yammItemLayout;
     public ArrayList<YammItem> selectedItems;
     public ArrayList<String> selectedItemsID;
     private List<YammItem> itemList;
-
+    private LinearLayout selectedItemsLayout;
+    private HashMap<Long, TextView> selectedItemTextViews;
 
     public ListView friendListView;
     private YammItemsListAdapter adapter;
@@ -31,7 +33,9 @@ public class FriendsFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        yammItemLayout = (RelativeLayout) inflater.inflate(R.layout.friends_fragment, container, false);
+        yammItemLayout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
+        selectedItemsLayout = (LinearLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
+        selectedItemTextViews = new HashMap<Long, TextView>();
 
         friendListView = new ListView(getActivity());
         friendsListEmptyText = new TextView(getActivity());
@@ -51,11 +55,13 @@ public class FriendsFragment extends Fragment {
         if (!selectedItems.contains(yammItem)){
             selectedItems.add(yammItem);
             selectedItemsID.add(Long.toString(yammItem.getID()));
+            addSelectedItemView(yammItem);
         }
     }
 
     public boolean removeSelectedItem(YammItem yammItem){
         selectedItemsID.remove(Long.toString(yammItem.getID()));
+        removeSelectedItemView(yammItem);
         return selectedItems.remove(yammItem);
     }
 
@@ -65,6 +71,28 @@ public class FriendsFragment extends Fragment {
 
     public void setConfirmButtonEnabled(boolean b){
         ((FriendActivity)getActivity()).setConfirmButtonEnabled(b);
+    }
+
+    /*
+    * Adds selected item view to layout
+    * */
+    private void addSelectedItemView(YammItem yammItem){
+        if (selectedItems.size() == 1)
+            selectedItemsLayout.setVisibility(View.VISIBLE);
+
+        TextView textView = new TextView(getActivity());
+        textView.setText(yammItem.getName());
+
+        selectedItemTextViews.put(yammItem.getID(), textView);
+        selectedItemsLayout.addView(textView);
+    }
+
+    private void removeSelectedItemView(YammItem yammItem){
+        if (selectedItems.size()==1)
+            selectedItemsLayout.setVisibility(View.GONE);
+
+        TextView textView = selectedItemTextViews.remove(yammItem.getID());
+        selectedItemsLayout.removeView(textView);
     }
 
     private void setSelectedItems(){
