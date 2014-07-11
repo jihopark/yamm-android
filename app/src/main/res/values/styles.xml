@@ -37,6 +37,11 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <!-- Action Bar Tab -->
+    <style name="TabStyle">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
     <!-- Intro Activity -->
     <style name="IntroButton">
         <item name="android:layout_width">match_parent</item>

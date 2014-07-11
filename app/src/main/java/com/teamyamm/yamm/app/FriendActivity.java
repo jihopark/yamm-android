@@ -1,10 +1,12 @@
 package com.teamyamm.yamm.app;
 
+import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -54,16 +56,49 @@ public class FriendActivity extends BaseActivity {
         FriendActivityPagerAdapter adapter =new FriendActivityPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.friend_fragment_pager);
         viewPager.setAdapter(adapter);
+
+        ArrayList<String> tabNameList = new ArrayList<String>();
+        tabNameList.add(getResources().getString(R.string.friend_activity_tab1));
+        tabNameList.add(getResources().getString(R.string.friend_activity_tab2));
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+
+        // Add 2 tabs, specifying the tab's text and TabListener
+        for (int i = 0; i < 2; i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(tabNameList.get(i))
+                            .setTabListener(tabListener));
+        }
+
+        viewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        actionBar.setSelectedNavigationItem(position);
+                    }
+                });
     }
 
     private class FriendActivityPagerAdapter extends FragmentStatePagerAdapter {
-        ArrayList<String> tabNameList = new ArrayList<String>();
 
 
         public FriendActivityPagerAdapter(FragmentManager fm){
             super(fm);
-            tabNameList.add(getResources().getString(R.string.friend_activity_tab1));
-            tabNameList.add(getResources().getString(R.string.friend_activity_tab2));
         }
 
         @Override
@@ -83,7 +118,7 @@ public class FriendActivity extends BaseActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabNameList.get(position);
+            return position+"";
         }
 
     }

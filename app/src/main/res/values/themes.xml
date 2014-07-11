@@ -4,9 +4,11 @@
         parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/YammActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="@android:attr/actionBarTabTextStyle">@style/TabStyle</item>
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/YammActionBar</item>
+        <item name="actionBarTabTextStyle">@style/TabStyle</item>
     </style>
 
     <!-- ActionBar styles -->
