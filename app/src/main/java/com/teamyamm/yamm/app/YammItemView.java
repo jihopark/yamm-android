@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,9 +17,12 @@ import android.widget.TextView;
  */
 public class YammItemView extends LinearLayout {
     private YammItem item;
-    private TextView itemNameText, itemSelectedText;
+    private TextView itemNameText;
+    private ImageView itemImage;
+    private CheckBox itemCheckbox;
     private FriendsFragment fragment;
     private Context context;
+
     public YammItemView(Context context) {
         super(context);
     }
@@ -35,36 +41,52 @@ public class YammItemView extends LinearLayout {
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
-        itemSelectedText = (TextView) layout.findViewById(R.id.yamm_item_selected_text);
+        itemImage = (ImageView) layout.findViewById(R.id.yamm_item_image);
+        itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
 
         fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag(FriendActivity.FRIEND_FRAGMENT);
 
 
         setItem(item);
+        itemCheckbox.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("YammItemView/itemCheckBoxOnClickListener","Checkbox Clicked");
+                toggle();
+            }
+        });
     }
 
     public void setItem(YammItem f){
         item = f;
         itemNameText.setText(item.getName());
 
+
         if (isSelected())
-            itemSelectedText.setVisibility(TextView.VISIBLE);
+            itemCheckbox.setChecked(true);
         else
-            itemSelectedText.setVisibility(TextView.GONE);
+            itemCheckbox.setChecked(false);
+
     }
 
     public boolean isSelected(){
         return item.getSelected();
     }
 
+    public YammItem getItem(){
+        return item;
+    }
+
     public void toggle(){
         item.toggle();
 
+
         //Change Visibility of Selected Text
         if (item.getSelected())
-            itemSelectedText.setVisibility(TextView.VISIBLE);
+            itemCheckbox.setChecked(true);
         else
-            itemSelectedText.setVisibility(TextView.GONE);
+            itemCheckbox.setChecked(false);
+
 
         //Put Selected Item to List
         if (fragment == null){

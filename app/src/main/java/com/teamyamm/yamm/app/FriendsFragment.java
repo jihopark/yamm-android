@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ public class FriendsFragment extends Fragment {
     private RelativeLayout yammItemLayout;
     public ArrayList<YammItem> selectedItems;
     public ArrayList<String> selectedItemsID;
+    private List<YammItem> itemList;
 
 
     public ListView friendListView;
@@ -36,8 +38,8 @@ public class FriendsFragment extends Fragment {
         friendsListEmptyText.setText(getActivity().getResources().getString(R.string.friends_list_empty));
         friendListView.setEmptyView(friendsListEmptyText);
 
-        setSelectedItems();
         setYammItemList();
+        setSelectedItems();
 
         yammItemLayout.addView(friendListView);
         yammItemLayout.addView(friendsListEmptyText);
@@ -66,21 +68,25 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setSelectedItems(){
-        selectedItemsID = getActivity().getIntent().getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
-
-
-        Log.i("FriendFragment/setSelectedItems", "Previous List " + selectedItemsID);
-
-        if (selectedItemsID.size()==0)
-            setConfirmButtonEnabled(false);
-
+        selectedItemsID = new ArrayList<String>();
         selectedItems = new ArrayList<YammItem>();
     }
 
     private void setYammItemList(){
-        List<Friend> list = ((FriendActivity) getActivity()).getFriends();
-        adapter = new YammItemsListAdapter(getActivity(), setFriendListToYammItemList(list));
+        itemList = setFriendListToYammItemList(((FriendActivity) getActivity()).getFriends());
+        adapter = new YammItemsListAdapter(getActivity(), itemList);
         friendListView.setAdapter(adapter);
+
+        friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                YammItemView itemView = (YammItemView)view;
+
+                Log.i("FriendFragment/onItemclickListener", itemView.getItem().getName() + "이 눌러짐 @" + position);
+
+                itemView.toggle();
+            }
+        });
     }
 
     private List<YammItem> setFriendListToYammItemList(List<Friend> list){

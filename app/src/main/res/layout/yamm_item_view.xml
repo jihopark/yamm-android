@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/yamm_item_height">
-    <TextView
-        android:layout_width="match_parent"
+    android:layout_height="@dimen/yamm_item_height"
+    android:descendantFocusability="blocksDescendants">
+    <ImageView
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/yamm_item_selected_text"
-        android:text="@string/yamm_item_selected_text"
-        android:visibility="gone"
-        style="@style/SelectedText"/>
+        android:src="@drawable/done"
+        android:id="@+id/yamm_item_image"/>
     <TextView
+        android:layout_toRightOf="@+id/yamm_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/yamm_item_name_text"/>
-</FrameLayout>
+    <CheckBox
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/yamm_item_check"
+        />
+</RelativeLayout>

@@ -1,14 +1,14 @@
 package com.teamyamm.yamm.app;
 
-import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,12 +27,13 @@ public class FriendActivity extends BaseActivity {
 
 
 
-    public final static String FRIEND_FRAGMENT = "ff";
+    public static String FRIEND_FRAGMENT;
     public final static String SELECTED_FRIEND_LIST = "fl";
 
     private HashMap<String, String> friendNameMap;
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
+    private InviteFragment inviteFragment;
     private List<Friend> friends;
     private ViewPager viewPager;
 
@@ -82,7 +83,8 @@ public class FriendActivity extends BaseActivity {
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(tabNameList.get(i))
-                            .setTabListener(tabListener));
+                            .setTabListener(tabListener)
+            );
         }
 
         viewPager.setOnPageChangeListener(
@@ -94,7 +96,7 @@ public class FriendActivity extends BaseActivity {
                 });
     }
 
-    private class FriendActivityPagerAdapter extends FragmentStatePagerAdapter {
+    private class FriendActivityPagerAdapter extends FragmentPagerAdapter {
 
 
         public FriendActivityPagerAdapter(FragmentManager fm){
@@ -104,10 +106,13 @@ public class FriendActivity extends BaseActivity {
         @Override
         public Fragment getItem(int i) {
            if (i==0){
-               return new FriendsFragment();
+               FRIEND_FRAGMENT = "android:switcher:" + viewPager.getId() + ":" + 0;
+               friendsFragment = new FriendsFragment();
+               return friendsFragment;
            }
            else{
-               return new InviteFragment();
+               inviteFragment = new InviteFragment();
+               return inviteFragment;
            }
         }
 

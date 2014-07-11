@@ -399,7 +399,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                 }
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
                 v.setEnabled(false); //To prevent double fire
-                intent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, selectedFriendList); //send previously selected friend list
+                //intent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, selectedFriendList); //send previously selected friend list
                 startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
                 Log.i("MainFragment/onClick","FriendActivity called");
             }
