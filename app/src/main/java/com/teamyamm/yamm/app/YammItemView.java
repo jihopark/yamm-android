@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ import android.widget.TextView;
 public class YammItemView extends LinearLayout {
     private YammItem item;
     private TextView itemNameText;
-    private ImageView itemImage;
     private CheckBox itemCheckbox;
     private FriendsFragment fragment;
     private Context context;
@@ -41,7 +39,6 @@ public class YammItemView extends LinearLayout {
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
-        itemImage = (ImageView) layout.findViewById(R.id.yamm_item_image);
         itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
 
         fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag(FriendActivity.FRIEND_FRAGMENT);

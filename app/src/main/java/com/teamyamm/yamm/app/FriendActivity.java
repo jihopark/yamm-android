@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,13 +28,15 @@ public class FriendActivity extends BaseActivity {
     public final static String FRIEND_FRAGMENT = "ff";
     public final static String SELECTED_FRIEND_LIST = "fl";
 
-    private boolean enableButtonFlag = true;
+    private boolean enableButtonFlag = false;
     private FriendsFragment friendsFragment;
     private List<Friend> friends;
 
     private Spinner datePickSpinner;
     public YammDatePickerFragment datePickerFragment;
     public ArrayAdapter<CharSequence> spinnerAdapter;
+
+    private Button friendConfirmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,10 @@ public class FriendActivity extends BaseActivity {
 
         friends = loadFriends();
         Log.i("FriendActivity/onResume","Loaded Friends");
+
+
+        setConfirmButton();
+
 
         //Set Fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -67,13 +74,6 @@ public class FriendActivity extends BaseActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.friend_activity_actions, menu);
 
-        if (enableButtonFlag) {
-            menu.findItem(R.id.friend_pick_confirm_button).setEnabled(true);
-        } else {
-            menu.findItem(R.id.friend_pick_confirm_button).setEnabled(false);
-        }
-
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -81,7 +81,7 @@ public class FriendActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.friend_pick_confirm_button:
+            case R.id.friend_invite_button:
                 finishActivity();
                 return true;
             default:
@@ -92,7 +92,12 @@ public class FriendActivity extends BaseActivity {
     public void setConfirmButtonEnabled(boolean b){
         if (enableButtonFlag != b) {
             enableButtonFlag = b;
-            supportInvalidateOptionsMenu();
+            if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
+                friendConfirmButton.setVisibility(View.GONE);
+            }
+            else if (enableButtonFlag && friendConfirmButton.getVisibility() == View.GONE){
+                friendConfirmButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -100,6 +105,15 @@ public class FriendActivity extends BaseActivity {
         return friends;
     }
 
+    private void setConfirmButton(){
+        friendConfirmButton = (Button) findViewById(R.id.friend_confirm_button);
+        friendConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishActivity();
+            }
+        });
+    }
 
 
     private void finishActivity(){

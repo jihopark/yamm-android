@@ -3,8 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:yourapp="http://schemas.android.com/apk/res-auto">
     <!-- Confirm Button for Friend Activity -->
-    <item android:id="@+id/friend_pick_confirm_button"
-        android:icon="@drawable/confirm_button"
-        android:title="@string/friend_pick_confirm_button"
+    <item android:id="@+id/friend_invite_button"
+        android:title="@string/friend_invite_button"
         yourapp:showAsAction="ifRoom"/>
 </menu>

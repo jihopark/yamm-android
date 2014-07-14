@@ -4,14 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/yamm_item_height"
     android:descendantFocusability="blocksDescendants">
-    <ImageView
-        android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/done"
-        android:id="@+id/yamm_item_image"/>
     <TextView
-        android:layout_toRightOf="@+id/yamm_item_image"
+        android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/yamm_item_name_text"/>

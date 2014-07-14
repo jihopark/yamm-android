@@ -112,17 +112,11 @@
     <string name="logout_dialog_title">로그아웃?</string>
     <string name="logout_dialog_message">로그아웃 하시겠습니까?</string>
 
-    <!-- Friends Fragment -->
-    <string name="yamm_list_header_1">Yamm팀</string>
-    <string name="yamm_list_header_2">Yamm친</string>
-    <string name="item_team_list_empty">Yamm 팀이 없으시네요</string>
-    <string name="yamm_item_search_text">이름 또는 그룹명 검색</string>
+    <!-- Friends Activity & Fragment -->
 
-    <string name="yamm_item_selected_text">얌</string>
+    <string name="friend_invite_button">친구초대</string>
     <string name="friend_pick_confirm_button">확인</string>
-    <string name="friends_list_empty">Yamm 친이 없으시네요</string>
-    <string name="friend_activity_tab1">얌친 목록</string>
-    <string name="friend_activity_tab2">친구 초대</string>
+    <string name="friends_list_empty">얌친이 없으시네요</string>
 
 
 
