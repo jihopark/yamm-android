@@ -35,20 +35,21 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
         }
 
         Log.i("onDateSet","onDateSet called");
-        final MainFragment mf = ((MainFragment)getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MAIN_FRAGMENT));
 
         //Date Validation
         if (!isDateValid(year, month, day)){
             Log.i("onDateSet","invalid date");
             //Alert invalid date
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            final FriendActivity activity = (FriendActivity) getActivity();
             builder.setMessage(R.string.invalid_date_message)
                     .setTitle(R.string.invalid_date_title)
                     .setPositiveButton(R.string.dialog_positive,new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mf.datePickerFragment = new YammDatePickerFragment();
-                            mf.datePickerFragment.show(mf.getChildFragmentManager(), "timePicker");
+                            activity.datePickerFragment = new YammDatePickerFragment();
+                            activity.datePickerFragment.show(activity.getSupportFragmentManager(), "timePicker");
+
                         }
                     });
             builder.create().show();
@@ -61,7 +62,7 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
 
         //Show Meal Picker Dialog
         DialogFragment newFragment = new MealPickerDialog();
-        newFragment.show(mf.getChildFragmentManager(), "mealPicker");
+        newFragment.show(getActivity().getSupportFragmentManager(), "mealPicker");
         dismiss();
     }
 

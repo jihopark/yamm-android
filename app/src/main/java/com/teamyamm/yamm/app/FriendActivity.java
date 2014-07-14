@@ -3,20 +3,17 @@ package com.teamyamm.yamm.app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -27,105 +24,34 @@ public class FriendActivity extends BaseActivity {
 
 
 
-    public static String FRIEND_FRAGMENT;
+    public final static String FRIEND_FRAGMENT = "ff";
     public final static String SELECTED_FRIEND_LIST = "fl";
 
-    private HashMap<String, String> friendNameMap;
     private boolean enableButtonFlag = true;
     private FriendsFragment friendsFragment;
-    private InviteFragment inviteFragment;
     private List<Friend> friends;
-    private ViewPager viewPager;
+
+    private Spinner datePickSpinner;
+    public YammDatePickerFragment datePickerFragment;
+    public ArrayAdapter<CharSequence> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
 
+        setActionBarBackButton(true);
+
         friends = loadFriends();
         Log.i("FriendActivity/onResume","Loaded Friends");
 
-        setTabViewPager();
+        //Set Fragment
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        friendsFragment = new FriendsFragment();
+        fragmentTransaction.add(R.id.friend_activity_container, friendsFragment, FRIEND_FRAGMENT);
+        fragmentTransaction.commit();
 
-
-
-    }
-
-    private void setTabViewPager(){
-
-        //Set Fragment View Pager
-        FriendActivityPagerAdapter adapter =new FriendActivityPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.friend_fragment_pager);
-        viewPager.setAdapter(adapter);
-
-        ArrayList<String> tabNameList = new ArrayList<String>();
-        tabNameList.add(getResources().getString(R.string.friend_activity_tab1));
-        tabNameList.add(getResources().getString(R.string.friend_activity_tab2));
-
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
-
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // probably ignore this event
-            }
-        };
-
-        // Add 2 tabs, specifying the tab's text and TabListener
-        for (int i = 0; i < 2; i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(tabNameList.get(i))
-                            .setTabListener(tabListener)
-            );
-        }
-
-        viewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        actionBar.setSelectedNavigationItem(position);
-                    }
-                });
-    }
-
-    private class FriendActivityPagerAdapter extends FragmentPagerAdapter {
-
-
-        public FriendActivityPagerAdapter(FragmentManager fm){
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-           if (i==0){
-               FRIEND_FRAGMENT = "android:switcher:" + viewPager.getId() + ":" + 0;
-               friendsFragment = new FriendsFragment();
-               return friendsFragment;
-           }
-           else{
-               inviteFragment = new InviteFragment();
-               return inviteFragment;
-           }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return position+"";
-        }
-
+        setDatePickSpinner();
     }
 
     @Override
@@ -202,5 +128,24 @@ public class FriendActivity extends BaseActivity {
         return list;
     }
 
+    private void setDatePickSpinner(){
+        datePickSpinner = (Spinner) findViewById(R.id.date_pick_spinner);
+        spinnerAdapter = ArrayAdapter.createFromResource(FriendActivity.this, R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        datePickSpinner.setAdapter(spinnerAdapter);
+        datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                // An item was selected. You can retrieve the selected item using
+                // parent.getItemAtPosition(pos)
+                if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
+                    datePickerFragment = new YammDatePickerFragment();
+                    datePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent) { }
+
+        });
+    }
 
 }

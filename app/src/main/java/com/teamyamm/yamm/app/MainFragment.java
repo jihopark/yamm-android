@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -40,7 +39,7 @@ import java.util.regex.Pattern;
 /**
  * Created by parkjiho on 5/24/14.
  */
-public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class MainFragment extends Fragment {
     private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
     private final static long LOCATION_MIN_TIME = 100; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
@@ -79,7 +78,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         setYammImageView();
         setFriendPickButton();
         setNextButton();
-        setDatePickSpinner();
         setPlacePickEditText();
         setSearchMapButton();
         setLocationManagerListener();
@@ -324,30 +322,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             return super.dispatchKeyEvent(event);
         }
     }
-
-
-    private void setDatePickSpinner(){
-        spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.date_spinner_array, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        datePickSpinner.setAdapter(spinnerAdapter);
-        datePickSpinner.setOnItemSelectedListener(this);
-    }
-
-    /*
-    * For implementing AdapterView.OnItemSelectedListener
-    * For Date Pick Spinner
-    * */
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
-            datePickerFragment = new YammDatePickerFragment();
-            datePickerFragment.show(getChildFragmentManager(), "timePicker");
-        }
-    }
-    public void onNothingSelected(AdapterView<?> parent) { }
-
 
     private void setYammImageView(){
         imageOne = (ImageView) main_layout.findViewById(R.id.main_image_view_one);
