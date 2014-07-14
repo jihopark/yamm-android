@@ -48,10 +48,12 @@ public class BaseActivity extends ActionBarActivity {
     public final static int ANIMATION_SPEED = 100;
     public final static int SUCCESS_RESULT_CODE = 200;
     public final static int FAILURE_RESULT_CODE = 400;
+    protected SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
         setDefaultOrientation(); //Set Portrait Orientation for whole application
         //Set Dialog for Internet Connection
@@ -286,7 +288,6 @@ public class BaseActivity extends ActionBarActivity {
     * */
 
     protected String getAuthToken(){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         String value = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
 
         if (value.equals("none"))
@@ -296,12 +297,20 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void removeAuthToken(){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.commit();
         Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
+    }
+
+    protected void removeFriendList(){
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getString(R.string.PHONE_NAME_MAP));
+        editor.remove(getString(R.string.FRIEND_LIST));
+        editor.commit();
+        Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed");
     }
 
     /*
