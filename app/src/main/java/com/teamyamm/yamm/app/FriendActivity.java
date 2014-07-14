@@ -152,7 +152,7 @@ public class FriendActivity extends BaseActivity {
                                        int pos, long id) {
                 // An item was selected. You can retrieve the selected item using
                 // parent.getItemAtPosition(pos)
-                if (pos == getResources().getInteger(R.integer.spinner_datepick_pos) ){
+                if (pos == spinnerAdapter.getCount()-1 ){
                     datePickerFragment = new YammDatePickerFragment();
                     datePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 }

@@ -3,4 +3,13 @@
     <array name="nav_menu_titles">
         <item>로그아웃</item>
     </array>
+
+    <!-- Yamm Date Spinner -->
+    <string-array name="date_spinner_array">
+        <item>오늘 점심</item>
+        <item>오늘 저녁</item>
+        <item>내일 점심</item>
+        <item>내일 저녁</item>
+        <item>직접 선택</item>
+    </string-array>
 </resources>

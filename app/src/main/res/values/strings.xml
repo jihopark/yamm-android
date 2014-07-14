@@ -120,15 +120,6 @@
 
 
 
-
-    <!-- Yamm Date Spinner -->
-    <string-array name="date_spinner_array">
-        <item>오늘 점심</item>
-        <item>오늘 저녁</item>
-        <item>지금 당장</item>
-        <item>날짜 선택</item>
-    </string-array>
-
     <!-- Place Pick Autocomplete -->
     <string-array name="places_array">
         <item>강남</item>
