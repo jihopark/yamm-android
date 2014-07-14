@@ -1,15 +1,13 @@
 package com.teamyamm.yamm.app;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
-
-import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by parkjiho on 5/31/14.
@@ -39,13 +37,12 @@ public class IntroActivity extends BaseActivity {
     private void setViewPager(){
         pager = (ViewPager) findViewById(R.id.intro_view_pager);
         pager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
-        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.intro_view_pager_indicator);
+        YammCirclePageIndicator indicator = (YammCirclePageIndicator)findViewById(R.id.intro_view_pager_indicator);
 
-        indicator.setFillColor(Color.WHITE);
-        indicator.setStrokeColor(Color.WHITE);
-        indicator.setPageColor(Color.BLACK);
-        indicator.setRadius(8.0f);
+        indicator.setRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+
         indicator.setViewPager(pager);
+
     }
 
     private void setButtons(){

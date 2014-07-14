@@ -32,14 +32,17 @@ public class IntroImageFragment extends Fragment {
 
         imageView = (ImageView) rootView.findViewById(R.id.intro_image_view);
 
+        //imageView = new IntroImageView(getActivity());
 
+        //rootView.addView(imageView, 0);
         setImageView();
 
         return rootView;
     }
 
     private void setImageView(){
+        Log.i("IntroImageFragment/setImageView","Created Image for " + position);
         imageView.setImageDrawable(getActivity().getResources().getDrawable(getResources().getIdentifier("@drawable/intro_0" + (position + 1), "drawable", getActivity().getPackageName())));
+        imageView.setScaleType(ImageView.ScaleType.MATRIX);
     }
-
 }
