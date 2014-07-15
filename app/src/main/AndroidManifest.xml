@@ -97,6 +97,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
+
+        <!-- Invite Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.InviteActivity"
+            android:label="@string/title_activity_invite"
+            android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.FriendActivity" />
+        </activity>
+
         <!-- For KaKao SDK -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"

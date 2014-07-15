@@ -24,7 +24,7 @@ public class IntroImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.intro_image_fragment, container, false);
+                R.layout.fragment_intro_image, container, false);
         Bundle b = getArguments();
 
         position = b.getInt("position");

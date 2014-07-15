@@ -13,6 +13,7 @@
     <string name="title_activity_login">로그인</string>
     <string name="title_activity_friend">얌친 목록</string>
     <string name="title_activity_grid">못먹는 음식 선택</string>
+    <string name="title_activity_invite">친구 초대</string>
 
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정해요</string>
@@ -38,6 +39,8 @@
     <string name="PREVIOUS_ACTIVITY_MAIN">MainActivity</string>
     <string name="PREVIOUS_ACTIVITY_LOGIN">LoginActivity</string>
     <string name="PREVIOUS_ACTIVITY_GRID">GridActivity</string>
+    <string name="PREVIOUS_ACTIVITY_INVITE">FriendActivity</string>
+    <string name="PREVIOUS_ACTIVITY_FRIEND">InviteActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
@@ -118,7 +121,8 @@
     <string name="friend_pick_confirm_button">확인</string>
     <string name="friends_list_empty">얌친이 없으시네요</string>
 
-
+    <!-- Invite Activity -->
+    <string name="invite_activity_intro">더 많은 친구들을 Yamm으로 초대하세요!</string>
 
     <!-- Place Pick Autocomplete -->
     <string-array name="places_array">

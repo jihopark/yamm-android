@@ -26,7 +26,7 @@ public class BattleFragment extends Fragment{
 
         Log.i("BattleFragment", "BattleFragment onCreateView Started");
 
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.battle_fragment, container, false);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_battle, container, false);
 
         return layout;
     }

@@ -66,7 +66,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("MainFragment/onCreateView", "onCreateView started");
 
-        main_layout = (FrameLayout) inflater.inflate(R.layout.new_main_fragment, container, false);
+        main_layout = (FrameLayout) inflater.inflate(R.layout.fragment_main, container, false);
         friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
         nextButton = (Button) main_layout.findViewById(R.id.next_button);
         datePickSpinner = (Spinner) main_layout.findViewById(R.id.date_pick_spinner);

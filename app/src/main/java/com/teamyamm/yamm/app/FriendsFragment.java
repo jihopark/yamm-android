@@ -33,7 +33,7 @@ public class FriendsFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        yammItemLayout = (LinearLayout) inflater.inflate(R.layout.friends_fragment, container, false);
+        yammItemLayout = (LinearLayout) inflater.inflate(R.layout.fragment_friends, container, false);
         selectedItemsLayout = (LinearLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
         selectedItemTextViews = new HashMap<Long, TextView>();
 

@@ -8,18 +8,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 /**
- * Created by parkjiho on 7/10/14.
+ * Created by parkjiho on 7/15/14.
  */
-public class InviteFragment extends Fragment {
-    private LinearLayout mainLayout;
-
-
+public class ContactFragment extends Fragment {
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)  {
 
-        mainLayout = (LinearLayout) inflater.inflate(R.layout.invite_fragment, container, false);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_contact, container, false);
 
-        return mainLayout;
-
+        return layout;
     }
+
+
 }

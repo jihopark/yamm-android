@@ -82,7 +82,7 @@ public class FriendActivity extends BaseActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.friend_invite_button:
-                finishActivity();
+                goToActivity(InviteActivity.class);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
