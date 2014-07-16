@@ -25,7 +25,6 @@ public class IntroActivity extends BaseActivity {
 
         setButtons();
         setViewPager();
-        hideActionBar();
     }
 
 

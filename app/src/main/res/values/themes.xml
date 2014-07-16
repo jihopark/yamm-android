@@ -11,6 +11,14 @@
         <item name="actionBarTabTextStyle">@style/TabStyle</item>
     </style>
 
+    <style name="IntroTheme"
+        parent="@style/Theme.AppCompat.Light">
+
+        <item name="android:windowBackground">@color/default_color</item>
+        <item name="android:windowNoTitle">true</item>
+
+        </style>
+
     <!-- ActionBar styles -->
     <style name="YammActionBar"
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
