@@ -124,6 +124,9 @@
     <!-- Invite Activity -->
     <string name="invite_activity_intro">더 많은 친구들을 Yamm으로 초대하세요!</string>
     <string name="invite_contact_confirm">초대하기</string>
+    <string name="invite_sms_body">Yamm 우리 뭐 먹지? http://yamm.me</string>
+    <string name="invite_sms_error_message">SMS를 보낼 수가 없어요</string>
+
     <!-- Place Pick Autocomplete -->
     <string-array name="places_array">
         <item>강남</item>
