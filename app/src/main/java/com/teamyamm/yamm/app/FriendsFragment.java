@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class FriendsFragment extends Fragment {
 
+
     private LinearLayout yammItemLayout;
     public ArrayList<YammItem> selectedItems;
     public ArrayList<String> selectedItemsID;
@@ -70,7 +71,7 @@ public class FriendsFragment extends Fragment {
     }
 
     public void setConfirmButtonEnabled(boolean b){
-        ((FriendActivity)getActivity()).setConfirmButtonEnabled(b);
+        ((FriendListInterface)getActivity()).setConfirmButtonEnabled(b);
     }
 
     /*
@@ -101,7 +102,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setYammItemList(){
-        itemList = setFriendListToYammItemList(((FriendActivity) getActivity()).getFriends());
+        itemList = ((FriendListInterface) getActivity()).getList();
         adapter = new YammItemsListAdapter(getActivity(), itemList);
         friendListView.setAdapter(adapter);
 
@@ -117,7 +118,7 @@ public class FriendsFragment extends Fragment {
         });
     }
 
-    private List<YammItem> setFriendListToYammItemList(List<Friend> list){
+    public static List<YammItem> setFriendListToYammItemList(List<Friend> list){
         List<YammItem> newList = new ArrayList<YammItem>();
         for (Friend i : list)
             newList.add(i);

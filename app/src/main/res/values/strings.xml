@@ -123,7 +123,7 @@
 
     <!-- Invite Activity -->
     <string name="invite_activity_intro">더 많은 친구들을 Yamm으로 초대하세요!</string>
-
+    <string name="invite_contact_confirm">초대하기</string>
     <!-- Place Pick Autocomplete -->
     <string-array name="places_array">
         <item>강남</item>

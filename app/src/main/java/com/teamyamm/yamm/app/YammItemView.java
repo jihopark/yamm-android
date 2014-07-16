@@ -41,7 +41,7 @@ public class YammItemView extends LinearLayout {
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
 
-        fragment = (FriendsFragment) ((FriendActivity)context).getSupportFragmentManager().findFragmentByTag(FriendActivity.FRIEND_FRAGMENT);
+        fragment = (FriendsFragment) ((BaseActivity)context).getSupportFragmentManager().findFragmentByTag(((FriendListInterface)context).getFragmentTag());
 
 
         setItem(item);
@@ -103,7 +103,6 @@ public class YammItemView extends LinearLayout {
             else if (selectedItemSize == 1){
                 fragment.setConfirmButtonEnabled(true);
             }
-            Log.i("YammItemView",fragment.getSelectedItems()+"");
         }
     }
 }

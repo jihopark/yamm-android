@@ -21,11 +21,10 @@ import java.util.List;
 /**
  * Created by parkjiho on 5/26/14.
  */
-public class FriendActivity extends BaseActivity {
+public class FriendActivity extends BaseActivity implements FriendListInterface {
 
 
 
-    public final static String FRIEND_FRAGMENT = "ff";
     public final static String SELECTED_FRIEND_LIST = "fl";
 
     private boolean enableButtonFlag = false;
@@ -55,7 +54,7 @@ public class FriendActivity extends BaseActivity {
         //Set Fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         friendsFragment = new FriendsFragment();
-        fragmentTransaction.add(R.id.friend_activity_container, friendsFragment, FRIEND_FRAGMENT);
+        fragmentTransaction.add(R.id.friend_activity_container, friendsFragment, getFragmentTag());
         fragmentTransaction.commit();
 
         setDatePickSpinner();
@@ -89,6 +88,11 @@ public class FriendActivity extends BaseActivity {
         }
     }
 
+
+    /*
+    * For FriendListInterface
+    * */
+
     public void setConfirmButtonEnabled(boolean b){
         if (enableButtonFlag != b) {
             enableButtonFlag = b;
@@ -101,8 +105,12 @@ public class FriendActivity extends BaseActivity {
         }
     }
 
-    public List<Friend> getFriends(){
-        return friends;
+    public List<YammItem> getList(){
+        return FriendsFragment.setFriendListToYammItemList(friends);
+    }
+
+    public String getFragmentTag(){
+        return "ff";
     }
 
     private void setConfirmButton(){
