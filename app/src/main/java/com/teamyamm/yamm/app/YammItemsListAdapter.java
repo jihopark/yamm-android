@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class YammItemsListAdapter extends BaseAdapter {
     public YammItemsListAdapter(Context context, List<YammItem> list){
         this.context = context;
         items = list;
+        Collections.sort(items);
     }
 
 

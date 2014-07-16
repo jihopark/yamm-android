@@ -5,10 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/yamm_item_list_layout">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
         android:id="@+id/selected_items_layout"
-        android:visibility="gone"/>
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/selected_items_textview"/>
+    </RelativeLayout>
 </LinearLayout>

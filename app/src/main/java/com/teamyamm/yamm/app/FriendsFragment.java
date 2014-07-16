@@ -1,7 +1,11 @@
 package com.teamyamm.yamm.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,8 +29,9 @@ public class FriendsFragment extends Fragment {
     public ArrayList<YammItem> selectedItems;
     public ArrayList<String> selectedItemsID;
     private List<YammItem> itemList;
-    private LinearLayout selectedItemsLayout;
-    private HashMap<Long, TextView> selectedItemTextViews;
+
+    private RelativeLayout selectedItemsLayout;
+    private TextView selectedItemsTextView;
 
     public ListView friendListView;
     private YammItemsListAdapter adapter;
@@ -35,8 +40,8 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         yammItemLayout = (LinearLayout) inflater.inflate(R.layout.fragment_friends, container, false);
-        selectedItemsLayout = (LinearLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
-        selectedItemTextViews = new HashMap<Long, TextView>();
+        selectedItemsLayout = (RelativeLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
+        selectedItemsTextView = (TextView) yammItemLayout.findViewById(R.id.selected_items_textview);
 
         friendListView = new ListView(getActivity());
         friendsListEmptyText = new TextView(getActivity());
@@ -80,20 +85,39 @@ public class FriendsFragment extends Fragment {
     private void addSelectedItemView(YammItem yammItem){
         if (selectedItems.size() == 1)
             selectedItemsLayout.setVisibility(View.VISIBLE);
+        else{
+            Spannable newSpan = new SpannableString(" ");
+            newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
+                    0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            selectedItemsTextView.append(newSpan);
+        }
 
-        TextView textView = new TextView(getActivity());
-        textView.setText(yammItem.getName());
+        Spannable newSpan = new SpannableString(yammItem.getName());
+        newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
+                0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        selectedItemTextViews.put(yammItem.getID(), textView);
-        selectedItemsLayout.addView(textView);
+        selectedItemsTextView.append(newSpan);
     }
 
     private void removeSelectedItemView(YammItem yammItem){
         if (selectedItems.size()==1)
             selectedItemsLayout.setVisibility(View.GONE);
 
-        TextView textView = selectedItemTextViews.remove(yammItem.getID());
-        selectedItemsLayout.removeView(textView);
+        selectedItemsTextView.setText("");
+        for (YammItem i : selectedItems){
+            if (i!=yammItem){
+                Spannable newSpan = new SpannableString(i.getName());
+                newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
+                        0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                selectedItemsTextView.append(newSpan);
+
+                newSpan = new SpannableString(" ");
+                newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
+                        0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                selectedItemsTextView.append(newSpan);
+            }
+        }
     }
 
     private void setSelectedItems(){
