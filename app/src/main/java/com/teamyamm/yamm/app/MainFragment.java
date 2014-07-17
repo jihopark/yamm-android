@@ -27,6 +27,7 @@ public class MainFragment extends Fragment {
 
     private ArrayList<Integer> dishIDs;
     private int currentPage;
+    private boolean isGroup;
 
 
     //For Place Pick
@@ -42,7 +43,7 @@ public class MainFragment extends Fragment {
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_main, container, false);
         searchMapButton = (Button) main_layout.findViewById(R.id.search_map_button);
 
-        setDishes();
+        initFragment();
         setDishPager();
 
 
@@ -53,10 +54,10 @@ public class MainFragment extends Fragment {
         return main_layout;
     }
 
-    private void setDishes(){
-        dishIDs = this.getArguments().getIntegerArrayList("dishIDs");
-
-        //Set Current DishItem to 0
+    private void initFragment(){
+        Bundle bundle =  this.getArguments();
+        dishIDs = bundle.getIntegerArrayList("dishIDs");
+        isGroup = bundle.getBoolean("isGroup");
 
     }
 
@@ -303,19 +304,33 @@ public class MainFragment extends Fragment {
     }
 
     private class DishFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener{
-        private final int NUMBER_OF_PAGES = 4;
+
+        private final int DEFAULT_NUMBER_OF_DISHES = 4;
+        private int numPage;
         private ArrayList<DishFragment> fragments;
 
         public DishFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<DishFragment>();
+
+            if (isGroup)
+                numPage = DEFAULT_NUMBER_OF_DISHES + 1;
+            else
+                numPage = DEFAULT_NUMBER_OF_DISHES;
+
         }
 
         @Override
         public Fragment getItem(int index) {
+            if (isGroup && index == DEFAULT_NUMBER_OF_DISHES){
+                return  new BattleOfferFragment();
+            }
+
+
             DishFragment dishFragment = new DishFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("dish",dishIDs.get(index));
+            bundle.putBoolean("isGroup",isGroup);
             dishFragment.setArguments(bundle);
 
             fragments.add(index, dishFragment);
@@ -325,7 +340,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return NUMBER_OF_PAGES;
+            return numPage;
         }
 
         @Override
@@ -334,13 +349,22 @@ public class MainFragment extends Fragment {
         }
 
         @Override
+        public float getPageWidth(int position)
+        {
+            return 0.95f;
+        }
+
+        @Override
         public void onPageScrolled(int i, float v, int i2) {
         }
 
         @Override
         public void onPageSelected(int i) {
-            currentPage = i;
-            Log.i("DishFragmentPagerAdapter/onPageSelected",i+":"+fragments.get(i).getDishItem());
+            if (i == DEFAULT_NUMBER_OF_DISHES)
+                currentPage = DEFAULT_NUMBER_OF_DISHES - 1;
+            else
+                currentPage = i;
+            Log.i("DishFragmentPagerAdapter/onPageSelected",i+":"+fragments.get(currentPage).getDishItem());
         }
 
         @Override

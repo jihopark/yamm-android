@@ -2,19 +2,56 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+    android:layout_height="match_parent"
+    android:paddingLeft="5dp">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/dish_fragment_text"/>
+        android:layout_height="0dp"
+        android:layout_weight="5">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/dish_image"
+            android:src="@drawable/example"
+            android:scaleType="fitXY"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#96919191">
+            <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dish_explanation_text"
+                android:text="여친 입에 넣어주고 싶은"/>
+            <TextView
+                android:layout_below="@+id/dish_explanation_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dish_name_text"
+                android:text="낫시고랭"/>
+            <Button
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dish_dislike_button"
+                android:text="싫어요"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
     <Button
+        android:background="@color/default_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/poke_friend_button"
-        android:text="친구랑 같이 먹기" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/poke_friend_button"/>
     <Button
+        android:background="@color/default_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/search_map_button"
         android:text="음식점 위치 찾기"
         android:layout_alignParentBottom="true"

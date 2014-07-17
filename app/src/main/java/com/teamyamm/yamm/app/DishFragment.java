@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /**
  * Created by parkjiho on 7/17/14.
@@ -20,16 +19,16 @@ public class DishFragment extends Fragment {
     private DishItem item;
     private int itemID;
     private Button searchMap, pokeFriend;
+    private boolean isGroup;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         main_layout = (LinearLayout) inflater.inflate(R.layout.fragment_dish, container, false);
 
+        isGroup = this.getArguments().getBoolean("isGroup");
+
         loadDish();
         setButton();
-
-        TextView textView = (TextView) main_layout.findViewById(R.id.dish_fragment_text);
-        textView.setText("Dish Id " + itemID);
 
         return main_layout;
     }
@@ -48,6 +47,13 @@ public class DishFragment extends Fragment {
         searchMap = (Button) main_layout.findViewById(R.id.search_map_button);
 
         pokeFriend = (Button) main_layout.findViewById(R.id.poke_friend_button);
+
+        if (isGroup)
+            pokeFriend.setText("메뉴 선택");
+        else
+            pokeFriend.setText("친구랑 같이 먹기");
+
+
         pokeFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

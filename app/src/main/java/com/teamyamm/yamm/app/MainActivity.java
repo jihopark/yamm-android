@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
         super.onResume();
 
         setMainFragment();
-
+        friendPickButton.setEnabled(true);
         Log.i("MainActivity","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
@@ -107,6 +107,7 @@ public class MainActivity extends BaseActivity {
         if (mainFragment == null) {
             Bundle bundle = new Bundle();
             bundle.putIntegerArrayList("dishIDs",currentDishIDs);
+            bundle.putBoolean("isGroup", false);
 
             mainFragment = new MainFragment();
             mainFragment.setArguments(bundle);
