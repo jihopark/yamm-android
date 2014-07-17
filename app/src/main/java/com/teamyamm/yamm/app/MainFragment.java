@@ -1,103 +1,66 @@
 package com.teamyamm.yamm.app;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 /**
  * Created by parkjiho on 5/24/14.
  */
 public class MainFragment extends Fragment {
-    private final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
     private final static long LOCATION_MIN_TIME = 100; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
-    private FrameLayout main_layout;
-    private ImageView imageOne, imageTwo;
-    private int currentImage = 1;
-    private DishItem currentDishItem;
 
-    private Button friendPickButton, nextButton, searchMapButton, pokeFriendButton;
-    private Spinner datePickSpinner;
-    public ArrayAdapter<CharSequence> spinnerAdapter;
-    public YammDatePickerFragment datePickerFragment;
-    private RelativeLayout mainButtonsContainer;
+    private RelativeLayout main_layout;
+    private Button searchMapButton;
+    private ViewPager dishPager;
+    private DishFragmentPagerAdapter dishAdapter;
 
-    private ArrayList<String> selectedFriendList = new ArrayList<String>();
+    private ArrayList<Integer> dishIDs;
+    private int currentPage;
+
 
     //For Place Pick
-    private AutoCompleteTextView placePickEditText;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    //private AutoCompleteTextView placePickEditText;
+   // private LocationManager locationManager;
+  //  private LocationListener locationListener;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("MainFragment/onCreateView", "onCreateView started");
 
-        main_layout = (FrameLayout) inflater.inflate(R.layout.fragment_main, container, false);
-        friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
-        nextButton = (Button) main_layout.findViewById(R.id.next_button);
-        datePickSpinner = (Spinner) main_layout.findViewById(R.id.date_pick_spinner);
-        mainButtonsContainer = (RelativeLayout) main_layout.findViewById(R.id.main_buttons_container);
+        main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_main, container, false);
         searchMapButton = (Button) main_layout.findViewById(R.id.search_map_button);
-        pokeFriendButton = (Button) main_layout.findViewById(R.id.poke_friend_button);
 
-        currentDishItem = new DishItem(1,"쌀국수");
-        setYammImageView();
-        setFriendPickButton();
-        setNextButton();
-        setPlacePickEditText();
-        setSearchMapButton();
-        setLocationManagerListener();
-        setPokeFriendButton();
+        setDishes();
+        setDishPager();
+
+
+       // setPlacePickEditText();
+       // setSearchMapButton();
+       // setLocationManagerListener();
 
         return main_layout;
     }
 
-    private void setPokeFriendButton(){
-        pokeFriendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment pokeMethodDialog = new PokeMethodDialog();
-                pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
-                //sendKakaoLink();
-            }
-        });
+    private void setDishes(){
+        dishIDs = this.getArguments().getIntegerArrayList("dishIDs");
+
+        //Set Current DishItem to 0
+
     }
 
-    private void setLocationManagerListener(){
+   /* private void setLocationManagerListener(){
         //Set Location Listener
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -128,7 +91,7 @@ public class MainFragment extends Fragment {
                 Uri location = getLocationURI();
                 if (location == null){
                     Toast.makeText(getActivity(),getString(R.string.location_error),Toast.LENGTH_LONG).show();
-                    location = Uri.parse("geo:0,0?q="+ currentDishItem.getName());
+                    location = Uri.parse("geo:0,0?q="+ getCurrentDishItem().getName());
                 }
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
 
@@ -191,8 +154,8 @@ public class MainFragment extends Fragment {
             Log.e("NewMainFragment/getLocationURI","Unable to locate user");
             return null;
         }
-        Log.i("NewMainFragment/getLocationURI","Location: " + place + " Dish:" + currentDishItem.getName() );
-        uri = Uri.parse("geo:0,0?q=" + place + " " + currentDishItem.getName());
+        Log.i("NewMainFragment/getLocationURI","Location: " + place + " Dish:" + getCurrentDishItem().getName() );
+        uri = Uri.parse("geo:0,0?q=" + place + " " + getCurrentDishItem().getName());
 
         return uri;
     }
@@ -261,7 +224,7 @@ public class MainFragment extends Fragment {
         params.addRule(RelativeLayout.RIGHT_OF, R.id.friends_pick_button);
         placePickEditText.setLayoutParams(params);
 
-        mainButtonsContainer.addView(placePickEditText);
+        main_layout.addView(placePickEditText);
 
         unfocusPlacePickEditText(main_layout);
         ArrayAdapter<String> place_adapter =
@@ -282,11 +245,11 @@ public class MainFragment extends Fragment {
             }
         });
     }
-
+*/
     /*
     * For unfocusing PlacePickEditText when other views are touched
     * */
-    private void unfocusPlacePickEditText(View view) {
+  /*  private void unfocusPlacePickEditText(View view) {
         //Set up touch listener for non-text box views to hide keyboard.
         if(!(view instanceof CustomAutoCompleteTextView)) {
             view.setOnTouchListener(new View.OnTouchListener() {
@@ -305,10 +268,11 @@ public class MainFragment extends Fragment {
             }
         }
     }
-
+    */
     /*
      * For unfocusing PlacePickEditText when back button is pressed
      * */
+    /*
     public class CustomAutoCompleteTextView extends AutoCompleteTextView{
         public CustomAutoCompleteTextView(Context context){ super(context); }
         public CustomAutoCompleteTextView(Context context, AttributeSet attrs){ super(context, attrs); }
@@ -321,85 +285,71 @@ public class MainFragment extends Fragment {
             }
             return super.dispatchKeyEvent(event);
         }
-    }
-
-    private void setYammImageView(){
-        imageOne = (ImageView) main_layout.findViewById(R.id.main_image_view_one);
-        imageOne.setAdjustViewBounds(true);
-        imageOne.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageTwo = (ImageView) main_layout.findViewById(R.id.main_image_view_two);
-        imageTwo.setAdjustViewBounds(true);
-        imageTwo.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageTwo.setVisibility(View.GONE);
-
-        imageOne.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.example2));
-        imageTwo.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.example));
-    }
-
-    private void setNextButton(){
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentImage == 1){
-                    imageOne.setVisibility(View.GONE);
-                    imageTwo.setVisibility(View.VISIBLE);
-                    loadNextImage();
-                    currentImage = 2;
-                }
-                else{
-                    imageTwo.setVisibility(View.GONE);
-                    imageOne.setVisibility(View.VISIBLE);
-                    loadNextImage();
-                    currentImage = 1;
-                }
-            }
-        });
-    }
+    }*/
 
     /*
-    * Loads next image on main imageview
+    * Dish View Pager Related Methods & Classes
     * */
-    private void loadNextImage(){
-
-    }
-
-    private void setFriendPickButton(){
-        friendPickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!((MainActivity)getActivity()).isFriendLoaded()){
-                    Toast.makeText(getActivity(), R.string.friend_not_loaded_message, Toast.LENGTH_LONG).show();
-                    return ;
-                }
-                Intent intent = new Intent(getActivity(), FriendActivity.class);
-                v.setEnabled(false); //To prevent double fire
-                //intent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, selectedFriendList); //send previously selected friend list
-                startActivityForResult(intent, FRIEND_ACTIVITY_REQUEST_CODE);
-                Log.i("MainFragment/onClick","FriendActivity called");
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == FRIEND_ACTIVITY_REQUEST_CODE){
-            Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
-
-            friendPickButton.setEnabled(true);
-
-            if (resultCode == BaseActivity.SUCCESS_RESULT_CODE) {
-                //Get Friend List
-                selectedFriendList = data.getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
-
-                Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     public DishItem getCurrentDishItem(){
-        return currentDishItem;
+        return dishAdapter.getCurrentDishItem();
+    }
+
+    private void setDishPager(){
+        dishAdapter = new DishFragmentPagerAdapter(getChildFragmentManager());
+        dishPager = (ViewPager) main_layout.findViewById(R.id.dish_pager);
+        dishPager.setAdapter(dishAdapter);
+        dishPager.setOnPageChangeListener(dishAdapter);
+    }
+
+    private class DishFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener{
+        private final int NUMBER_OF_PAGES = 4;
+        private ArrayList<DishFragment> fragments;
+
+        public DishFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+            fragments = new ArrayList<DishFragment>();
+        }
+
+        @Override
+        public Fragment getItem(int index) {
+            DishFragment dishFragment = new DishFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("dish",dishIDs.get(index));
+            dishFragment.setArguments(bundle);
+
+            fragments.add(index, dishFragment);
+
+            return dishFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return NUMBER_OF_PAGES;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position){
+            return "";
+        }
+
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            currentPage = i;
+            Log.i("DishFragmentPagerAdapter/onPageSelected",i+":"+fragments.get(i).getDishItem());
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+        }
+
+        public DishItem getCurrentDishItem(){
+            return fragments.get(currentPage).getDishItem();
+        }
     }
 
 }

@@ -24,6 +24,7 @@ import java.util.List;
 public class FriendActivity extends BaseActivity implements FriendListInterface {
 
 
+    public final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
 
     public final static String SELECTED_FRIEND_LIST = "fl";
 
@@ -125,10 +126,10 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
 
 
     private void finishActivity(){
-        Intent resultIntent = new Intent();
+       /* Intent resultIntent = new Intent();
         resultIntent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, friendsFragment.selectedItemsID);
         setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
-        finish();
+        finish();*/
     }
 
     private List<Friend> loadFriends(){

@@ -35,7 +35,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/YammActionBarTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

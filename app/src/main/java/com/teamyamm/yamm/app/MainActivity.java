@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,33 +41,33 @@ public class MainActivity extends BaseActivity {
     private ReadContactAsyncTask readContactAsyncTask;
     private SharedPreferences prefs;
 
+    private Button friendPickButton;
+
+    private ArrayList<Integer> currentDishIDs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarOverlay();
         setContentView(R.layout.activity_main);
 
-        setLeftDrawer();
         Log.i("MainActivity/onCreate", "onCreate started");
-        prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
-        //Set up Main Fragment
-        mainFragment = new MainFragment();
-        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-        tact.add(R.id.main_content_frame, mainFragment, MAIN_FRAGMENT);
-        tact.commit();
+        setLeftDrawer();
+        setFriendPickButton();
+
+        prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
     }
 
     @Override
     public void onResume(){
         super.onResume();
+
+        setMainFragment();
+
         Log.i("MainActivity","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
         readContactAsyncTask.execute();
-
-        //Get Friend List by Sending Contacts
-
     }
 
     @Override
@@ -86,6 +89,78 @@ public class MainActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+
+    private void setMainFragment(){
+        //To be deleted in production
+        currentDishIDs = new ArrayList<Integer>();
+        currentDishIDs.add(123);
+        currentDishIDs.add(234);
+        currentDishIDs.add(345);
+        currentDishIDs.add(456);
+
+        if (loadDishes()){
+            //removes previous fragment and make new MainFragment
+        }
+
+
+
+        if (mainFragment == null) {
+            Bundle bundle = new Bundle();
+            bundle.putIntegerArrayList("dishIDs",currentDishIDs);
+
+            mainFragment = new MainFragment();
+            mainFragment.setArguments(bundle);
+
+            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+            tact.add(R.id.main_layout, mainFragment, MAIN_FRAGMENT);
+            tact.commit();
+        }
+    }
+
+    /*
+    * Loads dish IDs from Server
+    * Returns true if there is a new recommendation
+    * */
+    private boolean loadDishes(){
+        return false;
+    }
+
+    private void setFriendPickButton(){
+        friendPickButton = (Button) findViewById(R.id.friends_pick_button);
+
+        friendPickButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFriendLoaded()){
+                    Toast.makeText(MainActivity.this, R.string.friend_not_loaded_message, Toast.LENGTH_LONG).show();
+                    return ;
+                }
+                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                v.setEnabled(false); //To prevent double fire
+                Log.i("MainActivity/onClick","FriendActivity called");
+                startActivity(intent);
+            }
+        });
+    }
+    /*
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FRIEND_ACTIVITY_REQUEST_CODE){
+            Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
+
+            friendPickButton.setEnabled(true);
+
+            if (resultCode == BaseActivity.SUCCESS_RESULT_CODE) {
+                //Get Friend List
+                selectedFriendList = data.getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
+
+                Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
+            }
+        }
+    }*/
+
 
     private void setLeftDrawer(){
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
