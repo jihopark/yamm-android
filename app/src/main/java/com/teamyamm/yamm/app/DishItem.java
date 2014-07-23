@@ -6,11 +6,20 @@ package com.teamyamm.yamm.app;
 public class DishItem {
     private int id;
     private String name;
+    private String comment;
 
-    public DishItem(int i, String n){
-        id = i;
-        name = n;
+    public DishItem(int id, String name){
+        this.id = id;
+        this.name = name;
     }
+
+    public DishItem(int id, String name, String comment){
+        this.id = id;
+        this.name = name;
+        this.comment = comment;
+    }
+
+    public String getComment(){ return comment; }
 
     public int getId(){
         return id;
@@ -22,5 +31,9 @@ public class DishItem {
 
     public String toString(){
         return "Dish : " + "id -" + id + ",name - " + name;
+    }
+
+    public boolean equals(DishItem i){
+        return i.getId() == id;
     }
 }

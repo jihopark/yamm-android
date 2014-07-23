@@ -166,6 +166,10 @@ public interface YammAPIService {
             return yamm_users;
         }
     }
+
+    @GET("/preferences/suggestions")
+    void getPersonalDishes(Callback<List<DishItem>> cb);
+
     /*
     * Error
     * */

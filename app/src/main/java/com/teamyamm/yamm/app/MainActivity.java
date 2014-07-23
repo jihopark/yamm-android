@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +19,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,9 +44,10 @@ public class MainActivity extends BaseActivity {
     private ReadContactAsyncTask readContactAsyncTask;
     private SharedPreferences prefs;
 
-    private Button friendPickButton;
+    private List<DishItem> dishItems;
+    private ProgressDialog dialog;
 
-    private ArrayList<Integer> currentDishIDs;
+    private Button friendPickButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,7 @@ public class MainActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
 
-        setMainFragment();
+        loadDishes();
         friendPickButton.setEnabled(true);
         Log.i("MainActivity","Execute Read Contact Async Task");
 
@@ -90,39 +95,100 @@ public class MainActivity extends BaseActivity {
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
     private void setMainFragment(){
-        //To be deleted in production
-        currentDishIDs = new ArrayList<Integer>();
-        currentDishIDs.add(123);
-        currentDishIDs.add(234);
-        currentDishIDs.add(345);
-        currentDishIDs.add(456);
 
-        if (loadDishes()){
-            //removes previous fragment and make new MainFragment
+        dialog.show();
+
+        if (dishItems == null){
+            Log.e("MainActivity/setMainFragment","Dishes haven't loaded yet");
+            return ;
         }
 
 
+        Type type = new TypeToken<List<DishItem>>(){}.getType();
+        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
 
-        if (mainFragment == null) {
-            Bundle bundle = new Bundle();
-            bundle.putIntegerArrayList("dishIDs",currentDishIDs);
-            bundle.putBoolean("isGroup", false);
-
-            mainFragment = new MainFragment();
-            mainFragment.setArguments(bundle);
-
-            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-            tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
+        if (mainFragment!= null){
+            Log.i("MainActivity/setMainFragment","Remove previous fragment");
+            tact.remove(mainFragment);
             tact.commit();
         }
+
+
+        Bundle bundle = new Bundle();
+
+        bundle.putString("dishes",new Gson().toJson(dishItems, type) );
+        bundle.putBoolean("isGroup", false);
+
+        mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
+
+
+        tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
+        tact.commit();
+
+
+        dialog.dismiss();
     }
 
     /*
     * Loads dish IDs from Server
     * Returns true if there is a new recommendation
     * */
-    private boolean loadDishes(){
-        return false;
+    private void loadDishes(){
+
+        dialog = createProgressDialog(MainActivity.this,
+                R.string.progress_dialog_title, R.string.progress_dialog_message);
+
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(setRequestInterceptorWithToken())
+                .build();
+
+        YammAPIService service = restAdapter.create(YammAPIService.class);
+
+        service.getPersonalDishes(new Callback<List<DishItem>>() {
+            @Override
+            public void success(List<DishItem> items, Response response) {
+                Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
+                if (!isSameDishItems(items)){
+                    Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
+
+                    dishItems = items;
+                    setMainFragment();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("MainActivity/getPersonalDishes","Something went wrong");
+            }
+        });
+
+    }
+
+    private boolean isSameDishItems(List<DishItem> items){
+        if (dishItems == null)
+            return false;
+
+        boolean present;
+
+        for (DishItem i : items){
+            present = false;
+            for (DishItem j : dishItems){
+                if (i.equals(j)){
+                    present = true;
+                    break;
+                }
+            }
+
+            if (!present)
+                return false;
+        }
+
+        return true;
     }
 
     private void setFriendPickButton(){
@@ -138,7 +204,7 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, FriendActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 v.setEnabled(false); //To prevent double fire
-                Log.i("MainActivity/onClick","FriendActivity called");
+                Log.i("MainActivity/onClick", "FriendActivity called");
                 startActivity(intent);
             }
         });
@@ -255,19 +321,19 @@ public class MainActivity extends BaseActivity {
 
         service.findFriendsFromPhone(new YammAPIService.RawPhones(phoneNameMap.keySet()),
                 new Callback<YammAPIService.RawFriends>() {
-            @Override
-            public void success(YammAPIService.RawFriends rawFriends, Response response) {
-                friendsList = rawFriends.getFriendsList();
-                Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
-                setContactNames();
-                BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
-            }
+                    @Override
+                    public void success(YammAPIService.RawFriends rawFriends, Response response) {
+                        friendsList = rawFriends.getFriendsList();
+                        Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+                        setContactNames();
+                        BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
+                    }
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.e("MainActivity/sendContactsToServer", "Sending Failed");
-            }
-        });
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e("MainActivity/sendContactsToServer", "Sending Failed");
+                    }
+                });
     }
 
     private void setContactNames(){

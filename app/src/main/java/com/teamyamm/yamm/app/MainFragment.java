@@ -12,7 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by parkjiho on 5/24/14.
  */
@@ -27,7 +33,7 @@ public class MainFragment extends Fragment {
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
 
-    private ArrayList<Integer> dishIDs;
+    private List<DishItem> dishItems;
     private int currentPage;
     private boolean isGroup;
 
@@ -58,7 +64,12 @@ public class MainFragment extends Fragment {
 
     private void initFragment(){
         Bundle bundle =  this.getArguments();
-        dishIDs = bundle.getIntegerArrayList("dishIDs");
+        Type type = new TypeToken<List<DishItem>>(){}.getType();
+
+        String s = bundle.getString("dishes");
+
+
+        dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
 
     }
@@ -331,7 +342,7 @@ public class MainFragment extends Fragment {
 
             DishFragment dishFragment = new DishFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt("dish",dishIDs.get(index));
+            bundle.putString("dish", new Gson().toJson(dishItems.get(index), DishItem.class));
             bundle.putBoolean("isGroup",isGroup);
             dishFragment.setArguments(bundle);
 

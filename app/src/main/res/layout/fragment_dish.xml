@@ -23,10 +23,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/dish_explanation_text"
+                android:id="@+id/dish_comment_text"
                 android:text="여친 입에 넣어주고 싶은"/>
             <TextView
-                android:layout_below="@+id/dish_explanation_text"
+                android:layout_below="@+id/dish_comment_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dish_name_text"

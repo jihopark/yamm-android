@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 /**
  * Created by parkjiho on 7/17/14.
@@ -37,13 +40,19 @@ public class DishFragment extends Fragment {
     }
 
     public DishItem getDishItem(){
-        return new DishItem(itemID, "짜장면");
-        //return item;
+        return item;
     }
 
     private void loadDish(){
-        itemID = this.getArguments().getInt("dish");
-        //load Dish from Server
+        String s = this.getArguments().getString("dish");
+        item = new Gson().fromJson(s, DishItem.class);
+
+        TextView name = (TextView) main_layout.findViewById(R.id.dish_name_text);
+        name.setText(item.getName());
+
+        TextView comment = (TextView) main_layout.findViewById(R.id.dish_comment_text);
+        comment.setText(item.getComment());
+
     }
 
     private void setButton(){
