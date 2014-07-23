@@ -15,6 +15,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,8 +68,6 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
 
     @Override
     public void onBackPressed() {
-        Intent resultIntent = new Intent();
-        setResult(BaseActivity.FAILURE_RESULT_CODE, resultIntent);
         finish();
     }
 
@@ -82,7 +85,9 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.friend_invite_button:
-                goToActivity(InviteActivity.class);
+                Intent intent = new Intent(FriendActivity.this, InviteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -126,10 +131,13 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
 
 
     private void finishActivity(){
-       /* Intent resultIntent = new Intent();
-        resultIntent.putStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST, friendsFragment.selectedItemsID);
-        setResult(BaseActivity.SUCCESS_RESULT_CODE, resultIntent);
-        finish();*/
+        Intent intent = new Intent(FriendActivity.this, GroupRecommendationActivity.class);
+        Type type = new TypeToken<ArrayList<Friend>>(){}.getType();
+
+        intent.putExtra("friendlist",new Gson().toJson(friendsFragment.selectedItems, type));
+        intent.putExtra("time", datePickSpinner.getSelectedItem().toString());
+
+        startActivity(intent);
     }
 
     private List<Friend> loadFriends(){

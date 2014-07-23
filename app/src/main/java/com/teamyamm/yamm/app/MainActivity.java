@@ -29,7 +29,6 @@ import retrofit.client.Response;
 
 
 public class MainActivity extends BaseActivity {
-    public final static String MAIN_FRAGMENT = "mf";
     public final static int DRAWER_LOGOUT = 0;
 
     private HashMap<String, String> phoneNameMap;
@@ -113,7 +112,7 @@ public class MainActivity extends BaseActivity {
             mainFragment.setArguments(bundle);
 
             FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-            tact.add(R.id.main_layout, mainFragment, MAIN_FRAGMENT);
+            tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
             tact.commit();
         }
     }
@@ -137,6 +136,7 @@ public class MainActivity extends BaseActivity {
                     return ;
                 }
                 Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 v.setEnabled(false); //To prevent double fire
                 Log.i("MainActivity/onClick","FriendActivity called");
                 startActivity(intent);

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment {
     private final static long LOCATION_MIN_TIME = 100; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
+    public final static String MAIN_FRAGMENT = "mf";
+
 
     private RelativeLayout main_layout;
     private Button searchMapButton;
