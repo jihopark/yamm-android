@@ -138,8 +138,7 @@ public class DishFragment extends Fragment {
             public void onClick(View v) {
                 if (DishFragment.this.isAdded())
                     searchMap(textView.getText().toString());
-                else
-                    dialog.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -148,8 +147,7 @@ public class DishFragment extends Fragment {
             public void onClick(View v) {
                 if (DishFragment.this.isAdded())
                     searchMap(activity.getString(R.string.place_pick_edit_text));
-                else
-                    dialog.dismiss();
+                dialog.dismiss();
             }
         });
 

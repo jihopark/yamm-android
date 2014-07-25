@@ -1,8 +1,13 @@
 package com.teamyamm.yamm.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +33,29 @@ public class GroupRecommendationActivity extends BaseActivity {
 
         setActionBarBackButton(true);
         loadBundle();
+        setSelectedItems();
         setFragment();
+    }
+
+    private void setSelectedItems(){
+        TextView selectedItemsText = (TextView) findViewById(R.id.selected_items_textview);
+        String s = "";
+        int count = 0;
+
+        for (Friend f : selectedFriend) {
+            if (count++ != 0) {
+                Spannable newSpan = new SpannableString(" ");
+                newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
+                        0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                selectedItemsText.append(newSpan);
+            }
+
+            Spannable newSpan = new SpannableString(f.getName());
+            newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
+                    0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            selectedItemsText.append(newSpan);
+        }
     }
 
     private void setFragment(){
