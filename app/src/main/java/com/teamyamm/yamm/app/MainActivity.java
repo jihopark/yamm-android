@@ -57,7 +57,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i("MainActivity/onCreate", "onCreate started");
 
         setLeftDrawer();
         setFriendPickButton();
@@ -75,6 +74,25 @@ public class MainActivity extends BaseActivity {
 
         readContactAsyncTask = new ReadContactAsyncTask();
         readContactAsyncTask.execute();
+    }
+
+    @Override
+    public void onStop(){
+
+        Log.i("MainActivity/onDestroy", "List saved in Pref");
+
+        Type type = new TypeToken<List<DishItem>>(){}.getType();
+
+        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
+
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+
     }
 
     @Override
@@ -171,9 +189,6 @@ public class MainActivity extends BaseActivity {
 
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
-        if (mainFragment == null){
-            dialog.show();
-        }
 
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
@@ -182,8 +197,6 @@ public class MainActivity extends BaseActivity {
                 if (!isSameDishItems(items)){
                     Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
 
-                    //Should have Immense Loading here
-
                     dishItems = items;
                     setMainFragment();
                 }
@@ -191,11 +204,28 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("MainActivity/getPersonalDishes","Something went wrong");
+                Log.e("MainActivity/getPersonalDishes","Server Error, setting saved list");
+                retrofitError.printStackTrace();
+
+                restoreSavedList();
+                setMainFragment();
+
                 dialog.dismiss();
             }
         });
+    }
 
+    private void restoreSavedList(){
+        String savedList = prefs.getString("dishes", "none");
+
+        if (!savedList.equals("none")){
+            Type type = new TypeToken<List<DishItem>>(){}.getType();
+
+            dishItems = new Gson().fromJson(savedList, type);
+            Log.e("MainActivity/restoreSavedList", "Restore saved list : " +dishItems.toString());
+        }
+        else
+            Log.e("MainActivity/restoreSavedList", "saved null");
     }
 
     private boolean isSameDishItems(List<DishItem> items){
@@ -238,25 +268,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-    /*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == FRIEND_ACTIVITY_REQUEST_CODE){
-            Log.i("MainFragment/onActivityResult","Got back from FriendActivity; resultcode: " + resultCode);
-
-            friendPickButton.setEnabled(true);
-
-            if (resultCode == BaseActivity.SUCCESS_RESULT_CODE) {
-                //Get Friend List
-                selectedFriendList = data.getStringArrayListExtra(FriendActivity.SELECTED_FRIEND_LIST);
-
-                Toast.makeText(getActivity(), "Got Back from Friend" + selectedFriendList, Toast.LENGTH_LONG).show();
-            }
-        }
-    }*/
-
 
     private void setLeftDrawer(){
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
@@ -360,7 +371,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        Log.e("MainActivity/sendContactsToServer", "Sending Failed");
+                        Log.e("MainActivity/sendContactsToServer", "Phone Sending Failed");
                     }
                 });
     }
