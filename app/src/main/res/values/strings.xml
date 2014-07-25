@@ -62,6 +62,9 @@
     <string name="join_progress_dialog_title">가입 처리 중</string>
     <string name="join_progress_dialog_message">좀만 기다려주세요</string>
     <string name="poke_method_dialog_title">어떻게 찌를까요?</string>
+    <string name="map_dialog_title">어디서 먹을꺼에요?</string>
+    <string name="map_dialog_positive">찾기</string>
+    <string name="map_dialog_negative">취소</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
@@ -110,7 +113,6 @@
     <!-- Main Activty & Fragment -->
     <string name="stream_end_message">이젠 없어요</string>
     <string name="friend_pick_edit_text">같이 먹을 사람을 선택하세요</string>
-    <string name="place_pick_edit_text">현재 위치</string>
     <string name="friend_not_loaded_message">아직 로딩 중이에요</string>
     <string name="logout_dialog_title">로그아웃?</string>
     <string name="logout_dialog_message">로그아웃 하시겠습니까?</string>
@@ -128,6 +130,8 @@
     <string name="invite_sms_error_message">SMS를 보낼 수가 없어요</string>
 
     <!-- Place Pick Autocomplete -->
+    <string name="place_pick_edit_text">현재 위치</string>
+
     <string-array name="places_array">
         <item>강남</item>
         <item>홍대</item>

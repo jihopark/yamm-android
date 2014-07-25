@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity {
 
 
         tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
-        tact.commit();
+        tact.commitAllowingStateLoss();
 
 
         dialog.dismiss();
