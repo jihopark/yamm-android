@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity {
     private SharedPreferences prefs;
 
     private List<DishItem> dishItems;
-    private ProgressDialog dialog;
+    private ProgressDialog dialog, newDialog;
 
     private Button friendPickButton;
 
@@ -83,8 +83,8 @@ public class MainActivity extends BaseActivity {
 
         Type type = new TypeToken<List<DishItem>>(){}.getType();
 
-        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
 
+        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
         super.onStop();
     }
 
@@ -162,12 +162,8 @@ public class MainActivity extends BaseActivity {
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
 
-
         tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
         tact.commitAllowingStateLoss();
-
-
-        dialog.dismiss();
     }
 
     /*
@@ -179,7 +175,6 @@ public class MainActivity extends BaseActivity {
         dialog = createProgressDialog(MainActivity.this,
                 R.string.progress_dialog_title, R.string.progress_dialog_message);
 
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setLog(setRestAdapterLog())
@@ -189,17 +184,38 @@ public class MainActivity extends BaseActivity {
 
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
+        if (mainFragment==null) {
+            //If no mainfragment, show progress dialog
+            dialog.show();
+            Log.i("MainActivity/loadDishes", "Show Dialog");
+        }
+
 
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
                 Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
+                restoreSavedList();
+
                 if (!isSameDishItems(items)){
+                    //if there is new list, show newDialog
                     Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
 
                     dishItems = items;
                     setMainFragment();
+                    dialog.dismiss();
+
+                    Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_LONG).show();
+
+                    return ;
                 }
+
+                if (mainFragment==null){
+                    //if no mainfragment, create one with restored dishes
+                    Log.i("MainActivity/getPersonalDishes","MainFragment null, Setting MainFragment");
+                    setMainFragment();
+                }
+                dialog.dismiss();
             }
 
             @Override
@@ -222,10 +238,12 @@ public class MainActivity extends BaseActivity {
             Type type = new TypeToken<List<DishItem>>(){}.getType();
 
             dishItems = new Gson().fromJson(savedList, type);
-            Log.e("MainActivity/restoreSavedList", "Restore saved list : " +dishItems.toString());
+            if (dishItems!=null)
+                Log.i("MainActivity/restoreSavedList", "Restore saved list : " + dishItems.toString());
         }
         else
-            Log.e("MainActivity/restoreSavedList", "saved null");
+            Log.i("MainActivity/restoreSavedList", "saved null");
+
     }
 
     private boolean isSameDishItems(List<DishItem> items){

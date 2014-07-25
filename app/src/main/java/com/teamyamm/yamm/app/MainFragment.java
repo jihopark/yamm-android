@@ -39,7 +39,6 @@ public class MainFragment extends Fragment {
     private int currentPage;
     private boolean isGroup;
 
-
     //For Place Pick
     //private AutoCompleteTextView placePickEditText;
     private LocationManager locationManager;
@@ -82,7 +81,6 @@ public class MainFragment extends Fragment {
 
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
-
     }
 
 
@@ -94,6 +92,8 @@ public class MainFragment extends Fragment {
     public DishItem getCurrentDishItem(){
         return dishAdapter.getCurrentDishItem();
     }
+
+    public int getCurrentPage(){ return currentPage; }
 
     private void setDishPager(){
         dishAdapter = new DishFragmentPagerAdapter(getChildFragmentManager());
