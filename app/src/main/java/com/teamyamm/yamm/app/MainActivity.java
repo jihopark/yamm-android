@@ -63,10 +63,10 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
-
+    public void onStart(){
+        super.onStart();
         loadDishes();
+
         friendPickButton.setEnabled(true);
         Log.i("MainActivity","Execute Read Contact Async Task");
 
