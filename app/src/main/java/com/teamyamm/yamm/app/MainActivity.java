@@ -95,9 +95,6 @@ public class MainActivity extends BaseActivity {
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
     private void setMainFragment(){
-
-        dialog.show();
-
         if (dishItems == null){
             Log.e("MainActivity/setMainFragment","Dishes haven't loaded yet");
             return ;
@@ -110,7 +107,6 @@ public class MainActivity extends BaseActivity {
         if (mainFragment!= null){
             Log.i("MainActivity/setMainFragment","Remove previous fragment");
             tact.remove(mainFragment);
-            tact.commit();
         }
 
 
@@ -149,12 +145,18 @@ public class MainActivity extends BaseActivity {
 
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
+        if (mainFragment == null){
+            dialog.show();
+        }
+
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
                 Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
                 if (!isSameDishItems(items)){
                     Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
+
+                    //Should have Immense Loading here
 
                     dishItems = items;
                     setMainFragment();
@@ -164,6 +166,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("MainActivity/getPersonalDishes","Something went wrong");
+                dialog.dismiss();
             }
         });
 
