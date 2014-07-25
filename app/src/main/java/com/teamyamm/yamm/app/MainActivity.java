@@ -12,6 +12,9 @@ import android.provider.ContactsContract;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -92,6 +95,29 @@ public class MainActivity extends BaseActivity {
         return value != "none";
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.invite_button_actions, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.friend_invite_button:
+                Intent intent = new Intent(MainActivity.this, InviteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
     private void setMainFragment(){
@@ -112,7 +138,7 @@ public class MainActivity extends BaseActivity {
 
         Bundle bundle = new Bundle();
 
-        bundle.putString("dishes",new Gson().toJson(dishItems, type) );
+        bundle.putString("dishes", new Gson().toJson(dishItems, type));
         bundle.putBoolean("isGroup", false);
 
         mainFragment = new MainFragment();
@@ -307,7 +333,7 @@ public class MainActivity extends BaseActivity {
         }
         //Save HashMap
         BaseActivity.putInPref(prefs, getString(R.string.PHONE_NAME_MAP), fromHashMapToString(phoneNameMap));
-        Log.i("MainActivity/readContacts","Saved " + phoneNameMap.size() + " numbers");
+        Log.i("MainActivity/readContacts", "Saved " + phoneNameMap.size() + " numbers");
     }
 
     private void sendContactsToServer(){

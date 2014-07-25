@@ -75,7 +75,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.friend_activity_actions, menu);
+        inflater.inflate(R.menu.invite_button_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
