@@ -89,21 +89,10 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-
-    }
-
-    @Override
     public void onBackPressed() {
         goBackHome();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     public boolean isFriendLoaded(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
@@ -184,10 +173,14 @@ public class MainActivity extends BaseActivity {
 
         YammAPIService service = restAdapter.create(YammAPIService.class);
 
+        restoreSavedList();
+
         if (mainFragment==null) {
             //If no mainfragment, show progress dialog
             dialog.show();
-            Log.i("MainActivity/loadDishes", "Show Dialog");
+            Log.i("MainActivity/loadDishes", "Set Main Fragment with previous dishes");
+            setMainFragment();
+            dialog.dismiss();
         }
 
 
@@ -195,7 +188,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void success(List<DishItem> items, Response response) {
                 Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
-                restoreSavedList();
 
                 if (!isSameDishItems(items)){
                     //if there is new list, show newDialog
@@ -203,28 +195,17 @@ public class MainActivity extends BaseActivity {
 
                     dishItems = items;
                     setMainFragment();
-                    dialog.dismiss();
 
                     Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_LONG).show();
 
                     return ;
                 }
-
-                if (mainFragment==null){
-                    //if no mainfragment, create one with restored dishes
-                    Log.i("MainActivity/getPersonalDishes","MainFragment null, Setting MainFragment");
-                    setMainFragment();
-                }
-                dialog.dismiss();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("MainActivity/getPersonalDishes","Server Error, setting saved list");
                 retrofitError.printStackTrace();
-
-                restoreSavedList();
-                setMainFragment();
 
                 dialog.dismiss();
             }

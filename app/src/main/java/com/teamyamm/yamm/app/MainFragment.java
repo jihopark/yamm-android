@@ -7,7 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,7 +90,9 @@ public class MainFragment extends Fragment {
     * */
 
     public DishItem getCurrentDishItem(){
-        return dishAdapter.getCurrentDishItem();
+        if (dishAdapter!=null)
+            return dishAdapter.getCurrentDishItem();
+        return null;
     }
 
     public int getCurrentPage(){ return currentPage; }
@@ -102,7 +104,7 @@ public class MainFragment extends Fragment {
         dishPager.setOnPageChangeListener(dishAdapter);
     }
 
-    private class DishFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener{
+    private class DishFragmentPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener{
 
         private final int DEFAULT_NUMBER_OF_DISHES = 4;
         private int numPage;
@@ -163,7 +165,6 @@ public class MainFragment extends Fragment {
                 currentPage = DEFAULT_NUMBER_OF_DISHES - 1;
             else
                 currentPage = i;
-            Log.i("DishFragmentPagerAdapter/onPageSelected",i+":"+fragments.get(currentPage).getDishItem());
         }
 
         @Override
@@ -171,7 +172,10 @@ public class MainFragment extends Fragment {
         }
 
         public DishItem getCurrentDishItem(){
-            return fragments.get(currentPage).getDishItem();
+            if (fragments.size() > currentPage)
+                return fragments.get(currentPage).getDishItem();
+            Log.e("DishFragmentPagerAdapter/getCurrentDishItem","Current Page is wrong, returning first item");
+            return fragments.get(0).getDishItem();
         }
     }
 
