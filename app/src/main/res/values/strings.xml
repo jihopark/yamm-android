@@ -67,6 +67,13 @@
     <string name="map_dialog_negative">취소</string>
     <string name="new_recommendation_message">새로운 음식이 추천되었습니다</string>
 
+    <string name="fb_dialog_title">좋아요 해주세요</string>
+    <string name="fb_dialog_message">Yamm 페이스북에 좋아요를 누르면 더 많은 정보와 소식을 알려드려요! 다양한 이벤트와 재밌거리를 위해 페이스북 라이크 고고!!</string>
+    <string name="fb_dialog_negative">싫어요</string>
+    <string name="fb_dialog_positive">좋아요</string>
+    <string name="fb_dialog_neutral">나중에요</string>
+
+
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
     <string name="intro_login_button">로그인</string>

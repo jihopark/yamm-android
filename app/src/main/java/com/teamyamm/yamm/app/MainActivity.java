@@ -1,11 +1,13 @@
 package com.teamyamm.yamm.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -38,6 +40,10 @@ import retrofit.client.Response;
 public class MainActivity extends BaseActivity {
     public final static int DRAWER_LOGOUT = 0;
 
+    public static final String loggedFirstTime = "lft";
+    private boolean neutral = false;
+
+
     private HashMap<String, String> phoneNameMap;
     private List<Friend> friendsList;
     private String[] navMenuTitles;
@@ -67,6 +73,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onStart(){
         super.onStart();
+        showFBDialog();
+
         loadDishes();
 
         friendPickButton.setEnabled(true);
@@ -127,6 +135,79 @@ public class MainActivity extends BaseActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
 
+
+    private void showFBDialog(){
+        boolean fb = prefs.getBoolean(loggedFirstTime, false);
+
+        Log.i("MainActivity/showFBDialog","FB boolean " + fb);
+
+        if (fb){
+
+            Log.i("MainActivity/showFBDialog","Show FB Dialog");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            DialogInterface.OnClickListener positiveListener =
+                    new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean(MainActivity.loggedFirstTime, false);
+                            editor.commit();
+
+                            goToYammFacebook();
+                            dialog.dismiss();
+                        }
+                    };
+            DialogInterface.OnClickListener neutralListener =
+                    new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            dialog.dismiss();
+                        }
+                    };
+
+            DialogInterface.OnClickListener negativeListener =
+                    new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean(MainActivity.loggedFirstTime, false);
+                            editor.commit();
+
+                            dialog.dismiss();
+                        }
+                    };
+
+            AlertDialog alert = builder.setPositiveButton(R.string.fb_dialog_positive,positiveListener)
+                    .setNegativeButton(R.string.fb_dialog_negative, negativeListener)
+                    .setNeutralButton(R.string.fb_dialog_neutral, neutralListener)
+                    .setTitle(R.string.fb_dialog_title)
+                    .setMessage(R.string.fb_dialog_message)
+                    .create();
+
+            alert.show();
+        }
+    }
+
+    private void goToYammFacebook(){
+        Intent intent;
+
+        try {
+            getPackageManager()
+                    .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
+            Log.i("tried", "facebook");
+            intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("fb://page/251075981744124")); //Trys to make intent with FB's URI
+        } catch (Exception e) {
+            intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://www.facebook.com/yammapp")); //catches and opens a url to the desired page
+        }
+        startActivity(intent);
+    }
+
     private void setMainFragment(){
         if (dishItems == null){
             Log.e("MainActivity/setMainFragment","Dishes haven't loaded yet");
@@ -140,8 +221,9 @@ public class MainActivity extends BaseActivity {
         if (mainFragment!= null){
             Log.i("MainActivity/setMainFragment","Remove previous fragment");
             tact.remove(mainFragment);
+            tact.commitAllowingStateLoss();
+            tact = getSupportFragmentManager().beginTransaction();
         }
-
 
         Bundle bundle = new Bundle();
 
@@ -204,7 +286,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("MainActivity/getPersonalDishes","Server Error, setting saved list");
+                Log.e("MainActivity/getPersonalDishes", "Server Error, setting saved list");
                 retrofitError.printStackTrace();
 
                 dialog.dismiss();

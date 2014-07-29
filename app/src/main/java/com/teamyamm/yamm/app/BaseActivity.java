@@ -395,21 +395,4 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
     }
-
-    private void goToYammFacebook(){
-        Intent intent;
-
-        try {
-            getPackageManager()
-                    .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
-            Log.i("tried", "facebook");
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("fb://page/251075981744124")); //Trys to make intent with FB's URI
-        } catch (Exception e) {
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.facebook.com/yammapp")); //catches and opens a url to the desired page
-        }
-        startActivity(intent);
-    }
-
 }

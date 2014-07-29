@@ -3,6 +3,7 @@ package com.teamyamm.yamm.app;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -186,6 +187,12 @@ public class BattleActivity extends BaseActivity {
             public void success(String msg, Response response) {
                 Log.i("BattleActivity/getBattleItem",msg);
                 finalDialog.dismiss();
+
+                //for FB Dialog
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(MainActivity.loggedFirstTime, true);
+                editor.commit();
+
                 goToActivity(MainActivity.class);
             }
 
