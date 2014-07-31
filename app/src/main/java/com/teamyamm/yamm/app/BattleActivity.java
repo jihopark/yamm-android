@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -22,8 +24,10 @@ public class BattleActivity extends BaseActivity {
     public int battleCount = 0;
     public int totalBattle;
     private String result = "";
+    private int previousLength = 0;
     private YammAPIService service;
     private TextView battleCountText;
+    private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class BattleActivity extends BaseActivity {
         setContentView(R.layout.activity_battle);
 
         battleCountText = (TextView) findViewById(R.id.battle_count_text);
+
+        battleItems = new ArrayList<YammAPIService.RawBattleItemForPost>();
 
         hideActionBar();
         setAPIService();
@@ -130,7 +136,11 @@ public class BattleActivity extends BaseActivity {
     * */
     public void loadNextItem(BattleItem item){
         battleCount++;
+        previousLength = result.length();
         result = result + item;
+        battleItems.add(new YammAPIService.RawBattleItemForPost(item));
+        Log.i("BattleActivity/loadNextItem","Item added to list" + item);
+
 
         //If Last Item, Finish this
         if (battleCount == totalBattle){
@@ -138,11 +148,16 @@ public class BattleActivity extends BaseActivity {
             return ;
         }
         Log.i("BattleActivity/loadNextItem","Query param " + result);
+
+        bf.setLayoutClickable(false);
+
         //Send Item to Server
         service.getBattleItem(result,new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
                 Log.i("BattleActivity/getBattleItem","Success " + rawBattleItem.getBattleItem());
+
+                bf.setLayoutClickable(true);
 
                 bf.setDishItemView(rawBattleItem.getBattleItem());
                 battleCountText.setText( (battleCount+1) + " out of " + totalBattle);
@@ -150,6 +165,8 @@ public class BattleActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                bf.setLayoutClickable(true);
+
                 Log.e("BattleActivity/getBattleItem", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
@@ -167,7 +184,7 @@ public class BattleActivity extends BaseActivity {
     * */
     private void retrieveResult(){
         battleCount--;
-        result = result.substring(0, result.length()-6);
+        result = result.substring(0, previousLength);
         Log.e("BattleActivity/retrieveResult", "BattleCount to " + battleCount + "& Result : " + result);
     }
 
@@ -175,14 +192,14 @@ public class BattleActivity extends BaseActivity {
 * Saves Battle Result and Proceed
 * */
     private void finishBattle(){
-        Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ result);
+        Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ battleItems);
         final ProgressDialog finalDialog =  createProgressDialog(BattleActivity.this,
                 R.string.battle_final_dialog_title,
                 R.string.battle_final_dialog_message);
 
         finalDialog.show();
 
-        service.postBattleItem(result,new Callback<String>() {
+        service.postBattleItem(new YammAPIService.RawBattleItemList(battleItems), new Callback<String>() {
             @Override
             public void success(String msg, Response response) {
                 Log.i("BattleActivity/getBattleItem",msg);

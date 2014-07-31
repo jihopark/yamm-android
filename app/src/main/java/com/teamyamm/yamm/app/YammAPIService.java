@@ -118,9 +118,8 @@ public interface YammAPIService {
     @GET("/battle/next-round")
     void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
 
-    @FormUrlEncoded
     @POST("/battle/results")
-    void postBattleItem(@Field("results") String result, Callback<String> callback);
+    void postBattleItem(@Body RawBattleItemList results, Callback<String> callback);
 
     public static class RawBattleItem{
         private int rounds;
@@ -139,6 +138,28 @@ public interface YammAPIService {
             return rounds;
         }
     }
+
+    public static class RawBattleItemList{
+        private List<RawBattleItemForPost> results;
+
+        public RawBattleItemList(List<RawBattleItemForPost> results){
+            this.results = results;
+        }
+    }
+
+    //For Post
+    public static class RawBattleItemForPost{
+        private int first_dish_id;
+        private int second_dish_id;
+        private int result_dish_id;
+
+        public RawBattleItemForPost(BattleItem item){
+            first_dish_id = item.getFirst().getId();
+            second_dish_id = item.getSecond().getId();
+            result_dish_id = item.getResult();
+        }
+    }
+
 
 
 

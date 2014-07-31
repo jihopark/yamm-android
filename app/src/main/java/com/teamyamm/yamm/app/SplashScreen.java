@@ -102,7 +102,7 @@ public class SplashScreen extends Activity {
             activity = new Intent(getBaseContext(), MainActivity.class);
 
         //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Friend
-        //activity = new Intent(getBaseContext(), MainActivity.class);
+        //activity = new Intent(getBaseContext(), BattleActivity.class);
 
         if (activity!=null){
             Log.v("SplashScreen","Activity Start");

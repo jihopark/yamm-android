@@ -63,7 +63,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         setLeftDrawer();
         setFriendPickButton();
 
@@ -219,22 +218,34 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
 
         if (mainFragment!= null){
-            Log.i("MainActivity/setMainFragment","Remove previous fragment");
             tact.remove(mainFragment);
             tact.commitAllowingStateLoss();
             tact = getSupportFragmentManager().beginTransaction();
         }
+
 
         Bundle bundle = new Bundle();
 
         bundle.putString("dishes", new Gson().toJson(dishItems, type));
         bundle.putBoolean("isGroup", false);
 
-        mainFragment = new MainFragment();
-        mainFragment.setArguments(bundle);
+        MainFragment newMainFragment = new MainFragment();
+        newMainFragment.setArguments(bundle);
 
-        tact.add(R.id.main_layout, mainFragment, MainFragment.MAIN_FRAGMENT);
-        tact.commitAllowingStateLoss();
+        if (mainFragment == null) {
+            Log.i("MainActivity/setMainFragment","Added new fragment");
+
+            tact.add(R.id.main_layout, newMainFragment, MainFragment.MAIN_FRAGMENT);
+            tact.commitAllowingStateLoss();
+
+        }
+        else{
+            Log.i("MainActivity/setMainFragment","Replacing previous fragment");
+            tact.replace(R.id.main_layout, newMainFragment);
+            tact.commitAllowingStateLoss();
+
+        }
+        mainFragment = newMainFragment;
     }
 
     /*
