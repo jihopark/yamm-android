@@ -12,7 +12,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.TransformationMethod;
@@ -45,7 +44,7 @@ public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    public static String apiURL = "http://api.yamm.me";
+    public static String apiURL = "https://yamm-api.ap01.aws.af.cm/";
     public final static int ANIMATION_SPEED = 100;
     public final static int SUCCESS_RESULT_CODE = 200;
     public final static int FAILURE_RESULT_CODE = 400;
