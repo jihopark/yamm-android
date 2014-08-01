@@ -65,7 +65,7 @@ public class PokeMethodDialog extends DialogFragment{
             final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getActivity());
             final KakaoTalkLinkMessageBuilder msgBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            msgBuilder.addText(((MainFragment)getParentFragment()).getCurrentDishItem().getName() + " 같이 먹을래요?");
+            msgBuilder.addText(((DishFragment)getParentFragment()).getDishItem().getName() + " 같이 먹을래요?");
 
             final String linkContents = msgBuilder.build();
             kakaoLink.sendMessage(linkContents, getActivity());
