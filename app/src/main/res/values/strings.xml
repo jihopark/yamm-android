@@ -139,16 +139,4 @@
 
     <!-- Place Pick Autocomplete -->
     <string name="place_pick_edit_text">현재 위치</string>
-
-    <string-array name="places_array">
-        <item>강남</item>
-        <item>홍대</item>
-        <item>상수</item>
-        <item>이태원</item>
-        <item>압구정</item>
-        <item>가로수길</item>
-        <item>건대입구</item>
-        <item>신촌</item>
-    </string-array>
-
 </resources>
