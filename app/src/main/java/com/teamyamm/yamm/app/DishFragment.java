@@ -47,6 +47,7 @@ public class DishFragment extends Fragment {
     private DishItem item;
     private int itemID;
     private Button searchMap, pokeFriend;
+    private YammImageView dishImage;
     private boolean isGroup;
     private Activity activity;
 
@@ -84,6 +85,8 @@ public class DishFragment extends Fragment {
         TextView comment = (TextView) main_layout.findViewById(R.id.dish_comment_text);
         comment.setText(item.getComment());
 
+        YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
+        image.setDishImage(item.getName());
     }
 
     private void setButton(){
