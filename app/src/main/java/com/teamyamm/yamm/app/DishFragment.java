@@ -50,6 +50,8 @@ public class DishFragment extends Fragment {
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
 
     public final static String TOO_MANY_DISLIKE = "dis";
+    public final static String SHARE = "SHARE";
+    public final static String SEARCH_MAP = "SEARCHMAP";
 
     private LinearLayout main_layout;
     private DishItem item;
@@ -109,12 +111,14 @@ public class DishFragment extends Fragment {
         else
             pokeFriend.setText("친구랑 같이 먹기");
 
-
         pokeFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment pokeMethodDialog = new PokeMethodDialog();
                 pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
+
+                addDishToPositive(SHARE, null);
+
             }
         });
 
@@ -139,7 +143,7 @@ public class DishFragment extends Fragment {
                 service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), new Callback<DishItem>() {
                     @Override
                     public void success(DishItem dishItem, Response response) {
-                        Log.i("DishFragment/postDislikeDish","Success " + dishItem.getName());
+                        Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
                         changeInDishItems(getDishItem(), dishItem);
                     }
 
@@ -149,8 +153,7 @@ public class DishFragment extends Fragment {
 
                         if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
                             Toast.makeText(getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -178,6 +181,24 @@ public class DishFragment extends Fragment {
 
     private void changeInDishItems(DishItem original, DishItem replace){
         ((MainFragment)getParentFragment()).changeInDishItem(original, replace);
+    }
+
+    private void addDishToPositive(String category, String detail){
+
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        Log.i("DishFragment/addDishToPositive","Like "  + getDishItem().getName() + " " + category + " " + detail);
+
+        service.postLikeDish(new YammAPIService.RawLike(getDishItem().getId(), category, detail), new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("DishFragment/postLikeDish","Success " + s);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+            }
+        });
     }
 
 
@@ -321,12 +342,16 @@ public class DishFragment extends Fragment {
             else
                 place = null;
         }
+
+        addDishToPositive(SEARCH_MAP, place);
+
         if (place == null){
             Log.e("DishFragment/getLocationURI","Unable to locate user");
             return null;
         }
         Log.i("DishFragment/getLocationURI","Location: " + place + " Dish:" + getDishItem().getName() );
         uri = Uri.parse("geo:0,0?q=" + place + " " + getDishItem().getName());
+
 
         return uri;
     }

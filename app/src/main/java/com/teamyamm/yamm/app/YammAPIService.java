@@ -200,6 +200,24 @@ public interface YammAPIService {
         public RawDislike(int dislikeId){ this.dislikeId = dislikeId; }
     }
 
+    @POST("/preferences/like")
+    void postLikeDish(@Body RawLike like, Callback<String> callback);
+
+    public static class RawLike{
+        int dishId;
+        String category;
+        String detail;
+
+        public RawLike(int dishId, String category, String detail){
+            this.dishId = dishId;
+            this.category = category;
+            if (detail == null)
+                this.detail = "";
+            else
+                this.detail = detail;
+        }
+    }
+
     /*
     * Error
     * */
