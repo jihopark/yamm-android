@@ -2,8 +2,10 @@ package com.teamyamm.yamm.app;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -36,6 +38,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * Created by parkjiho on 7/17/14.
  */
@@ -43,10 +49,12 @@ public class DishFragment extends Fragment {
     private final static long LOCATION_MIN_TIME = 100; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
 
+    public final static String TOO_MANY_DISLIKE = "dis";
+
     private LinearLayout main_layout;
     private DishItem item;
     private int itemID;
-    private Button searchMap, pokeFriend;
+    private Button searchMap, pokeFriend, dislike;
     private YammImageView dishImage;
     private boolean isGroup;
     private Activity activity;
@@ -94,6 +102,8 @@ public class DishFragment extends Fragment {
 
         pokeFriend = (Button) main_layout.findViewById(R.id.poke_friend_button);
 
+        dislike = (Button) main_layout.findViewById(R.id.dish_dislike_button);
+
         if (isGroup)
             pokeFriend.setText("메뉴 선택");
         else
@@ -114,7 +124,59 @@ public class DishFragment extends Fragment {
                 showLocationDialog();
             }
         });
+
+
+
+
+        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("DishFragment/onClick","Dislike pressed for " + getDishItem().getName());
+                Toast.makeText(getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
+                ((MainActivity) activity).getDislikeService().postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), new Callback<DishItem>() {
+                    @Override
+                    public void success(DishItem dishItem, Response response) {
+                        Log.i("DishFragment/postDislikeDish","Success " + dishItem.getName());
+                        changeInDishItems(getDishItem(), dishItem);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        String msg = retrofitError.getCause().getMessage();
+
+                        if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
+                            Toast.makeText(getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+            }
+        };
+
+        dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                AlertDialog alert = builder.setPositiveButton(R.string.dish_dislike_positive,positiveListener)
+                        .setNegativeButton(R.string.dish_dislike_negative,null)
+                        .setTitle(R.string.dish_dislike_title)
+                        .setMessage(R.string.dish_dislike_message)
+                        .create();
+
+                alert.show();
+            }
+        });
     }
+
+    private void changeInDishItems(DishItem original, DishItem replace){
+        ((MainFragment)getParentFragment()).changeInDishItem(original, replace);
+    }
+
 
     private void showLocationDialog(){
         final Dialog dialog = new Dialog(activity);
@@ -317,5 +379,7 @@ public class DishFragment extends Fragment {
         }
         return null;
     }
+
+
 
 }

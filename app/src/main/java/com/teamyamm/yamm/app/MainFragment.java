@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,6 +141,11 @@ public class MainFragment extends Fragment {
         }
 
         @Override
+        public int getItemPosition(Object object){
+            return PagerAdapter.POSITION_NONE;
+        }
+
+        @Override
         public int getCount() {
             return numPage;
         }
@@ -177,6 +183,22 @@ public class MainFragment extends Fragment {
             Log.e("DishFragmentPagerAdapter/getCurrentDishItem","Current Page is wrong, returning first item");
             return fragments.get(0).getDishItem();
         }
+    }
+
+    public void changeInDishItem(DishItem original, DishItem replace){
+        Log.i("MainFragment/changeInDishItem","Original " + original + " Replace    " + replace);
+        for (int i = 0; i < dishItems.size() ; i++){
+            if (dishItems.get(i).equals(original)){
+                dishItems.remove(i);
+                break;
+            }
+        }
+        dishItems.add(replace);
+        dishAdapter.notifyDataSetChanged();
+        Log.i("MainFragment/changeInDishItem","Change In items " + dishItems);
+
+
+        ((MainFragmentInterface)getActivity()).changeInDishItem(dishItems);
     }
 
 

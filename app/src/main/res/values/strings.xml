@@ -73,6 +73,12 @@
     <string name="fb_dialog_positive">좋아요</string>
     <string name="fb_dialog_neutral">나중에요</string>
 
+    <string name="dish_dislike_title">정말로?</string>
+    <string name="dish_dislike_message">진정으로 이 음식을 먹기 싫은건가요?</string>
+    <string name="dish_dislike_negative">그정도는 아닌데</string>
+    <string name="dish_dislike_positive">정말이에요</string>
+    <string name="dish_dislike_toast">그럼 딴거 드셔야죠!</string>
+    <string name="dish_too_many_dislike_toast">너무 다 싫어하는거 아니에요ㅠㅠ?</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>

@@ -191,6 +191,15 @@ public interface YammAPIService {
     @GET("/preferences/suggestions")
     void getPersonalDishes(Callback<List<DishItem>> cb);
 
+    @POST("/preferences/next-suggestion")
+    void postDislikeDish(@Body RawDislike dislike, Callback<DishItem> callback);
+
+    public static class RawDislike{
+        int dislikeId;
+
+        public RawDislike(int dislikeId){ this.dislikeId = dislikeId; }
+    }
+
     /*
     * Error
     * */

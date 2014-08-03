@@ -27,17 +27,21 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainFragmentInterface {
     public final static int DRAWER_LOGOUT = 0;
 
     public static final String loggedFirstTime = "lft";
@@ -57,6 +61,9 @@ public class MainActivity extends BaseActivity {
     private ProgressDialog dialog, newDialog;
 
     private Button friendPickButton;
+
+    private YammAPIService service;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +93,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onStop(){
 
-        Log.i("MainActivity/onDestroy", "List saved in Pref");
-
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
-
-
-        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
+        saveDishItemsInPref();
         super.onStop();
     }
 
@@ -133,7 +135,14 @@ public class MainActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private void saveDishItemsInPref(){
+        Log.i("MainActivity/savedishItemsInPref", "List saved in Pref");
 
+        Type type = new TypeToken<List<DishItem>>(){}.getType();
+
+
+        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
+    }
 
     private void showFBDialog(){
         boolean fb = prefs.getBoolean(loggedFirstTime, false);
@@ -264,7 +273,7 @@ public class MainActivity extends BaseActivity {
                 .setRequestInterceptor(setRequestInterceptorWithToken())
                 .build();
 
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        service = restAdapter.create(YammAPIService.class);
 
         restoreSavedList();
 
@@ -305,6 +314,19 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    public YammAPIService getDislikeService(){
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setLog(setRestAdapterLog())
+                .setErrorHandler(new DislikeErrorHandler())
+                .setRequestInterceptor(setRequestInterceptorWithToken())
+                .build();
+
+        service = restAdapter.create(YammAPIService.class);
+
+        return service;
+    }
+
     private void restoreSavedList(){
         String savedList = prefs.getString("dishes", "none");
 
@@ -318,6 +340,12 @@ public class MainActivity extends BaseActivity {
         else
             Log.i("MainActivity/restoreSavedList", "saved null");
 
+    }
+
+    public void changeInDishItem(List<DishItem> list){
+        dishItems = list;
+        Log.i("MainActivity/changeInDishItem","Dish Item changed to " + dishItems);
+        saveDishItemsInPref();
     }
 
     private boolean isSameDishItems(List<DishItem> items){
@@ -507,6 +535,53 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
+        }
+    }
+
+    //Error Handler
+    public class DislikeErrorHandler implements ErrorHandler {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
+            Gson gson = new Gson();
+
+            error = gson.fromJson(responseToString(r), error.getClass());
+            Log.e("DislikeErrorHandler/handleError",error.getMessage());
+
+
+            if (error.getCode().equals("TooManyAttempts")) {
+                return new YammAPIService.YammRetrofitException(cause, DishFragment.TOO_MANY_DISLIKE);
+            }
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+
+        private String responseToString(Response result){
+            //Try to get response body
+            BufferedReader reader = null;
+            StringBuilder sb = new StringBuilder();
+            try {
+
+                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+
+                String line;
+
+                try {
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return sb.toString();
         }
     }
 }
