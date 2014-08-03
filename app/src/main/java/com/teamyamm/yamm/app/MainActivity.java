@@ -27,16 +27,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -55,15 +50,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private ReadContactAsyncTask readContactAsyncTask;
-    private SharedPreferences prefs;
 
     private List<DishItem> dishItems;
     private ProgressDialog dialog, newDialog;
 
     private Button friendPickButton;
-
-    private YammAPIService service;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +63,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         setLeftDrawer();
         setFriendPickButton();
-
-        prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
     }
 
     @Override
@@ -266,14 +255,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         dialog = createProgressDialog(MainActivity.this,
                 R.string.progress_dialog_title, R.string.progress_dialog_message);
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+     /*   RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setLog(setRestAdapterLog())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(setRequestInterceptorWithToken())
-                .build();
+                .build();*/
 
-        service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getTokenService();
 
         restoreSavedList();
 
@@ -312,19 +301,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 dialog.dismiss();
             }
         });
-    }
-
-    public YammAPIService getDislikeService(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setErrorHandler(new DislikeErrorHandler())
-                .setRequestInterceptor(setRequestInterceptorWithToken())
-                .build();
-
-        service = restAdapter.create(YammAPIService.class);
-
-        return service;
     }
 
     private void restoreSavedList(){
@@ -470,14 +446,17 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private void sendContactsToServer(){
         Log.i("MainActivity/sendContactsToServer","Phone List " + phoneNameMap.keySet());
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+       /* RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setLog(setRestAdapterLog())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(setRequestInterceptorWithToken())
                 .build();
 
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = restAdapter.create(YammAPIService.class);*/
+
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
 
         service.findFriendsFromPhone(new YammAPIService.RawPhones(phoneNameMap.keySet()),
                 new Callback<YammAPIService.RawFriends>() {
@@ -535,53 +514,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         @Override
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
-        }
-    }
-
-    //Error Handler
-    public class DislikeErrorHandler implements ErrorHandler {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Response r = cause.getResponse();
-
-            if (cause.isNetworkError()){
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
-            }
-            YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
-            Gson gson = new Gson();
-
-            error = gson.fromJson(responseToString(r), error.getClass());
-            Log.e("DislikeErrorHandler/handleError",error.getMessage());
-
-
-            if (error.getCode().equals("TooManyAttempts")) {
-                return new YammAPIService.YammRetrofitException(cause, DishFragment.TOO_MANY_DISLIKE);
-            }
-            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-        }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
         }
     }
 }

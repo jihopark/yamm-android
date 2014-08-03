@@ -13,9 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import retrofit.Callback;
-import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -102,16 +100,7 @@ public class LoginActivity extends BaseActivity {
                 R.string.progress_dialog_message);
         progressDialog.show();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(setRequestInterceptorForLogin(email, pw))
-                .setErrorHandler(new LoginErrorHandler())
-                .build();
-
-
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getLoginService(email, pw);
 
         service.userLogin(new YammAPIService.GrantType(), new Callback<YammAPIService.YammToken>() {
             @Override
@@ -160,24 +149,4 @@ public class LoginActivity extends BaseActivity {
             }
         };
     }
-
-    //Error Handler
-    public class LoginErrorHandler implements ErrorHandler {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Response r = cause.getResponse();
-
-            if (cause.isNetworkError()){
-                Log.e("LoginErrorHandler/handleError","Handling Network Error");
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
-            }
-            if (r != null && r.getStatus() == 401) {
-                Log.e("LoginErrorHandler/handleError","Handling 401 Error");
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
-            }
-            Log.e("LoginErrorHandler/handleError","Unidentified Error");
-            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-        }
-    }
-
 }

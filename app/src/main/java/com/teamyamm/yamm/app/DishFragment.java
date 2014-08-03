@@ -133,7 +133,10 @@ public class DishFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 Log.i("DishFragment/onClick","Dislike pressed for " + getDishItem().getName());
                 Toast.makeText(getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
-                ((MainActivity) activity).getDislikeService().postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), new Callback<DishItem>() {
+
+                YammAPIService service = YammAPIAdapter.getDislikeService();
+
+                service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), new Callback<DishItem>() {
                     @Override
                     public void success(DishItem dishItem, Response response) {
                         Log.i("DishFragment/postDislikeDish","Success " + dishItem.getName());

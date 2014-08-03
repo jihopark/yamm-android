@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -80,14 +79,7 @@ public class GridActivity extends BaseActivity {
             return false;
         }
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(setRequestInterceptorWithToken())
-                .build();
-
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getTokenService();
 
         final ProgressDialog progressDialog;
         // Show Progress Dialog
@@ -239,45 +231,6 @@ public class GridActivity extends BaseActivity {
    * */
     private GridSelectionListAdapter initiateAdapter(){
         adapter = new GridSelectionListAdapter(this);
-
-
-        ///Deleted because no need to retrieve items from server
-/*        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(((BaseActivity)getActivity()).apiURL)
-                .setLog(((BaseActivity)getActivity()).setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
-
-        YammAPIService service = restAdapter.create(YammAPIService.class);
-
-        service.getGridItems(new Callback<YammAPIService.Choices>() {
-            @Override
-            public void success(YammAPIService.Choices choices, Response response) {
-                List<GridItem> gridItems = choices.getList();
-                Log.i("GridActivity/initiateAdapter",gridItems.size() + " items loaded");
-                Log.i("GridActivity/initiateAdapter",gridItems.toString());
-
-                for (GridItem i : gridItems) {
-                    adapter.addItem(i);
-                }
-
-                adapter.notifyDataSetChanged();
-                listView.invalidateViews();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.e("GridFragment/initiateAdapter","Loading Adapter Failed");
-                retrofitError.printStackTrace();
-
-                if (retrofitError.isNetworkError())
-                    Toast.makeText(getActivity(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getActivity(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
-            }
-        });
-        */
 
         String[] itemNames = getResources().getStringArray(R.array.grid_item_names);
         int[] itemIds =  getResources().getIntArray(R.array.grid_item_ids);

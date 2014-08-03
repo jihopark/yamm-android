@@ -58,6 +58,8 @@ public class BaseActivity extends ActionBarActivity {
         setDefaultOrientation(); //Set Portrait Orientation for whole application
         //Set Dialog for Internet Connection
         setInternetConnectionAlert();
+
+        YammAPIAdapter.setToken(getAuthToken());
     }
 
 
@@ -287,7 +289,7 @@ public class BaseActivity extends ActionBarActivity {
     * Login Auth Token Issues
     * */
 
-    protected String getAuthToken(){
+    public String getAuthToken(){
         String value = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
 
         if (value.equals("none"))
@@ -301,6 +303,9 @@ public class BaseActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.commit();
+
+        YammAPIAdapter.setToken(null);
+
         Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
     }
 

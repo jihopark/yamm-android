@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -39,8 +38,9 @@ public class BattleActivity extends BaseActivity {
 
         battleItems = new ArrayList<YammAPIService.RawBattleItemForPost>();
 
+        service = YammAPIAdapter.getTokenService();
+
         hideActionBar();
-        setAPIService();
         setBattleFragments();
     }
 
@@ -61,17 +61,6 @@ public class BattleActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
-    private void setAPIService(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(setRequestInterceptorWithToken())
-                .build();
-
-        service = restAdapter.create(YammAPIService.class);
-    }
-
     /*
     * Custom Listener for Battle Activity InternetDialog for getInitialBattleItem
     * */

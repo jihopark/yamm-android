@@ -25,15 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -271,13 +263,7 @@ public class JoinActivity extends BaseActivity {
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setErrorHandler(new JoinErrorHandler())
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getJoinService();
 
         //To Prevent Double Fire
         joinConfirmButton.setEnabled(false);
@@ -346,14 +332,7 @@ public class JoinActivity extends BaseActivity {
         String email = ((EditText) joinLayout.findViewById(R.id.email_field)).getText().toString();
         String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(LoginActivity.setRequestInterceptorForLogin(email, password))
-                .build();
-
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getLoginService(email, password);
 
         service.userLogin(new YammAPIService.GrantType(), new Callback<YammAPIService.YammToken>() {
             @Override
@@ -478,10 +457,7 @@ public class JoinActivity extends BaseActivity {
     }
 
     private void sendVeriMessage(String phone){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(apiURL)
-                .build();
-        YammAPIService service = restAdapter.create(YammAPIService.class);
+        YammAPIService service = YammAPIAdapter.getService();
 
         service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
             @Override
@@ -498,65 +474,4 @@ public class JoinActivity extends BaseActivity {
             }
         });
     }
-
-    //Error Handler
-    public class JoinErrorHandler implements ErrorHandler {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Response r = cause.getResponse();
-
-            if (cause.isNetworkError()){
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
-            }
-            YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
-            Gson gson = new Gson();
-
-            error = gson.fromJson(responseToString(r), error.getClass());
-            Log.e("JoinErrorHandler/handleError",error.getMessage());
-
-
-            if (error.getCode().equals("DuplicateAccount")) {
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
-            }
-            else if (error.getCode().equals("IncorrectAuthCode"))
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE);
-            else if (error.getCode().equals("InvalidParam:password:numchars"))
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_MIN);
-            else if (error.getCode().equals("InvalidParam:password:specialchars"))
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_FORMAT);
-            else if (error.getCode().equals("InvalidParam:email"))
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.EMAIL_FORMAT);
-            else if (error.getCode().equals("InvalidParam:phone"))
-                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PHONE_FORMAT);
-
-            Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
-            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-        }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
-        }
-    }
-
-
 }
