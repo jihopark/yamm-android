@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HeaderListView/HeaderListView.iml" filepath="$PROJECT_DIR$/HeaderListView/HeaderListView.iml" />
       <module fileurl="file://$PROJECT_DIR$/Papreeca.iml" filepath="$PROJECT_DIR$/Papreeca.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Papreeca.iml" filepath="$PROJECT_DIR$/Papreeca.iml" />
       <module fileurl="file://$PROJECT_DIR$/Yamm.iml" filepath="$PROJECT_DIR$/Yamm.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sdk/sdk.iml" filepath="$PROJECT_DIR$/sdk/sdk.iml" />

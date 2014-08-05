@@ -13,9 +13,6 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 /**
  * Created by parkjiho on 6/19/14.
  */
@@ -98,9 +95,9 @@ public class YammImageView extends FrameLayout {
     }
 
     public void setDishImage(String name){
-
+/*
         //should be deleted
-        name = "샘플이미지";
+        name = "샘플";
 
         //encode korean into url format
         try {
@@ -129,7 +126,8 @@ public class YammImageView extends FrameLayout {
                     public void onError() {
                         Log.e("YammImageView/loadImage", "Image Loading Error ");
                     }
-                });
+                });*/
+        image.setImageDrawable(getResources().getDrawable(R.drawable.example));
     }
 
     public void loadImage(){

@@ -26,7 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +53,7 @@ public class DishFragment extends Fragment {
     public final static String SHARE = "SHARE";
     public final static String SEARCH_MAP = "SEARCHMAP";
 
-    private LinearLayout main_layout;
+    private RelativeLayout main_layout;
     private DishItem item;
     private int itemID;
     private Button searchMap, pokeFriend, dislike;
@@ -65,7 +65,7 @@ public class DishFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        main_layout = (LinearLayout) inflater.inflate(R.layout.fragment_dish, container, false);
+        main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_dish, container, false);
 
         isGroup = this.getArguments().getBoolean("isGroup");
 

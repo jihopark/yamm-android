@@ -155,11 +155,11 @@ public class MainFragment extends Fragment {
             return "";
         }
 
-        @Override
+       /* @Override
         public float getPageWidth(int position)
         {
             return 0.95f;
-        }
+        }*/
 
         @Override
         public void onPageScrolled(int i, float v, int i2) {
