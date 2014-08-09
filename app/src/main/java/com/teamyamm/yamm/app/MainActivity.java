@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -154,6 +156,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                             editor.commit();
 
                             goToYammFacebook();
+                            trackFBPageMixpanel();
                             dialog.dismiss();
                         }
                     };
@@ -288,7 +291,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     setMainFragment();
 
                     Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_LONG).show();
-
+                    trackNewRecommendationMixpanel();
                     return ;
                 }
             }
@@ -515,6 +518,19 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
         }
+    }
+
+    private void trackNewRecommendationMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("New Recommendation", props);
+        Log.i("MainActivity/trackNewRecommendationMixpanel","New Recommendation Tracked ");
+
+    }
+
+    private void trackFBPageMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("FB Page Like", props);
+        Log.i("MainActivity/trackFBPageMixpanel","FB Page Tracked ");
     }
 }
 

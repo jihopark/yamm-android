@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import com.kakao.KakaoLink;
 import com.kakao.KakaoParameterException;
 import com.kakao.KakaoTalkLinkMessageBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by parkjiho on 5/17/14.
@@ -46,10 +50,13 @@ public class PokeMethodDialog extends DialogFragment{
                 switch (position) {
                     case KAKAO:
                         sendKakaoLink();
+                        trackPokeFriendMixpanel("KAKAO");
                         break;
                     case YAMM:
+                        trackPokeFriendMixpanel("YAMM");
                         break;
                     case SMS:
+                        trackPokeFriendMixpanel("SMS");
                         break;
                 }
 
@@ -112,5 +119,24 @@ public class PokeMethodDialog extends DialogFragment{
 
             return rowView;
         }
+    }
+
+    private void trackPokeFriendMixpanel(String method){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try {
+                props.put("Method", method);
+            }catch(JSONException e){
+                Log.e("PokeMethodDialog/trackPokeFriendMixpanel","JSON Error");
+            }
+
+            base.getMixpanelAPI().track("Poke Friend", props);
+            Log.i("PokeMethodDialog/trackPokeFriendMixpanel","Poke Friend Tracked " + method);
+        }
+        else
+            Log.e("PokeMethodDialog/trackPokeFriendMixpanel","Wrong Activity");
+
     }
 }

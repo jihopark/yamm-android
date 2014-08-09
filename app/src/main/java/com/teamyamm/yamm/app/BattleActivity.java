@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -42,8 +45,9 @@ public class BattleActivity extends BaseActivity {
 
         hideActionBar();
         setBattleFragments();
-    }
 
+        trackBattleMixpanel();
+    }
     /*
     * Go to Home Screen When Back Button of IntroActivity
     * */
@@ -218,6 +222,16 @@ public class BattleActivity extends BaseActivity {
     }
 
 
+    private void trackBattleMixpanel(){
+        JSONObject props = new JSONObject();
+        try{
+            props.put("Battle Count", battleCount);
+        }catch(JSONException e){
+            Log.e("BattleActivity/trackBattleMixpanel","Error in JSON");
+            props = new JSONObject();
+        }
+        mixpanel.track("Battle", props);
+    }
 
 
 }

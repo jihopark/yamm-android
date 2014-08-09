@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.viewpagerindicator.TabPageIndicator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +109,9 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             }
             Log.d("aa",s);
             sendIntent.setData(Uri.parse("smsto:"+s));
+
+            trackInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
+
         } catch (Exception e) {
             makeErrorToast(getString(R.string.invite_sms_error_message),Toast.LENGTH_SHORT);
             Log.e("InviteActivity/startSMSIntent","SMS Error");
@@ -188,6 +194,20 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         @Override
         public void onPageScrollStateChanged(int i) {
         }
+    }
+
+    public void trackInviteMixpanel(String method, int count){
+        JSONObject props = new JSONObject();
+
+        try{
+            props.put("method", method);
+            props.put("count", count);
+        }catch(JSONException e){
+            Log.e("InviteActivity/trackInviteMixpanel","JSON Error");
+        }
+
+        mixpanel.track("Invite", props);
+        Log.i("InviteActivity/trackInviteMixpanel","Invite Tracked " + method);
     }
 
 

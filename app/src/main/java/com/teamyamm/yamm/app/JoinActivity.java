@@ -25,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -92,6 +94,7 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
+        setMixpanelEvent();
     }
 
     @Override
@@ -277,6 +280,7 @@ public class JoinActivity extends BaseActivity {
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 progressDialog.hide();
+                setMixpanelAlias();
                 logInAfterJoin();
             }
 
@@ -473,5 +477,21 @@ public class JoinActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.verification_error_message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setMixpanelAlias(){
+        mixpanel.alias(emailText.getText().toString(), null);
+        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Unique ID with email "+ emailText.getText().toString());
+
+        mixpanel.getPeople().identify(emailText.getText().toString());
+        mixpanel.getPeople().set("name",nameText.getText().toString());
+
+        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ nameText.getText().toString());
+
+    }
+
+    private void setMixpanelEvent(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Joining", props);
     }
 }

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -42,12 +43,12 @@ import retrofit.RestAdapter;
  */
 public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
+
+    private static final String MIXPANEL_TOKEN = "5bebb04a41c88c1fad928b5526990d03";
+    protected MixpanelAPI mixpanel;
+
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    public static String apiURL = "https://yamm-api.ap01.aws.af.cm/";
-    public final static int ANIMATION_SPEED = 100;
-    public final static int SUCCESS_RESULT_CODE = 200;
-    public final static int FAILURE_RESULT_CODE = 400;
     protected SharedPreferences prefs;
 
     @Override
@@ -60,6 +61,10 @@ public class BaseActivity extends ActionBarActivity {
         setInternetConnectionAlert();
 
         YammAPIAdapter.setToken(getAuthToken());
+
+        mixpanel =
+                MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN);
+
     }
 
 
@@ -71,6 +76,15 @@ public class BaseActivity extends ActionBarActivity {
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
     }
+
+    @Override
+    protected void onDestroy() {
+        mixpanel.flush();
+        super.onDestroy();
+    }
+
+    public MixpanelAPI getMixpanelAPI(){ return mixpanel; }
+
 
     /*
     * returns screen width

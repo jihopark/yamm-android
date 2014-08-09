@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,8 @@ public class GroupRecommendationActivity extends BaseActivity {
         loadBundle();
         setSelectedItems();
         setFragment();
+
+        trackGroupRecommendation();
     }
 
     private void setSelectedItems(){
@@ -107,5 +112,18 @@ public class GroupRecommendationActivity extends BaseActivity {
         Log.i("GroupRecommendationActivity/loadBundle", "Selected Friends : " + selectedFriend);
         Log.i("GroupRecommendationActivity/loadBundle","Selected Time : " + selectedTime);
 
+    }
+
+    private void trackGroupRecommendation(){
+        JSONObject props = new JSONObject();
+        try{
+            props.put("count", selectedFriend.size());
+            props.put("time", selectedTime);
+
+        }catch(JSONException e){
+            Log.e("GroupRecommendationActivity/trackGroupRecommendation","JSON Error");
+        }
+        mixpanel.track("Group Recommendation", props);
+        Log.i("GroupRecommendationActivity/trackGroupRecommendation","Group Recommendation Tracked");
     }
 }

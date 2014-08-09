@@ -113,6 +113,8 @@ public class LoginActivity extends BaseActivity {
                 SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
 
+                setMixpanelIdentity();
+
                 Toast.makeText(getApplicationContext(), "로그인 되었습니다", Toast.LENGTH_SHORT).show();
                 goToActivity(MainActivity.class);
             }
@@ -134,6 +136,11 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void setMixpanelIdentity(){
+        mixpanel.identify(emailField.getText().toString());
+        Log.i("LoginActivity/setMixpanelIdentity","Setting Unique ID with email "+ emailField.getText().toString());
     }
 
     public static RequestInterceptor setRequestInterceptorForLogin(String email, String pw){

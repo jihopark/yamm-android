@@ -32,6 +32,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -118,7 +121,6 @@ public class DishFragment extends Fragment {
                 pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
 
                 addDishToPositive(SHARE, null);
-
             }
         });
 
@@ -136,6 +138,7 @@ public class DishFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.i("DishFragment/onClick","Dislike pressed for " + getDishItem().getName());
+                trackDislikeMixpanel();
                 Toast.makeText(getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
 
                 YammAPIService service = YammAPIAdapter.getDislikeService();
@@ -145,6 +148,7 @@ public class DishFragment extends Fragment {
                     public void success(DishItem dishItem, Response response) {
                         Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
                         changeInDishItems(getDishItem(), dishItem);
+                        trackDislikeMixpanel();
                     }
 
                     @Override
@@ -344,6 +348,7 @@ public class DishFragment extends Fragment {
         }
 
         addDishToPositive(SEARCH_MAP, place);
+        trackSearchMapMixpanel(place);
 
         if (place == null){
             Log.e("DishFragment/getLocationURI","Unable to locate user");
@@ -408,6 +413,34 @@ public class DishFragment extends Fragment {
         return null;
     }
 
+    private void trackSearchMapMixpanel(String place){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try {
+                props.put("Place", place);
+            }catch(JSONException e){
+                Log.e("DishFragment/trackSearchMapMixpanel","JSON Error");
+            }
+
+            base.getMixpanelAPI().track("Search Map", props);
+            Log.i("DishFragment/trackSearchMapMixpanel","Search Map Tracked " + place);
+        }
+        else
+            Log.e("DishFragment/trackSearchMapMixpanel","Wrong Activity");
+
+    }
+
+    private void trackDislikeMixpanel(){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            base.getMixpanelAPI().track("Dislike", props);
+            Log.i("DishFragment/trackDislikeMixpanel","Dislike Tracked");
+        }
+    }
 
 
 }

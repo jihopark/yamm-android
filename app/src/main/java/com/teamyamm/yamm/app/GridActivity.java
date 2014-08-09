@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -43,7 +45,9 @@ public class GridActivity extends BaseActivity {
         checkbox = (CheckBox) findViewById(R.id.grid_checkbox);
         checkbox.setChecked(false);
         checkbox.setClickable(false);
+        trackSelectingDislkeFoodMixpanel();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -244,4 +248,9 @@ public class GridActivity extends BaseActivity {
         return adapter;
     }
 
+    private void trackSelectingDislkeFoodMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Selecting Dislike Food", props);
+        Log.i("GridActivity/trackSelectingDislkeFoodMixpanell","Selecting Dislike Food Tracked ");
+    }
 }
