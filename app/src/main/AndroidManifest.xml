@@ -118,6 +118,16 @@
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
+        <!-- Poke Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.PokeActivity"
+            android:label="@string/title_activity_poke"
+            android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.MainActivity" />
+        </activity>
+
         <!-- For KaKao SDK -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"

@@ -15,16 +15,18 @@ import java.util.List;
 public class YammItemsListAdapter extends BaseAdapter {
     private List<YammItem> items;
     private Context context;
+    private int contentType;
 
     public YammItemsListAdapter(Context context){
         this.context = context;
         items = new ArrayList<YammItem>();
     }
 
-    public YammItemsListAdapter(Context context, List<YammItem> list){
+    public YammItemsListAdapter(Context context, List<YammItem> list, int contentType){
         this.context = context;
         items = list;
         Collections.sort(items);
+        this.contentType = contentType;
     }
 
 
@@ -32,7 +34,7 @@ public class YammItemsListAdapter extends BaseAdapter {
         YammItemView view = null;
 
         if (convertView == null)
-            view = new YammItemView(context, getItem(position));
+            view = new YammItemView(context, getItem(position), contentType);
         else{
             view = (YammItemView) convertView;
             view.setItem(getItem(position));

@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by parkjiho on 5/26/14.
  */
-public class FriendActivity extends BaseActivity implements FriendListInterface {
+public class FriendActivity extends BaseActivity implements FriendListInterface, DatePickerFragmentInterface {
 
 
     public final static int FRIEND_ACTIVITY_REQUEST_CODE = 1001;
@@ -60,7 +60,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
         //Set Fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         friendsFragment = new FriendsFragment();
-        fragmentTransaction.add(R.id.friend_activity_container, friendsFragment, getFragmentTag());
+        fragmentTransaction.add(R.id.friend_activity_container, friendsFragment, getFragmentTag(friendsFragment.getContentType()));
         fragmentTransaction.commit();
 
         setDatePickSpinner();
@@ -94,12 +94,19 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
         }
     }
 
+    /*
+    * For DatePickerFragmentInterface
+    * */
+    public YammDatePickerFragment getDatePickerFragment(){return datePickerFragment;}
+    public void setDatePickerFragment(YammDatePickerFragment fragment){ datePickerFragment = fragment; }
+    public ArrayAdapter<CharSequence> getSpinnerAdapter(){return spinnerAdapter; }
+
 
     /*
     * For FriendListInterface
     * */
 
-    public void setConfirmButtonEnabled(boolean b){
+    public void setConfirmButtonEnabled(boolean b, int type){
         if (enableButtonFlag != b) {
             enableButtonFlag = b;
             if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
@@ -111,11 +118,11 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
         }
     }
 
-    public List<YammItem> getList(){
+    public List<YammItem> getList(int type){
         return FriendsFragment.setFriendListToYammItemList(friends);
     }
 
-    public String getFragmentTag(){
+    public String getFragmentTag(int type){
         return "ff";
     }
 
@@ -170,7 +177,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface 
                 // An item was selected. You can retrieve the selected item using
                 // parent.getItemAtPosition(pos)
                 if (pos == spinnerAdapter.getCount()-1 ){
-                    datePickerFragment = new YammDatePickerFragment();
+                    datePickerFragment = new YammDatePickerFragment(FriendActivity.this);
                     datePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 }
             }

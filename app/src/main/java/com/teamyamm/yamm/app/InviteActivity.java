@@ -52,11 +52,11 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
     * For FriendListInterface
     * */
 
-    public List<YammItem> getList(){
+    public List<YammItem> getList(int type){
         return contactList;
     }
 
-    public void setConfirmButtonEnabled(boolean b) {
+    public void setConfirmButtonEnabled(boolean b, int type) {
 
         if (enableButtonFlag != b) {
             enableButtonFlag = b;
@@ -70,7 +70,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         }
     }
 
-    public String getFragmentTag(){
+    public String getFragmentTag(int type){
         return "android:switcher:" + pager.getId() + ":" + 0;
     }
 

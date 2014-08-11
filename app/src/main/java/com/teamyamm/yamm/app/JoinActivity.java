@@ -485,9 +485,9 @@ public class JoinActivity extends BaseActivity {
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Unique ID with email "+ emailText.getText().toString());
 
         mixpanel.getPeople().identify(emailText.getText().toString());
-        mixpanel.getPeople().set("name",nameText.getText().toString());
+        mixpanel.getPeople().set("email",emailText.getText().toString());
 
-        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ nameText.getText().toString());
+        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());
 
     }
 

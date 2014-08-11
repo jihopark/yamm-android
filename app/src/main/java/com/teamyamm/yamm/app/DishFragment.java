@@ -16,7 +16,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,10 +116,13 @@ public class DishFragment extends Fragment {
         pokeFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment pokeMethodDialog = new PokeMethodDialog();
-                pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
-
+                //DialogFragment pokeMethodDialog = new PokeMethodDialog();
+                //pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
                 addDishToPositive(SHARE, null);
+
+                Intent intent = new Intent(getActivity(), PokeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
         });
 

@@ -20,6 +20,7 @@ public class YammItemView extends LinearLayout {
     private CheckBox itemCheckbox;
     private FriendsFragment fragment;
     private Context context;
+    private int contentType;
 
     public YammItemView(Context context) {
         super(context);
@@ -29,11 +30,12 @@ public class YammItemView extends LinearLayout {
         super(context, attrs);
     }
 
-    public YammItemView(Context context, YammItem i) {
+    public YammItemView(Context context, YammItem i, int type) {
         super(context);
 
         this.context = context;
         this.item = i;
+        contentType = type;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
@@ -41,8 +43,7 @@ public class YammItemView extends LinearLayout {
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
 
-        fragment = (FriendsFragment) ((BaseActivity)context).getSupportFragmentManager().findFragmentByTag(((FriendListInterface)context).getFragmentTag());
-
+        fragment = (FriendsFragment) ((BaseActivity)context).getSupportFragmentManager().findFragmentByTag(((FriendListInterface)context).getFragmentTag(contentType));
 
         setItem(item);
         itemCheckbox.setOnClickListener(new OnClickListener() {

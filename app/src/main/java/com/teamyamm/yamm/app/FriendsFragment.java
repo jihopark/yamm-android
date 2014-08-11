@@ -23,6 +23,8 @@ import java.util.List;
  * Created by parkjiho on 5/19/14.
  */
 public class FriendsFragment extends Fragment {
+    public final static int YAMM = 1;
+    public final static int CONTACT = 2;
 
 
     private LinearLayout yammItemLayout;
@@ -37,8 +39,12 @@ public class FriendsFragment extends Fragment {
     private YammItemsListAdapter adapter;
     private TextView friendsListEmptyText;
 
+    private int contentType = 0;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initFragment();
+
         yammItemLayout = (LinearLayout) inflater.inflate(R.layout.fragment_friends, container, false);
         selectedItemsLayout = (RelativeLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
         selectedItemsTextView = (TextView) yammItemLayout.findViewById(R.id.selected_items_textview);
@@ -55,6 +61,13 @@ public class FriendsFragment extends Fragment {
         yammItemLayout.addView(friendsListEmptyText);
 
         return yammItemLayout;
+    }
+
+    private void initFragment(){
+        Bundle bundle =  this.getArguments();
+
+        if (bundle!=null)
+            contentType = bundle.getInt("contentType");
     }
 
     public void addSelectedItem(YammItem yammItem){
@@ -76,7 +89,7 @@ public class FriendsFragment extends Fragment {
     }
 
     public void setConfirmButtonEnabled(boolean b){
-        ((FriendListInterface)getActivity()).setConfirmButtonEnabled(b);
+        ((FriendListInterface)getActivity()).setConfirmButtonEnabled(b, contentType);
     }
 
     /*
@@ -126,8 +139,8 @@ public class FriendsFragment extends Fragment {
     }
 
     private void setYammItemList(){
-        itemList = ((FriendListInterface) getActivity()).getList();
-        adapter = new YammItemsListAdapter(getActivity(), itemList);
+        itemList = ((FriendListInterface) getActivity()).getList(contentType);
+        adapter = new YammItemsListAdapter(getActivity(), itemList, contentType);
         friendListView.setAdapter(adapter);
 
         friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,5 +161,9 @@ public class FriendsFragment extends Fragment {
             newList.add(i);
 
         return newList;
+    }
+
+    public int getContentType(){
+        return contentType;
     }
 }

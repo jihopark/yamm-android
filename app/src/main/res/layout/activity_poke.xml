@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/date_pick_spinner"/>
+    <com.viewpagerindicator.TabPageIndicator
+        android:layout_below="@+id/date_pick_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/poke_page_indicator"
+        />
+    <android.support.v4.view.ViewPager
+        android:layout_below="@+id/poke_page_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/poke_view_pager"/>
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/poke_contact_confirm"
+        android:id="@+id/poke_contact_confirm"
+        android:visibility="gone"/>
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/poke_yamm_confirm"
+        android:id="@+id/poke_yamm_confirm"
+        android:visibility="gone"/>
+</RelativeLayout>

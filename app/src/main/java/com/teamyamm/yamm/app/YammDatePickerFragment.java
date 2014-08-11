@@ -18,6 +18,11 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
     public String result = "";
     private boolean invalid = false;
     private int todayY, todayM, todayD;
+    private DatePickerFragmentInterface activity;
+
+    public YammDatePickerFragment(DatePickerFragmentInterface activity){
+        this.activity = activity;
+    }
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
@@ -41,14 +46,13 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
             Log.i("onDateSet","invalid date");
             //Alert invalid date
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            final FriendActivity activity = (FriendActivity) getActivity();
             builder.setMessage(R.string.invalid_date_message)
                     .setTitle(R.string.invalid_date_title)
                     .setPositiveButton(R.string.dialog_positive,new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            activity.datePickerFragment = new YammDatePickerFragment();
-                            activity.datePickerFragment.show(activity.getSupportFragmentManager(), "timePicker");
+                            activity.setDatePickerFragment(new YammDatePickerFragment(activity));
+                            activity.getDatePickerFragment().show(((BaseActivity)activity).getSupportFragmentManager(), "timePicker");
 
                         }
                     });

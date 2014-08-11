@@ -1,0 +1,293 @@
+package com.teamyamm.yamm.app;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.viewpagerindicator.TabPageIndicator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Created by parkjiho on 8/11/14.
+ */
+public class PokeActivity extends BaseActivity implements FriendListInterface, DatePickerFragmentInterface{
+
+    private Spinner datePickSpinner;
+    public YammDatePickerFragment datePickerFragment;
+    public ArrayAdapter<CharSequence> spinnerAdapter;
+
+    private ViewPager pager;
+    private List<YammItem> yammFriendsList, contactFriendsList;
+    private FriendsFragment yammFriendsFragment, contactFriendsFragment;
+    private boolean yammEnableButtonFlag = false, contactEnableButtonFlag = false;
+    private Button yammConfirmButton, contactConfirmButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_poke);
+
+        setContactList();
+        setFriendList();
+        setDatePickSpinner();
+
+        setButtons();
+        setViewPager();
+
+        trackEnteredPokeFriendMixpanel();
+
+    }
+
+    private void setContactList(){
+        HashMap<String, String> phoneNameMap;
+        int count = 0;
+
+        contactFriendsList = new ArrayList<YammItem>();
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        String s = prefs.getString(getString(R.string.PHONE_NAME_MAP),"none");
+
+        if (!s.equals("none")){
+            phoneNameMap = fromStringToHashMap(s);
+            for (String i : phoneNameMap.keySet()){
+                YammItem item = new Friend(count++, phoneNameMap.get(i), i);
+                contactFriendsList.add(item);
+            }
+        }
+        Log.i("PokeActivity/setContactList", "Successfully loaded contacts");
+    }
+    private void setFriendList(){
+        //Load Contacts From SharedPrefs
+        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+
+        List<Friend> list = fromStringToFriendList(prefs.getString(getString(R.string.FRIEND_LIST),"none"));
+
+        if (list == null){
+            Log.e("PokeActivity/setFriendList", "Failed to load contacts from shared pref");
+            Toast.makeText(this, getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
+            finish();
+        }
+        else{
+            Log.i("PokeActivity/setFriendList", "Successfully loaded friends");
+        }
+        yammFriendsList = FriendsFragment.setFriendListToYammItemList(list);
+    }
+
+    private void setButtons(){
+        yammConfirmButton = (Button) findViewById(R.id.poke_yamm_confirm);
+        contactConfirmButton = (Button) findViewById(R.id.poke_contact_confirm);
+
+        yammConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("PokeActivity/onClickListener","YammFriend Onclicklistener " + yammFriendsFragment.selectedItems);
+                Log.i("PokeActivity/onClickListener","Selected Time" + datePickSpinner.getSelectedItem());
+                pokeWithYamm();
+            }
+        });
+
+        contactConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("PokeActivity/onClickListener","ContactFriend Onclicklistener " + contactFriendsFragment.selectedItems);
+                Log.i("PokeActivity/onClickListener","Selected Time" + datePickSpinner.getSelectedItem());
+                pokeWithSMS();
+            }
+        });
+    }
+
+    private void pokeWithYamm(){
+        trackPokeFriendMixpanel("YAMM",yammFriendsFragment.selectedItems.size());
+    }
+
+    private void pokeWithSMS(){
+        trackPokeFriendMixpanel("SMS",contactFriendsFragment.selectedItems.size());
+    }
+
+    /*
+    * For DatePickerFragmentInterface
+    * */
+    public YammDatePickerFragment getDatePickerFragment(){return datePickerFragment;}
+    public void setDatePickerFragment(YammDatePickerFragment fragment){ datePickerFragment = fragment; }
+    public ArrayAdapter<CharSequence> getSpinnerAdapter(){return spinnerAdapter; }
+
+    /*
+    * For FriendListInterface
+    * */
+
+    public List<YammItem> getList(int type){
+        Log.i("PokeActivity/getList","Type is " + type);
+        if (type == FriendsFragment.YAMM)
+            return yammFriendsList;
+
+        return contactFriendsList;
+    }
+
+    public void setConfirmButtonEnabled(boolean b, int type) {
+        Log.i("PokeActivity/setConfirmButtonEnabled","Type is " + type);
+
+        if (type == FriendsFragment.YAMM){
+            if (yammEnableButtonFlag != b){
+                yammEnableButtonFlag = b;
+                if (yammEnableButtonFlag)
+                    yammConfirmButton.setVisibility(View.VISIBLE);
+                else
+                    yammConfirmButton.setVisibility(View.GONE);
+            }
+        }
+        else if (type == FriendsFragment.CONTACT){
+            if (contactEnableButtonFlag != b){
+                contactEnableButtonFlag = b;
+                if (contactEnableButtonFlag)
+                    contactConfirmButton.setVisibility(View.VISIBLE);
+                else
+                    contactConfirmButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public String getFragmentTag(int type){
+        if (type == FriendsFragment.YAMM)
+            return "android:switcher:" + pager.getId() + ":" + 0;
+        return "android:switcher:" + pager.getId() + ":" + 1;
+    }
+
+    private void setViewPager(){
+        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.poke_page_indicator);
+        PokeFragmentPagerAdapter adapter= new PokeFragmentPagerAdapter(getSupportFragmentManager());
+
+        pager = (ViewPager) findViewById(R.id.poke_view_pager);
+        pager.setAdapter(adapter);
+        indicator.setViewPager(pager);
+        indicator.setOnPageChangeListener(adapter);
+    }
+
+    private class PokeFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+        private final int NUMBER_OF_PAGES = 3;
+        private String[] titles = {"얌친","주소록","카카오톡"};
+
+        public PokeFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int index) {
+
+            switch (index){
+                case 0:
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("contentType", FriendsFragment.YAMM);
+                    yammFriendsFragment = new FriendsFragment();
+                    yammFriendsFragment.setArguments(bundle);
+
+                    return yammFriendsFragment;
+                case 1:
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putInt("contentType",FriendsFragment.CONTACT);
+
+                    contactFriendsFragment = new FriendsFragment();
+                    contactFriendsFragment.setArguments(bundle2);
+
+                    return contactFriendsFragment;
+                case 2:
+                    return new KakaoFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return NUMBER_OF_PAGES;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position){
+            return titles[position];
+        }
+
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {
+        }
+
+        @Override
+        public void onPageSelected(int i) {
+            if (i==0) {
+                contactConfirmButton.setVisibility(View.GONE);
+                if (yammEnableButtonFlag)
+                    yammConfirmButton.setVisibility(View.VISIBLE);
+                else
+                    yammConfirmButton.setVisibility(View.GONE);
+            }
+            else if (i==1){
+                yammConfirmButton.setVisibility(View.GONE);
+                if (contactEnableButtonFlag)
+                    contactConfirmButton.setVisibility(View.VISIBLE);
+                else
+                    contactConfirmButton.setVisibility(View.GONE);
+            }
+            else{
+                contactConfirmButton.setVisibility(View.GONE);
+                yammConfirmButton.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+        }
+    }
+
+    private void setDatePickSpinner(){
+        datePickSpinner = (Spinner) findViewById(R.id.date_pick_spinner);
+        spinnerAdapter = ArrayAdapter.createFromResource(PokeActivity.this, R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        datePickSpinner.setAdapter(spinnerAdapter);
+        datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                // An item was selected. You can retrieve the selected item using
+                // parent.getItemAtPosition(pos)
+                if (pos == spinnerAdapter.getCount()-1 ){
+                    datePickerFragment = new YammDatePickerFragment(PokeActivity.this);
+                    datePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent) { }
+
+        });
+    }
+
+    private void trackPokeFriendMixpanel(String method, int count){
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Method", method);
+            props.put("Count", count);
+        }catch(JSONException e){
+            Log.e("PokeMethodDialog/trackPokeFriendMixpanel","JSON Error");
+        }
+
+        mixpanel.track("Poke Friend", props);
+        Log.i("PokeMethodDialog/trackPokeFriendMixpanel","Poke Friend Tracked " + method + count);
+    }
+
+    private void trackEnteredPokeFriendMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Entered Poke Friend", props);
+        Log.i("PokeMethodDialog/trackEnteredPokeFriendMixpanel","Entered Poke Friend Tracked ");
+    }
+
+}
