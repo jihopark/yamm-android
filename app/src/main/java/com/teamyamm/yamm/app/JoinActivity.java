@@ -55,6 +55,8 @@ public class JoinActivity extends BaseActivity {
         configEditTexts();
         configJoinConfirmButton();
         getPhoneNumber();
+        trackJoiningMixpanel();
+
     }
 
     private void getPhoneNumber(){
@@ -94,7 +96,6 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
-        setMixpanelEvent();
     }
 
     @Override
@@ -490,8 +491,9 @@ public class JoinActivity extends BaseActivity {
 
     }
 
-    private void setMixpanelEvent(){
+    private void trackJoiningMixpanel(){
         JSONObject props = new JSONObject();
         mixpanel.track("Joining", props);
+        Log.i("JoinActivity/trackJoiningMixpanel","Joining Tracked");
     }
 }

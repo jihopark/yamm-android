@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         loadDishes();
 
         friendPickButton.setEnabled(true);
-        Log.i("MainActivity","Execute Read Contact Async Task");
+        Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
         readContactAsyncTask.execute();
@@ -363,6 +363,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 v.setEnabled(false); //To prevent double fire
                 Log.i("MainActivity/onClick", "FriendActivity called");
+
+                trackEnteredGroupRecommendationMixpanel();
+
                 startActivity(intent);
             }
         });
@@ -531,6 +534,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         JSONObject props = new JSONObject();
         mixpanel.track("FB Page Like", props);
         Log.i("MainActivity/trackFBPageMixpanel","FB Page Tracked ");
+    }
+
+    private void trackEnteredGroupRecommendationMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Entered Group Recommendation", props);
+        Log.i("MainActivity/trackEnteredGroupRecommendationMixpanel","Entered Group Recommendation Tracked ");
     }
 }
 

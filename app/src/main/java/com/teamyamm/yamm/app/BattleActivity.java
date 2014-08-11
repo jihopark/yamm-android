@@ -45,8 +45,6 @@ public class BattleActivity extends BaseActivity {
 
         hideActionBar();
         setBattleFragments();
-
-        trackBattleMixpanel();
     }
     /*
     * Go to Home Screen When Back Button of IntroActivity
@@ -202,6 +200,8 @@ public class BattleActivity extends BaseActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(MainActivity.loggedFirstTime, true);
                 editor.commit();
+
+                trackBattleMixpanel();
 
                 goToActivity(MainActivity.class);
             }

@@ -44,6 +44,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         setViewPager();
         setConfirmButton();
 
+        trackEnteredInviteMixpanel();
     }
 
 
@@ -110,7 +111,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             Log.d("aa",s);
             sendIntent.setData(Uri.parse("smsto:"+s));
 
-            trackInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
+            trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
 
         } catch (Exception e) {
             makeErrorToast(getString(R.string.invite_sms_error_message),Toast.LENGTH_SHORT);
@@ -196,18 +197,24 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         }
     }
 
-    public void trackInviteMixpanel(String method, int count){
+    public void trackSendInviteMixpanel(String method, int count){
         JSONObject props = new JSONObject();
 
         try{
             props.put("method", method);
             props.put("count", count);
         }catch(JSONException e){
-            Log.e("InviteActivity/trackInviteMixpanel","JSON Error");
+            Log.e("InviteActivity/trackSendInviteMixpanel","JSON Error");
         }
 
-        mixpanel.track("Invite", props);
-        Log.i("InviteActivity/trackInviteMixpanel","Invite Tracked " + method);
+        mixpanel.track("Send Invite", props);
+        Log.i("InviteActivity/trackSendInviteMixpanel","Send Invite Tracked " + method);
+    }
+
+    private void trackEnteredInviteMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Entered Invite", props);
+        Log.i("InviteActivity/trackEnteredInviteMixpanel","Entered Invite Tracked ");
     }
 
 

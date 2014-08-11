@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,6 +20,8 @@ import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -110,6 +113,7 @@ public class MainFragment extends Fragment {
         private final int DEFAULT_NUMBER_OF_DISHES = 4;
         private int numPage;
         private ArrayList<DishFragment> fragments;
+        private boolean hasReachedEnd = false;
 
         public DishFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -171,6 +175,12 @@ public class MainFragment extends Fragment {
                 currentPage = DEFAULT_NUMBER_OF_DISHES - 1;
             else
                 currentPage = i;
+
+            if (i == DEFAULT_NUMBER_OF_DISHES - 1 && !hasReachedEnd){
+                trackEndOfRecommendationMixpanel();
+                hasReachedEnd = true;
+            }
+
         }
 
         @Override
@@ -222,8 +232,16 @@ public class MainFragment extends Fragment {
         };
 
         Log.i("MainFragment/setLocationManagerListener","Location Manager and Listener Set");
+    }
 
-
+    private void trackEndOfRecommendationMixpanel(){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            base.getMixpanelAPI().track("End Of Recommendation", props);
+            Log.i("MainFragment/trackEndOfRecommendationMixpanel","End of Recommendation Tracked");
+        }
     }
 
 }

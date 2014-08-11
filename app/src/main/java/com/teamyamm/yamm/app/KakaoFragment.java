@@ -59,11 +59,11 @@ public class KakaoFragment extends Fragment {
             kakaoLink.sendMessage(linkContents, getActivity());
 
             if (getActivity() instanceof InviteActivity) {
-                ((InviteActivity)getActivity()).trackInviteMixpanel("KAKAO", 0);
+                ((InviteActivity)getActivity()).trackSendInviteMixpanel("KAKAO", 0);
             }
 
         }catch(KakaoParameterException e){
-            Log.e("KaKaoFragment/sendKakaLink", "Kakao link init error");
+            Log.e("KaKaoFragment/sendKakaoLink", "Kakao link init error");
             e.printStackTrace();
         }
     }

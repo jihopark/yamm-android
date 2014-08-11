@@ -39,7 +39,7 @@ public class GroupRecommendationActivity extends BaseActivity {
         setSelectedItems();
         setFragment();
 
-        trackGroupRecommendation();
+        trackReceivedGroupRecommendation();
     }
 
     private void setSelectedItems(){
@@ -114,16 +114,16 @@ public class GroupRecommendationActivity extends BaseActivity {
 
     }
 
-    private void trackGroupRecommendation(){
+    private void trackReceivedGroupRecommendation(){
         JSONObject props = new JSONObject();
         try{
             props.put("count", selectedFriend.size());
             props.put("time", selectedTime);
 
         }catch(JSONException e){
-            Log.e("GroupRecommendationActivity/trackGroupRecommendation","JSON Error");
+            Log.e("GroupRecommendationActivity/trackReceivedGroupRecommendation","JSON Error");
         }
-        mixpanel.track("Group Recommendation", props);
-        Log.i("GroupRecommendationActivity/trackGroupRecommendation","Group Recommendation Tracked");
+        mixpanel.track("Received Group Recommendation", props);
+        Log.i("GroupRecommendationActivity/trackReceivedGroupRecommendation","Received Group Recommendation Tracked");
     }
 }
