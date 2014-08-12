@@ -1,16 +1,16 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-        <color name="default_color">#FFFF6000</color>
+    <color name="default_color">#ffe0323b</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>
     <color name="button_disabled_text">#80ffffff</color>
-    <color name="button_enabled_background">#e5ff6000</color>
-    <color name="button_disabled_background">#99ff6000</color>
+    <color name="button_enabled_background">#e5e0323b</color>
+    <color name="button_disabled_background">#99e0323b</color>
 
-    <color name="agreement_text_color">#ffad663c</color>
-    <color name="agreement_link_color">#ff033f8a</color>
-    <color name="join_text_color">#ff4d4d4d</color>
+    <color name="agreement_text_color">#ffa39a8f</color>
+    <color name="agreement_link_color">#ff009bfe</color>
+    <color name="join_text_color">#ff626054</color>
     <color name="error_color">#ffff0000</color>
 </resources>

@@ -2,6 +2,6 @@
     <item
         android:left="15dp"
         android:right="15dp">
-        <bitmap android:src="@drawable/back_button" />
+        <bitmap android:src="@drawable/back" />
     </item>
 </layer-list>

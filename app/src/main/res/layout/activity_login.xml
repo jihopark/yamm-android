@@ -14,20 +14,41 @@
         android:paddingTop="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
-        <EditText
-            android:hint="@string/verification_email"
-            android:id="@+id/email_field"
-            style="@style/LoginEditText"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="10dp"
-            />
-        <EditText
-            android:hint="@string/verification_pw"
-            android:id="@+id/pw_field"
-            style="@style/LoginEditText"
-            android:inputType="textPassword"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <EditText
+                android:hint="@string/verification_email"
+                android:id="@+id/email_field"
+                style="@style/LoginEditText"
+                android:inputType="textEmailAddress"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/LoginErrorImage"
+                android:id="@+id/email_field_error"
+                android:visibility="gone"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            />
+            >
+            <EditText
+                android:hint="@string/verification_pw"
+                android:id="@+id/pw_field"
+                style="@style/LoginEditText"
+                android:inputType="textPassword"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/LoginErrorImage"
+                android:id="@+id/login_field_error"
+                android:visibility="gone"/>
+        </RelativeLayout>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +64,7 @@
             android:layout_marginTop="28dp"
             android:textSize="16sp"
             android:gravity="center_horizontal"
-            android:textColor="#ff033f8a"
+            android:textColor="#ff00e4ff"
             android:shadowColor="#ffffffff"
             android:shadowRadius="20"
             />

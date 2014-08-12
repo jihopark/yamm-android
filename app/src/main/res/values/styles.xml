@@ -79,7 +79,7 @@
         <item name="android:layout_height">46dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:paddingLeft">20dp</item>
-        <item name="android:textColorHint">#ffcacaca</item>
+        <item name="android:textColorHint">#ffaaa8a1</item>
         <item name="android:background">@drawable/textlines</item>
         <item name="android:textColor">@color/join_text_color</item>
     </style>
@@ -123,8 +123,17 @@
         <item name="android:layout_marginRight">14dp</item>
     </style>
 
+    <style name="LoginErrorImage">
+        <item name="android:src">@drawable/x</item>
+        <item name="android:layout_marginRight">14dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
     <style name="ErrorToast">
-        <item name="android:background">#e5ff0000</item>
+        <item name="android:background">#b3430000</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:layout_height">26dp</item>
         <item name="android:layout_width">match_parent</item>

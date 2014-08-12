@@ -29,7 +29,7 @@
         <Button
             style="@style/IntroButton"
             android:layout_marginBottom="14dp"
-            android:textColor="#ffd55000"
+            android:textColor="#ffe0323b"
             android:background="#99ffffff"
             android:text="@string/intro_join_button"
             android:id="@+id/join_button"/>
@@ -37,7 +37,7 @@
             style="@style/IntroButton"
             android:layout_marginBottom="18dp"
             android:textColor="#ffffffff"
-            android:background="#ccff6000"
+            android:background="#e5e0323b"
             android:text="@string/intro_login_button"
             android:id="@+id/login_button"/>
     </LinearLayout>
