@@ -122,6 +122,11 @@ public class DishFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), PokeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("dish",new Gson().toJson(item, DishItem.class));
+
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.json.JSONException;
@@ -38,11 +39,15 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     private boolean yammEnableButtonFlag = false, contactEnableButtonFlag = false;
     private Button yammConfirmButton, contactConfirmButton;
 
+    private DishItem currentItem;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poke);
 
+        getBundle();
         setContactList();
         setFriendList();
         setDatePickSpinner();
@@ -52,6 +57,10 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
 
         trackEnteredPokeFriendMixpanel();
 
+    }
+    private void getBundle(){
+        currentItem = new Gson().fromJson(getIntent().getExtras().getString("dish"), DishItem.class);
+        Log.i("PokeActivity/getBundle","Current Dish Item " + currentItem.getName());
     }
 
     private void setContactList(){
@@ -112,11 +121,11 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
 
     private void pokeWithYamm(){
-        trackPokeFriendMixpanel("YAMM",yammFriendsFragment.selectedItems.size());
+        trackPokeFriendMixpanel("YAMM",yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
     }
 
     private void pokeWithSMS(){
-        trackPokeFriendMixpanel("SMS",contactFriendsFragment.selectedItems.size());
+        trackPokeFriendMixpanel("SMS",contactFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName() );
     }
 
     /*
@@ -205,7 +214,16 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
 
                     return contactFriendsFragment;
                 case 2:
-                    return new KakaoFragment();
+                    Bundle bundle3 = new Bundle();
+
+                    bundle3.putInt(KakaoFragment.TYPE, KakaoFragment.POKE);
+                    bundle3.putString(KakaoFragment.DISH, getIntent().getExtras().getString("dish"));
+                    bundle3.putString(KakaoFragment.TIME, datePickSpinner.getSelectedItem().toString());
+
+                    KakaoFragment fragment = new KakaoFragment();
+                    fragment.setArguments(bundle3);
+
+                    return fragment;
             }
             return null;
         }
@@ -271,17 +289,19 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         });
     }
 
-    private void trackPokeFriendMixpanel(String method, int count){
+    public void trackPokeFriendMixpanel(String method, int count, String time, String dish){
         JSONObject props = new JSONObject();
         try {
             props.put("Method", method);
             props.put("Count", count);
+            props.put("Time", time);
+            props.put("Dish", dish);
         }catch(JSONException e){
             Log.e("PokeMethodDialog/trackPokeFriendMixpanel","JSON Error");
         }
 
         mixpanel.track("Poke Friend", props);
-        Log.i("PokeMethodDialog/trackPokeFriendMixpanel","Poke Friend Tracked " + method + count);
+        Log.i("PokeMethodDialog/trackPokeFriendMixpanel","Poke Friend Tracked " + method + count + time);
     }
 
     private void trackEnteredPokeFriendMixpanel(){

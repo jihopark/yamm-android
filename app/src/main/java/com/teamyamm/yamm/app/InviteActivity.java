@@ -163,7 +163,12 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
                     friendsFragment = new FriendsFragment();
                     return friendsFragment;
                 case 1:
-                    return new KakaoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(KakaoFragment.TYPE, KakaoFragment.INVITE);
+                    KakaoFragment fragment = new KakaoFragment();
+                    fragment.setArguments(bundle);
+
+                    return fragment;
             }
             return null;
         }
