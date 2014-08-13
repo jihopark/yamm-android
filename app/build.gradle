@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     compile "com.mixpanel.android:mixpanel-android:4.1.0@aar"
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:appcompat-v7:19.0.+'
     compile 'com.android.support:support-v4:19.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.viewpagerindicator:library:2.4.1@aar'

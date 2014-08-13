@@ -108,7 +108,7 @@ public class BaseActivity extends ActionBarActivity {
     * */
     protected void setActionBarBackButton(boolean b){
         getSupportActionBar().setDisplayHomeAsUpEnabled(b);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.home_as_up_indicator);
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.home_as_up_indicator);
     }
 
 
