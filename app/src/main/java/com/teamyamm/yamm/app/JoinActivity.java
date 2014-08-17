@@ -486,6 +486,7 @@ public class JoinActivity extends BaseActivity {
 
         mixpanel.getPeople().identify(emailText.getText().toString());
         mixpanel.getPeople().set("email",emailText.getText().toString());
+        mixpanel.getPeople().initPushHandling(getResources().getString(R.string.gcm_project_number));
 
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());
 

@@ -218,6 +218,11 @@ public interface YammAPIService {
         }
     }
 
+    @FormUrlEncoded
+    @POST("/kakao-push-token")
+    void registerPushToken(@Field("pushToken") String items, Callback<String> cb);
+
+
     /*
     * Error
     * */

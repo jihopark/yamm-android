@@ -116,6 +116,10 @@ public class LoginActivity extends BaseActivity {
                 setMixpanelIdentity();
 
                 Toast.makeText(getApplicationContext(), "로그인 되었습니다", Toast.LENGTH_SHORT).show();
+
+                //For Push Token
+                registerGCM();
+
                 goToActivity(MainActivity.class);
             }
 

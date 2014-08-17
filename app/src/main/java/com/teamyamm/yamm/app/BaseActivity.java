@@ -9,9 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.TransformationMethod;
@@ -26,16 +29,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -316,7 +326,11 @@ public class BaseActivity extends ActionBarActivity {
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.AUTH_TOKEN));
+        editor.remove(PROPERTY_REG_ID);
+        editor.remove(PROPERTY_APP_VERSION);
+
         editor.commit();
+
 
         YammAPIAdapter.setToken(null);
 
@@ -413,4 +427,149 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
     }
+
+    /*
+    * Related to Push Services
+    * */
+
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    public boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i("BaseActivity/checkPlayServices", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+    public static final String EXTRA_MESSAGE = "message";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+
+    protected GoogleCloudMessaging gcm;
+    protected String regid;
+    protected String SENDER_ID;
+
+    protected void registerGCM(){
+        SENDER_ID = getResources().getString(R.string.gcm_project_number);
+
+        if (checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = getRegistrationId(getApplicationContext());
+
+            Log.i("BaseActivity/registerGCM", "Regid " + regid);
+
+            if (regid.isEmpty()) {
+                Log.i("BaseActivity/registerGCM", "Regid is empty. Receiving from GCM");
+
+                registerInBackground();
+            }
+        } else {
+            Log.e("BaseActivity/registerGCM", "No valid Google Play Services APK found.");
+        }
+    }
+
+    private String getRegistrationId(Context context) {
+        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+        if (registrationId.isEmpty()) {
+            Log.i("BaseActiviy/getRegistrationId", "Registration not found.");
+            return "";
+        }
+        // Check if app was updated; if so, it must clear the registration ID
+        // since the existing regID is not guaranteed to work with the new
+        // app version.
+        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int currentVersion = getAppVersion(context);
+        if (registeredVersion != currentVersion) {
+            Log.i("BaseActivity/getRegistrationId", "App version changed.");
+            return "";
+        }
+        return registrationId;
+    }
+
+    private void registerInBackground() {
+        new AsyncTask<Void, Integer, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(SENDER_ID);
+                    msg = "Device registered, registration ID=" + regid;
+
+                    // You should send the registration ID to your server over HTTP,
+                    // so it can use GCM/HTTP or CCS to send messages to your app.
+                    // The request to your server should be authenticated if your app
+                    // is using accounts.
+                    sendRegistrationIdToBackend();
+
+                    // For this demo: we don't need to send it because the device
+                    // will send upstream messages to a server that echo back the
+                    // message using the 'from' address in the message.
+
+                    // Persist the regID - no need to register again.
+                    storeRegistrationId(getApplicationContext(), regid);
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                Log.i("BaseActivity/registerInBackground","GCM Registeration " + msg);
+            }
+        }.execute(null, null, null);
+    }
+
+    private void sendRegistrationIdToBackend() {
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        service.registerPushToken(regid, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to server");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("BaseActivity/sendRegistrationIdToBackend", "Push Token not sent to server");
+            }
+        });
+    }
+
+    private void storeRegistrationId(Context context, String regId) {
+        int appVersion = getAppVersion(context);
+        Log.i("BaseActivity/storeRegistrationId", "Saving regId on app version " + appVersion);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_REG_ID, regId);
+        editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.commit();
+    }
+    /**
+     * @return Application's version code from the {@code PackageManager}.
+     */
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
 }
