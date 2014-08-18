@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -36,7 +35,6 @@ public class MainFragment extends Fragment {
 
 
     private RelativeLayout main_layout;
-    private Button searchMapButton;
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
 
@@ -56,15 +54,10 @@ public class MainFragment extends Fragment {
         Log.i("MainFragment/onCreateView", "onCreateView started");
 
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_main, container, false);
-        searchMapButton = (Button) main_layout.findViewById(R.id.search_map_button);
 
         initFragment();
         setDishPager();
         setLocationManagerListener();
-
-       // setPlacePickEditText();
-       // setSearchMapButton();
-
 
         return main_layout;
     }

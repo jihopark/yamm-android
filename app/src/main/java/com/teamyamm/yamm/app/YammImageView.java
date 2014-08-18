@@ -131,7 +131,7 @@ public class YammImageView extends FrameLayout {
                         Log.e("YammImageView/loadImage", "Image Loading Error ");
                     }
                 });*/
-        image.setImageDrawable(getResources().getDrawable(R.drawable.example));
+        image.setImageDrawable(getResources().getDrawable(R.drawable.mainback_test));
     }
 
     public void loadImage(){
