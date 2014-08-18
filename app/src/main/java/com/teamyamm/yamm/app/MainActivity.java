@@ -6,11 +6,13 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -49,6 +51,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private List<Friend> friendsList;
     private String[] navMenuTitles;
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private ReadContactAsyncTask readContactAsyncTask;
@@ -113,6 +116,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.friend_invite_button:
@@ -408,10 +416,47 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             }
         });
 
+        drawerToggle = new ActionBarDrawerToggle(
+                MainActivity.this,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                R.drawable.menu,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         Log.i("MainActivity/onCreate","Drawer Initialized");
-
-
     }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
     //For Contact Reading
     private static final String[] PROJECTION = new String[] {
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,

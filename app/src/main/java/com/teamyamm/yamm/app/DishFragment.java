@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +53,8 @@ import retrofit.client.Response;
 public class DishFragment extends Fragment {
     private final static long LOCATION_MIN_TIME = 100; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
+    private final int DEFAULT_NUMBER_OF_DISHES = 4;
+
 
     public final static String TOO_MANY_DISLIKE = "dis";
     public final static String SHARE = "SHARE";
@@ -58,8 +62,8 @@ public class DishFragment extends Fragment {
 
     private RelativeLayout main_layout;
     private DishItem item;
-    private int itemID;
-    private Button searchMap, pokeFriend, dislike;
+    private int index;
+    private ImageButton searchMap, pokeFriend, dislike, next;
     private YammImageView dishImage;
     private boolean isGroup;
     private Activity activity;
@@ -71,6 +75,7 @@ public class DishFragment extends Fragment {
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_dish, container, false);
 
         isGroup = this.getArguments().getBoolean("isGroup");
+        index = this.getArguments().getInt("index");
 
         loadDish();
         setButton();
@@ -119,16 +124,37 @@ public class DishFragment extends Fragment {
     }
 
     private void setButton(){
-        searchMap = (Button) main_layout.findViewById(R.id.search_map_button);
+        next = (ImageButton) main_layout.findViewById(R.id.dish_next_button);
 
-        pokeFriend = (Button) main_layout.findViewById(R.id.poke_friend_button);
+        searchMap = (ImageButton) main_layout.findViewById(R.id.search_map_button);
 
-        dislike = (Button) main_layout.findViewById(R.id.dish_dislike_button);
+        pokeFriend = (ImageButton) main_layout.findViewById(R.id.poke_friend_button);
 
-        if (isGroup)
-            pokeFriend.setText("메뉴 선택");
-        else
-            pokeFriend.setText("친구랑 같이 먹기");
+        dislike = (ImageButton) main_layout.findViewById(R.id.dish_dislike_button);
+
+        if (index == DEFAULT_NUMBER_OF_DISHES - 1){
+            next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            next.setLayoutParams(params);
+        }
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getParentFragment() instanceof MainFragment){
+                    MainFragment parent = (MainFragment) getParentFragment();
+                    ViewPager dishPager = parent.getDishPager();
+
+                    if (index == DEFAULT_NUMBER_OF_DISHES - 1)
+                        dishPager.setCurrentItem(index - 1, true);
+                    else
+                        dishPager.setCurrentItem(index + 1, true);
+                }
+            }
+        });
+
 
         pokeFriend.setOnClickListener(new View.OnClickListener() {
             @Override

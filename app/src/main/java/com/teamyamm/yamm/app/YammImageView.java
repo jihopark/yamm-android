@@ -53,6 +53,8 @@ public class YammImageView extends FrameLayout {
         this.setBackgroundColor(Color.GRAY);
         image = new ImageView(context);
         image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        image.setScaleType(ImageView.ScaleType.FIT_XY);
+
         addView(image);
 
         progressCircle = new ProgressBar(context);
@@ -81,6 +83,8 @@ public class YammImageView extends FrameLayout {
         this.setBackgroundColor(Color.GRAY);
         image = new ImageView(context);
         image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        image.setScaleType(ImageView.ScaleType.FIT_XY);
+
         addView(image);
 
         progressCircle = new ProgressBar(context);

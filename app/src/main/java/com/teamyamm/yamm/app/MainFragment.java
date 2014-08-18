@@ -125,6 +125,10 @@ public class MainFragment extends Fragment {
         dishPager.setOnPageChangeListener(dishAdapter);
     }
 
+    public ViewPager getDishPager(){
+        return dishPager;
+    }
+
     private class DishFragmentPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener{
 
         private final int DEFAULT_NUMBER_OF_DISHES = 4;
@@ -154,6 +158,8 @@ public class MainFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("dish", new Gson().toJson(dishItems.get(index), DishItem.class));
             bundle.putBoolean("isGroup",isGroup);
+            bundle.putInt("index", index);
+
             dishFragment.setArguments(bundle);
 
             fragments.add(index, dishFragment);
