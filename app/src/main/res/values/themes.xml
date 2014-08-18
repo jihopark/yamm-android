@@ -11,6 +11,14 @@
         <item name="actionBarTabTextStyle">@style/TabStyle</item>
     </style>
 
+    <style name="YammLogoActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammLogoActionBar</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/YammLogoActionBar</item>
+    </style>
+
     <style name="IntroTheme"
         parent="@style/Theme.AppCompat.Light">
 
@@ -32,8 +40,16 @@
         <item name="icon">@android:color/transparent</item>
         <item name="titleTextStyle">@style/YammActionBar.Title</item>
         <item name="height">43dp</item>
+    </style>
 
+    <style name="YammLogoActionBar"
+        parent="YammActionBar">
+        <item name="android:displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/yamm</item>
 
+        <!-- Support library compatibility -->
+        <item name="icon">@android:color/transparent</item>
+        <item name="displayOptions">showHome|useLogo</item>
     </style>
 
     <style name="YammActionBar.Title">

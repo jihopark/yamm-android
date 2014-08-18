@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private List<DishItem> dishItems;
     private ProgressDialog dialog, newDialog;
 
-    private Button friendPickButton;
+    private ImageButton friendPickButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
-        readContactAsyncTask.execute();
+      //  readContactAsyncTask.execute();
     }
 
     @Override
@@ -278,7 +278,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
 
-        service.getPersonalDishes(new Callback<List<DishItem>>() {
+        /*service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
                 Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
@@ -303,7 +303,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
                 dialog.dismiss();
             }
-        });
+        });*/
     }
 
     private void restoreSavedList(){
@@ -350,7 +350,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     private void setFriendPickButton(){
-        friendPickButton = (Button) findViewById(R.id.friends_pick_button);
+        friendPickButton = (ImageButton) findViewById(R.id.friends_pick_button);
 
         friendPickButton.setOnClickListener(new View.OnClickListener() {
             @Override

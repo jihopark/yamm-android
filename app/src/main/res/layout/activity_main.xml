@@ -10,12 +10,19 @@
         android:orientation="vertical"
         android:id="@+id/main_layout">
 
-        <Button
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_pick_button"
-            android:text="얌친들 함께 먹을 음식추천"
-            />
+            android:layout_height="62dp"
+            android:background="#ff574d44">
+
+            <ImageButton
+                style="@style/FriendPickButton"
+                android:src="@drawable/yamm_friend"
+                android:id="@+id/friends_pick_button"
+                android:text="@string/friend_pick_button"
+                />
+
+            </RelativeLayout>
 
     </LinearLayout>
 

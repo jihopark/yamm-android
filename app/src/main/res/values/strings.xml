@@ -126,7 +126,7 @@
     <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>
 
     <!-- Main Activty & Fragment -->
-    <string name="stream_end_message">이젠 없어요</string>
+    <string name="friend_pick_button">얌친들과 함께 먹을 음식추천</string>
     <string name="friend_pick_edit_text">같이 먹을 사람을 선택하세요</string>
     <string name="friend_not_loaded_message">아직 로딩 중이에요</string>
     <string name="logout_dialog_title">로그아웃?</string>
