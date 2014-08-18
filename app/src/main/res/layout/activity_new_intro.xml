@@ -30,14 +30,14 @@
             style="@style/IntroButton"
             android:layout_marginBottom="14dp"
             android:textColor="#ffe0323b"
-            android:background="#99ffffff"
+            android:background="@drawable/white_round_button"
             android:text="@string/intro_join_button"
             android:id="@+id/join_button"/>
         <Button
             style="@style/IntroButton"
             android:layout_marginBottom="18dp"
             android:textColor="#ffffffff"
-            android:background="#e5e0323b"
+            android:background="@drawable/enabled_round_button"
             android:text="@string/intro_login_button"
             android:id="@+id/login_button"/>
     </LinearLayout>

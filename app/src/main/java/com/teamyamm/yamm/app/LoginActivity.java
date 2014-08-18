@@ -84,11 +84,11 @@ public class LoginActivity extends BaseActivity {
 
         if (b){
             loginButton.setTextColor(getResources().getColor(R.color.button_enabled_text));
-            loginButton.setBackgroundColor(getResources().getColor(R.color.button_enabled_background));
+            loginButton.setBackgroundResource(R.drawable.enabled_round_button);
         }
         else{
             loginButton.setTextColor(getResources().getColor(R.color.button_disabled_text));
-            loginButton.setBackgroundColor(getResources().getColor(R.color.button_disabled_background));
+            loginButton.setBackgroundResource(R.drawable.disabled_round_button);
         }
     }
 

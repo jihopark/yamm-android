@@ -111,11 +111,11 @@ public class JoinActivity extends BaseActivity {
         if (enableButtonFlag != tmp) {
             joinConfirmButton.setEnabled(enableButtonFlag);
             if (enableButtonFlag){
-                joinConfirmButton.setBackgroundColor(getResources().getColor(R.color.button_enabled_background));
+                joinConfirmButton.setBackgroundResource(R.drawable.enabled_round_button);
                 joinConfirmButton.setTextColor(getResources().getColor(R.color.button_enabled_text));
             }
             else{
-                joinConfirmButton.setBackgroundColor(getResources().getColor(R.color.button_disabled_background));
+                joinConfirmButton.setBackgroundResource(R.drawable.disabled_round_button);
                 joinConfirmButton.setTextColor(getResources().getColor(R.color.button_disabled_text));
             }
 
@@ -215,12 +215,12 @@ public class JoinActivity extends BaseActivity {
 
                 Button b = (Button) findViewById(R.id.verification_button);
                 if (s.toString().length() < 10){
-                    b.setBackgroundResource(R.drawable.rounded_button_disabled);
+                    b.setBackgroundResource(R.drawable.veri_disabled_rounded_button);
                     b.setTextColor(getResources().getColor(R.color.button_disabled_text));
 
                 }
                 else{
-                    b.setBackgroundResource(R.drawable.rounded_button_enabled);
+                    b.setBackgroundResource(R.drawable.veri_enabled_rounded_button);
                     b.setTextColor(getResources().getColor(R.color.button_enabled_text));
                 }
             }

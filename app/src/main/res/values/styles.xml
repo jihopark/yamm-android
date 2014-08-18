@@ -67,7 +67,8 @@
     <style name="LoginButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">@color/button_disabled_background</item>
+
+        <item name="android:background">@drawable/disabled_round_button</item>
         <item name="android:textColor">@color/button_disabled_text</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center</item>
@@ -105,7 +106,7 @@
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@color/button_disabled_background</item>
+        <item name="android:background">@drawable/disabled_round_button</item>
         <item name="android:textColor">@color/button_disabled_text</item>
     </style>
 
