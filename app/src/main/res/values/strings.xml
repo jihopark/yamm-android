@@ -145,6 +145,7 @@
     <string name="invite_contact_confirm">초대하기</string>
     <string name="invite_sms_body">Yamm 우리 뭐 먹지? http://yamm.me</string>
     <string name="invite_sms_error_message">SMS를 보낼 수가 없어요</string>
+    <string name="kakao_invite_button">카카오톡 친구 초대하기</string>
 
     <!-- Poke Activity -->
     <string name="poke_contact_confirm">친구한테 물어보기!</string>

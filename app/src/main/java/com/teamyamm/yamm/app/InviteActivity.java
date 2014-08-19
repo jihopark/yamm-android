@@ -13,7 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.IconPageIndicator;
+import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,7 +140,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
     }
 
     private void setViewPager(){
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.invite_page_indicator);
+        IconPageIndicator indicator = (IconPageIndicator) findViewById(R.id.invite_page_indicator);
         InviteFragmentPagerAdapter adapter= new InviteFragmentPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.invite_view_pager);
@@ -148,12 +149,19 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         indicator.setOnPageChangeListener(adapter);
     }
 
-    private class InviteFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+    private class InviteFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, IconPagerAdapter {
         private final int NUMBER_OF_PAGES = 2;
         private String[] titles = {"주소록","카카오톡"};
-
+        protected final int[] ICONS = new int[] {
+                R.drawable.invite_phonebook,R.drawable.invite_kakao
+        };
         public InviteFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        @Override
+        public int getIconResId(int index) {
+            return ICONS[index % ICONS.length];
         }
 
         @Override

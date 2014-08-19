@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/invite_page_indicator"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/invite_activity_intro"/>
-    <com.viewpagerindicator.TabPageIndicator
+        android:layout_height="41dp"
+        android:paddingTop="14dp"
+        android:src="@drawable/invite_message"
+        android:background="@color/brown_color"
+        />
+    <com.viewpagerindicator.IconPageIndicator
+        android:background="@color/brown_color"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="39dp"
         android:id="@+id/invite_page_indicator"
         />
     <android.support.v4.view.ViewPager
@@ -26,4 +28,4 @@
         android:text="@string/invite_contact_confirm"
         android:id="@+id/invite_contact_confirm"
         android:visibility="gone"/>
-</RelativeLayout>
+</LinearLayout>

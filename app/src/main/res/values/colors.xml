@@ -2,6 +2,7 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="default_color">#ffe0323b</color>
+    <color name="brown_color">#ff574d44</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>

@@ -3,9 +3,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KaKao"
+        android:src="@drawable/invite_message2"
+        android:layout_marginTop="28dp"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        android:layout_marginTop="23dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/kakao_invite_button"
+        android:textColor="#ffffffff"
+        android:textSize="20sp"
+        android:background="@drawable/enabled_round_button"
         android:id="@+id/kakao_button"/>
 </LinearLayout>
