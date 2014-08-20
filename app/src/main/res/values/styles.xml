@@ -214,4 +214,13 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:background">@drawable/friend_pick_round_button</item>
     </style>
+
+    <!-- Friends Fragment -->
+    <style name="FriendConfirmButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">#ffe0323b</item>
+    </style>
 </resources>

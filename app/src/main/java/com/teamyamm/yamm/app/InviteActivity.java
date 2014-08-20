@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -127,7 +126,22 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         int count = 0;
 
         contactList = new ArrayList<YammItem>();
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+
+        contactList.add(new Friend(123,"박지호"));
+        contactList.add(new Friend(124,"임창균"));
+        contactList.add(new Friend(125,"황기연"));
+        contactList.add(new Friend(126,"장연호"));
+        contactList.add(new Friend(127,"양영직"));
+        contactList.add(new Friend(128,"존나게쓸데없이긴이름"));
+        contactList.add(new Friend(128,"이름"));
+        contactList.add(new Friend(128,"황준식"));
+        contactList.add(new Friend(128,"방소정"));
+
+
+
+
+
+        /*SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         String s = prefs.getString(getString(R.string.PHONE_NAME_MAP),"none");
 
         if (!s.equals("none")){
@@ -136,7 +150,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
                 YammItem item = new Friend(count++, phoneNameMap.get(i), i);
                 contactList.add(item);
             }
-        }
+        }*/
     }
 
     private void setViewPager(){

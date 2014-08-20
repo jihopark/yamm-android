@@ -3,6 +3,9 @@
     <color name="black_overlay">#66000000</color>
     <color name="default_color">#ffe0323b</color>
     <color name="brown_color">#ff574d44</color>
+    <color name="light_brown_background">#fff3f0e6</color>
+
+    <color name="selected_item_color">#ffc29443</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>

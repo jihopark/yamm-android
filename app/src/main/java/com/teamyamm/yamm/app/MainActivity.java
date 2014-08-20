@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
-      //  readContactAsyncTask.execute();
+        readContactAsyncTask.execute();
     }
 
     @Override
@@ -286,7 +286,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
 
-        /*service.getPersonalDishes(new Callback<List<DishItem>>() {
+        service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
                 Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
                 dialog.dismiss();
             }
-        });*/
+        });
     }
 
     private void restoreSavedList(){

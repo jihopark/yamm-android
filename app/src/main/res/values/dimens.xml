@@ -5,9 +5,18 @@
 
 
     <dimen name="yamm_item_text_size">10sp</dimen>
-    <dimen name="yamm_item_height">50dp</dimen>
+    <dimen name="yamm_item_height">47dp</dimen>
 
     <dimen name="round_button_radius">50dp</dimen>
     <dimen name="veri_round_button_radius">4dp</dimen>
+
+    <!-- FriendsFragment -->
+
+    <dimen name="selected_item_x_padding">10dp</dimen>
+    <dimen name="selected_item_y_padding">5dp</dimen>
+    <dimen name="selected_item_round">2dp</dimen>
+    <dimen name="selected_item_line_spacing">8dp</dimen> <!-- Line spacing + 2*y_padding -->
+    <dimen name="selected_item_line_spacing_plus_padding">18dp</dimen> <!-- Line spacing + 2*y_padding -->
+    <dimen name="selected_item_height">30dp</dimen>
 
 </resources>

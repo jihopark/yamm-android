@@ -1,11 +1,17 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ReplacementSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,13 +129,14 @@ public class FriendsFragment extends Fragment {
         }
 
         Spannable newSpan = new SpannableString(yammItem.getName());
-        newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
-                0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+        newSpan.setSpan(new NameSpan(getActivity().getApplicationContext()),
+                        0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         selectedItemsTextView.append(newSpan);
     }
 
     private void removeSelectedItemView(YammItem yammItem){
+        int count = 0;
+
         if (selectedItems.size()==1)
             selectedItemsLayout.setVisibility(View.GONE);
 
@@ -137,15 +144,17 @@ public class FriendsFragment extends Fragment {
         for (YammItem i : selectedItems){
             if (i!=yammItem){
                 Spannable newSpan = new SpannableString(i.getName());
-                newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
+                newSpan.setSpan(new NameSpan(getActivity().getApplicationContext()),
                         0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 selectedItemsTextView.append(newSpan);
 
-                newSpan = new SpannableString(" ");
-                newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
-                        0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                selectedItemsTextView.append(newSpan);
+                if (count != selectedItems.size() - 2) {
+                    newSpan = new SpannableString(" ");
+                    newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
+                            0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    selectedItemsTextView.append(newSpan);
+                }
             }
         }
     }
@@ -182,5 +191,44 @@ public class FriendsFragment extends Fragment {
 
     public int getContentType(){
         return contentType;
+    }
+
+    private static class NameSpan extends ReplacementSpan {
+
+        private int squareSize, textSize;
+        private float x_padding, y_padding, round;
+        private float lineSpacing, height;
+        private Resources r;
+
+        public NameSpan(Context context) {
+            r = context.getResources();
+            x_padding = r.getDimension(R.dimen.selected_item_x_padding);
+            y_padding = r.getDimension(R.dimen.selected_item_y_padding);
+            round = r.getDimension(R.dimen.selected_item_round);
+            lineSpacing = r.getDimension(R.dimen.selected_item_line_spacing_plus_padding);
+            height = r.getDimension(R.dimen.selected_item_height);
+        }
+
+        @Override
+        public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+            textSize = (int)paint.measureText(text, start, end);
+            squareSize = (int) (textSize + x_padding*2);
+            return squareSize;
+        }
+
+        @Override
+        public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
+            RectF rect = new RectF((int) x, top,
+                    (int) (x + textSize + 2 * x_padding), bottom - lineSpacing + y_padding*2);
+
+            paint.setColor(r.getColor(R.color.selected_item_color));
+
+            canvas.drawRoundRect(rect, round, round, paint);
+
+            paint.setColor(Color.WHITE);
+            canvas.drawText(text, start, end, x + x_padding , y + y_padding , paint);
+
+        }
+
     }
 }
