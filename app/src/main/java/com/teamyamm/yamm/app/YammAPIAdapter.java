@@ -19,7 +19,7 @@ import retrofit.client.Response;
  * Created by parkjiho on 8/3/14.
  */
 public class YammAPIAdapter {
-    public static String apiURL = "https://yamm-api.ap01.aws.af.cm/";
+    public static String apiURL = "http://api.yamm.me";
     private static YammAPIService service = null;
     public static YammAPIService tokenService = null;
     private static YammAPIService dislikeService = null;

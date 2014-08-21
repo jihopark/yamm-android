@@ -56,14 +56,14 @@ public interface YammAPIService {
     void phoneVerification(@Field("phone") String phone, Callback<VeriExp> cb);
 
     public static class VeriExp{
-        String expires;
+        long expires;
 
-        public VeriExp(String expires){
+        public VeriExp(long expires){
             this.expires = expires;
         }
 
         public String toString(){
-            return expires;
+            return expires+"";
         }
     }
 

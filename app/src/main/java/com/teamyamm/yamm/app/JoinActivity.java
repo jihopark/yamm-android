@@ -473,7 +473,7 @@ public class JoinActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed " + retrofitError.getBody());
+                Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed ");
                 retrofitError.printStackTrace();
                 Toast.makeText(getApplicationContext(), R.string.verification_error_message, Toast.LENGTH_SHORT).show();
             }
@@ -485,7 +485,7 @@ public class JoinActivity extends BaseActivity {
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Unique ID with email "+ emailText.getText().toString());
 
         mixpanel.getPeople().identify(emailText.getText().toString());
-        mixpanel.getPeople().set("email",emailText.getText().toString());
+        mixpanel.getPeople().set("$email",emailText.getText().toString());
         mixpanel.getPeople().initPushHandling(getResources().getString(R.string.gcm_project_number));
 
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());

@@ -193,7 +193,6 @@ public class BattleActivity extends BaseActivity {
         service.postBattleItem(new YammAPIService.RawBattleItemList(battleItems), new Callback<String>() {
             @Override
             public void success(String msg, Response response) {
-                Log.i("BattleActivity/getBattleItem",msg);
                 finalDialog.dismiss();
 
                 //for FB Dialog
