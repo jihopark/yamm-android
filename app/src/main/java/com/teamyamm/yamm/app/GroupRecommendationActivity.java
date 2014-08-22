@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +9,7 @@ import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +21,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * Created by parkjiho on 7/23/14.
  */
@@ -28,6 +34,7 @@ public class GroupRecommendationActivity extends BaseActivity {
     List<DishItem> dishItems;
     String selectedTime;
     MainFragment mainFragment;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +44,7 @@ public class GroupRecommendationActivity extends BaseActivity {
         setActionBarBackButton(true);
         loadBundle();
         setSelectedItems();
-        setFragment();
-
+        loadDishes();
         trackReceivedGroupRecommendation();
     }
 
@@ -64,7 +70,8 @@ public class GroupRecommendationActivity extends BaseActivity {
     }
 
     private void setFragment(){
-        dishItems = loadDishes();
+        if (dishItems == null)
+            return ;
 
         Type type = new TypeToken<List<DishItem>>(){}.getType();
 
@@ -81,19 +88,34 @@ public class GroupRecommendationActivity extends BaseActivity {
         tact.commit();
     }
 
-    private List<DishItem> loadDishes(){
-        ArrayList<DishItem> temp = new ArrayList<DishItem>();
+    private void loadDishes(){
+        YammAPIService service = YammAPIAdapter.getTokenService();
+        String userIds = "";
+        for (Friend f : selectedFriend)
+            userIds = userIds + f.getID() + ",";
+        userIds = userIds.substring(0, userIds.length() - 1);
+        Log.i("GroupRecommendationActivity/loadDishes",userIds);
+        dialog = createProgressDialog(GroupRecommendationActivity.this,
+                R.string.progress_dialog_title, R.string.progress_dialog_message);
 
-        temp.add(new DishItem(1,"짜장면","맛있는"));
+        dialog.show();
 
-        temp.add(new DishItem(2,"짬뽕","맛있는" ));
+        service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
+            @Override
+            public void success(List<DishItem> dishes, Response response) {
+                Log.i("GroupRecommendationActivity/getGroupSuggestions","Group Recommendation Success " +dishItems );
+                dishItems = dishes;
+                setFragment();
+                dialog.dismiss();
+            }
 
-        temp.add(new DishItem(3,"탕수육","맛있는"));
-
-        temp.add(new DishItem(4,"냉면","맛있는"));
-
-        return temp;
-
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("GroupRecommendationActivity/getGroupSuggestions", "Something went wrong");
+                finishActivityForError();
+                dialog.dismiss();
+            }
+        });
     }
 
     private void loadBundle(){
@@ -112,6 +134,11 @@ public class GroupRecommendationActivity extends BaseActivity {
         Log.i("GroupRecommendationActivity/loadBundle", "Selected Friends : " + selectedFriend);
         Log.i("GroupRecommendationActivity/loadBundle","Selected Time : " + selectedTime);
 
+    }
+
+    private void finishActivityForError(){
+        Toast.makeText(GroupRecommendationActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void trackReceivedGroupRecommendation(){
