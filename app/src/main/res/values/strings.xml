@@ -137,7 +137,7 @@
     <!-- Friends Activity & Fragment -->
 
     <string name="friend_invite_button">친구초대</string>
-    <string name="friend_pick_confirm_button">확인</string>
+    <string name="friend_pick_confirm_button">메뉴를 보여주세요!</string>
     <string name="friends_list_empty">얌친이 없으시네요</string>
 
     <!-- Invite Activity -->

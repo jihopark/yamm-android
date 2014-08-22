@@ -5,7 +5,8 @@
         <item name="android:actionBarStyle">@style/YammActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="@android:attr/actionBarTabTextStyle">@style/TabStyle</item>
-
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:dropDownListViewStyle">@style/SpinnerItemDropDown</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/YammActionBar</item>
         <item name="actionBarTabTextStyle">@style/TabStyle</item>

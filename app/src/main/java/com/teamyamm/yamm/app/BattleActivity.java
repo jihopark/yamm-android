@@ -30,6 +30,7 @@ public class BattleActivity extends BaseActivity {
     private YammAPIService service;
     private TextView battleCountText;
     private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,13 @@ public class BattleActivity extends BaseActivity {
 
         setContentView(R.layout.activity_battle);
 
-        battleCountText = (TextView) findViewById(R.id.battle_count_text);
+        //battleCountText = (TextView) findViewById(R.id.battle_count_text);
 
         battleItems = new ArrayList<YammAPIService.RawBattleItemForPost>();
+
+        progressDialog = createProgressDialog(BattleActivity.this,
+                R.string.progress_dialog_title, R.string.progress_dialog_message);
+        progressDialog.show();
 
         service = YammAPIAdapter.getTokenService();
 
@@ -103,7 +108,8 @@ public class BattleActivity extends BaseActivity {
                 Log.i("BattleActivity/getBattleItem","Total Rounds: " + totalBattle);
 
                 bf.setDishItemView(rawBattleItem.getBattleItem());
-                battleCountText.setText("1 out of " + totalBattle);
+           //     battleCountText.setText("1 out of " + totalBattle);
+                progressDialog.dismiss();
             }
 
             @Override
@@ -114,7 +120,7 @@ public class BattleActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
-
+                progressDialog.dismiss();
                 showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             }
         });
@@ -151,7 +157,7 @@ public class BattleActivity extends BaseActivity {
                 bf.setLayoutClickable(true);
 
                 bf.setDishItemView(rawBattleItem.getBattleItem());
-                battleCountText.setText( (battleCount+1) + " out of " + totalBattle);
+      //          battleCountText.setText( (battleCount+1) + " out of " + totalBattle);
             }
 
             @Override

@@ -10,15 +10,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
 /**
  * Created by parkjiho on 6/19/14.
  */
 public class YammImageView extends FrameLayout {
 
-    private final static String exampleURL = "http://t1.gstatic.com/images?q=tbn:ANd9GcTPwjgglBpW0--98JFE6PyoQt1YhSRUMzBEEsIQhJlLuQkkTlHwkQ";
     private final static String imageURL = "http://res.cloudinary.com/yamm/image/upload/";
     public final static String DISH = "dish";
     public final static String GRID = "grid";
@@ -136,7 +132,10 @@ public class YammImageView extends FrameLayout {
 
     public void loadImage(){
         Log.i("YammImageView/loadImage", "Loading Image");
-        Picasso.with(context)
+        setDishImage("aa");
+        progressCircle.setVisibility(GONE);
+
+       /* Picasso.with(context)
                 .load(getURL())
                 .error(R.drawable.error_placeholder)
                 .into(image, new Callback() {
@@ -151,7 +150,7 @@ public class YammImageView extends FrameLayout {
                     public void onError() {
                         Log.e("YammImageView/loadImage", "Image Loading Error " + path + " " + id);
                     }
-                });
+                });*/
     }
 
     public void setDimension(int w, int h){
@@ -163,7 +162,7 @@ public class YammImageView extends FrameLayout {
         if (path == DISH){
 
         }
-        return exampleURL;
+        return "";
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }
 

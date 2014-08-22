@@ -6,7 +6,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/default_color</item>
         <item name="android:windowContentOverlay">@null</item>
-    </style>
+        </style>
 
     <style name="SplashTheme">
         <item name="android:windowBackground">@color/default_color</item>
@@ -183,11 +183,7 @@
         <item name="android:background">#87a2a2a2</item>
         <item name="android:gravity">left|center</item>
     </style>
-    <style name="dish_item_text">
-        <item name="android:textSize">30dp</item>
-        <item name="android:layout_gravity">bottom|center_horizontal</item>
-        <item name="android:background">#87a2a2a2</item>
-    </style>
+
     <style name="dish_stream_text">
         <item name="android:textSize">14dp</item>
         <item name="android:gravity">center</item>
@@ -216,6 +212,30 @@
     </style>
 
     <!-- Friends Fragment -->
+
+    <style name="DatePickSpinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/time_spinner_background</item>
+        <item name="android:layout_marginLeft">13dp</item>
+        <item name="android:layout_marginRight">13dp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:textColor">#ffa5a5a5</item>
+    </style>
+
+    <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#ffa5a5a5</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="SpinnerItemDropDown" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">#ff313131</item>
+        <item name="android:dividerHeight">2dp</item>
+    </style>
+
+
     <style name="FriendConfirmButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dp</item>
