@@ -56,13 +56,16 @@ public class GroupRecommendationActivity extends BaseActivity {
         for (Friend f : selectedFriend) {
             if (count++ != 0) {
                 Spannable newSpan = new SpannableString(" ");
-                newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
+                newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(Color.TRANSPARENT)),
                         0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                 selectedItemsText.append(newSpan);
             }
 
             Spannable newSpan = new SpannableString(f.getName());
-            newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(R.color.default_color)),
+            newSpan.setSpan(new NameSpan(getResources(), getResources().getDimension(R.dimen.selected_item_x_padding)
+                            , getResources().getDimension(R.dimen.selected_item_y_padding), getResources().getDimension(R.dimen.selected_item_round),
+                            getResources().getDimension(R.dimen.selected_item_line_spacing_plus_padding_for_group), getResources().getDimension(R.dimen.selected_item_height)),
                     0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             selectedItemsText.append(newSpan);
@@ -94,7 +97,7 @@ public class GroupRecommendationActivity extends BaseActivity {
         for (Friend f : selectedFriend)
             userIds = userIds + f.getID() + ",";
         userIds = userIds.substring(0, userIds.length() - 1);
-        Log.i("GroupRecommendationActivity/loadDishes",userIds);
+        Log.i("GroupRecommendationActivity/loadDishes", userIds);
         dialog = createProgressDialog(GroupRecommendationActivity.this,
                 R.string.progress_dialog_title, R.string.progress_dialog_message);
 
@@ -103,7 +106,7 @@ public class GroupRecommendationActivity extends BaseActivity {
         service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishes, Response response) {
-                Log.i("GroupRecommendationActivity/getGroupSuggestions","Group Recommendation Success " +dishItems );
+                Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
                 setFragment();
                 dialog.dismiss();

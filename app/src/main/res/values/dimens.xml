@@ -19,4 +19,6 @@
     <dimen name="selected_item_line_spacing_plus_padding">18dp</dimen> <!-- Line spacing + 2*y_padding -->
     <dimen name="selected_item_height">30dp</dimen>
 
+    <dimen name="selected_item_line_spacing_for_group">16dp</dimen>
+    <dimen name="selected_item_line_spacing_plus_padding_for_group">26dp</dimen>
 </resources>
