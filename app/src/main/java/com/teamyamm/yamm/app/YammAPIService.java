@@ -118,20 +118,27 @@ public interface YammAPIService {
     @GET("/battle/next-round")
     void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
 
+    @GET("/battle/entries")
+    void getBattleItems(Callback<RawBattleItem> callback);
+
     @POST("/battle/results")
     void postBattleItem(@Body RawBattleItemList results, Callback<String> callback);
 
     public static class RawBattleItem{
         private int rounds;
-        private List<DishItem> dishes;
+        private List<List<DishItem>> dishes;
 
-        public RawBattleItem(int rounds, List<DishItem> dishes){
+        public RawBattleItem(int rounds, List<List<DishItem>> dishes){
             this.rounds = rounds;
             this.dishes = dishes;
         }
 
-        public BattleItem getBattleItem(){
-            return new BattleItem(dishes.get(0), dishes.get(1));
+        public List<List<DishItem>> getDishes(){
+            return dishes;
+        }
+
+        public BattleItem getBattleItem(int i){
+            return new BattleItem(dishes.get(i).get(0), dishes.get(i).get(1));
         }
 
         public int getRounds(){

@@ -30,6 +30,7 @@ public class BattleActivity extends BaseActivity {
     private YammAPIService service;
     private TextView battleCountText;
     private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
+    private YammAPIService.RawBattleItem dishes;
     private ProgressDialog progressDialog;
 
     @Override
@@ -100,7 +101,7 @@ public class BattleActivity extends BaseActivity {
     * Set totalBattleCount and get InitialBattleItem
     * */
     private void getInitialBattleItem(){
-        service.getBattleItem("",new Callback<YammAPIService.RawBattleItem>() {
+        /*service.getBattleItem("",new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
                 Log.i("BattleActivity/getBattleItem","Success " + rawBattleItem.getBattleItem());
@@ -115,6 +116,33 @@ public class BattleActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("BattleActivity/getBattleItem", "Fail");
+                retrofitError.printStackTrace();
+                if (retrofitError.isNetworkError())
+                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+                showInternetConnectionAlert(new CustomInternetListener(internetAlert));
+            }
+        });*/
+        service.getBattleItems(new Callback<YammAPIService.RawBattleItem>() {
+            @Override
+            public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
+                totalBattle = rawBattleItem.getRounds();
+                dishes = rawBattleItem;
+
+                Log.i("BattleActivity/getBattleItems","Total Rounds: " + totalBattle);
+                for (int i=0; i< totalBattle; i++){
+                    Log.i("BattleActivity/getBattleItems","Round " + (i+1) + ":" +
+                            dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
+                }
+                bf.setDishItemView(dishes.getBattleItem(0));
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("BattleActivity/getBattleItems", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
@@ -144,12 +172,14 @@ public class BattleActivity extends BaseActivity {
             finishBattle();
             return ;
         }
-        Log.i("BattleActivity/loadNextItem","Query param " + result);
 
         bf.setLayoutClickable(false);
+        bf.setDishItemView(dishes.getBattleItem(battleCount));
+        bf.setLayoutClickable(true);
+
 
         //Send Item to Server
-        service.getBattleItem(result,new Callback<YammAPIService.RawBattleItem>() {
+       /* service.getBattleItem(result,new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
                 Log.i("BattleActivity/getBattleItem","Success " + rawBattleItem.getBattleItem());
@@ -173,7 +203,7 @@ public class BattleActivity extends BaseActivity {
 
                 retrieveResult();
             }
-        });
+        });*/
     }
 
     /*

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,7 +49,6 @@ public class DishBattleView extends FrameLayout {
 
         layout =(FrameLayout) inflater.inflate(R.layout.dish_item, parent, true);
 
-        thumbsUp = (ImageView) layout.findViewById(R.id.battle_thumbsup);
 
         setImageView();
 
@@ -56,7 +57,14 @@ public class DishBattleView extends FrameLayout {
     }
 
     public void showThumbsUp(){
-        thumbsUp.setVisibility(View.VISIBLE);
+        Animation thumbsUpAnimation = AnimationUtils.loadAnimation(context, R.anim.thumbs_up_animation);
+
+        thumbsUp = new ImageView(context);
+        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+        thumbsUp.setImageDrawable(getResources().getDrawable(R.drawable.thumbsup));
+        layout.addView(thumbsUp, 0);
+        thumbsUp.startAnimation(thumbsUpAnimation);
     }
 
     ///////////////////////////////Private

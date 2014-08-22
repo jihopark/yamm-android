@@ -30,7 +30,7 @@ public class DishItem {
     }
 
     public String toString(){
-        return id+"";
+        return id+":"+name;
     }
 
     public boolean equals(DishItem i){
