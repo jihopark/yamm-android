@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
-        <LinearLayout
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#b2220002">
+        <FrameLayout
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/battle_fragment_layout">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/battle_layout1"
-                android:layout_weight="5"
-                android:clickable="true"
-                android:focusable="true"
-                android:hapticFeedbackEnabled="true"
-                />
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/battle_layout2"
-                android:layout_weight="5"
-                android:clickable="true"
-                android:focusable="true"
-                android:hapticFeedbackEnabled="true"
-                />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:text="@string/battle_none_button"
-                android:id="@+id/battle_none_button"
-                android:layout_weight="1"/>
-        </LinearLayout>
-</LinearLayout>
+            android:layout_height="230dp"
+            android:id="@+id/battle_layout1"
+            android:clickable="true"
+            android:focusable="true"
+            android:hapticFeedbackEnabled="true"
+            />
+        <FrameLayout
+            android:layout_below="@+id/battle_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:id="@+id/battle_layout2"
+            android:clickable="true"
+            android:focusable="true"
+            android:hapticFeedbackEnabled="true"
+            />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:scaleType="fitXY"
+            android:layout_height="74dp"
+            android:src="@drawable/vs"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="@color/light_brown_background">
+        <Button
+            android:layout_centerInParent="true"
+            style="@style/IntroButton"
+            android:textColor="#ffffffff"
+            android:background="@drawable/enabled_round_button"
+            android:text="@string/battle_none_button"
+            android:id="@+id/battle_none_button"/>
+    </RelativeLayout>
+</RelativeLayout>

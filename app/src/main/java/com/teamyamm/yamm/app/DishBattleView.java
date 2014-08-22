@@ -5,8 +5,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -17,8 +19,7 @@ public class DishBattleView extends FrameLayout {
     public YammImageView imageView;
     public TextView textView;
     private int width=0, height=0;
-    private final int TEXT_TO_HEIGHT_RATIO = 12;
-    private final float WIDTH_TO_HEIGHT_RATIO = 0.5f;
+    private ImageView thumbsUp;
     private Context context;
     private FrameLayout layout;
 
@@ -36,7 +37,7 @@ public class DishBattleView extends FrameLayout {
 
         this.context = context;
         this.width = ((BaseActivity)context).getScreenWidth();
-        this.height = (int) (width*WIDTH_TO_HEIGHT_RATIO);
+        this.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, context.getResources().getDisplayMetrics());
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -46,10 +47,16 @@ public class DishBattleView extends FrameLayout {
 
         layout =(FrameLayout) inflater.inflate(R.layout.dish_item, parent, true);
 
+        thumbsUp = (ImageView) layout.findViewById(R.id.battle_thumbsup);
+
         setImageView();
 
         setDishItemText((TextView) layout.findViewById(R.id.dish_item_text));
         Log.i("DishItemView", width + "x" + height + "Dish Set" + " " + ((TextView) layout.findViewById(R.id.dish_item_text)).getText());
+    }
+
+    public void showThumbsUp(){
+        thumbsUp.setVisibility(View.VISIBLE);
     }
 
     ///////////////////////////////Private
@@ -86,6 +93,5 @@ public class DishBattleView extends FrameLayout {
     private void setDishItemText(TextView view){
         view.setText(item.getName());
         this.textView = view;
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, height / TEXT_TO_HEIGHT_RATIO);
     }
 }

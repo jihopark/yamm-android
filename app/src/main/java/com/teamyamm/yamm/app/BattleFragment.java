@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -17,9 +17,9 @@ import android.widget.LinearLayout;
 public class BattleFragment extends Fragment{
     DishBattleView first, second;
     Button battleNoneButton;
-    LinearLayout fragmentLayout;
     FrameLayout layout1, layout2;
     BattleItem item;
+    RelativeLayout mainLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,9 +27,9 @@ public class BattleFragment extends Fragment{
 
         Log.i("BattleFragment", "BattleFragment onCreateView Started");
 
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_battle, container, false);
+        mainLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_battle, container, false);
 
-        return layout;
+        return mainLayout;
     }
 
     public void setLayoutClickable(boolean click){
@@ -41,15 +41,17 @@ public class BattleFragment extends Fragment{
     public void setDishItemView(BattleItem i){
         item = i;
         Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
-        fragmentLayout = (LinearLayout) getView().findViewById(R.id.battle_fragment_layout);
-        layout1 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout1);
-        layout2 = (FrameLayout) fragmentLayout.findViewById(R.id.battle_layout2);
+        layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
+        layout2 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout2);
+
+        layout1.removeAllViews();
+        layout2.removeAllViews();
 
         first = new DishBattleView(getActivity(),item.getFirst(), layout1);
         second = new DishBattleView(getActivity(),item.getSecond(), layout2);
 
         //Set Battle Non Button
-        battleNoneButton = (Button) fragmentLayout.findViewById(R.id.battle_none_button);
+        battleNoneButton = (Button) mainLayout.findViewById(R.id.battle_none_button);
         battleNoneButton.setOnClickListener(setBattleNoneButtonClickListener());
 
 
@@ -58,6 +60,7 @@ public class BattleFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.FIRST);
+                first.showThumbsUp();
                 Log.i("BattleFragment/onClickListener", "First Dish Selected " +item.getFirst());
                 ((BattleActivity)getActivity()).loadNextItem(item);
 
@@ -66,6 +69,7 @@ public class BattleFragment extends Fragment{
         layout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                second.showThumbsUp();
                 item.setResult(BattleItem.SECOND);
                 Log.i("BattleFragment/onClickListener", "Second Dish Selected " +item.getSecond());
                 ((BattleActivity)getActivity()).loadNextItem(item);

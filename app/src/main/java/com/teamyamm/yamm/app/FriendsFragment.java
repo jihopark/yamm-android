@@ -116,7 +116,7 @@ public class FriendsFragment extends Fragment {
     }
 
     /*
-    * Adds selected item view to layout
+    * Adds selected item view to mainLayout
     * */
     private void addSelectedItemView(YammItem yammItem){
         if (selectedItems.size() == 1)
