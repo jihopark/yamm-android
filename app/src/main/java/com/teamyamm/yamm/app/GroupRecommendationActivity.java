@@ -1,6 +1,8 @@
 package com.teamyamm.yamm.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,23 @@ public class GroupRecommendationActivity extends BaseActivity {
         setSelectedItems();
         loadDishes();
         trackReceivedGroupRecommendation();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showFinishDialog();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+                showFinishDialog();
+                break;
+        }
+
+        return true;
     }
 
     private void setSelectedItems(){
@@ -139,6 +159,24 @@ public class GroupRecommendationActivity extends BaseActivity {
     private void finishActivityForError(){
         Toast.makeText(GroupRecommendationActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    private void showFinishDialog(){
+        AlertDialog dialog = createDialog(GroupRecommendationActivity.this, R.string.group_finish_dialog_title,
+                R.string.group_finish_dialog_message,R.string.group_finish_dialog_positive, R.string.group_finish_dialog_negative,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                },
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        dialog.show();
     }
 
     private void trackReceivedGroupRecommendation(){
