@@ -6,10 +6,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="62dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:background="@color/brown_color"
         android:id="@+id/selected_items_layout">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#ffffffff"
+            android:layout_marginTop="@dimen/selected_item_line_spacing_for_group"
+            android:lineSpacingExtra="@dimen/selected_item_line_spacing_plus_padding_for_group"
             android:id="@+id/selected_items_textview"/>
     </RelativeLayout>
     <RelativeLayout
