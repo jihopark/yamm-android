@@ -76,7 +76,7 @@ public class GroupRecommendationActivity extends BaseActivity {
         for (Friend f : selectedFriend) {
             if (count++ != 0) {
                 Spannable newSpan = new SpannableString(" ");
-                newSpan.setSpan(new BackgroundColorSpan(getResources().getColor(Color.TRANSPARENT)),
+                newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
                         0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 selectedItemsText.append(newSpan);
