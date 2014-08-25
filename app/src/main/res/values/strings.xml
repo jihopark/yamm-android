@@ -90,7 +90,9 @@
     <string name="grid_checkbox_text">나는 채식주의자얌</string>
     <string name="grid_all_button">못 먹는 것 없어요</string>
     <string name="grid_empty_text">로딩 중 입니다</string>
-    <string name="grid_all_button_finish">완료</string>
+    <string name="grid_all_button_finish">다 골랐어요</string>
+    <string name="grid_dialog_title">어디 가요</string>
+    <string name="grid_dialog_message">아직 가입 절차가 남았습니다.\n금방 끝나는데 정말 종료하시겠습니까?</string>
 
     <!--Battle Activity -->
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>

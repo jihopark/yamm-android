@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,7 +52,15 @@ public class GridActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        goBackHome();
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goBackHome();
+            }
+        };
+
+        createDialog(GridActivity.this, R.string.grid_dialog_title, R.string.grid_dialog_message,
+                R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
     }
 
     /*
@@ -176,9 +185,26 @@ public class GridActivity extends BaseActivity {
                     }
                     selectedItems.add(vegi);
                     checkbox.setChecked(true);
+
+                    setVegiItemsChecked();
                 }
                 Log.i("GridActivity/onClick", selectedItems.toString());
             }
+
+            private void setVegiItemsChecked(){
+                int[] vegiList= {0, 2, 7};  //put 돼지고기, 내장, 계란 as selected
+
+                for (int i : vegiList) {
+                    GridItemView v = adapter.getItemView(i, adapter.getItem(i).getId());
+                    if (v != null && !v.getChecked()) {
+                        v.toggle();
+                        selectedItems.add(adapter.getItem(i));
+                    }
+
+                }
+
+            }
+
         });
 
         finishButton.setOnClickListener(new View.OnClickListener() {
