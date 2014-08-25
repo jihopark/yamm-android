@@ -41,9 +41,6 @@ public class YammImageView extends FrameLayout {
         Log.i("YammImageView/constructor", "Yamm ImageView XML Constructor");
 
 
-        width = 100;
-        height = 100;
-
         this.context = context;
 
         this.setBackgroundColor(Color.GRAY);
@@ -91,48 +88,11 @@ public class YammImageView extends FrameLayout {
         addView(progressCircle);
 
         if (width!=0 && height!=0)
-            loadImage();
+            loadImage(id);
     }
 
-    public void setDishImage(String name){
-/*
-        //should be deleted
-        name = "샘플";
-
-        //encode korean into url format
-        try {
-            name = URLEncoder.encode(name, "UTF-8");
-        }catch(UnsupportedEncodingException e){
-            e.printStackTrace();
-            Log.e("YammImageView/setDishImage","URL Encoding Error " + name);
-        }
-
-        String url = imageURL + "dish/" + name + ".jpg";
-
-
-
-        Log.i("YammImageView/loadImage", "Loading Image " + url);
-        Picasso.with(context)
-                .load(url)
-                .error(R.drawable.error_placeholder)
-                .into(image, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        setBackgroundColor(Color.TRANSPARENT);
-                        progressCircle.setVisibility(GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        Log.e("YammImageView/loadImage", "Image Loading Error ");
-                    }
-                });*/
+    public void loadImage(long id){
         image.setImageDrawable(getResources().getDrawable(R.drawable.mainback_test));
-    }
-
-    public void loadImage(){
-        Log.i("YammImageView/loadImage", "Loading Image");
-        setDishImage("aa");
         progressCircle.setVisibility(GONE);
 
        /* Picasso.with(context)

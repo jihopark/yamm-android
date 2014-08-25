@@ -1,12 +1,13 @@
 package com.teamyamm.yamm.app;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -21,9 +22,9 @@ public class DishBattleView extends FrameLayout {
     public YammImageView imageView;
     public TextView textView;
     private int width=0, height=0;
-    private ImageView thumbsUp;
     private Context context;
     private FrameLayout layout;
+    private ImageView thumb;
 
     public DishBattleView(Context context){
         super(context);
@@ -38,65 +39,90 @@ public class DishBattleView extends FrameLayout {
         super(context);
 
         this.context = context;
-        this.width = ((BaseActivity)context).getScreenWidth();
-        this.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, context.getResources().getDisplayMetrics());
+        //this.width = ((BaseActivity)context).getScreenWidth();
+        //this.height = getHeight();
+
+        //this.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, context.getResources().getDisplayMetrics());
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         item = aItem;
-        setClickable(true);
-        setFocusable(true);
 
         layout =(FrameLayout) inflater.inflate(R.layout.dish_item, parent, true);
 
+        imageView = (YammImageView) layout.findViewById(R.id.dish_image);
+        thumb = (ImageView) layout.findViewById(R.id.thumb);
 
-        setImageView();
+        measureDynamicDimension();
+
+        setClickable(true);
+        setFocusable(true);
 
         setDishItemText((TextView) layout.findViewById(R.id.dish_item_text));
-        Log.i("DishItemView", width + "x" + height + "Dish Set" + " " + ((TextView) layout.findViewById(R.id.dish_item_text)).getText());
     }
 
     public void showThumbsUp(){
         Animation thumbsUpAnimation = AnimationUtils.loadAnimation(context, R.anim.thumbs_up_animation);
 
-        thumbsUp = new ImageView(context);
-        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER;
-        thumbsUp.setImageDrawable(getResources().getDrawable(R.drawable.thumbsup));
-        layout.addView(thumbsUp, 0);
-        thumbsUp.startAnimation(thumbsUpAnimation);
+        thumb.setVisibility(View.VISIBLE);
+        thumbsUpAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                thumb.setVisibility(View.GONE);
+                Fragment fragment = ((BaseActivity) context).getSupportFragmentManager().findFragmentByTag("bfragment");
+                if (fragment instanceof BattleFragment) {
+                    ((BattleFragment)fragment).loadNextItem();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        thumb.startAnimation(thumbsUpAnimation);
     }
 
     ///////////////////////////////Private
 
     private void setImageView(){
-        imageView = new YammImageView(context, YammImageView.DISH, width, height , item.getId());
-        layout.addView(imageView, 0);
+        Log.i("DishBattleView/setImageView", "DishBattleView " + width + "x" + height + " Set Image");
+
+        TextView tv = (TextView) layout.findViewById(R.id.dish_item_text);
+
+        Log.i("DishBattleView/setImageView", "DishText " + tv.getText() );
+        imageView.setDimension(width, height);
+        imageView.loadImage(item.getId());
     }
-/*
+
     private void measureDynamicDimension(){
         final DishBattleView div = this;
         ViewTreeObserver vto = imageView.getViewTreeObserver();
-        vto.addOnGlobalLayoutistener(new ViewTreeObserver.OnGGlobalLayout   Listener() {
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
-                Log.i("OnPreDraw", "PreDraw " + div.width +" "+ div.height);
-                if (div.width == 0 && div.height == 0) {
+                Log.i("DishBattleView/onPreDraw", "PreDraw");
+
+                if (div.width == 0 && div.height == 0 ) {
                     div.width = imageView.getMeasuredWidth();
                     div.height = imageView.getMeasuredHeight();
-                    Log.i("OnPreDraw", "PreDraw " + div.width +" "+ div.height);
+
                     //Set Image here
-                    setImage(div.width, div.height);
-                    //Set Text Size
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, div.height / TEXT_TO_HEIGHT_RATIO);
+                    setImageView();
 
                     imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
                 return true;
             }
         });
-        Log.i("DishBattleView/measureDynamicDimension", "ViewTreeObserver Set");
     }
- */
+
+
+
 
     private void setDishItemText(TextView view){
         view.setText(item.getName());

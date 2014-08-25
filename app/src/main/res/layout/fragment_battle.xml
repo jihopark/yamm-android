@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <RelativeLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:background="@color/light_brown_background">
-        <Button
-            android:layout_centerInParent="true"
-            style="@style/IntroButton"
-            android:textColor="#ffffffff"
-            android:background="@drawable/enabled_round_button"
-            android:text="@string/battle_none_button"
-            android:id="@+id/battle_none_button"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="460dp"
+        android:layout_height="0dp"
+        android:layout_weight="460"
         android:background="#b2220002"
         android:id="@+id/dish_views_container">
-        <FrameLayout
+        <LinearLayout
             android:layout_alignParentTop="true"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:id="@+id/battle_layout1"
-            android:clickable="true"
-            android:focusable="true"
-            android:hapticFeedbackEnabled="true"
-            />
-        <FrameLayout
-            android:layout_below="@+id/battle_layout1"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:id="@+id/battle_layout2"
-            android:clickable="true"
-            android:focusable="true"
-            android:hapticFeedbackEnabled="true"
-            />
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/battle_layout1"
+                android:clickable="true"
+                android:focusable="true"
+                android:hapticFeedbackEnabled="true"
+                />
+            <FrameLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/battle_layout2"
+                android:clickable="true"
+                android:focusable="true"
+                android:hapticFeedbackEnabled="true"
+                />
+        </LinearLayout>
         <ImageView
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
@@ -47,8 +41,8 @@
             android:layout_height="74dp"
             android:src="@drawable/vs"
             />
+        <!--
         <ImageView
-            android:layout_marginTop="41.5dp"
             android:layout_alignParentTop="true"
             android:layout_width="147dp"
             android:layout_height="147dp"
@@ -65,6 +59,19 @@
             android:src="@drawable/thumbsup"
             android:id="@+id/second_thumb"
             android:visibility="gone"/>
+            -->
     </RelativeLayout>
-
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="92"
+        android:background="@color/light_brown_background">
+        <Button
+            android:layout_centerInParent="true"
+            style="@style/IntroButton"
+            android:textColor="#ffffffff"
+            android:background="@drawable/enabled_round_button"
+            android:text="@string/battle_none_button"
+            android:id="@+id/battle_none_button"/>
+    </RelativeLayout>
+</LinearLayout>

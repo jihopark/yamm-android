@@ -17,6 +17,7 @@
             android:gravity="center"/>
     </RelativeLayout>
     <fragment
+        android:tag="bfragment"
         android:layout_below="@+id/battle_title_container"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"

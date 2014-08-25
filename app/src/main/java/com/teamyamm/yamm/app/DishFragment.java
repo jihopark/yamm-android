@@ -120,7 +120,7 @@ public class DishFragment extends Fragment {
         comment.setText(item.getComment());
 
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
-        image.setDishImage(item.getName());
+        image.loadImage(item.getId());
     }
 
     private void setButton(){

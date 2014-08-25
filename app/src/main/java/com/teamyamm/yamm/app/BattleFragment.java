@@ -6,12 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 
 /**
@@ -22,7 +20,7 @@ public class BattleFragment extends Fragment{
     Button battleNoneButton;
     FrameLayout layout1, layout2;
     BattleItem item;
-    RelativeLayout mainLayout;
+    LinearLayout mainLayout;
     ImageView thumb1, thumb2;
 
     @Override
@@ -31,10 +29,10 @@ public class BattleFragment extends Fragment{
 
         Log.i("BattleFragment", "BattleFragment onCreateView Started");
 
-        mainLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_battle, container, false);
+        mainLayout = (LinearLayout) inflater.inflate(R.layout.fragment_battle, container, false);
 
-        thumb1 = (ImageView) mainLayout.findViewById(R.id.first_thumb);
-        thumb2 = (ImageView) mainLayout.findViewById(R.id.second_thumb);
+      //  thumb1 = (ImageView) mainLayout.findViewById(R.id.first_thumb);
+      //  thumb2 = (ImageView) mainLayout.findViewById(R.id.second_thumb);
 
         return mainLayout;
     }
@@ -67,9 +65,8 @@ public class BattleFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.FIRST);
-                showThumbsUp(0);
+                first.showThumbsUp();
                 Log.i("BattleFragment/onClickListener", "First Dish Selected " +item.getFirst());
-                ((BattleActivity)getActivity()).loadNextItem(item);
 
             }
         });
@@ -77,9 +74,8 @@ public class BattleFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 item.setResult(BattleItem.SECOND);
-                showThumbsUp(1);
+                second.showThumbsUp();
                 Log.i("BattleFragment/onClickListener", "Second Dish Selected " +item.getSecond());
-                ((BattleActivity)getActivity()).loadNextItem(item);
             }
         });
     }
@@ -95,34 +91,8 @@ public class BattleFragment extends Fragment{
         };
     }
 
-    private void showThumbsUp(int i){
-        Animation thumbsUpAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.thumbs_up_animation);
-        final ImageView thumb;
-        if (i == 0)
-            thumb = thumb1;
-        else
-            thumb = thumb2;
-
-
-
-        thumb.setVisibility(View.VISIBLE);
-        thumbsUpAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                thumb.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        thumb.startAnimation(thumbsUpAnimation);
+    public void loadNextItem(){
+        ((BattleActivity)getActivity()).loadNextItem(item);
     }
 
 
