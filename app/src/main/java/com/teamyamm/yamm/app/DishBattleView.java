@@ -20,11 +20,12 @@ import android.widget.TextView;
 public class DishBattleView extends FrameLayout {
     private DishItem item;
     public YammImageView imageView;
-    public TextView textView;
+    public TextView dishText;
     private int width=0, height=0;
     private Context context;
     private FrameLayout layout;
     private ImageView thumb;
+
 
     public DishBattleView(Context context){
         super(context);
@@ -63,12 +64,13 @@ public class DishBattleView extends FrameLayout {
 
     public void showThumbsUp(){
         Animation thumbsUpAnimation = AnimationUtils.loadAnimation(context, R.anim.thumbs_up_animation);
+        final Animation putdown = AnimationUtils.loadAnimation(context, R.anim.battle_put_down);
 
         thumb.setVisibility(View.VISIBLE);
         thumbsUpAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
+                dishText.startAnimation(putdown);
             }
 
             @Override
@@ -121,11 +123,13 @@ public class DishBattleView extends FrameLayout {
         });
     }
 
-
+    public TextView getTextView(){
+        return dishText;
+    }
 
 
     private void setDishItemText(TextView view){
         view.setText(item.getName());
-        this.textView = view;
+        this.dishText = view;
     }
 }

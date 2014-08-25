@@ -41,31 +41,13 @@
             android:layout_height="74dp"
             android:src="@drawable/vs"
             />
-        <!--
-        <ImageView
-            android:layout_alignParentTop="true"
-            android:layout_width="147dp"
-            android:layout_height="147dp"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/thumbsup"
-            android:id="@+id/first_thumb"
-            android:visibility="gone"/>
-        <ImageView
-            android:layout_marginBottom="41.5dp"
-            android:layout_alignParentBottom="true"
-            android:layout_width="147dp"
-            android:layout_height="147dp"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/thumbsup"
-            android:id="@+id/second_thumb"
-            android:visibility="gone"/>
-            -->
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="92"
-        android:background="@color/light_brown_background">
+        android:background="@color/light_brown_background"
+        >
         <Button
             android:layout_centerInParent="true"
             style="@style/IntroButton"

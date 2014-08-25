@@ -6,9 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
@@ -21,7 +22,8 @@ public class BattleFragment extends Fragment{
     FrameLayout layout1, layout2;
     BattleItem item;
     LinearLayout mainLayout;
-    ImageView thumb1, thumb2;
+
+    Animation battleFromLeft, battleFromRight, battleToLeft, battleToRight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +35,7 @@ public class BattleFragment extends Fragment{
 
       //  thumb1 = (ImageView) mainLayout.findViewById(R.id.first_thumb);
       //  thumb2 = (ImageView) mainLayout.findViewById(R.id.second_thumb);
-
+        loadAnimations();
         return mainLayout;
     }
 
@@ -66,7 +68,8 @@ public class BattleFragment extends Fragment{
             public void onClick(View v) {
                 item.setResult(BattleItem.FIRST);
                 first.showThumbsUp();
-                Log.i("BattleFragment/onClickListener", "First Dish Selected " +item.getFirst());
+                startBattleChoiceAnimation(0);
+                Log.i("BattleFragment/onClickListener", "First Dish Selected " + item.getFirst());
 
             }
         });
@@ -75,9 +78,12 @@ public class BattleFragment extends Fragment{
             public void onClick(View v) {
                 item.setResult(BattleItem.SECOND);
                 second.showThumbsUp();
-                Log.i("BattleFragment/onClickListener", "Second Dish Selected " +item.getSecond());
+                startBattleChoiceAnimation(1);
+                Log.i("BattleFragment/onClickListener", "Second Dish Selected " + item.getSecond());
             }
         });
+
+        startBattleIntroAnimation();
     }
 
     private View.OnClickListener setBattleNoneButtonClickListener(){
@@ -93,6 +99,30 @@ public class BattleFragment extends Fragment{
 
     public void loadNextItem(){
         ((BattleActivity)getActivity()).loadNextItem(item);
+    }
+
+    private void loadAnimations(){
+        battleFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_from_left);
+        battleFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_from_right);
+
+        battleToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_to_left);
+        battleToRight = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_to_right);
+
+    }
+
+    private void startBattleIntroAnimation(){
+        first.getTextView().startAnimation(battleFromLeft);
+        second.getTextView().startAnimation(battleFromRight);
+    }
+
+    private void startBattleChoiceAnimation(int win){
+        if (win == 0){
+            second.getTextView().startAnimation(battleToRight);
+        }
+        else{
+            first.getTextView().startAnimation(battleToLeft);
+        }
+
     }
 
 

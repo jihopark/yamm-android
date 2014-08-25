@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="battle_finish_speed">500</integer>
+    <integer name="battle_intro_speed">300</integer>
+
 </resources>
