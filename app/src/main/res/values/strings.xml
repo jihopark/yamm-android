@@ -122,7 +122,6 @@
     <string name="join_checkbox_message">서비스 약관와 개인정보 보호정책에 동의하시나요?</string>
     <string name="verification_done_message">인증왔어요! 진짜 번호가 맞네요</string>
     <string name="join_confirm_button">가입하기</string>
-
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
     <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>

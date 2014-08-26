@@ -47,7 +47,7 @@ public class JoinActivity extends BaseActivity {
         setContentView(R.layout.activity_join);
         Log.i("JoinActivity/OnCreate", "JoinActivity onCreate");
 
-        joinLayout = (LinearLayout)findViewById(R.id.join_layout);
+        joinLayout = (LinearLayout) findViewById(R.id.join_layout);
         ((EditText) joinLayout.findViewById(R.id.pw_field)).setTransformationMethod(new HiddenPassTransformationMethod());
         setActionBarBackButton(true);
         configSendButton();
@@ -96,6 +96,7 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
+        showSoftKeyboard(JoinActivity.this);
     }
 
     @Override
@@ -263,7 +264,7 @@ public class JoinActivity extends BaseActivity {
         final ImageView emailError = (ImageView) findViewById(R.id.email_field_error);
         final ImageView pwError = (ImageView) findViewById(R.id.pw_field_error);
         final ImageView veriError = (ImageView) findViewById(R.id.veri_field_error);
-
+        final ImageView veriSuccess = (ImageView)findViewById(R.id.veri_success_image);
 
         Log.i("JoinActivity/postRegistrationToServer", name + "/" + email + "/" + password + "/" + phone);
 
@@ -306,6 +307,7 @@ public class JoinActivity extends BaseActivity {
                 else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE)) {
                     makeErrorToast(getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_SHORT);
                     veriText.setTextColor(getResources().getColor(R.color.error_color));
+                    veriSuccess.setVisibility(View.GONE);
                     veriError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT)) {
@@ -389,6 +391,14 @@ public class JoinActivity extends BaseActivity {
         Spannable span = new SpannableString(getString(R.string.agreement_textview));
         span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.agreement_link_color)), 0, 17, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         agreementTextView.setText(span);
+
+        agreementTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(JoinActivity.this, "웹페이지로 띄우기" ,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void configSendButton() {
