@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onStart(){
         super.onStart();
-        showFBDialog();
+     //   showFBDialog();   //For Later
 
         loadDishes();
 
