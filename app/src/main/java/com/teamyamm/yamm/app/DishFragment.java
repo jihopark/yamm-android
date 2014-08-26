@@ -193,7 +193,7 @@ public class DishFragment extends Fragment {
 
                 YammAPIService service = YammAPIAdapter.getDislikeService();
 
-                service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), new Callback<DishItem>() {
+                Callback<DishItem> callback = new Callback<DishItem>() {
                     @Override
                     public void success(DishItem dishItem, Response response) {
                         Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
@@ -211,7 +211,14 @@ public class DishFragment extends Fragment {
                             Toast.makeText(getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                };
+
+                if (isGroup) {
+                    service.postDislikeDishGroup(new YammAPIService.RawDislike(getDishItem().getId()), callback);
+                    Log.i("DishFragment/onClickListener","Group Dislike API Called");
+                }
+                else
+                    service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), callback);
 
 
             }

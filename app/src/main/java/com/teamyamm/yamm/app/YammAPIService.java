@@ -228,6 +228,9 @@ public interface YammAPIService {
     @GET("/group/suggestions")
     void getGroupSuggestions(@Query("userIds") String userIDs, Callback<List<DishItem>> callback);
 
+    @POST("/group/next-suggestion")
+    void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
+
     @FormUrlEncoded
     @POST("/kakao-push-token")
     void registerPushToken(@Field("pushToken") String items, Callback<String> cb);

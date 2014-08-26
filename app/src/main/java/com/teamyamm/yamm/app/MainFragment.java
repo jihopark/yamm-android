@@ -133,18 +133,18 @@ public class MainFragment extends Fragment {
             super(fm);
             fragments = new ArrayList<DishFragment>();
 
-            if (isGroup)
-                numPage = DEFAULT_NUMBER_OF_DISHES + 1;
-            else
+         //   if (isGroup)
+        //        numPage = DEFAULT_NUMBER_OF_DISHES + 1;
+        //    else
                 numPage = DEFAULT_NUMBER_OF_DISHES;
 
         }
 
         @Override
         public Fragment getItem(int index) {
-            if (isGroup && index == DEFAULT_NUMBER_OF_DISHES){
-                return  new BattleOfferFragment();
-            }
+      //      if (isGroup && index == DEFAULT_NUMBER_OF_DISHES){
+        //        return  new BattleOfferFragment();
+      //      }
 
 
             DishFragment dishFragment = new DishFragment();

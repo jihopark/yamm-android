@@ -31,7 +31,7 @@ import retrofit.client.Response;
 /**
  * Created by parkjiho on 7/23/14.
  */
-public class GroupRecommendationActivity extends BaseActivity {
+public class GroupRecommendationActivity extends BaseActivity implements MainFragmentInterface {
 
     ArrayList<Friend> selectedFriend;
     List<DishItem> dishItems;
@@ -157,6 +157,11 @@ public class GroupRecommendationActivity extends BaseActivity {
         Log.i("GroupRecommendationActivity/loadBundle", "Selected Friends : " + selectedFriend);
         Log.i("GroupRecommendationActivity/loadBundle","Selected Time : " + selectedTime);
 
+    }
+
+    public void changeInDishItem(List<DishItem> list){
+        dishItems = list;
+        Log.i("MainActivity/changeInDishItem","Dish Item changed to " + dishItems);
     }
 
     private void finishActivityForError(){
