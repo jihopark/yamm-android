@@ -67,6 +67,7 @@ public class DishFragment extends Fragment {
     private YammImageView dishImage;
     private boolean isGroup;
     private Activity activity;
+    private MainFragment parentFragment;
 
     //private AutoCompleteTextView placePickEditText;
 
@@ -77,8 +78,19 @@ public class DishFragment extends Fragment {
         isGroup = this.getArguments().getBoolean("isGroup");
         index = this.getArguments().getInt("index");
 
+        if (getParentFragment() instanceof MainFragment){
+            parentFragment = (MainFragment) getParentFragment();
+        }
+        else{
+            Log.e("DishFragment/onCreateView", "Parent Fragment of DishFragment should be instanceof MainFragment!");
+            return null;
+        }
+
         loadDish();
-        setButton();
+        if (index == parentFragment.getCurrentPage()) {
+            Log.i("DishFragment/onCreateView",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
+            setButtons();
+        }
 
         return main_layout;
     }
@@ -123,35 +135,27 @@ public class DishFragment extends Fragment {
         image.loadImage(item.getId());
     }
 
-    private void setButton(){
-        next = (ImageButton) main_layout.findViewById(R.id.dish_next_button);
+    public void setButtons(){
+        next = parentFragment.getButton(R.id.dish_next_button);
 
-        searchMap = (ImageButton) main_layout.findViewById(R.id.search_map_button);
+        searchMap = parentFragment.getButton(R.id.search_map_button);
 
-        pokeFriend = (ImageButton) main_layout.findViewById(R.id.poke_friend_button);
+        pokeFriend = parentFragment.getButton(R.id.poke_friend_button);
 
-        dislike = (ImageButton) main_layout.findViewById(R.id.dish_dislike_button);
+        dislike = parentFragment.getButton(R.id.dish_dislike_button);
 
-        if (index == DEFAULT_NUMBER_OF_DISHES - 1){
-            next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            next.setLayoutParams(params);
-        }
+
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getParentFragment() instanceof MainFragment){
-                    MainFragment parent = (MainFragment) getParentFragment();
-                    ViewPager dishPager = parent.getDishPager();
+                ViewPager dishPager = parentFragment.getDishPager();
 
-                    if (index == DEFAULT_NUMBER_OF_DISHES - 1)
-                        dishPager.setCurrentItem(index - 1, true);
-                    else
-                        dishPager.setCurrentItem(index + 1, true);
-                }
+                if (index == DEFAULT_NUMBER_OF_DISHES - 1)
+                    dishPager.setCurrentItem(index - 1, true);
+                else
+                    dishPager.setCurrentItem(index + 1, true);
+
             }
         });
 
@@ -163,7 +167,7 @@ public class DishFragment extends Fragment {
                 //pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
                 addDishToPositive(SHARE, null);
 
-                Intent intent = new Intent(getActivity(), PokeActivity.class);
+                Intent intent = new Intent(parentFragment.getActivity(), PokeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
                 Bundle bundle = new Bundle();
@@ -189,7 +193,7 @@ public class DishFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 Log.i("DishFragment/onClick","Dislike pressed for " + getDishItem().getName());
                 trackDislikeMixpanel();
-                Toast.makeText(getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(parentFragment.getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
 
                 YammAPIService service = YammAPIAdapter.getDislikeService();
 
@@ -206,9 +210,9 @@ public class DishFragment extends Fragment {
                         String msg = retrofitError.getCause().getMessage();
 
                         if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
-                            Toast.makeText(getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(parentFragment.getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(parentFragment.getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -471,7 +475,7 @@ public class DishFragment extends Fragment {
     }
 
     private void trackSearchMapMixpanel(String place){
-        Activity activity = getActivity();
+        Activity activity = parentFragment.getActivity();
         if (activity instanceof BaseActivity){
             BaseActivity base = (BaseActivity) activity;
             JSONObject props = new JSONObject();
@@ -490,7 +494,7 @@ public class DishFragment extends Fragment {
     }
 
     private void trackDislikeMixpanel(){
-        Activity activity = getActivity();
+        Activity activity = parentFragment.getActivity();
         if (activity instanceof BaseActivity){
             BaseActivity base = (BaseActivity) activity;
             JSONObject props = new JSONObject();

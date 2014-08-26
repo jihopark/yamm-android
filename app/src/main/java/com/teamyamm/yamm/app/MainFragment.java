@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -37,9 +38,10 @@ public class MainFragment extends Fragment {
     private RelativeLayout main_layout;
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
+    private ImageButton next;
 
     private List<DishItem> dishItems;
-    private int currentPage;
+    private int currentPage = 0;
     private boolean isGroup;
 
     //For Place Pick
@@ -95,6 +97,17 @@ public class MainFragment extends Fragment {
 
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
+
+        next = (ImageButton) main_layout.findViewById(R.id.dish_next_button);
+
+    }
+
+    public ImageButton getButton(int viewId){
+        View v = main_layout.findViewById(viewId);
+        if (v instanceof ImageButton)
+            return (ImageButton) v;
+        Log.e("MainFragment/getButtons","Non-imagebutton view Id!");
+        return null;
     }
 
 
@@ -128,10 +141,14 @@ public class MainFragment extends Fragment {
         private int numPage;
         private ArrayList<DishFragment> fragments;
         private boolean hasReachedEnd = false;
+        private boolean buttonToLeft = false;
 
         public DishFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<DishFragment>();
+            for (int i=0; i < DEFAULT_NUMBER_OF_DISHES ; i++){
+                fragments.add(new DishFragment());
+            }
 
          //   if (isGroup)
         //        numPage = DEFAULT_NUMBER_OF_DISHES + 1;
@@ -154,8 +171,8 @@ public class MainFragment extends Fragment {
             bundle.putInt("index", index);
 
             dishFragment.setArguments(bundle);
-
-            fragments.add(index, dishFragment);
+            fragments.set(index, dishFragment);
+            Log.i("DishFragmentPagerAdapter/getItem", "Page " + index +" : " + dishItems.get(index).getName());
 
             return dishFragment;
         }
@@ -196,11 +213,36 @@ public class MainFragment extends Fragment {
                 trackEndOfRecommendationMixpanel();
                 hasReachedEnd = true;
             }
+            Log.i("DishFragmentPagerAdapter/onPageSelected", dishItems.get(i).getName() + " Page " + i +" : Setting Buttons Again");
+            fragments.get(i).setButtons();
 
+            if (i == DEFAULT_NUMBER_OF_DISHES - 1){
+                next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                next.setLayoutParams(params);
+                buttonToLeft = true;
+            }
+            else{
+                if (buttonToLeft) {
+                    next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_right));
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    next.setLayoutParams(params);
+                    buttonToLeft = false;
+                }
+            }
         }
 
         @Override
         public void onPageScrollStateChanged(int i) {
+        }
+
+        public void setButtonsForCurrentIndex(){
+            Log.i("DishFragmentPagerAdapter/setButtonsForCurrentIndex", dishItems.get(currentPage).getName() + "Page " + currentPage +" : Setting Buttons For Current Index");
+            fragments.get(currentPage).setButtons();
         }
 
         public DishItem getCurrentDishItem(){
@@ -221,6 +263,7 @@ public class MainFragment extends Fragment {
         }
         dishItems.add(replace);
         dishAdapter.notifyDataSetChanged();
+        dishAdapter.setButtonsForCurrentIndex();
         Log.i("MainFragment/changeInDishItem","Change In items " + dishItems);
 
 

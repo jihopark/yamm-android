@@ -10,4 +10,50 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/dish_pager" />
+    <ImageButton
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="89dp"
+        android:layout_marginRight="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dish_dislike_button"
+        android:src="@drawable/main_dislike"
+        android:background="@drawable/negative_main_circle"
+        />
+    <ImageButton
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="89dp"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/dish_dislike_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_map_button"
+        android:src="@drawable/main_locate"
+        android:background="@drawable/positive_main_circle"
+        />
+    <ImageButton
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="89dp"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/search_map_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/poke_friend_button"
+        android:src="@drawable/main_yamm_select"
+        android:background="@drawable/positive_main_circle"
+        />
+
+    <ImageButton
+        android:layout_above="@+id/dish_dislike_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="147dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dish_next_button"
+        android:src="@drawable/arrow_right"
+        android:background="@drawable/arrow_circle"
+        />
 </RelativeLayout>
