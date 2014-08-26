@@ -15,8 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,11 +41,12 @@ public class MainFragment extends Fragment {
     private RelativeLayout main_layout;
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
-    private ImageButton next;
+    private ImageButton next, searchMap, pokeFriend, dislike;
 
     private List<DishItem> dishItems;
     private int currentPage = 0;
     private boolean isGroup;
+    private boolean hasPerformed = false;
 
     //For Place Pick
     //private AutoCompleteTextView placePickEditText;
@@ -57,11 +61,26 @@ public class MainFragment extends Fragment {
 
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_main, container, false);
 
+        next = (ImageButton) main_layout.findViewById(R.id.dish_next_button);
+        searchMap = (ImageButton) main_layout.findViewById(R.id.search_map_button);
+        pokeFriend = (ImageButton) main_layout.findViewById(R.id.poke_friend_button);
+        dislike = (ImageButton) main_layout.findViewById(R.id.dish_dislike_button);
+
+
         initFragment();
         setDishPager();
         setLocationManagerListener();
 
         return main_layout;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (!hasPerformed) {
+            startButtonsAnimation();
+            hasPerformed = true;
+        }
     }
 
     @Override
@@ -97,9 +116,6 @@ public class MainFragment extends Fragment {
 
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
-
-        next = (ImageButton) main_layout.findViewById(R.id.dish_next_button);
-
     }
 
     public ImageButton getButton(int viewId){
@@ -251,6 +267,8 @@ public class MainFragment extends Fragment {
             Log.e("DishFragmentPagerAdapter/getCurrentDishItem","Current Page is wrong, returning first item");
             return fragments.get(0).getDishItem();
         }
+
+        public DishFragment getFirstFragment(){return fragments.get(0); }
     }
 
     public void changeInDishItem(DishItem original, DishItem replace){
@@ -291,6 +309,69 @@ public class MainFragment extends Fragment {
         };
 
         Log.i("MainFragment/setLocationManagerListener","Location Manager and Listener Set");
+    }
+
+    public void startButtonsAnimation(){
+        Animation buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
+        final Animation mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
+        final Animation textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
+        final Animation textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
+
+        textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
+
+        mainBarAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                TextView tv1 = dishAdapter.getFirstFragment().getNameText();
+                TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
+
+                tv1.setVisibility(View.VISIBLE);
+                tv2.setVisibility(View.VISIBLE);
+
+                tv1.startAnimation(textAnimation1);
+                tv2.startAnimation(textAnimation2);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                hasPerformed = true;
+                dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
+                dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
+                dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
+                dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
+        next.startAnimation(buttonAnimation);
+        searchMap.startAnimation(buttonAnimation);
+        pokeFriend.startAnimation(buttonAnimation);
+        dislike.startAnimation(buttonAnimation);
+
+        Log.i("MainFragment/startButtonsAnimation", "Null? " + (dishAdapter.getFirstFragment().getMainBar() == null));
+        Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
     }
 
     private void trackEndOfRecommendationMixpanel(){

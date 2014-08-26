@@ -246,7 +246,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
             tact.add(R.id.main_layout, newMainFragment, MainFragment.MAIN_FRAGMENT);
             tact.commitAllowingStateLoss();
-
         }
         else{
             Log.i("MainActivity/setMainFragment","Replacing previous fragment");

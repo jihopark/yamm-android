@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,8 @@ public class DishFragment extends Fragment {
     private boolean isGroup;
     private Activity activity;
     private MainFragment parentFragment;
+    private ImageView mainBar;
+    private TextView nameText, commentText;
 
     //private AutoCompleteTextView placePickEditText;
 
@@ -77,6 +80,11 @@ public class DishFragment extends Fragment {
 
         isGroup = this.getArguments().getBoolean("isGroup");
         index = this.getArguments().getInt("index");
+
+        mainBar = (ImageView) main_layout.findViewById(R.id.main_image_bar);
+        nameText = (TextView) main_layout.findViewById(R.id.dish_name_text);
+        commentText = (TextView) main_layout.findViewById(R.id.dish_comment_text);
+
 
         if (getParentFragment() instanceof MainFragment){
             parentFragment = (MainFragment) getParentFragment();
@@ -92,12 +100,16 @@ public class DishFragment extends Fragment {
             setButtons();
         }
 
+
         return main_layout;
     }
 
     public DishItem getDishItem(){
         return item;
     }
+    public ImageView getMainBar(){ return mainBar; }
+    public TextView getNameText(){ return nameText; }
+    public TextView getCommentText(){ return commentText; }
 
     @Override
     public void onAttach(Activity activity) {
