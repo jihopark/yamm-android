@@ -97,8 +97,8 @@ public class GridActivity extends BaseActivity {
         final ProgressDialog progressDialog;
         // Show Progress Dialog
         progressDialog = createProgressDialog(GridActivity.this,
-                R.string.battle_progress_dialog_title,
-                R.string.battle_progress_dialog_message);
+                R.string.progress_dialog_title,
+                R.string.progress_dialog_message);
         progressDialog.show();
 
         service.postGridItems(s, new Callback<String>() {

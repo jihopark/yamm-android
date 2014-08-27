@@ -23,7 +23,7 @@ public class BattleFragment extends Fragment{
     BattleItem item;
     LinearLayout mainLayout;
 
-    Animation battleFromLeft, battleFromRight, battleToLeft, battleToRight;
+    Animation battleFromLeft, battleFromRight, battleToLeft, battleToRight, animationWithListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,7 +92,7 @@ public class BattleFragment extends Fragment{
             public void onClick(View v) {
                 item.setResult(BattleItem.NONE);
                 Log.i("BattleFragment/onClickListener", "No Dish Selected");
-                ((BattleActivity)getActivity()).loadNextItem(item);
+                startBattleChoiceAnimation(2);
             }
         };
     }
@@ -108,9 +108,28 @@ public class BattleFragment extends Fragment{
         battleToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_to_left);
         battleToRight = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_to_right);
 
+        animationWithListener = AnimationUtils.loadAnimation(getActivity(), R.anim.battle_to_left);
+
+        animationWithListener.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.i("BattleFragment/onAnimationEnd","Animation Listener for NO selection");
+                ((BattleActivity)getActivity()).loadNextItem(item);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
-    private void startBattleIntroAnimation(){
+    public void startBattleIntroAnimation(){
         first.getTextView().startAnimation(battleFromLeft);
         second.getTextView().startAnimation(battleFromRight);
     }
@@ -119,8 +138,12 @@ public class BattleFragment extends Fragment{
         if (win == 0){
             second.getTextView().startAnimation(battleToRight);
         }
-        else{
+        else if (win == 1){
             first.getTextView().startAnimation(battleToLeft);
+        }
+        else{
+            second.getTextView().startAnimation(battleToRight);
+            first.getTextView().startAnimation(animationWithListener);
         }
 
     }

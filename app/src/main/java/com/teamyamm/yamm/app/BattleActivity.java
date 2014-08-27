@@ -2,11 +2,16 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +36,7 @@ public class BattleActivity extends BaseActivity {
     private TextView battleCountText;
     private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
     private YammAPIService.RawBattleItem dishes;
-    private ProgressDialog progressDialog;
+    private Dialog fullScreenDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +48,7 @@ public class BattleActivity extends BaseActivity {
 
         battleItems = new ArrayList<YammAPIService.RawBattleItemForPost>();
 
-        progressDialog = createProgressDialog(BattleActivity.this,
-                R.string.progress_dialog_title, R.string.progress_dialog_message);
-        progressDialog.show();
+        setInitialLoading();
 
         service = YammAPIAdapter.getTokenService();
 
@@ -69,6 +72,39 @@ public class BattleActivity extends BaseActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private void setInitialLoading(){
+
+        fullScreenDialog = createBattleFullScreenDialog(BattleActivity.this, getString(R.string.battle_intro_dialog));
+        fullScreenDialog.show();
+
+    }
+    private Dialog createBattleFullScreenDialog(Context context, String message){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_battle_full_screen);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black_overlay)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        TextView tv = (TextView) dialog.findViewById(R.id.dialog_message);
+        tv.setText(message);
+
+        Button start = (Button) dialog.findViewById(R.id.start_button);
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bf == null || bf.first ==null || bf.second == null){
+                    Toast.makeText(BattleActivity.this, R.string.battle_loading_toast, Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+                fullScreenDialog.dismiss();
+                bf.startBattleIntroAnimation();
+            }
+        });
+
+        return dialog;
+    }
+
     /*
     * Custom Listener for Battle Activity InternetDialog for getInitialBattleItem
     * */
@@ -137,7 +173,6 @@ public class BattleActivity extends BaseActivity {
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
                 bf.setDishItemView(dishes.getBattleItem(0));
-                progressDialog.dismiss();
             }
 
             @Override
@@ -148,7 +183,6 @@ public class BattleActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
                 showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             }
         });
@@ -221,8 +255,8 @@ public class BattleActivity extends BaseActivity {
     private void finishBattle(){
         Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ battleItems);
         final ProgressDialog finalDialog =  createProgressDialog(BattleActivity.this,
-                R.string.battle_final_dialog_title,
-                R.string.battle_final_dialog_message);
+                R.string.progress_dialog_title,
+                R.string.progress_dialog_message);
 
         finalDialog.show();
 
