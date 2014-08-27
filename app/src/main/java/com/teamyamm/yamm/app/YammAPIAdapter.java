@@ -20,12 +20,34 @@ import retrofit.client.Response;
  */
 public class YammAPIAdapter {
     public static String apiURL = "http://api.yamm.me";
+
+
+    public final static boolean HTTP = false;
+    public final static boolean HTTPS = true;
+    public static boolean protocol = HTTP;
+
     private static YammAPIService service = null;
     public static YammAPIService tokenService = null;
     private static YammAPIService dislikeService = null;
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
     private static String token = null;
+
+    public static boolean toggleProtocol(){
+        protocol = !protocol;
+        if (protocol == HTTP)
+            apiURL = "http://api.yamm.me";
+        else
+            apiURL = "https://api.yamm.me";
+
+        service = null;
+        tokenService = null;
+        joinService = null;
+        dislikeService = null;
+        loginService = null;
+
+        return protocol;
+    }
 
     /*
     * Plain service without any interceptor or error handler

@@ -456,6 +456,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 else if (position == 2){
                     goToActivity(BattleActivity.class);
                 }
+                else if (position == 3){
+                    boolean result = YammAPIAdapter.toggleProtocol();
+                    if (result == YammAPIAdapter.HTTP)
+                        Toast.makeText(MainActivity.this, "H!T!T!P!", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(MainActivity.this, "H!T!T!P!S!", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             private DialogInterface.OnClickListener setPositiveListener(){
