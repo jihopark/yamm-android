@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import retrofit.Callback;
@@ -40,6 +41,8 @@ public class JoinActivity extends BaseActivity {
     private SmsListener smsListener;
     private Button joinConfirmButton;
     private EditText emailText, nameText, pwText, phoneText, veriText;
+    private ProgressDialog progressDialog;
+    private int loginAttempt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +275,7 @@ public class JoinActivity extends BaseActivity {
 
         //To Prevent Double Fire
         joinConfirmButton.setEnabled(false);
-        final ProgressDialog progressDialog = createProgressDialog(JoinActivity.this,
+        progressDialog = createProgressDialog(JoinActivity.this,
                 R.string.join_progress_dialog_title,
                 R.string.join_progress_dialog_message);
         progressDialog.show();
@@ -281,7 +284,6 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
-                progressDialog.hide();
                 setMixpanelAlias();
                 logInAfterJoin();
             }
@@ -345,6 +347,7 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
                 Log.i("LoginActivity/userLogin", "Logged in " + yammToken);
+                progressDialog.hide();
 
                 //Save Token to Shared Pref
                 SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
@@ -357,7 +360,26 @@ public class JoinActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("JoinActivity/userLogin", "ERROR");
+                Log.e("JoinActivity/userLogin", "ERROR " + retrofitError.getCause().toString());
+
+                if(loginAttempt < 6){
+                    loginAttempt++;
+
+                    Log.e("JoinActivity/userLogin", "Handling Error Retrying for " +loginAttempt + " times");
+
+                    String msg = "";
+                    if (retrofitError.getMessage()!=null){
+                        msg = retrofitError.getMessage();
+                    }
+
+                    trackLoginErrorMixpanel(msg, loginAttempt);
+
+                    logInAfterJoin();
+                    return ;
+                }
+
+                progressDialog.dismiss();
+
 
                 if (retrofitError.isNetworkError())
                     Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_SHORT).show();
@@ -500,6 +522,18 @@ public class JoinActivity extends BaseActivity {
 
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());
 
+    }
+
+    private void trackLoginErrorMixpanel(String errorMessage, int count){
+        JSONObject props = new JSONObject();
+        try {
+            props.put("count", count);
+            props.put("Message", errorMessage);
+        }catch(JSONException e){
+            Log.e("JoinActivity/trackLoginErrorMixpanel","JSON Error");
+        }
+        mixpanel.track("Login Error", props);
+        Log.i("JoinActivity/trackJoiningMixpanel","Login Error Tracked");
     }
 
     private void trackJoiningMixpanel(){
