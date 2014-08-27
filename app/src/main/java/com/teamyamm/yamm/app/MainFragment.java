@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -311,7 +313,7 @@ public class MainFragment extends Fragment {
         Log.i("MainFragment/setLocationManagerListener","Location Manager and Listener Set");
     }
 
-    public void startButtonsAnimation(){
+    public void startButtonsAnimation() {
         Animation buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
         final Animation mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         final Animation textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
@@ -342,6 +344,7 @@ public class MainFragment extends Fragment {
 
             }
         });
+        final Dialog dialog = ((MainFragmentInterface) getActivity()).getFullScreenDialog();
 
         buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -350,6 +353,7 @@ public class MainFragment extends Fragment {
                 dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
                 dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
                 dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
+
             }
 
             @Override
@@ -364,13 +368,25 @@ public class MainFragment extends Fragment {
             }
         });
 
+        final MainFragmentInterface main = (MainFragmentInterface) getActivity();
 
+        if (main.isFullScreenDialogOpen()){
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    main.closeFullScreenDialog();
+                    Log.d("MainFragment/run","Dialog Dismissed here - 6");
+                }
+            }, getResources().getInteger(R.integer.dialog_delay_duration));
+
+            buttonAnimation.setStartOffset(getResources().getInteger(R.integer.dialog_delay_duration) - 1000);
+        }
         next.startAnimation(buttonAnimation);
         searchMap.startAnimation(buttonAnimation);
         pokeFriend.startAnimation(buttonAnimation);
         dislike.startAnimation(buttonAnimation);
 
-        Log.i("MainFragment/startButtonsAnimation", "Null? " + (dishAdapter.getFirstFragment().getMainBar() == null));
         Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
     }
 

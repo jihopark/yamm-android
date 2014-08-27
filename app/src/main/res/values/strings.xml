@@ -67,6 +67,7 @@
     <string name="map_dialog_positive">찾기</string>
     <string name="map_dialog_negative">취소</string>
     <string name="new_recommendation_message">새로운 음식이 추천되었습니다</string>
+    <string name="no_new_recommendation_message">새로운 추천이 없네요ㅠㅠ \n점심, 저녁 한번씩 추천되요\n여기에 어떤식으로 하루에 몇번 언제 추천되는지가 들어가야할듯!!!!!!!!!!!!!!!</string>
 
     <string name="fb_dialog_title">좋아요 해주세요</string>
     <string name="fb_dialog_message">Yamm 페이스북에 좋아요를 누르면 더 많은 정보와 소식을 알려드려요! 다양한 이벤트와 재밌거리를 위해 페이스북 라이크 고고!!</string>
@@ -80,6 +81,8 @@
     <string name="dish_dislike_positive">정말이에요</string>
     <string name="dish_dislike_toast">그럼 딴거 드셔야죠!</string>
     <string name="dish_too_many_dislike_toast">너무 다 싫어하는거 아니에요ㅠㅠ?</string>
+
+    <string name="dialog_main">당신의 입맛에 맞는 메뉴를 고르고 있어요\n새롭게 추천되는 4개 중 몇 개나 입맛에 맞을까요?</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
@@ -161,5 +164,5 @@
     <string name="group_finish_dialog_message">얌친들과 먹을 메뉴를 다 보셨나요?\n지금 뒤로 가면 현재 추천 결과를 다시 못볼지도 몰라요</string>
     <string name="group_finish_dialog_positive">다 봤어요</string>
     <string name="group_finish_dialog_negative">더 볼래요</string>
-
+    <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>
 </resources>

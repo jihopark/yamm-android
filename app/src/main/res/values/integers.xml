@@ -5,6 +5,6 @@
     <integer name="main_buttons_animation_duration">1500</integer>
     <integer name="main_text_animation_offset">800</integer>
     <integer name="main_text_animation_duration">1000</integer>
-    <integer name="main_text_container_animation_duration">800</integer>
-
+    <integer name="main_text_container_animation_duration">500</integer>
+    <integer name="dialog_delay_duration">3000</integer>
 </resources>

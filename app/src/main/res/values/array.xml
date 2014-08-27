@@ -2,6 +2,9 @@
 <resources>
     <array name="nav_menu_titles">
         <item>로그아웃</item>
+        <item>못 먹는 음식</item>
+        <item>배틀 다시</item>
+
     </array>
 
     <!-- Yamm Date Spinner -->

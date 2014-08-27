@@ -1,7 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,7 +37,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     List<DishItem> dishItems;
     String selectedTime;
     MainFragment mainFragment;
-    ProgressDialog dialog;
+    private Dialog fullScreenDialog;
+    private boolean isDialogOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,26 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     public void onBackPressed() {
         showFinishDialog();
     }
+
+    public Dialog getFullScreenDialog(){
+        return fullScreenDialog;
+    }
+
+    public boolean isFullScreenDialogOpen(){
+        return isDialogOpen;
+    }
+
+    public void setFullScreenDialogOpen(boolean b){
+        isDialogOpen = b;
+    }
+
+    public void closeFullScreenDialog(){
+        if (fullScreenDialog!= null && isDialogOpen) {
+            fullScreenDialog.dismiss();
+            isDialogOpen = false;
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -118,10 +139,10 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             userIds = userIds + f.getID() + ",";
         userIds = userIds.substring(0, userIds.length() - 1);
         Log.i("GroupRecommendationActivity/loadDishes", userIds);
-        dialog = createProgressDialog(GroupRecommendationActivity.this,
-                R.string.progress_dialog_title, R.string.progress_dialog_message);
+        fullScreenDialog = createFullScreenDialog(GroupRecommendationActivity.this, getString(R.string.dialog_group_recommendation));
+        isDialogOpen = true;
 
-        dialog.show();
+        fullScreenDialog.show();
 
         service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
             @Override
@@ -129,14 +150,13 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
                 setFragment();
-                dialog.dismiss();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("GroupRecommendationActivity/getGroupSuggestions", "Something went wrong");
                 finishActivityForError();
-                dialog.dismiss();
+                fullScreenDialog.dismiss();
             }
         });
     }
@@ -161,7 +181,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
 
     public void changeInDishItem(List<DishItem> list){
         dishItems = list;
-        Log.i("MainActivity/changeInDishItem","Dish Item changed to " + dishItems);
+        Log.i("MainActivity/changeInDishItem", "Dish Item changed to " + dishItems);
     }
 
     private void finishActivityForError(){

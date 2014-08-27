@@ -1,7 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +11,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +25,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -57,7 +61,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ReadContactAsyncTask readContactAsyncTask;
 
     private List<DishItem> dishItems;
-    private ProgressDialog dialog, newDialog;
+    private Dialog fullScreenDialog;
+    private boolean isDialogOpen = false;
 
     private ImageButton friendPickButton;
 
@@ -96,6 +101,21 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         goBackHome();
     }
 
+    public Dialog getFullScreenDialog(){ return fullScreenDialog; }
+
+    public boolean isFullScreenDialogOpen(){ return isDialogOpen; }
+
+    public void closeFullScreenDialog(){
+        if (fullScreenDialog!= null && isDialogOpen) {
+            fullScreenDialog.dismiss();
+            isDialogOpen = false;
+        }
+        else{
+            Log.d("MainActivity/closeFullScreenDialog","It is already closed");
+        }
+    }
+
+    public void setFullScreenDialogOpen(boolean b){ isDialogOpen = b; }
 
     public boolean isFriendLoaded(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
@@ -262,8 +282,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     * */
     private void loadDishes(){
 
-        dialog = createProgressDialog(MainActivity.this,
-                R.string.progress_dialog_title, R.string.progress_dialog_message);
+        fullScreenDialog = createFullScreenDialog(MainActivity.this, getString(R.string.dialog_main));
 
      /*   RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
@@ -278,10 +297,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         if (mainFragment==null) {
             //If no mainfragment, show progress dialog
-            dialog.show();
+            fullScreenDialog.show();
+            isDialogOpen = true;
+            Log.d("MainActivity/loadDishes", "Dialog Opened here - 1");
+
             Log.i("MainActivity/loadDishes", "Set Main Fragment with previous dishes");
             setMainFragment();
-            dialog.dismiss();
         }
 
 
@@ -292,14 +313,44 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
                 if (!isSameDishItems(items)){
                     //if there is new list, show newDialog
+                    if (isDialogOpen == false){
+                        fullScreenDialog.show();
+                        isDialogOpen = true;
+                        Log.d("MainActivity/getPersonalDishes", "Dialog Opened here - 2");
+                    }
+
                     Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
 
                     dishItems = items;
                     setMainFragment();
 
-                    Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_LONG).show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_SHORT).show();
+                        }
+                    }, getResources().getInteger(R.integer.dialog_delay_duration));
+
                     trackNewRecommendationMixpanel();
                     return ;
+                }
+                if (isDialogOpen){
+                    final Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_new_recommendation_message),Toast.LENGTH_LONG);
+                    TextView tv = (TextView) ((LinearLayout)toast.getView()).getChildAt(0);
+                    tv.setGravity(Gravity.CENTER_HORIZONTAL);
+
+                    // To delay Toast
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            toast.show();
+
+                            closeFullScreenDialog();
+                            Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");
+                        }
+                    }, getResources().getInteger(R.integer.dialog_delay_duration) - 2000);
+                   // fullScreenDialog.dismiss();
+                   // isDialogOpen = false;
                 }
             }
 
@@ -307,8 +358,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             public void failure(RetrofitError retrofitError) {
                 Log.e("MainActivity/getPersonalDishes", "Server Error, setting saved list");
                 retrofitError.printStackTrace();
-
-                dialog.dismiss();
+                closeFullScreenDialog();
+                Log.i("MainActivity/getPersonalDishes","Dialog Dismissed here - 4");
             }
         });
     }
@@ -398,6 +449,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                             R.string.logout_dialog_title, R.string.logout_dialog_message,
                             R.string.dialog_positive, R.string.dialog_negative,
                             setPositiveListener(), null).show();
+                }
+                else if (position == 1){
+                    goToActivity(GridActivity.class);
+                }
+                else if (position == 2){
+                    goToActivity(BattleActivity.class);
                 }
             }
 

@@ -12,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -160,6 +161,23 @@ public class BaseActivity extends ActionBarActivity {
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle(getString(title));
         dialog.setMessage(getString(message));
+        return dialog;
+    }
+
+    protected Dialog createFullScreenDialog(Context context, String message){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_full_screen);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black_overlay)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        TextView tv = (TextView) dialog.findViewById(R.id.dialog_message);
+        tv.setText(message);
+
+        //ProgressBar spinner = (ProgressBar) dialog.findViewById(R.id.dialog_progress_bar);
+
+        //spinner.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.default_color),
+         //       android.graphics.PorterDuff.Mode.MULTIPLY);
+
         return dialog;
     }
 
