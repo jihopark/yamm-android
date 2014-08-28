@@ -334,6 +334,13 @@ public class BaseActivity extends ActionBarActivity {
         toast.show();
     }
 
+    protected void startInviteActivity(Context context){
+        Intent intent = new Intent(context, InviteActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_alpha_out);
+    }
+
     /*
     * Login Auth Token Issues
     * */

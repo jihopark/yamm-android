@@ -85,9 +85,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.friend_invite_button:
-                Intent intent = new Intent(FriendActivity.this, InviteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                startInviteActivity(FriendActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

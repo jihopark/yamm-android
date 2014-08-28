@@ -144,9 +144,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.friend_invite_button:
-                Intent intent = new Intent(MainActivity.this, InviteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                startInviteActivity(MainActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

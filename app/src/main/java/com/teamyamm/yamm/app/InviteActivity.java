@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -46,6 +47,29 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         setConfirmButton();
 
         trackEnteredInviteMixpanel();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishInvite();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case android.R.id.home:
+                finishInvite();
+                break;
+        }
+
+        return true;
+    }
+
+
+    private void finishInvite(){
+        finish();
+        this.overridePendingTransition(R.anim.activity_alpha_in, R.anim.activity_slide_out);
     }
 
 
