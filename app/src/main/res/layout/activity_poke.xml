@@ -3,15 +3,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Spinner
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/date_pick_spinner"/>
-    <com.viewpagerindicator.TabPageIndicator
-        android:layout_below="@+id/date_pick_spinner"
+        android:layout_height="47dp"
+        android:background="#ff574d44"
+        android:id="@+id/date_pick_spinner_container">
+        <Spinner
+            android:layout_alignParentTop="true"
+            android:id="@+id/date_pick_spinner"
+            style="@style/DatePickSpinner"/>
+    </RelativeLayout>
+    <com.viewpagerindicator.IconPageIndicator
+        android:layout_below="@+id/date_pick_spinner_container"
+        android:background="@color/brown_color"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="39dp"
         android:id="@+id/poke_page_indicator"
         />
     <android.support.v4.view.ViewPager
@@ -20,6 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/poke_view_pager"/>
     <Button
+        style="@style/FriendConfirmButton"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +34,7 @@
         android:id="@+id/poke_contact_confirm"
         android:visibility="gone"/>
     <Button
+        style="@style/FriendConfirmButton"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -26,7 +26,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -387,6 +390,62 @@ public class BaseActivity extends ActionBarActivity {
         editor.commit();
         Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed " + prefs.getString(getString(R.string.PREV_DISHES), "none"));
 
+    }
+
+    protected void confirmButtonAnimation(FriendListInterface activity,
+                                          Button confirm, boolean enableButtonFlag, int type){
+        final FriendListInterface fActivity = activity;
+        final Button fConfirm = confirm;
+        final int fType = type;
+        final boolean fEnableButtonFlag = enableButtonFlag;
+
+        if (!enableButtonFlag && confirm.getVisibility() == View.VISIBLE){
+            Animation slideOut = new TranslateAnimation(0, 0, 0,
+                    getResources().getDimension(R.dimen.friends_list_confirm_button_height));
+            slideOut.setDuration(getResources().getInteger(R.integer.confirm_button_slide_duration));
+            slideOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    fConfirm.setVisibility(View.GONE);
+                    fActivity.setConfirmButtonEnabled(fEnableButtonFlag, fType);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            confirm.startAnimation(slideOut);
+        }
+        else if (enableButtonFlag && confirm.getVisibility() == View.GONE) {
+            Animation slideIn = new TranslateAnimation(0, 0,
+                    getResources().getDimension(R.dimen.friends_list_confirm_button_height), 0);
+            slideIn.setDuration(getResources().getInteger(R.integer.confirm_button_slide_duration));
+            slideIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    fActivity.setConfirmButtonEnabled(fEnableButtonFlag, fType);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            confirm.setVisibility(View.VISIBLE);
+            confirm.startAnimation(slideIn);
+        }
     }
 
     /*

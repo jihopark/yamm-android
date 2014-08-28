@@ -9,8 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -107,9 +105,9 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
     * */
 
     public void setConfirmButtonEnabled(boolean b, int type){
-        final int ty = type;
         enableButtonFlag = b;
-        if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
+        confirmButtonAnimation(FriendActivity.this, friendConfirmButton, enableButtonFlag, type );
+        /*if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
             Animation slideOut = new TranslateAnimation(0, 0, 0,
                     getResources().getDimension(R.dimen.friends_list_confirm_button_height));
             slideOut.setDuration(getResources().getInteger(R.integer.confirm_button_slide_duration));
@@ -155,7 +153,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
             });
             friendConfirmButton.setVisibility(View.VISIBLE);
             friendConfirmButton.startAnimation(slideIn);
-        }
+        }*/
     }
 
     public List<YammItem> getList(int type){

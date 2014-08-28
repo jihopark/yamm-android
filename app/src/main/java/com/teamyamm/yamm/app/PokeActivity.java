@@ -15,7 +15,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.IconPageIndicator;
+import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,22 +152,13 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         Log.i("PokeActivity/setConfirmButtonEnabled","Type is " + type);
 
         if (type == FriendsFragment.YAMM){
-            if (yammEnableButtonFlag != b){
-                yammEnableButtonFlag = b;
-                if (yammEnableButtonFlag)
-                    yammConfirmButton.setVisibility(View.VISIBLE);
-                else
-                    yammConfirmButton.setVisibility(View.GONE);
-            }
+            yammEnableButtonFlag = b;
+            confirmButtonAnimation(PokeActivity.this, yammConfirmButton, yammEnableButtonFlag, type);
+
         }
         else if (type == FriendsFragment.CONTACT){
-            if (contactEnableButtonFlag != b){
-                contactEnableButtonFlag = b;
-                if (contactEnableButtonFlag)
-                    contactConfirmButton.setVisibility(View.VISIBLE);
-                else
-                    contactConfirmButton.setVisibility(View.GONE);
-            }
+            contactEnableButtonFlag = b;
+            confirmButtonAnimation(PokeActivity.this, contactConfirmButton, contactEnableButtonFlag, type);
         }
     }
 
@@ -177,7 +169,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
 
     private void setViewPager(){
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.poke_page_indicator);
+        IconPageIndicator indicator = (IconPageIndicator) findViewById(R.id.poke_page_indicator);
         PokeFragmentPagerAdapter adapter= new PokeFragmentPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.poke_view_pager);
@@ -186,13 +178,23 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         indicator.setOnPageChangeListener(adapter);
     }
 
-    private class PokeFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+    private class PokeFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener, IconPagerAdapter {
         private final int NUMBER_OF_PAGES = 3;
         private String[] titles = {"얌친","주소록","카카오톡"};
+
+        protected final int[] ICONS = new int[] {
+                R.drawable.poke_yamm, R.drawable.poke_phonebook,R.drawable.poke_kakao
+        };
 
         public PokeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
+        @Override
+        public int getIconResId(int index) {
+            return ICONS[index % ICONS.length];
+        }
+
 
         @Override
         public Fragment getItem(int index) {
@@ -272,7 +274,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     private void setDatePickSpinner(){
         datePickSpinner = (Spinner) findViewById(R.id.date_pick_spinner);
         spinnerAdapter = ArrayAdapter.createFromResource(PokeActivity.this, R.array.date_spinner_array, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         datePickSpinner.setAdapter(spinnerAdapter);
         datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
