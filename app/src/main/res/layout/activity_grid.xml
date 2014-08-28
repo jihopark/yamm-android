@@ -7,7 +7,7 @@
     <ImageView
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="45dp"
         android:paddingLeft="18dp"
         android:paddingRight="17dp"
         android:src="@drawable/title_text_hateselect2"
@@ -21,9 +21,9 @@
         android:layout_below="@+id/grid_intro_image"
         android:background="@color/light_brown_background">
         <com.teamyamm.yamm.app.GridSelectionListView
-            android:layout_above="@+id/grid_checkbox_container"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
             android:layout_marginTop="2dp"
@@ -32,7 +32,7 @@
             android:verticalSpacing="2dp"
             android:id="@+id/grid_selection_list_view"/>
         <RelativeLayout
-            android:layout_above="@+id/grid_all_button"
+            android:layout_below="@+id/grid_selection_list_view"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="1dp"
@@ -63,7 +63,6 @@
             android:background="@drawable/enabled_round_button"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="27dp"
             android:textColor="#ffffffff"
             android:text="@string/grid_all_button"
             android:id="@+id/grid_all_button"/>

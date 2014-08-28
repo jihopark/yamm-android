@@ -202,7 +202,7 @@
     <!-- Main Activity -->
     <style name="FriendPickButton">
         <item name="android:paddingLeft">9dp</item>
-        <item name="android:paddingRight">9dp</item>
+        <item name="android:paddingRight">21dp</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:layout_marginLeft">30dp</item>
         <item name="android:layout_marginRight">30dp</item>
