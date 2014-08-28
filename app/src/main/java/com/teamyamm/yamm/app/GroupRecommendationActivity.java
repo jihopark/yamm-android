@@ -129,7 +129,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
 
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         tact.add(R.id.main_fragment_container, mainFragment, MainFragment.MAIN_FRAGMENT);
-        tact.commit();
+        tact.commitAllowingStateLoss();
     }
 
     private void loadDishes(){
