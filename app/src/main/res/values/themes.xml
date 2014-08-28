@@ -7,9 +7,12 @@
         <item name="@android:attr/actionBarTabTextStyle">@style/TabStyle</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:dropDownListViewStyle">@style/SpinnerItemDropDown</item>
+        <item name="android:homeAsUpIndicator">@drawable/back</item>
+
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/YammActionBar</item>
         <item name="actionBarTabTextStyle">@style/TabStyle</item>
+        <item name="homeAsUpIndicator">@drawable/back</item>
     </style>
 
     <style name="YammLogoActionBarTheme"
@@ -49,8 +52,70 @@
         <item name="android:icon">@drawable/yamm</item>
 
         <!-- Support library compatibility -->
-        <item name="icon">@android:color/transparent</item>
+        <item name="icon">@drawable/yamm</item>
         <item name="displayOptions">showHome|useLogo</item>
+    </style>
+
+    <!-- Custom Title Bars -->
+
+    <style name="YammInviteActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_invite</item>
+        <item name="icon">@drawable/title_text_invite</item>
+    </style>
+
+    <style name="YammInviteActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammInviteActionBar</item>
+        <item name="actionBarStyle">@style/YammInviteActionBar</item>
+    </style>
+
+    <style name="YammLoginActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_login</item>
+        <item name="icon">@drawable/title_text_login</item>
+    </style>
+
+    <style name="YammLoginActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammLoginActionBar</item>
+        <item name="actionBarStyle">@style/YammLoginActionBar</item>
+    </style>
+
+    <style name="YammJoinActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_signup</item>
+        <item name="icon">@drawable/title_text_signup</item>
+    </style>
+
+    <style name="YammJoinActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammJoinActionBar</item>
+        <item name="actionBarStyle">@style/YammJoinActionBar</item>
+    </style>
+
+    <style name="YammGridActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_hateselect</item>
+        <item name="icon">@drawable/title_text_hateselect</item>
+    </style>
+
+    <style name="YammGridActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammGridActionBar</item>
+        <item name="actionBarStyle">@style/YammGridActionBar</item>
+    </style>
+
+    <style name="YammGroupRecommendationActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_withfriend</item>
+        <item name="icon">@drawable/title_text_withfriend</item>
+    </style>
+
+    <style name="YammGroupRecommendationActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammGroupRecommendationActionBar</item>
+        <item name="actionBarStyle">@style/YammGroupRecommendationActionBar</item>
     </style>
 
     <style name="YammActionBar.Title">
