@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -163,7 +164,7 @@ public class GridActivity extends BaseActivity {
     ////////////////////////////////////Private Method
 
     private void initButtons() {
-        Button vegiButton = (Button) findViewById(R.id.grid_checkbox_button);
+        RelativeLayout vegiButton = (RelativeLayout) findViewById(R.id.grid_checkbox_container);
         finishButton = (Button) findViewById(R.id.grid_all_button);
 
         vegi = new GridItem(getResources().getInteger(R.integer.grid_vegi_id), "채식");
