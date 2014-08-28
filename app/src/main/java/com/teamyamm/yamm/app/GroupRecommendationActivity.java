@@ -70,7 +70,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     }
 
     public void closeFullScreenDialog(){
-        if (fullScreenDialog!= null && isDialogOpen) {
+        if (fullScreenDialog!= null) {
             fullScreenDialog.dismiss();
             isDialogOpen = false;
         }

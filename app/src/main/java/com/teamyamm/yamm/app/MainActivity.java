@@ -106,12 +106,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public boolean isFullScreenDialogOpen(){ return isDialogOpen; }
 
     public void closeFullScreenDialog(){
-        if (fullScreenDialog!= null && isDialogOpen) {
+        if (fullScreenDialog!= null) {
             fullScreenDialog.dismiss();
             isDialogOpen = false;
-        }
-        else{
-            Log.d("MainActivity/closeFullScreenDialog","It is already closed");
         }
     }
 
