@@ -3,8 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/yamm_item_height"
-    android:descendantFocusability="blocksDescendants"
-    android:background="@drawable/textlines">
+    android:descendantFocusability="blocksDescendants">
     <TextView
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"

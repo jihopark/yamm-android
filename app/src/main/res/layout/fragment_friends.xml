@@ -11,18 +11,23 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/yamm_item_height"
         android:id="@+id/selected_items_layout"
-        android:visibility="gone"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp">
+        android:visibility="gone">
         <TextView
             android:background="@color/light_brown_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:textSize="20sp"
             android:textColor="#ffffffff"
             android:id="@+id/selected_items_textview"
             android:layout_marginTop="@dimen/selected_item_line_spacing"
             android:lineSpacingExtra="@dimen/selected_item_line_spacing_plus_padding"
             />
+        <View
+            android:layout_below="@+id/selected_items_textview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#ffe2ddcb"/>
     </RelativeLayout>
 </LinearLayout>

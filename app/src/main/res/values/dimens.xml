@@ -10,6 +10,8 @@
     <dimen name="round_button_radius">50dp</dimen>
     <dimen name="veri_round_button_radius">4dp</dimen>
 
+    <dimen name="line_height">1dp</dimen>
+
     <!-- FriendsFragment -->
 
     <dimen name="selected_item_x_padding">10dp</dimen>

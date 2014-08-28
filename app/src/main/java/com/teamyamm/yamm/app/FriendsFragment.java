@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -51,6 +53,9 @@ public class FriendsFragment extends Fragment {
         selectedItemsTextView = (TextView) yammItemLayout.findViewById(R.id.selected_items_textview);
 
         friendListView = new ListView(getActivity());
+        friendListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        friendListView.setDivider(new ColorDrawable(getResources().getColor(R.color.divider_color)));
+        friendListView.setDividerHeight((int) getResources().getDimension(R.dimen.line_height));
         friendsListEmptyText = new TextView(getActivity());
         friendsListEmptyText.setText(getActivity().getResources().getString(R.string.friends_list_empty));
         friendListView.setEmptyView(friendsListEmptyText);
@@ -113,6 +118,10 @@ public class FriendsFragment extends Fragment {
     * Adds selected item view to mainLayout
     * */
     private void addSelectedItemView(YammItem yammItem){
+        TextSwitcher textSwitcher = new TextSwitcher(getActivity());
+
+
+
         if (selectedItems.size() == 1)
             selectedItemsLayout.setVisibility(View.VISIBLE);
         else{
@@ -127,6 +136,7 @@ public class FriendsFragment extends Fragment {
                 , getResources().getDimension(R.dimen.selected_item_y_padding), getResources().getDimension(R.dimen.selected_item_round),
                         getResources().getDimension(R.dimen.selected_item_line_spacing_plus_padding), getResources().getDimension(R.dimen.selected_item_height)),
                         0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         selectedItemsTextView.append(newSpan);
     }
 
