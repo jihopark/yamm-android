@@ -280,12 +280,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         if (fullScreenDialog==null) {
             fullScreenDialog = createFullScreenDialog(MainActivity.this, getString(R.string.dialog_main));
         }
-        else{
-            if (!isDialogOpen) {
-                fullScreenDialog.show();
-                isDialogOpen = true;
-            }
-        }
+
      /*   RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
                 .setLog(setRestAdapterLog())
