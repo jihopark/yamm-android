@@ -232,24 +232,39 @@ public class MainFragment extends Fragment {
                 hasReachedEnd = true;
             }
             Log.i("DishFragmentPagerAdapter/onPageSelected", dishItems.get(i).getName() + " Page " + i +" : Setting Buttons Again");
-            fragments.get(i).setButtons();
+            try {
+                fragments.get(i).setButtons();
 
-            if (i == DEFAULT_NUMBER_OF_DISHES - 1){
-                next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                next.setLayoutParams(params);
-                buttonToLeft = true;
-            }
-            else{
-                if (buttonToLeft) {
-                    next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_right));
+                if (i == DEFAULT_NUMBER_OF_DISHES - 1) {
+                    next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     next.setLayoutParams(params);
-                    buttonToLeft = false;
+                    buttonToLeft = true;
+                } else {
+                    if (buttonToLeft) {
+                        next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_right));
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        next.setLayoutParams(params);
+                        buttonToLeft = false;
+                    }
+                }
+            }catch(NullPointerException e){
+                Log.e("MainFragment/onPageSelected","NullPointer Exception caught. Is fragments.get(i)==null? "+ (fragments.get(i)==null));
+                e.printStackTrace();
+                if (getActivity() instanceof BaseActivity) {
+                    BaseActivity activity = (BaseActivity) getActivity();
+                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
+                }
+            }catch (IndexOutOfBoundsException e){
+                Log.e("MainFragment/onPageSelected","IndexOutOfBoundsException caught");
+                e.printStackTrace();
+                if (getActivity() instanceof BaseActivity) {
+                    BaseActivity activity = (BaseActivity) getActivity();
+                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
                 }
             }
         }
@@ -376,7 +391,7 @@ public class MainFragment extends Fragment {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     main.closeFullScreenDialog();
-                    Log.d("MainFragment/run","Dialog Dismissed here - 6");
+                    Log.d("MainFragment/run", "Dialog Dismissed here - 6");
                 }
             }, getResources().getInteger(R.integer.dialog_delay_duration));
 

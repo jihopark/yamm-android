@@ -148,112 +148,118 @@ public class DishFragment extends Fragment {
     }
 
     public void setButtons(){
-        next = parentFragment.getButton(R.id.dish_next_button);
+        try {
+            next = parentFragment.getButton(R.id.dish_next_button);
 
-        searchMap = parentFragment.getButton(R.id.search_map_button);
+            searchMap = parentFragment.getButton(R.id.search_map_button);
 
-        pokeFriend = parentFragment.getButton(R.id.poke_friend_button);
+            pokeFriend = parentFragment.getButton(R.id.poke_friend_button);
 
-        dislike = parentFragment.getButton(R.id.dish_dislike_button);
-
-
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewPager dishPager = parentFragment.getDishPager();
-
-                if (index == DEFAULT_NUMBER_OF_DISHES - 1)
-                    dishPager.setCurrentItem(index - 1, true);
-                else
-                    dishPager.setCurrentItem(index + 1, true);
-
-            }
-        });
+            dislike = parentFragment.getButton(R.id.dish_dislike_button);
 
 
-        pokeFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //DialogFragment pokeMethodDialog = new PokeMethodDialog();
-                //pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
-                addDishToPositive(SHARE, null);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewPager dishPager = parentFragment.getDishPager();
 
-                Intent intent = new Intent(parentFragment.getActivity(), PokeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    if (index == DEFAULT_NUMBER_OF_DISHES - 1)
+                        dishPager.setCurrentItem(index - 1, true);
+                    else
+                        dishPager.setCurrentItem(index + 1, true);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("dish",new Gson().toJson(item, DishItem.class));
-
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-        searchMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLocationDialog();
-            }
-        });
-
-
-
-
-        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i("DishFragment/onClick","Dislike pressed for " + getDishItem().getName());
-                trackDislikeMixpanel();
-                Toast.makeText(parentFragment.getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
-
-                YammAPIService service = YammAPIAdapter.getDislikeService();
-
-                Callback<DishItem> callback = new Callback<DishItem>() {
-                    @Override
-                    public void success(DishItem dishItem, Response response) {
-                        Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
-                        changeInDishItems(getDishItem(), dishItem);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        String msg = retrofitError.getCause().getMessage();
-
-                        if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
-                            Toast.makeText(parentFragment.getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(parentFragment.getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                };
-
-                if (isGroup) {
-                    service.postDislikeDishGroup(new YammAPIService.RawDislike(getDishItem().getId()), callback);
-                    Log.i("DishFragment/onClickListener","Group Dislike API Called");
                 }
-                else
-                    service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), callback);
+            });
 
 
+            pokeFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //DialogFragment pokeMethodDialog = new PokeMethodDialog();
+                    //pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
+                    addDishToPositive(SHARE, null);
+
+                    Intent intent = new Intent(parentFragment.getActivity(), PokeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dish", new Gson().toJson(item, DishItem.class));
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+
+            searchMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showLocationDialog();
+                }
+            });
+
+
+            final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i("DishFragment/onClick", "Dislike pressed for " + getDishItem().getName());
+                    trackDislikeMixpanel();
+                    Toast.makeText(parentFragment.getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
+
+                    YammAPIService service = YammAPIAdapter.getDislikeService();
+
+                    Callback<DishItem> callback = new Callback<DishItem>() {
+                        @Override
+                        public void success(DishItem dishItem, Response response) {
+                            Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
+                            changeInDishItems(getDishItem(), dishItem);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError retrofitError) {
+                            String msg = retrofitError.getCause().getMessage();
+
+                            if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
+                                Toast.makeText(parentFragment.getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(parentFragment.getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+
+                    if (isGroup) {
+                        service.postDislikeDishGroup(new YammAPIService.RawDislike(getDishItem().getId()), callback);
+                        Log.i("DishFragment/onClickListener", "Group Dislike API Called");
+                    } else
+                        service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), callback);
+
+
+                }
+            };
+
+            dislike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    trackClickedDislikeMixpanel();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                    AlertDialog alert = builder.setPositiveButton(R.string.dish_dislike_positive, positiveListener)
+                            .setNegativeButton(R.string.dish_dislike_negative, null)
+                            .setTitle(R.string.dish_dislike_title)
+                            .setMessage(R.string.dish_dislike_message)
+                            .create();
+
+                    alert.show();
+                }
+            });
+        }catch(NullPointerException e){
+            Log.e("DishFragment/setButtons","NullPointerException caught. Is ParentFragment Null? " + (parentFragment == null));
+            e.printStackTrace();
+            if (getActivity() instanceof BaseActivity) {
+                BaseActivity activity = (BaseActivity) getActivity();
+                activity.trackCaughtExceptionMixpanel("DishFragment/setButtons", e.getMessage());
             }
-        };
 
-        dislike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                trackClickedDislikeMixpanel();
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-                AlertDialog alert = builder.setPositiveButton(R.string.dish_dislike_positive,positiveListener)
-                        .setNegativeButton(R.string.dish_dislike_negative,null)
-                        .setTitle(R.string.dish_dislike_title)
-                        .setMessage(R.string.dish_dislike_message)
-                        .create();
-
-                alert.show();
-            }
-        });
+        }
     }
 
     private void changeInDishItems(DishItem original, DishItem replace){

@@ -40,6 +40,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -102,6 +105,17 @@ public class BaseActivity extends ActionBarActivity {
 
     public MixpanelAPI getMixpanelAPI(){ return mixpanel; }
 
+    protected void trackCaughtExceptionMixpanel(String where, String message){
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Where", where);
+            props.put("Message", message);
+        }catch(JSONException e){
+            Log.e("BaseActivity/trackCaughtExceptionMixpanel","JSON Error");
+        }
+        mixpanel.track("Caught Exception", props);
+        Log.i("BaseActivity/trackCaughtExceptionMixpanel","Caught Exception Tracked");
+    }
 
     /*
     * returns screen width
@@ -143,6 +157,7 @@ public class BaseActivity extends ActionBarActivity {
         Intent intent = new Intent(getBaseContext(), nextActivity);
         startActivity(intent);
     }
+
 
      /*
     * Builds Alert Dialog with positive and negative buttons
