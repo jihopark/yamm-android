@@ -214,7 +214,6 @@ public class DishFragment extends Fragment {
                     public void success(DishItem dishItem, Response response) {
                         Log.i("DishFragment/postDislikeDish", "Success " + dishItem.getName());
                         changeInDishItems(getDishItem(), dishItem);
-                        trackDislikeMixpanel();
                     }
 
                     @Override
@@ -243,6 +242,7 @@ public class DishFragment extends Fragment {
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackClickedDislikeMixpanel();
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
                 AlertDialog alert = builder.setPositiveButton(R.string.dish_dislike_positive,positiveListener)
@@ -505,11 +505,31 @@ public class DishFragment extends Fragment {
 
     }
 
+    private void trackClickedDislikeMixpanel(){
+        Activity activity = parentFragment.getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try{
+                props.put("Dish", item.getName());
+            }catch (JSONException e){
+                Log.e("DishFragment/trackClickedDislikeMixpanel","JSON Error");
+            }
+            base.getMixpanelAPI().track("Clicked Dislike", props);
+            Log.i("DishFragment/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
+        }
+    }
+
     private void trackDislikeMixpanel(){
         Activity activity = parentFragment.getActivity();
         if (activity instanceof BaseActivity){
             BaseActivity base = (BaseActivity) activity;
             JSONObject props = new JSONObject();
+            try{
+                props.put("Dish", item.getName());
+            }catch (JSONException e){
+                Log.e("DishFragment/trackDislikeMixpanel","JSON Error");
+            }
             base.getMixpanelAPI().track("Dislike", props);
             Log.i("DishFragment/trackDislikeMixpanel","Dislike Tracked");
         }
