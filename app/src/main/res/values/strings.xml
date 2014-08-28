@@ -48,6 +48,7 @@
     <string name="PHONE_NAME_MAP">phonenamemap</string>
     <string name="AUTH_TOKEN">authtoken</string>
     <string name="FRIEND_LIST">friendlist</string>
+    <string name="PREV_DISHES">prevdish</string>
 
     <!-- Dialog -->
     <string name="dialog_positive">네</string>

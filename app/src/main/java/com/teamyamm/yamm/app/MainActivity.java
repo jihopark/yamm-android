@@ -63,7 +63,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private List<DishItem> dishItems;
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
-
     private ImageButton friendPickButton;
 
     @Override
@@ -91,8 +90,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     @Override
     public void onStop(){
-
-        saveDishItemsInPref();
+        Log.i("MainActivity/onStop","isLoggingOut " +isLoggingOut);
+        if (!isLoggingOut)
+            saveDishItemsInPref();
         super.onStop();
     }
 
@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         Type type = new TypeToken<List<DishItem>>(){}.getType();
 
 
-        putInPref(prefs, "dishes", new Gson().toJson(dishItems, type));
+        putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, type));
     }
 
     private void showFBDialog(){
@@ -365,7 +365,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     private void restoreSavedList(){
-        String savedList = prefs.getString("dishes", "none");
+        String savedList = prefs.getString(getString(R.string.PREV_DISHES), "none");
 
         if (!savedList.equals("none")){
             Type type = new TypeToken<List<DishItem>>(){}.getType();
@@ -470,11 +470,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 return new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        removeAuthToken();
-                        removeFriendList();
-                        Intent intent = new Intent(getBaseContext(), IntroActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        logOut();
                     }
                 };
             }

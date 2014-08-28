@@ -62,6 +62,9 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialog internetAlert;
     protected SharedPreferences prefs;
 
+    protected boolean isLoggingOut = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -344,6 +347,15 @@ public class BaseActivity extends ActionBarActivity {
         return value;
     }
 
+    protected void logOut(){
+        isLoggingOut = true;
+        removeAuthToken();
+        removePersonalData();
+        Intent intent = new Intent(getBaseContext(), IntroActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     protected void removeAuthToken(){
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -359,13 +371,15 @@ public class BaseActivity extends ActionBarActivity {
         Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
     }
 
-    protected void removeFriendList(){
+    protected void removePersonalData(){
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.PHONE_NAME_MAP));
         editor.remove(getString(R.string.FRIEND_LIST));
+        editor.remove(getString(R.string.PREV_DISHES));
         editor.commit();
-        Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed");
+        Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed " + prefs.getString(getString(R.string.PREV_DISHES), "none"));
+
     }
 
     /*
