@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -105,14 +107,54 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
     * */
 
     public void setConfirmButtonEnabled(boolean b, int type){
-        if (enableButtonFlag != b) {
-            enableButtonFlag = b;
-            if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
-                friendConfirmButton.setVisibility(View.GONE);
-            }
-            else if (enableButtonFlag && friendConfirmButton.getVisibility() == View.GONE){
-                friendConfirmButton.setVisibility(View.VISIBLE);
-            }
+        final int ty = type;
+        enableButtonFlag = b;
+        if (!enableButtonFlag && friendConfirmButton.getVisibility() == View.VISIBLE){
+            Animation slideOut = new TranslateAnimation(0, 0, 0,
+                    getResources().getDimension(R.dimen.friends_list_confirm_button_height));
+            slideOut.setDuration(getResources().getInteger(R.integer.confirm_button_slide_duration));
+            slideOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    friendConfirmButton.setVisibility(View.GONE);
+                    setConfirmButtonEnabled(enableButtonFlag, ty);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            friendConfirmButton.startAnimation(slideOut);
+        }
+        else if (enableButtonFlag && friendConfirmButton.getVisibility() == View.GONE){
+            Animation slideIn = new TranslateAnimation(0, 0,
+                    getResources().getDimension(R.dimen.friends_list_confirm_button_height), 0);
+            slideIn.setDuration(getResources().getInteger(R.integer.confirm_button_slide_duration));
+            slideIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    setConfirmButtonEnabled(enableButtonFlag, ty);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            friendConfirmButton.setVisibility(View.VISIBLE);
+            friendConfirmButton.startAnimation(slideIn);
         }
     }
 

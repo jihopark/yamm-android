@@ -21,4 +21,6 @@
 
     <dimen name="selected_item_line_spacing_for_group">16dp</dimen>
     <dimen name="selected_item_line_spacing_plus_padding_for_group">26dp</dimen>
+
+    <dimen name="friends_list_confirm_button_height">60dp</dimen>
 </resources>

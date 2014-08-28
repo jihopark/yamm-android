@@ -8,4 +8,5 @@
     <integer name="main_text_container_animation_duration">500</integer>
     <integer name="dialog_delay_duration">3000</integer>
     <integer name="activity_slide_duration">300</integer>
+    <integer name="confirm_button_slide_duration">600</integer>
 </resources>
