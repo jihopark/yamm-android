@@ -382,12 +382,19 @@ public class MainFragment extends Fragment {
 
             buttonAnimation.setStartOffset(getResources().getInteger(R.integer.dialog_delay_duration) - 1000);
         }
-        next.startAnimation(buttonAnimation);
-        searchMap.startAnimation(buttonAnimation);
-        pokeFriend.startAnimation(buttonAnimation);
-        dislike.startAnimation(buttonAnimation);
 
-        Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
+        if (dishAdapter.getFirstFragment()!=null){
+            next.startAnimation(buttonAnimation);
+            searchMap.startAnimation(buttonAnimation);
+            pokeFriend.startAnimation(buttonAnimation);
+            dislike.startAnimation(buttonAnimation);
+            Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
+        }
+        else{
+            main.closeFullScreenDialog();
+            Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
+        }
+
     }
 
     private void trackEndOfRecommendationMixpanel(){
