@@ -79,13 +79,19 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         super.onStart();
      //   showFBDialog();   //For Later
 
-        loadDishes();
+
 
         friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
         readContactAsyncTask.execute();
+    }
+
+    @Override
+    public void onPostResume(){
+        super.onPostResume();
+        loadDishes();
     }
 
     @Override

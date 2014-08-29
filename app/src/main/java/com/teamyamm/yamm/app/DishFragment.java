@@ -133,6 +133,15 @@ public class DishFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (getParentFragment() == null){
+            Log.e("DishFragment/getParentFragment","DishFragment Removed, because ParentFragment is null");
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        }
+    }
+
     private void loadDish(){
         String s = this.getArguments().getString("dish");
         item = new Gson().fromJson(s, DishItem.class);

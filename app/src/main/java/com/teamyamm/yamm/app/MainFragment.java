@@ -50,6 +50,8 @@ public class MainFragment extends Fragment {
     private boolean isGroup;
     private boolean hasPerformed = false;
 
+    private Animation buttonAnimation, mainBarAnimation, textAnimation1, textAnimation2;
+
     //For Place Pick
     //private AutoCompleteTextView placePickEditText;
     private LocationManager locationManager;
@@ -88,6 +90,16 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        Log.i("MainFragment/onDetach","Detaching all other components");
+        dishPager.setOnPageChangeListener(null);
+        buttonAnimation.setAnimationListener(null);
+        mainBarAnimation.setAnimationListener(null);
+        buttonAnimation.cancel();
+        mainBarAnimation.cancel();
+        textAnimation1.cancel();
+        textAnimation2.cancel();
+
 
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
@@ -145,6 +157,7 @@ public class MainFragment extends Fragment {
     private void setDishPager(){
         dishAdapter = new DishFragmentPagerAdapter(getChildFragmentManager());
         dishPager = (ViewPager) main_layout.findViewById(R.id.dish_pager);
+        dishPager.setOffscreenPageLimit(2);
         dishPager.setAdapter(dishAdapter);
         dishPager.setOnPageChangeListener(dishAdapter);
     }
@@ -329,10 +342,10 @@ public class MainFragment extends Fragment {
     }
 
     public void startButtonsAnimation() {
-        Animation buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
-        final Animation mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
-        final Animation textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
-        final Animation textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
+        buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
+        mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
+        textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
+        textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
 
         textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
 
@@ -365,10 +378,15 @@ public class MainFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 hasPerformed = true;
-                dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
-                dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
-                dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
-
+                try {
+                    dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
+                    dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
+                    dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
+                }catch(NullPointerException e){
+                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment()==null));
+                    e.printStackTrace();
+                    animation.cancel();
+                }
             }
 
             @Override
