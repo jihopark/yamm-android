@@ -5,6 +5,7 @@ import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -232,8 +233,12 @@ public interface YammAPIService {
     void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
 
     @FormUrlEncoded
-    @POST("/kakao-push-token")
-    void registerPushToken(@Field("pushToken") String items, Callback<String> cb);
+    @POST("/push/token")
+    void registerPushToken(@Field("pushToken") String items, @Field("deviceId") String id, Callback<String> cb);
+
+    @DELETE("/push/token")
+    void unregisterPushToken(@Query("deviceId") String id, Callback<String> cb);
+
 
     @FormUrlEncoded
     @POST("/password-recovery/request")

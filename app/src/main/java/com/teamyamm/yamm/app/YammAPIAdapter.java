@@ -58,6 +58,8 @@ public class YammAPIAdapter {
 
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(apiURL)
+                    .setLog(setRestAdapterLog())
+                    .setLogLevel(RestAdapter.LogLevel.BASIC)
                     .build();
             service = restAdapter.create(YammAPIService.class);
         }

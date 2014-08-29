@@ -32,6 +32,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.provider.Settings.Secure;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -85,6 +87,7 @@ public class BaseActivity extends ActionBarActivity {
         mixpanel =
                 MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN);
 
+        checkPlayServices();
     }
 
 
@@ -92,8 +95,8 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
+        checkPlayServices();
 
     }
 
@@ -387,8 +390,26 @@ public class BaseActivity extends ActionBarActivity {
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.remove(PROPERTY_REG_ID);
         editor.remove(PROPERTY_APP_VERSION);
-
         editor.commit();
+
+        //GCM push
+        MixpanelAPI.People people = mixpanel.getPeople();
+        people.clearPushRegistrationId();
+
+        String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
+                Secure.ANDROID_ID);
+
+        YammAPIAdapter.getTokenService().unregisterPushToken(deviceId, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("BaseActivity/removeAuthToken","Successfully unregistered Push Token");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("BaseActivity/removeAuthToken","Error in unregistering Push Token");
+            }
+        });
 
 
         YammAPIAdapter.setToken(null);
@@ -593,7 +614,7 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
-    private String getRegistrationId(Context context) {
+    protected String getRegistrationId(Context context) {
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i("BaseActiviy/getRegistrationId", "Registration not found.");
@@ -608,6 +629,7 @@ public class BaseActivity extends ActionBarActivity {
             Log.i("BaseActivity/getRegistrationId", "App version changed.");
             return "";
         }
+        Log.i("BaseActiviy/getRegistrationId", "RegId found " + registrationId);
         return registrationId;
     }
 
@@ -627,7 +649,7 @@ public class BaseActivity extends ActionBarActivity {
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
                     // is using accounts.
-                    //sendRegistrationIdToBackend();
+                    sendRegistrationIdToBackend();
 
                     // For this demo: we don't need to send it because the device
                     // will send upstream messages to a server that echo back the
@@ -652,9 +674,15 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     private void sendRegistrationIdToBackend() {
+
+        Log.i("BaseActivity/sendRegistrationIdToBackend","Send Registration Id to Backend");
+
         YammAPIService service = YammAPIAdapter.getTokenService();
 
-        service.registerPushToken(regid, new Callback<String>() {
+        String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
+                Secure.ANDROID_ID);
+
+        service.registerPushToken(regid, deviceId, new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to server");
@@ -665,6 +693,10 @@ public class BaseActivity extends ActionBarActivity {
                 Log.e("BaseActivity/sendRegistrationIdToBackend", "Push Token not sent to server");
             }
         });
+
+        MixpanelAPI.People people = mixpanel.getPeople();
+        people.setPushRegistrationId(regid);
+        Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to Mixpanel");
     }
 
     private void storeRegistrationId(Context context, String regId) {
