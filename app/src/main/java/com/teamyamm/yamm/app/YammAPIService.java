@@ -233,16 +233,36 @@ public interface YammAPIService {
     void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
 
     @FormUrlEncoded
+    @POST("/password-recovery/request")
+    void requestPasswordRecovery(@Field("email") String email, Callback<String> cb);
+
+    /*
+    * About Push Messages
+    * */
+
+    @FormUrlEncoded
     @POST("/push/token")
     void registerPushToken(@Field("pushToken") String items, @Field("deviceId") String id, Callback<String> cb);
 
     @DELETE("/push/token")
     void unregisterPushToken(@Query("deviceId") String id, Callback<String> cb);
 
+    @POST ("/push/poke")
+    void sendPokeMessage(@Body RawPokeMessage message, Callback<String> callback);
 
-    @FormUrlEncoded
-    @POST("/password-recovery/request")
-    void requestPasswordRecovery(@Field("email") String email, Callback<String> cb);
+    public static class RawPokeMessage{
+        private List<Long> uids;
+        private int dishId;
+        private String date;
+        private String meal;
+
+        public RawPokeMessage(List<Long> uids, int dishId, String date, String meal){
+            this.uids = uids;
+            this.dishId = dishId;
+            this.date = date;
+            this.meal = meal;
+        }
+    }
 
     /*
     * Error

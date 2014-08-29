@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * Created by parkjiho on 8/11/14.
  */
@@ -122,7 +126,31 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
 
     private void pokeWithYamm(){
-        trackPokeFriendMixpanel("YAMM",yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
+
+        List<Long> sendIds = new ArrayList<Long>();
+        String time = datePickSpinner.getSelectedItem().toString();
+        String meal = time.substring(time.length() - 2, time.length());
+        time = time.substring(0, time.length() - 3);
+
+        for (YammItem i : yammFriendsFragment.selectedItems)
+            sendIds.add(i.getID());
+
+        YammAPIAdapter.getTokenService().sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("PokeActivity/sendPushMessage", "Push " + s);
+                trackPokeFriendMixpanel("YAMM", yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
+                Toast.makeText(PokeActivity.this, "친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
+                        + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("PokeActivity/sendPushMessage", "Error In Push Message");
+                Toast.makeText(PokeActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void pokeWithSMS(){
