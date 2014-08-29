@@ -16,6 +16,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -99,7 +100,9 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
-        showSoftKeyboard(JoinActivity.this);
+        //To Show Keyboard
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     @Override

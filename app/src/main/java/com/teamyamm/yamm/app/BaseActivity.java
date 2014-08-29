@@ -326,9 +326,9 @@ public class BaseActivity extends ActionBarActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
-    protected static void showSoftKeyboard(Activity activity){
+    protected static void showSoftKeyboard(View view, Activity activity){
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
     }
 
     protected String phoneNumberFormat(String phone){

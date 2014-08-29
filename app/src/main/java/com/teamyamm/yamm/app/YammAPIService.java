@@ -235,6 +235,9 @@ public interface YammAPIService {
     @POST("/kakao-push-token")
     void registerPushToken(@Field("pushToken") String items, Callback<String> cb);
 
+    @FormUrlEncoded
+    @POST("/password-recovery/request")
+    void requestPasswordRecovery(@Field("email") String email, Callback<String> cb);
 
     /*
     * Error

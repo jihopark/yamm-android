@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit.Callback;
@@ -61,6 +63,49 @@ public class LoginActivity extends BaseActivity {
 
         emailField.addTextChangedListener(textWatcher);
         pwdField.addTextChangedListener(textWatcher);
+
+        TextView forgotPassword = (TextView) findViewById(R.id.forgot_password);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (emailField.getText().toString().equals("")){
+                    requestEmail();
+                }
+                else{
+                    DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            YammAPIAdapter.getService().requestPasswordRecovery(emailField.getText().toString(), new Callback<String>() {
+                                @Override
+                                public void success(String s, Response response) {
+                                    Toast.makeText(LoginActivity.this, R.string.forgot_password_sent, Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    Toast.makeText(LoginActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    };
+                    DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestEmail();
+                        }
+                    };
+                    createDialog(LoginActivity.this, R.string.forgot_password_dialog_title,
+                            R.string.forgot_password_dialog_message, R.string.dialog_positive, R.string.dialog_negative,
+                            positiveListener, negativeListener).show();
+
+                }
+            }
+
+            private void requestEmail(){
+                Toast.makeText(LoginActivity.this, R.string.forgot_password_no_email, Toast.LENGTH_SHORT).show();
+                showSoftKeyboard(emailField, LoginActivity.this);
+            }
+        });
     }
 
     private void setLoginButton(){
