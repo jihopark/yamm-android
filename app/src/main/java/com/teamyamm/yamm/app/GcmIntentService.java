@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -65,11 +68,19 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder = null;
 
         if (content.getType().equals(PushContent.POKE)) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, PokeAlertActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("pushcontent", new Gson().toJson(content, PushContent.class));
 
             contentIntent = PendingIntent.getActivity(this, 0,
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+            if (BaseActivity.checkIfAppIsRunning()){
+                makeNotificationSound();
+                startActivity(intent);
+                return ;
+            }
 
             String msg = content.getSender().getName() + "님이 " + content.getTime() + "에 이거 먹재요~";
             String title = getString(R.string.poke_push_title);
@@ -83,9 +94,20 @@ public class GcmIntentService extends IntentService {
                             .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
 
+
         if (contentIntent!= null && mBuilder!=null) {
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
+    }
+
+    private void makeNotificationSound(){
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -91,7 +91,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public void onPostResume(){
         super.onPostResume();
         loadDishes();
-        checkForBundle();
     }
 
     @Override
@@ -102,18 +101,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
         super.onStop();
     }
-
-    private void checkForBundle(){
-        if (getIntent().getExtras()!=null){
-            pushContent = new Gson().fromJson(getIntent().getExtras().getString("pushcontent"), PushContent.class);
-            Log.i("MainActivity/checkForBundle","Bundle Found " + pushContent);
-            pushContent = null;
-
-            return ;
-        }
-        Log.i("MainActivity/checkForBundle","Bundle Not Found");
-    }
-
 
     @Override
     public void onBackPressed() {

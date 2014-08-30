@@ -118,6 +118,13 @@
         <item name="actionBarStyle">@style/YammGroupRecommendationActionBar</item>
     </style>
 
+
+    <style name="YammPokeDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
     <style name="YammActionBar.Title">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">20sp</item>

@@ -16,6 +16,7 @@
     <string name="title_activity_invite">친구 초대</string>
     <string name="title_activity_group_recommendation">그룹 추천</string>
     <string name="title_activity_poke">친구랑 같이 먹기</string>
+    <string name="title_activity_poke_alert">친구랑 같이 먹어요</string>
 
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정해요</string>

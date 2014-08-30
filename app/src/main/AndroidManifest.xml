@@ -138,6 +138,12 @@
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
+        <!-- Poke AlertActivity -->
+        <activity android:name=".PokeAlertActivity"
+            android:theme="@style/YammPokeDialog"
+            android:label="@string/title_activity_poke_alert"
+            ></activity>
+
         <!-- For KaKao SDK -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"

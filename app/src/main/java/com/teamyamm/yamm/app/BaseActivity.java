@@ -60,6 +60,7 @@ import retrofit.client.Response;
 public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
 
+    private static boolean isAppRunning;
     private static final String MIXPANEL_TOKEN = "5bebb04a41c88c1fad928b5526990d03";
     protected MixpanelAPI mixpanel;
 
@@ -87,20 +88,30 @@ public class BaseActivity extends ActionBarActivity {
         checkPlayServices();
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
         checkPlayServices();
+        isAppRunning = true;
+        Log.d("BaseActivity/onResume","App is Running " + isAppRunning);
+    }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        isAppRunning = false;
+        Log.d("BaseActivity/onPause","App is Running " + isAppRunning);
     }
 
     @Override
     protected void onDestroy() {
         mixpanel.flush();
         super.onDestroy();
+    }
+
+    public static boolean checkIfAppIsRunning(){
+        return isAppRunning;
     }
 
     public MixpanelAPI getMixpanelAPI(){ return mixpanel; }
