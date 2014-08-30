@@ -173,4 +173,6 @@
     <string name="group_finish_dialog_positive">다 봤어요</string>
     <string name="group_finish_dialog_negative">더 볼래요</string>
     <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>
+    <string name="dialog_group_poke_title">그래 같이 먹어요</string>
+    <string name="dialog_group_poke_message">얌친들에게 이 음식을 먹자고 보내볼까요?</string>
 </resources>

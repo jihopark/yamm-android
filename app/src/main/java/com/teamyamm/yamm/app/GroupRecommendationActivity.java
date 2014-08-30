@@ -89,6 +89,53 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         return true;
     }
 
+    public void sendPokeMessage(DishItem dish){
+        final DishItem fDish = dish;
+        final List<Long> sendIds = new ArrayList<Long>();
+        String time = selectedTime;
+        final String meal = time.substring(time.length() - 2, time.length());
+        final String date = time = time.substring(0, time.length() - 3);
+
+        for (YammItem i : selectedFriend)
+            sendIds.add(i.getID());
+
+
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
+
+                Toast.makeText(GroupRecommendationActivity.this, "친구들한테 " + selectedTime + "에 "
+                        + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG).show();
+
+                YammAPIAdapter.getTokenService().sendPokeMessage(msg, new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        Log.i("GroupRecommendationActivity/sendPushMessage", "Push " + s);
+                        trackGroupPokeFriendMixpanel(selectedFriend.size(), selectedTime, fDish.getName());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                            Log.e("GroupRecommendationActivity/sendPushMessage", "Invalid Token, Logging out");
+                            invalidToken();
+                            return ;
+                        }
+                        Log.e("GroupRecommendationActivity/sendPushMessage", "Error In Push Message");
+                        Toast.makeText(GroupRecommendationActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+
+        Dialog askPoke = createDialog(GroupRecommendationActivity.this,
+                R.string.dialog_group_poke_title, R.string.dialog_group_poke_message,
+                R.string.dialog_positive, R.string.dialog_negative, positiveListener, null);
+        askPoke.show();
+    }
+
     private void setSelectedItems(){
         TextView selectedItemsText = (TextView) findViewById(R.id.selected_items_textview);
         String s = "";
@@ -224,5 +271,19 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         }
         mixpanel.track("Received Group Recommendation", props);
         Log.i("GroupRecommendationActivity/trackReceivedGroupRecommendation","Received Group Recommendation Tracked");
+    }
+
+    private void trackGroupPokeFriendMixpanel(int count, String time, String dish){
+        JSONObject props = new JSONObject();
+        try{
+            props.put("Method", "YAMM");
+            props.put("Count", count);
+            props.put("Time", time);
+            props.put("Dish", dish);
+        }catch(JSONException e){
+            Log.e("GroupRecommendationActivity/trackGroupPokeFriend","JSON Error");
+        }
+        mixpanel.track("Group Poke Friend", props);
+        Log.i("GroupRecommendationActivity/trackGroupPokeFriend","Group Poke Friend Tracked");
     }
 }

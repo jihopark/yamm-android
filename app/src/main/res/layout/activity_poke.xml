@@ -41,12 +41,4 @@
         android:text="@string/poke_yamm_confirm"
         android:id="@+id/poke_yamm_confirm"
         android:visibility="gone"/>
-    <ProgressBar
-        android:layout_alignParentBottom="true"
-        android:padding="5dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        android:id="@+id/poke_progress_bar"
-        />
 </RelativeLayout>

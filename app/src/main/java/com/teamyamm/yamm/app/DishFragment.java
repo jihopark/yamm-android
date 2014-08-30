@@ -188,14 +188,20 @@ public class DishFragment extends Fragment {
                     //pokeMethodDialog.show(getChildFragmentManager(), "pokeMethod");
                     addDishToPositive(SHARE, null);
 
-                    Intent intent = new Intent(parentFragment.getActivity(), PokeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    if (isGroup && getActivity() instanceof GroupRecommendationActivity){
+                        GroupRecommendationActivity activity = (GroupRecommendationActivity) getActivity();
+                        activity.sendPokeMessage(item);
+                    }
+                    else {
+                        Intent intent = new Intent(parentFragment.getActivity(), PokeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("dish", new Gson().toJson(item, DishItem.class));
+                        Bundle bundle = new Bundle();
+                        bundle.putString("dish", new Gson().toJson(item, DishItem.class));
 
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                 }
             });
 
