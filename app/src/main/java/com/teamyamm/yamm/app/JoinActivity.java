@@ -355,6 +355,7 @@ public class JoinActivity extends BaseActivity {
                 //Save Token to Shared Pref
                 SharedPreferences prefs = getSharedPreferences(packageName, MODE_PRIVATE);
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
+                YammAPIAdapter.setToken(yammToken.toString());
 
                 //Move onto Next Activity
                 goToActivity(GridActivity.class);

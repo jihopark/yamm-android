@@ -27,6 +27,12 @@ public class IntroActivity extends BaseActivity {
         setViewPager();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        BaseActivity.isLoggingOut = false;
+    }
+
 
     @Override
     public void onBackPressed() {

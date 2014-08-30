@@ -494,7 +494,6 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void invalidToken(){
         Toast.makeText(BaseActivity.this, R.string.invalid_token_error, Toast.LENGTH_LONG).show();
-        isLoggingOut = true;
         logOut();
     }
 

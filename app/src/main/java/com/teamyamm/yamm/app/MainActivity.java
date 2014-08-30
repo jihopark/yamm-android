@@ -64,6 +64,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private ImageButton friendPickButton;
+    private PushContent pushContent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +80,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         super.onStart();
      //   showFBDialog();   //For Later
 
-
-
         friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
@@ -92,6 +91,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public void onPostResume(){
         super.onPostResume();
         loadDishes();
+        checkForBundle();
     }
 
     @Override
@@ -102,6 +102,18 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
         super.onStop();
     }
+
+    private void checkForBundle(){
+        if (getIntent().getExtras()!=null){
+            pushContent = new Gson().fromJson(getIntent().getExtras().getString("pushcontent"), PushContent.class);
+            Log.i("MainActivity/checkForBundle","Bundle Found " + pushContent);
+            pushContent = null;
+
+            return ;
+        }
+        Log.i("MainActivity/checkForBundle","Bundle Not Found");
+    }
+
 
     @Override
     public void onBackPressed() {

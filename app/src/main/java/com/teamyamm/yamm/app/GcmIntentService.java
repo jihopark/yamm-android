@@ -6,10 +6,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
 
 /**
  * Created by parkjiho on 8/13/14.
@@ -44,16 +46,9 @@ public class GcmIntentService extends IntentService {
                     MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
           //      sendNotification("Send error: " + extras.toString());
             } else if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_DELETED.equals(messageType)) {
-     //           sendNotification("Deleted messages on server: " +
-     //                   extras.toString());
-                // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
-                // Post notification of received message.
-                sendNotification("푸시 예시" + extras.toString());
-                Log.i("GcmIntentService/onHandleIntent", "Received: " + extras.toString());
+                sendNotification(new PushContent(extras));
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -63,22 +58,34 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
+    private void sendNotification(PushContent content) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent contentIntent = null;
+        NotificationCompat.Builder mBuilder = null;
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+        if (content.getType().equals(PushContent.POKE)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("pushcontent", new Gson().toJson(content, PushContent.class));
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.yamm_launcher)
-                        .setContentTitle("GCM Notification")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            String msg = content.getSender().getName() + "님이 " + content.getTime() + "에 이거 먹재요~";
+            String title = getString(R.string.poke_push_title);
+            mBuilder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.yamm_launcher)
+                            .setContentTitle(title)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(msg))
+                            .setContentText(msg)
+                            .setAutoCancel(true)
+                            .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        }
+
+        if (contentIntent!= null && mBuilder!=null) {
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
     }
 }
