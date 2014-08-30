@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     private Button yammConfirmButton, contactConfirmButton;
 
     private DishItem currentItem;
-
+    private ProgressBar pokeProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     private void setButtons(){
         yammConfirmButton = (Button) findViewById(R.id.poke_yamm_confirm);
         contactConfirmButton = (Button) findViewById(R.id.poke_contact_confirm);
+        pokeProgress = (ProgressBar) findViewById(R.id.poke_progress_bar);
 
         yammConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,17 +137,22 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         for (YammItem i : yammFriendsFragment.selectedItems)
             sendIds.add(i.getID());
 
+        pokeProgress.setVisibility(View.VISIBLE);
+
         YammAPIAdapter.getTokenService().sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("PokeActivity/sendPushMessage", "Push " + s);
                 trackPokeFriendMixpanel("YAMM", yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
+                pokeProgress.setVisibility(View.GONE);
                 Toast.makeText(PokeActivity.this, "친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
-                        + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_SHORT).show();
+                        + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                pokeProgress.setVisibility(View.GONE);
+
                 String msg = retrofitError.getCause().getMessage();
                 if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
                     Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
@@ -307,7 +314,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
 
     private void setDatePickSpinner(){
         datePickSpinner = (Spinner) findViewById(R.id.date_pick_spinner);
-        spinnerAdapter = ArrayAdapter.createFromResource(PokeActivity.this, R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter = ArrayAdapter.createFromResource(PokeActivity.this, R.array.date_spinner_array, R.layout.closed_spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         datePickSpinner.setAdapter(spinnerAdapter);
         datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

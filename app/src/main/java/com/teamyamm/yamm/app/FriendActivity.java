@@ -206,7 +206,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
 
     private void setDatePickSpinner(){
         datePickSpinner = (Spinner) findViewById(R.id.date_pick_spinner);
-        spinnerAdapter = ArrayAdapter.createFromResource(FriendActivity.this, R.array.date_spinner_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter = ArrayAdapter.createFromResource(FriendActivity.this, R.array.date_spinner_array, R.layout.closed_spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         datePickSpinner.setAdapter(spinnerAdapter);
         datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

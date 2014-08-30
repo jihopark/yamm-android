@@ -45,7 +45,9 @@ public class MealPickerDialog extends DialogFragment{
                 list.add(((YammDatePickerFragment)activity.getDatePickerFragment()).result+ " " + parent.getItemAtPosition(position));
 
                 //Reset Adapter to spinner
-                adapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+                adapter = new ArrayAdapter<CharSequence>(getActivity(), R.layout.closed_spinner_item, list);
+                adapter.setDropDownViewResource(R.layout.spinner_item);
+
                 s.setAdapter(adapter);
                 s.setSelection(list.size()-1);
 

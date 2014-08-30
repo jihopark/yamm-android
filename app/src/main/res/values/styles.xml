@@ -221,7 +221,6 @@
         <item name="android:layout_marginRight">13dp</item>
         <item name="android:layout_marginTop">6dp</item>
         <item name="android:layout_marginBottom">6dp</item>
-        <item name="android:textColor">#ffa5a5a5</item>
     </style>
 
     <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
