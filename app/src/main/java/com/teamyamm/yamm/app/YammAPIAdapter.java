@@ -96,6 +96,7 @@ public class YammAPIAdapter {
                     .setEndpoint(apiURL)
                     .setLog(setRestAdapterLog())
                     .setLogLevel(RestAdapter.LogLevel.BASIC)
+                    .setErrorHandler(new TokenErrorHandler())
                     .setRequestInterceptor(interceptor)
                     .build();
 
@@ -196,6 +197,26 @@ public class YammAPIAdapter {
     Error Handlers
     * */
 
+    public static class TokenErrorHandler implements ErrorHandler{
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("TokenErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            if (r != null && r.getStatus() == 401) {
+                Log.e("LoginErrorHandler/handleError","Handling 401 Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
+            }
+            Log.e("TokenErrorHandler/handleError","Unidentified Error");
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+    }
+
+  //  public static interface TokenCallback<T> extends Callback<T>
+
     public static class DislikeErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError cause) {
@@ -210,6 +231,10 @@ public class YammAPIAdapter {
             error = gson.fromJson(responseToString(r), error.getClass());
             Log.e("DislikeErrorHandler/handleError",error.getMessage());
 
+            if (r != null && r.getStatus() == 401) {
+                Log.e("LoginErrorHandler/handleError","Handling 401 Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
+            }
 
             if (error.getCode().equals("TooManyAttempts")) {
                 return new YammAPIService.YammRetrofitException(cause, DishFragment.TOO_MANY_DISLIKE);

@@ -360,6 +360,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("MainActivity/getPersonalDishes", "Invalid Token, Logging out");
+                    invalidToken();
+                }
+
                 Log.e("MainActivity/getPersonalDishes", "Server Error, setting saved list");
                 retrofitError.printStackTrace();
                 closeFullScreenDialog();
@@ -585,6 +591,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                            Log.e("MainActivity/getPersonalDishes", "Invalid Token, Logging out");
+                            invalidToken();
+                        }
                         Log.e("MainActivity/sendContactsToServer", "Phone Sending Failed");
                     }
                 });

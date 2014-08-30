@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
@@ -32,8 +33,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.provider.Settings.Secure;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -51,8 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -495,34 +492,10 @@ public class BaseActivity extends ActionBarActivity {
     *
     * */
 
-    protected RestAdapter.Log setRestAdapterLog(){
-        return new RestAdapter.Log() {
-            @Override
-            public void log(String s) {
-                Log.i("YammAPIServiceLog", s);
-            }
-        };
-    }
-
-    /*
-    * Sets Request Header with Auth token
-    * */
-    public RequestInterceptor setRequestInterceptorWithToken(){
-        return new RequestInterceptor() {
-            @Override
-            public void intercept(RequestFacade request) {
-                SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
-                String token = prefs.getString(getString(R.string.AUTH_TOKEN),"none");
-
-                if (token == "none"){
-                    Log.e("BaseActivity/setRequestInterceptor","Token does not exist");
-                }
-
-                token = "Bearer " + token;
-                Log.i("BaseActivity/setRequestInterceptor", token);
-                request.addHeader("Authorization", token);
-            }
-        };
+    protected void invalidToken(){
+        Toast.makeText(BaseActivity.this, R.string.invalid_token_error, Toast.LENGTH_LONG).show();
+        isLoggingOut = true;
+        logOut();
     }
 
 

@@ -31,6 +31,7 @@
     <string name="email_format_error_message">이메일 형식이 잘못 되었어요</string>
     <string name="password_format_error_message">비밀번호에 숫자나 특수문자가 포함되어야 되요</string>
     <string name="password_min_error_message">비밀번호는 최소한 8자이어야 해요</string>
+    <string name="invalid_token_error">다시 한번 로그인해주세요</string>
 
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
@@ -126,7 +127,7 @@
 
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
-    <string name="forgot_password"><u>비밀번호가 기억안나요ㅠㅠ</u></string>
+    <string name="forgot_password"><u>비밀번호를 모르겠어요ㅠㅠ</u></string>
     <string name="forgot_password_no_email">비밀번호가 기억 안나는 이메일을 적어주세요</string>
     <string name="forgot_password_dialog_title">알려줄게</string>
     <string name="forgot_password_dialog_message">비밀번호 재설정을 도와드릴게요\n입력하신 이메일이 맞나요?</string>

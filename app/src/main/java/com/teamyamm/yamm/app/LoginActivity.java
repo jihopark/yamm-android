@@ -72,17 +72,22 @@ public class LoginActivity extends BaseActivity {
                     requestEmail();
                 }
                 else{
+                    final ProgressDialog progress = createProgressDialog(LoginActivity.this, R.string.progress_dialog_title, R.string.progress_dialog_message);
+
                     DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            progress.show();
                             YammAPIAdapter.getService().requestPasswordRecovery(emailField.getText().toString(), new Callback<String>() {
                                 @Override
                                 public void success(String s, Response response) {
+                                    progress.dismiss();
                                     Toast.makeText(LoginActivity.this, R.string.forgot_password_sent, Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void failure(RetrofitError retrofitError) {
+                                    progress.dismiss();
                                     Toast.makeText(LoginActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
                                 }
                             });

@@ -154,9 +154,15 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                fullScreenDialog.dismiss();
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
+                    invalidToken();
+                    return ;
+                }
                 Log.e("GroupRecommendationActivity/getGroupSuggestions", "Something went wrong");
                 finishActivityForError();
-                fullScreenDialog.dismiss();
             }
         });
     }

@@ -137,7 +137,7 @@ public class DishFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if (getParentFragment() == null){
-            Log.e("DishFragment/getParentFragment","DishFragment Removed, because ParentFragment is null");
+            Log.e("DishFragment/getParentFragment", "DishFragment Removed, because ParentFragment is null");
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         }
     }
@@ -229,7 +229,15 @@ public class DishFragment extends Fragment {
 
                             if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
                                 Toast.makeText(parentFragment.getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
-                            } else {
+                            }
+                            else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                                Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
+                                if (getActivity() instanceof BaseActivity) {
+                                    ((BaseActivity) getActivity()).invalidToken();
+                                    return;
+                                }
+                            }
+                            else {
                                 Toast.makeText(parentFragment.getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -289,6 +297,14 @@ public class DishFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("PokeActivity/addDishToPositive", "Invalid Token, Logging out");
+                    if (getActivity() instanceof BaseActivity) {
+                        ((BaseActivity) getActivity()).invalidToken();
+                        return ;
+                    }
+                }
             }
         });
     }

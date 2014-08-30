@@ -146,6 +146,12 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
+                    invalidToken();
+                    return ;
+                }
                 Log.e("PokeActivity/sendPushMessage", "Error In Push Message");
                 Toast.makeText(PokeActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
             }
