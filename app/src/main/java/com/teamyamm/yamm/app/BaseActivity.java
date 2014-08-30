@@ -70,7 +70,7 @@ public class BaseActivity extends ActionBarActivity {
     protected AlertDialog internetAlert;
     protected SharedPreferences prefs;
 
-    protected boolean isLoggingOut = false;
+    protected static boolean isLoggingOut = false;
 
 
     @Override
@@ -158,6 +158,12 @@ public class BaseActivity extends ActionBarActivity {
                 ,getString(R.string.PREVIOUS_ACTIVITY), nextActivity.getSimpleName());
 
         Intent intent = new Intent(getBaseContext(), nextActivity);
+
+        if (nextActivity == MainActivity.class){
+            Log.i("BaseActivity/goToActivity","Setting flags for MainActivity");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }
+
         startActivity(intent);
     }
 

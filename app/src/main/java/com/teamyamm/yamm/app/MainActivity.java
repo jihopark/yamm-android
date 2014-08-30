@@ -97,8 +97,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onStop(){
         Log.i("MainActivity/onStop","isLoggingOut " +isLoggingOut);
-        if (!isLoggingOut)
+        if (!BaseActivity.isLoggingOut) {
             saveDishItemsInPref();
+        }
         super.onStop();
     }
 

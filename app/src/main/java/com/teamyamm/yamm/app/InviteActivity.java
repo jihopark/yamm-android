@@ -50,6 +50,12 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        BaseActivity.isLoggingOut = false;
+    }
+
+    @Override
     public void onBackPressed() {
         finishInvite();
     }
