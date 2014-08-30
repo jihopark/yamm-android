@@ -1,6 +1,5 @@
 package com.teamyamm.yamm.app;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +45,6 @@ import retrofit.client.Response;
 public class MainActivity extends BaseActivity implements MainFragmentInterface {
     public final static int DRAWER_LOGOUT = 0;
 
-    public static final String loggedFirstTime = "lft";
     private boolean neutral = false;
 
 
@@ -78,7 +75,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onStart(){
         super.onStart();
-     //   showFBDialog();   //For Later
 
         friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
@@ -164,78 +160,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, type));
     }
 
-    private void showFBDialog(){
-        boolean fb = prefs.getBoolean(loggedFirstTime, false);
 
-        Log.i("MainActivity/showFBDialog","FB boolean " + fb);
 
-        if (fb){
 
-            Log.i("MainActivity/showFBDialog","Show FB Dialog");
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-            DialogInterface.OnClickListener positiveListener =
-                    new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which){
-
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putBoolean(MainActivity.loggedFirstTime, false);
-                            editor.commit();
-
-                            goToYammFacebook();
-                            trackFBPageMixpanel();
-                            dialog.dismiss();
-                        }
-                    };
-            DialogInterface.OnClickListener neutralListener =
-                    new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which){
-                            dialog.dismiss();
-                        }
-                    };
-
-            DialogInterface.OnClickListener negativeListener =
-                    new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which){
-
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putBoolean(MainActivity.loggedFirstTime, false);
-                            editor.commit();
-
-                            dialog.dismiss();
-                        }
-                    };
-
-            AlertDialog alert = builder.setPositiveButton(R.string.fb_dialog_positive,positiveListener)
-                    .setNegativeButton(R.string.fb_dialog_negative, negativeListener)
-                    .setNeutralButton(R.string.fb_dialog_neutral, neutralListener)
-                    .setTitle(R.string.fb_dialog_title)
-                    .setMessage(R.string.fb_dialog_message)
-                    .create();
-
-            alert.show();
-        }
-    }
-
-    private void goToYammFacebook(){
-        Intent intent;
-
-        try {
-            getPackageManager()
-                    .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
-            Log.i("tried", "facebook");
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("fb://page/251075981744124")); //Trys to make intent with FB's URI
-        } catch (Exception e) {
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://www.facebook.com/yammapp")); //catches and opens a url to the desired page
-        }
-        startActivity(intent);
-    }
 
     private void setMainFragment(){
         if (dishItems == null){
@@ -647,12 +574,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         mixpanel.track("New Recommendation", props);
         Log.i("MainActivity/trackNewRecommendationMixpanel","New Recommendation Tracked ");
 
-    }
-
-    private void trackFBPageMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("FB Page Like", props);
-        Log.i("MainActivity/trackFBPageMixpanel","FB Page Tracked ");
     }
 
     private void trackEnteredGroupRecommendationMixpanel(){

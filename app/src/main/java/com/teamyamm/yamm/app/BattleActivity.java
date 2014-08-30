@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -264,11 +263,6 @@ public class BattleActivity extends BaseActivity {
             @Override
             public void success(String msg, Response response) {
                 finalDialog.dismiss();
-
-                //for FB Dialog
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(MainActivity.loggedFirstTime, true);
-                editor.commit();
 
                 trackBattleMixpanel();
 
