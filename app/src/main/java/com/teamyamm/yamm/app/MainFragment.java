@@ -383,7 +383,7 @@ public class MainFragment extends Fragment {
                     dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
                     dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
                 }catch(NullPointerException e){
-                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment()==null));
+                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
                     e.printStackTrace();
                     animation.cancel();
                 }
@@ -391,8 +391,14 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
-                dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
+                try {
+                    dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
+                    dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
+                }catch(NullPointerException e){
+                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
+                    e.printStackTrace();
+                    animation.cancel();
+                }
             }
 
             @Override
