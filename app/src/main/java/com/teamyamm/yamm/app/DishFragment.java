@@ -98,6 +98,7 @@ public class DishFragment extends Fragment {
         if (index == parentFragment.getCurrentPage()) {
             Log.i("DishFragment/onCreateView",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
             setButtons();
+            showTexts();
         }
 
 
