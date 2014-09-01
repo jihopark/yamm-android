@@ -159,10 +159,13 @@
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
 
     <!-- Push Messages -->
-    <string name="poke_push_title">한끼 같이 먹어요</string>
+    <string name="poke_push_title">밥 한번 같이 먹어요</string>
     <string name="push_facebook_title">Yamm 페이스북 좋아요!</string>
     <string name="push_facebook_message">Yamm 얌의 소식을 페이스북 통해서 확인하세요</string>
     <string name="push_admin_default_title">Yamm 얌</string>
+    <string name="poke_alert_confirm">닫기</string>
+    <string name="poke_alert_negative">딴거 먹자</string>
+    <string name="poke_alert_positive">좋아</string>
     <!-- Place Pick Autocomplete -->
     <string name="place_pick_edit_text">현재 위치</string>
 

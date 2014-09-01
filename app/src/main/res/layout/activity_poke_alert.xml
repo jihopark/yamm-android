@@ -37,13 +37,37 @@
                 android:id="@+id/poke_alert_dish"/>
             </RelativeLayout>
         </RelativeLayout>
-    <Button
+    <LinearLayout
         android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="60dp">
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/default_color"
+            android:textColor="#ffffffff"
+            android:textSize="24sp"
+            android:text="@string/poke_alert_negative"
+            android:id="@+id/poke_alert_negative"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/default_color"
+            android:textColor="#ffffffff"
+            android:textSize="24sp"
+            android:text="@string/poke_alert_positive"
+            android:id="@+id/poke_alert_positive"/>
+    </LinearLayout>
+    <Button
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@color/default_color"
         android:textColor="#ffffffff"
-        android:textSize="24sp"
-        android:text="확 인"
+        android:text="@string/poke_alert_confirm"
         android:id="@+id/poke_alert_confirm"/>
 </RelativeLayout>

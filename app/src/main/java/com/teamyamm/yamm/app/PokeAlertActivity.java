@@ -17,7 +17,7 @@ public class PokeAlertActivity extends Activity {
     private PushContent content = null;
     private YammImageView image;
     private TextView title, dish;
-    private Button confirm;
+    private Button confirm, positive, negative;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +43,16 @@ public class PokeAlertActivity extends Activity {
 
     private void setButton(){
         confirm = (Button) findViewById(R.id.poke_alert_confirm);
+        positive = (Button) findViewById(R.id.poke_alert_positive);
+        negative = (Button) findViewById(R.id.poke_alert_negative);
+        confirm = (Button) findViewById(R.id.poke_alert_confirm);
+
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
     }
 }
