@@ -95,7 +95,7 @@ public class GcmIntentService extends IntentService {
             String msg = PokeAlertActivity.findFriendName(content.getSender(), getFriendList()) + "님이 " + content.getTime() + "에 이거 먹재요~";
             String title = getString(R.string.poke_push_title);
             mBuilder = new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.yamm_launcher)
+                            .setSmallIcon(R.drawable.yamm_stat_notify)
                             .setContentTitle(title)
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(msg))
@@ -115,7 +115,7 @@ public class GcmIntentService extends IntentService {
                 String msg = getString(R.string.push_facebook_message);
                 String title = getString((R.string.push_facebook_title));
                 mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.yamm_launcher)
+                        .setSmallIcon(R.drawable.yamm_stat_notify)
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
@@ -145,7 +145,7 @@ public class GcmIntentService extends IntentService {
                 title = getString(R.string.push_admin_default_title);
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.yamm_launcher)
+                    .setSmallIcon(R.drawable.yamm_stat_notify)
                     .setContentTitle(title)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(content.getMessage()))
