@@ -16,6 +16,10 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Created by parkjiho on 8/13/14.
@@ -26,7 +30,7 @@ public class GcmIntentService extends IntentService {
     NotificationCompat.Builder builder;
 
     public static final String facebookFirstTime = "FB";
-
+    public static List<Friend> friendList = null;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -87,7 +91,8 @@ public class GcmIntentService extends IntentService {
                 return ;
             }
 
-            String msg = content.getSender().getName() + "님이 " + content.getTime() + "에 이거 먹재요~";
+
+            String msg = PokeAlertActivity.findFriendName(content.getSender(), getFriendList()) + "님이 " + content.getTime() + "에 이거 먹재요~";
             String title = getString(R.string.poke_push_title);
             mBuilder = new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.yamm_launcher)
@@ -181,5 +186,20 @@ public class GcmIntentService extends IntentService {
                     Uri.parse("https://www.facebook.com/yammapp")); //catches and opens a url to the desired page
         }
         return intent;
+    }
+
+    private List<Friend> getFriendList(){
+        if (friendList == null){
+            Gson gson = new Gson();
+            Type typeOfDest = new TypeToken<List<Friend>>() {
+            }.getType();
+
+            SharedPreferences prefs =  getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+            String s = prefs.getString(getString(R.string.FRIEND_LIST),"");
+            if (s.isEmpty())
+                return null;
+            return gson.fromJson(s, typeOfDest);
+        }
+        return friendList;
     }
 }
