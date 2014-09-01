@@ -182,7 +182,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
 
         } catch (Exception e) {
-            makeErrorToast(getString(R.string.invite_sms_error_message),Toast.LENGTH_SHORT);
+            makeYammToast(getString(R.string.invite_sms_error_message), Toast.LENGTH_SHORT);
             Log.e("InviteActivity/startSMSIntent","SMS Error");
             e.printStackTrace();
         }

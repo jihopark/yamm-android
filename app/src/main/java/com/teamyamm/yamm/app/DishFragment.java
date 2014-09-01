@@ -224,7 +224,7 @@ public class DishFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     Log.i("DishFragment/onClick", "Dislike pressed for " + getDishItem().getName());
                     trackDislikeMixpanel();
-                    Toast.makeText(parentFragment.getActivity(), R.string.dish_dislike_toast, Toast.LENGTH_SHORT).show();
+                    ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
 
                     YammAPIService service = YammAPIAdapter.getDislikeService();
 
@@ -240,7 +240,7 @@ public class DishFragment extends Fragment {
                             String msg = retrofitError.getCause().getMessage();
 
                             if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
-                                Toast.makeText(parentFragment.getActivity(), R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT).show();
+                                ((BaseActivity)getActivity()).makeYammToast(R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT);
                             }
                             else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
                                 Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
@@ -250,7 +250,7 @@ public class DishFragment extends Fragment {
                                 }
                             }
                             else {
-                                Toast.makeText(parentFragment.getActivity(), R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                                ((BaseActivity)getActivity()).makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                             }
                         }
                     };
@@ -396,7 +396,7 @@ public class DishFragment extends Fragment {
     private void searchMap(String input){
         Uri location = getLocationURI(input);
         if (location == null){
-            Toast.makeText(activity, activity.getString(R.string.location_error), Toast.LENGTH_SHORT).show();
+            ((BaseActivity)activity).makeYammToast(activity.getString(R.string.location_error), Toast.LENGTH_SHORT);
             location = Uri.parse("geo:0,0?q="+ item.getName());
         }
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
@@ -452,7 +452,7 @@ public class DishFragment extends Fragment {
                 lastKnownLocation = locationManager.getLastKnownLocation(default_provider);
                 if (count++ > 150){
                     Log.e("DishFragment/getLocationURI", "Location Accuracy failed");
-                    Toast.makeText(activity,activity.getString(R.string.gps_accuracy_warning_text), Toast.LENGTH_SHORT).show();
+                    ((BaseActivity)activity).makeYammToast(activity.getString(R.string.gps_accuracy_warning_text), Toast.LENGTH_SHORT);
                     break;
                 }
             }

@@ -112,7 +112,7 @@ public class GridActivity extends BaseActivity {
                 progressDialog.dismiss();
                 Log.e("GridActivity/sendGridResults","Sending Error");
                 retrofitError.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+                makeYammToast( getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
             }
         });
 

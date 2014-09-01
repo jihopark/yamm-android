@@ -193,7 +193,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
 
         if (list == null){
             Log.e("FriendActivity/loadFriends","Failed to load contacts from shared pref");
-            Toast.makeText(this, getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
+            makeYammToast(getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
             finish();
         }
         else{

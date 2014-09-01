@@ -285,6 +285,7 @@ public class MainFragment extends Fragment {
         public void setButtonsForCurrentIndex(){
             Log.i("DishFragmentPagerAdapter/setButtonsForCurrentIndex", dishItems.get(currentPage).getName() + "Page " + currentPage +" : Setting Buttons For Current Index");
             fragments.get(currentPage).setButtons();
+            fragments.get(currentPage).showTexts();
         }
 
         public DishItem getCurrentDishItem(){

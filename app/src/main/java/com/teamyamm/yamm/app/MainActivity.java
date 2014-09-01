@@ -15,7 +15,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,9 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -262,7 +259,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            Toast.makeText(MainActivity.this, getString(R.string.new_recommendation_message),Toast.LENGTH_SHORT).show();
+                            makeYammToast(getString(R.string.new_recommendation_message),Toast.LENGTH_SHORT);
                         }
                     }, getResources().getInteger(R.integer.dialog_delay_duration));
 
@@ -270,15 +267,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     return ;
                 }
                 if (isDialogOpen){
-                    final Toast toast = Toast.makeText(MainActivity.this, getString(R.string.no_new_recommendation_message),Toast.LENGTH_LONG);
-                    TextView tv = (TextView) ((LinearLayout)toast.getView()).getChildAt(0);
-                    tv.setGravity(Gravity.CENTER_HORIZONTAL);
-
                     // To delay Toast
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                    //        toast.show();
+                            makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
 
                             closeFullScreenDialog();
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");
@@ -355,7 +348,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             @Override
             public void onClick(View v) {
                 if (!isFriendLoaded()){
-                    Toast.makeText(MainActivity.this, R.string.friend_not_loaded_message, Toast.LENGTH_LONG).show();
+                    makeYammToast(R.string.friend_not_loaded_message, Toast.LENGTH_LONG);
                     return ;
                 }
                 Intent intent = new Intent(MainActivity.this, FriendActivity.class);

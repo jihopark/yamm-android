@@ -92,7 +92,7 @@ public class BattleActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (bf == null || bf.first ==null || bf.second == null){
-                    Toast.makeText(BattleActivity.this, R.string.battle_loading_toast, Toast.LENGTH_SHORT).show();
+                    makeYammToast(R.string.battle_loading_toast, Toast.LENGTH_SHORT);
                     return ;
                 }
                 fullScreenDialog.dismiss();
@@ -178,9 +178,9 @@ public class BattleActivity extends BaseActivity {
                 Log.e("BattleActivity/getBattleItems", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
-                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_LONG);
                 else
-                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
                 showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             }
         });
@@ -272,9 +272,9 @@ public class BattleActivity extends BaseActivity {
                 Log.e("BattleActivity/postBattleItem", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
-                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_LONG);
                 else
-                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
 
                 retrieveResult();
                 finalDialog.dismiss();

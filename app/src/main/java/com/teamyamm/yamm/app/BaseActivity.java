@@ -353,10 +353,14 @@ public class BaseActivity extends ActionBarActivity {
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
-    protected void makeErrorToast(String message, int duration){
+    protected void makeYammToast(int rId, int duration){
+        makeYammToast(getString(rId), duration);
+    }
+
+    protected void makeYammToast(String message, int duration){
         LayoutInflater inflater = getLayoutInflater();
 
-        View layout = inflater.inflate(R.layout.yamm_error_toast,
+        View layout = inflater.inflate(R.layout.yamm_toast,
                 (ViewGroup) findViewById(R.id.toast_layout));
 
         TextView text = (TextView) layout.findViewById(R.id.toast_text);
@@ -364,7 +368,7 @@ public class BaseActivity extends ActionBarActivity {
         text.setText(message);
         Toast toast = new Toast(getApplicationContext());
 
-        toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, getSupportActionBar().getHeight());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0 ,0);
         toast.setDuration(duration);
         toast.setView(layout);
         toast.show();
@@ -505,7 +509,7 @@ public class BaseActivity extends ActionBarActivity {
     * */
 
     protected void invalidToken(){
-        Toast.makeText(BaseActivity.this, R.string.invalid_token_error, Toast.LENGTH_LONG).show();
+        makeYammToast(R.string.invalid_token_error, Toast.LENGTH_LONG);
         logOut();
     }
 

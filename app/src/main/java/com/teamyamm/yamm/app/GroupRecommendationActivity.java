@@ -101,8 +101,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             public void onClick(DialogInterface dialog, int which) {
                 YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
 
-                Toast.makeText(GroupRecommendationActivity.this, "친구들한테 " + selectedTime + "에 "
-                        + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG).show();
+                makeYammToast("친구들한테 " + selectedTime + "에 "
+                        + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
 
                 YammAPIAdapter.getTokenService().sendPokeMessage(msg, new Callback<String>() {
                     @Override
@@ -120,7 +120,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                             return ;
                         }
                         Log.e("GroupRecommendationActivity/sendPushMessage", "Error In Push Message");
-                        Toast.makeText(GroupRecommendationActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                        makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -240,7 +240,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     }
 
     private void finishActivityForError(){
-        Toast.makeText(GroupRecommendationActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+        makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
         finish();
     }
 

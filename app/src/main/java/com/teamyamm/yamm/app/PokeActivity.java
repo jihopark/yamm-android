@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -93,7 +92,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
 
         if (list == null){
             Log.e("PokeActivity/setFriendList", "Failed to load contacts from shared pref");
-            Toast.makeText(this, getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
+            makeYammToast(getString(R.string.friend_not_loaded_message), Toast.LENGTH_SHORT);
             finish();
         }
         else{
@@ -136,10 +135,9 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             sendIds.add(i.getID());
 
 
-        Toast toast = Toast.makeText(PokeActivity.this, "친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
+        makeYammToast("친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
                 + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0 ,0);
-        toast.show();
+
 
         YammAPIAdapter.getTokenService().sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
             @Override
@@ -158,7 +156,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                     return ;
                 }
                 Log.e("PokeActivity/sendPushMessage", "Error In Push Message");
-                Toast.makeText(PokeActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
             }
         });
 

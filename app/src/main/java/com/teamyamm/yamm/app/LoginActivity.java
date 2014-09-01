@@ -82,13 +82,13 @@ public class LoginActivity extends BaseActivity {
                                 @Override
                                 public void success(String s, Response response) {
                                     progress.dismiss();
-                                    Toast.makeText(LoginActivity.this, R.string.forgot_password_sent, Toast.LENGTH_SHORT).show();
+                                    makeYammToast(R.string.forgot_password_sent, Toast.LENGTH_SHORT);
                                 }
 
                                 @Override
                                 public void failure(RetrofitError retrofitError) {
                                     progress.dismiss();
-                                    Toast.makeText(LoginActivity.this, R.string.unidentified_error_message, Toast.LENGTH_SHORT).show();
+                                    makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                                 }
                             });
                         }
@@ -107,7 +107,7 @@ public class LoginActivity extends BaseActivity {
             }
 
             private void requestEmail(){
-                Toast.makeText(LoginActivity.this, R.string.forgot_password_no_email, Toast.LENGTH_SHORT).show();
+                makeYammToast(R.string.forgot_password_no_email, Toast.LENGTH_SHORT);
                 showSoftKeyboard(emailField, LoginActivity.this);
             }
         });
@@ -165,8 +165,6 @@ public class LoginActivity extends BaseActivity {
 
                 setMixpanelIdentity();
 
-                Toast.makeText(getApplicationContext(), "로그인 되었습니다", Toast.LENGTH_SHORT).show();
-
                 //For Push Token
                 registerGCM();
 
@@ -181,11 +179,11 @@ public class LoginActivity extends BaseActivity {
                 progressDialog.dismiss();
 
                 if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
-                    makeErrorToast(getString(R.string.login_authentication_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.login_authentication_error_message), Toast.LENGTH_SHORT);
                 else if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
-                    makeErrorToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
                 else
-                    makeErrorToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
 
 
             }

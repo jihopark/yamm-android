@@ -90,7 +90,7 @@ public class JoinActivity extends BaseActivity {
                     postRegistrationToServer();
                 }
                 else{
-                    Toast.makeText(JoinActivity.this, R.string.join_checkbox_message, Toast.LENGTH_SHORT).show();
+                    makeYammToast(R.string.join_checkbox_message, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -300,40 +300,40 @@ public class JoinActivity extends BaseActivity {
 
 
                 if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
-                    makeErrorToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
                 else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT)) {
-                    makeErrorToast(getString(R.string.duplicate_account_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.duplicate_account_error_message), Toast.LENGTH_SHORT);
                     phoneText.setTextColor(getResources().getColor(R.color.error_color));
                     emailText.setTextColor(getResources().getColor(R.color.error_color));
                     emailError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE)) {
-                    makeErrorToast(getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_SHORT);
                     veriText.setTextColor(getResources().getColor(R.color.error_color));
                     veriSuccess.setVisibility(View.GONE);
                     veriError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.EMAIL_FORMAT)) {
-                    makeErrorToast(getString(R.string.email_format_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.email_format_error_message), Toast.LENGTH_SHORT);
                     emailText.setTextColor(getResources().getColor(R.color.error_color));
                     emailError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT)) {
-                    makeErrorToast(getString(R.string.password_format_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.password_format_error_message), Toast.LENGTH_SHORT);
                     pwText.setTextColor(getResources().getColor(R.color.error_color));
                     pwError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN)) {
-                    makeErrorToast(getString(R.string.password_min_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.password_min_error_message), Toast.LENGTH_SHORT);
                     pwText.setTextColor(getResources().getColor(R.color.error_color));
                     pwError.setVisibility(View.VISIBLE);
                 }
                 else if (msg.equals(YammAPIService.YammRetrofitException.PHONE_FORMAT)) {
-                    makeErrorToast(getString(R.string.phone_number_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.phone_number_error_message), Toast.LENGTH_SHORT);
                     phoneText.setTextColor(getResources().getColor(R.color.error_color));
                 }
                 else
-                    makeErrorToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
             }
         });
     }
@@ -384,9 +384,9 @@ public class JoinActivity extends BaseActivity {
 
 
                 if (retrofitError.isNetworkError())
-                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_SHORT).show();
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
                 else
-                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT).show();
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
 
 
             }
@@ -419,7 +419,7 @@ public class JoinActivity extends BaseActivity {
         agreementTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(JoinActivity.this, "웹페이지로 띄우기" ,Toast.LENGTH_SHORT).show();
+                makeYammToast("웹페이지로 띄우기" ,Toast.LENGTH_SHORT);
             }
         });
 
@@ -451,7 +451,7 @@ public class JoinActivity extends BaseActivity {
                     messageView.setGravity(Gravity.CENTER);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), R.string.phone_number_error_message, Toast.LENGTH_SHORT).show();
+                    makeYammToast(R.string.phone_number_error_message, Toast.LENGTH_SHORT);
                 }
             }
 
@@ -502,14 +502,14 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void success(YammAPIService.VeriExp s, Response response) {
                 Log.i("JoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
-                Toast.makeText(getApplicationContext(), R.string.verification_sent, Toast.LENGTH_SHORT).show();
+                makeYammToast(R.string.verification_sent, Toast.LENGTH_SHORT);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("JoinActivity/getVeriDialogPositiveListener", "Veri Failed ");
                 retrofitError.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.verification_error_message, Toast.LENGTH_SHORT).show();
+                makeYammToast(R.string.verification_error_message, Toast.LENGTH_SHORT);
             }
         });
     }
