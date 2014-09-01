@@ -136,9 +136,41 @@ public class BattleFragment extends Fragment{
 
     private void startBattleChoiceAnimation(int win){
         if (win == 0){
+            battleToRight.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    second.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             second.getTextView().startAnimation(battleToRight);
         }
         else if (win == 1){
+            battleToLeft.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    first.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             first.getTextView().startAnimation(battleToLeft);
         }
         else{

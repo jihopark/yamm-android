@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="battle_finish_speed">500</integer>
+    <integer name="battle_finish_speed">900</integer>
     <integer name="battle_intro_speed">300</integer>
     <integer name="main_text_animation_offset">800</integer>
     <integer name="main_text_animation_duration">1000</integer>

@@ -8,6 +8,6 @@
         android:toYScale="0.1"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:duration="@integer/battle_finish_speed"
+        android:duration="300"
         />
 </set>

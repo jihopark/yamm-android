@@ -1,7 +1,7 @@
 package com.teamyamm.yamm.app;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,12 +65,10 @@ public class DishBattleView extends FrameLayout {
     public void showThumbsUp(){
         Animation thumbsUpAnimation = AnimationUtils.loadAnimation(context, R.anim.thumbs_up_animation);
         final Animation putdown = AnimationUtils.loadAnimation(context, R.anim.battle_put_down);
-
-        thumb.setVisibility(View.VISIBLE);
-        thumbsUpAnimation.setAnimationListener(new Animation.AnimationListener() {
+        putdown.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                dishText.startAnimation(putdown);
+
             }
 
             @Override
@@ -80,6 +78,24 @@ public class DishBattleView extends FrameLayout {
                 if (fragment instanceof BattleFragment) {
                     ((BattleFragment)fragment).loadNextItem();
                 }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        thumb.setVisibility(View.VISIBLE);
+        thumbsUpAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                dishText.startAnimation(putdown);
+
             }
 
             @Override
