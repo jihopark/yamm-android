@@ -13,7 +13,8 @@
         android:scaleType="fitEnd"
         android:layout_alignParentBottom="true"
         android:src="@drawable/main_imagebar"
-        android:id="@+id/main_image_bar"/>
+        android:id="@+id/main_image_bar"
+        android:visibility="invisible"/>
     <TextView
         android:layout_above="@+id/dish_name_text"
         android:layout_width="match_parent"
@@ -23,7 +24,8 @@
         android:textColor="#ffffffff"
         android:textSize="20sp"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="16dp"/>
+        android:layout_marginLeft="16dp"
+        android:visibility="invisible"/>
     <TextView
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -33,5 +35,6 @@
         android:textColor="#ffffffff"
         android:textSize="30sp"
         android:layout_marginBottom="9dp"
-        android:layout_marginLeft="16dp"/>
+        android:layout_marginLeft="16dp"
+        android:visibility="invisible"/>
 </RelativeLayout>

@@ -156,6 +156,12 @@ public class DishFragment extends Fragment {
         image.loadImage(item.getId());
     }
 
+    public void showTexts(){
+        mainBar.setVisibility(View.VISIBLE);
+        nameText.setVisibility(View.VISIBLE);
+        commentText.setVisibility(View.VISIBLE);
+    }
+
     public void setButtons(){
         try {
             next = parentFragment.getButton(R.id.dish_next_button);

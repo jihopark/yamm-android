@@ -2,12 +2,27 @@
 <resources>
     <integer name="battle_finish_speed">500</integer>
     <integer name="battle_intro_speed">300</integer>
-    <integer name="main_buttons_animation_duration">150</integer>
     <integer name="main_text_animation_offset">800</integer>
     <integer name="main_text_animation_duration">1000</integer>
     <integer name="main_text_container_animation_duration">500</integer>
-    <integer name="dialog_delay_duration">3000</integer>
+
     <integer name="activity_slide_duration">300</integer>
     <integer name="confirm_button_slide_duration">300</integer>
-    <integer name="button_animation_offset">20</integer>
+
+    <integer name="dialog_delay_duration">2500</integer>
+    <integer name="main_buttons_animation_duration">400</integer>
+
+    <integer name="main_buttons_animation_offset0">2300</integer>
+
+    <!-- (dialog_delay_duration-500) + (main_buttons_animation_duration)
+        - (main_buttons_animation_offset) -->
+    <!--2300 + (500 - 400) -->
+    <integer name="main_buttons_animation_offset1">200</integer>
+    <!--2300 +  2*(500 - 400) -->
+    <integer name="main_buttons_animation_offset2">400</integer>
+    <!--2300 + 3*(500 - 400) -->
+    <integer name="main_buttons_animation_offset3">600</integer>
+
+
+
 </resources>

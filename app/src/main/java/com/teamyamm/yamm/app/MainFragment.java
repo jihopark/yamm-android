@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -168,6 +169,8 @@ public class MainFragment extends Fragment {
     }
 
     private class DishFragmentPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener{
+        private final boolean LEFT = true;
+        private final boolean RIGHT = false;
 
         private final int DEFAULT_NUMBER_OF_DISHES = 4;
         private int numPage;
@@ -246,25 +249,17 @@ public class MainFragment extends Fragment {
                 hasReachedEnd = true;
             }
             Log.i("DishFragmentPagerAdapter/onPageSelected", dishItems.get(i).getName() + " Page " + i +" : Setting Buttons Again");
+
             try {
                 fragments.get(i).setButtons();
-
+                fragments.get(i).showTexts();
                 if (i == DEFAULT_NUMBER_OF_DISHES - 1) {
-                    next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    next.setLayoutParams(params);
-                    buttonToLeft = true;
+                    nextButtonToOtherSide(LEFT);
+
                 } else {
-                    if (buttonToLeft) {
-                        next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_right));
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
-                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        next.setLayoutParams(params);
-                        buttonToLeft = false;
-                    }
+                    if (buttonToLeft)
+                        nextButtonToOtherSide(RIGHT);
+
                 }
             }catch(NullPointerException e){
                 Log.e("MainFragment/onPageSelected","NullPointer Exception caught. Is fragments.get(i)==null? "+ (fragments.get(i)==null));
@@ -300,6 +295,46 @@ public class MainFragment extends Fragment {
         }
 
         public DishFragment getFirstFragment(){return fragments.get(0); }
+
+        private void nextButtonToOtherSide(boolean side){
+            final boolean SIDE = side;
+            AlphaAnimation animation = new AlphaAnimation(1.0f, 0f);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    if (SIDE==LEFT) {
+                        next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_left));
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        next.setLayoutParams(params);
+                        buttonToLeft = true;
+                    }
+                    else{
+                        next.setImageDrawable(getResources().getDrawable(R.drawable.arrow_right));
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) next.getLayoutParams();
+                        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        next.setLayoutParams(params);
+                        buttonToLeft = false;
+                    }
+                }
+            });
+            animation.setDuration(getResources().getInteger(R.integer.main_buttons_animation_duration));
+            animation.setRepeatCount(1);
+            animation.setRepeatMode(Animation.REVERSE);
+            next.startAnimation(animation);
+        }
     }
 
     public void changeInDishItem(DishItem original, DishItem replace){
@@ -344,22 +379,23 @@ public class MainFragment extends Fragment {
 
     public void startButtonsAnimation() {
         buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
-        buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
-        buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
-        buttonAnimation4 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
+        buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha2);
+        buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha3);
+        buttonAnimation4 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha4);
 
         mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
 
         //textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
-      //  buttonAnimation2.setStartOffset(getResources().getInteger(R.integer.main_buttons_animation_duration));
-      //  buttonAnimation3.setStartOffset(2*getResources().getInteger(R.integer.main_buttons_animation_duration));
-      //  buttonAnimation4.setStartOffset(3*getResources().getInteger(R.integer.main_buttons_animation_duration));
+       // buttonAnimation2.setStartOffset(getResources().getInteger(R.integer.main_buttons_animation_duration));
+        //buttonAnimation3.setStartOffset(2*getResources().getInteger(R.integer.main_buttons_animation_duration));
+        //buttonAnimation4.setStartOffset(3*getResources().getInteger(R.integer.main_buttons_animation_duration));
 
         buttonAnimation2.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                Log.d("Animation","Button2 on Animation Start");
                 searchMap.setVisibility(View.VISIBLE);
             }
 
@@ -377,6 +413,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 dislike.setVisibility(View.VISIBLE);
+                Log.d("Animation","Button3 on Animation Start");
             }
 
             @Override
@@ -393,75 +430,32 @@ public class MainFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 next.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        mainBarAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+                Log.d("Animation","Button4 on Animation Start");
 
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                startMainBarTextAnimation(animation);
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
+
         final Dialog dialog = ((MainFragmentInterface) getActivity()).getFullScreenDialog();
 
         buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 hasPerformed = true;
-                try {
-                    pokeFriend.setVisibility(View.VISIBLE);
-
-                    dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
-                    dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
-                    dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
-                }catch(NullPointerException e){
-                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
-                    e.printStackTrace();
-                    animation.cancel();
-                }
+                pokeFriend.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                try {
-                    dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
-                    dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
 
-                    TextView tv1 = dishAdapter.getFirstFragment().getNameText();
-                    TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
-
-                    tv1.setVisibility(View.VISIBLE);
-                    tv2.setVisibility(View.VISIBLE);
-
-                    tv1.startAnimation(textAnimation1);
-                    tv2.startAnimation(textAnimation2);
-
-                    //searchMap.startAnimation(buttonAnimation2);
-
-                }catch(NullPointerException e){
-                    Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
-                    e.printStackTrace();
-                    animation.cancel();
-                }
             }
 
             @Override
@@ -472,36 +466,59 @@ public class MainFragment extends Fragment {
 
         final MainFragmentInterface main = (MainFragmentInterface) getActivity();
 
-        if (main.isFullScreenDialogOpen()){
+        next.setVisibility(View.INVISIBLE);
+        searchMap.setVisibility(View.INVISIBLE);
+        pokeFriend.setVisibility(View.INVISIBLE);
+        dislike.setVisibility(View.INVISIBLE);
 
+        if (main.isFullScreenDialogOpen()){
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
                     main.closeFullScreenDialog();
                     Log.d("MainFragment/run", "Dialog Dismissed here - 6");
+                    actuallyRunAnimations();
+                    Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons after Dialog");
                 }
             }, getResources().getInteger(R.integer.dialog_delay_duration));
-
-            buttonAnimation.setStartOffset(getResources().getInteger(R.integer.dialog_delay_duration) - 1000);
         }
+        else
+            actuallyRunAnimations();
 
-        if (dishAdapter.getFirstFragment()!=null){
-            next.setVisibility(View.INVISIBLE);
-            searchMap.setVisibility(View.INVISIBLE);
-            pokeFriend.setVisibility(View.INVISIBLE);
-            dislike.setVisibility(View.INVISIBLE);
 
+    }
+
+    private void actuallyRunAnimations(){
+        if (dishAdapter.getFirstFragment() != null) {
             pokeFriend.startAnimation(buttonAnimation);
             searchMap.startAnimation(buttonAnimation2);
             dislike.startAnimation(buttonAnimation3);
             next.startAnimation(buttonAnimation4);
-            Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
         }
-        else{
-            main.closeFullScreenDialog();
+        else {
+            ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
             Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
         }
+    }
 
+    private void startMainBarTextAnimation(Animation animation){
+        try {
+            TextView tv1 = dishAdapter.getFirstFragment().getNameText();
+            TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
+
+            tv1.setVisibility(View.VISIBLE);
+            tv2.setVisibility(View.VISIBLE);
+
+            tv1.startAnimation(textAnimation1);
+            tv2.startAnimation(textAnimation2);
+
+            dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
+            dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
+        }catch(NullPointerException e){
+            Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
+            e.printStackTrace();
+            animation.cancel();
+        }
     }
 
     private void trackEndOfRecommendationMixpanel(){
