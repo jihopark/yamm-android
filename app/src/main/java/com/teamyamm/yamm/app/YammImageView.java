@@ -6,9 +6,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by parkjiho on 6/19/14.
@@ -23,8 +27,8 @@ public class YammImageView extends FrameLayout {
     private final static float progressCircleRatio = 0.2f;
 
     private String path;
-    private int width, height;
-    private int id;
+    private int width=0, height=0;
+    private long id=0;
 
     private Context context;
     private ImageView image;
@@ -49,6 +53,8 @@ public class YammImageView extends FrameLayout {
         image.setScaleType(ImageView.ScaleType.FIT_XY);
 
         addView(image);
+
+        measureDynamicDimension();
 
         progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) (width*progressCircleRatio),(int) (height*progressCircleRatio));
@@ -88,29 +94,20 @@ public class YammImageView extends FrameLayout {
         addView(progressCircle);
 
         if (width!=0 && height!=0)
-            loadImage(id);
+            setID(id);
     }
 
-    public void loadImage(long id){
-        image.setImageDrawable(getResources().getDrawable(R.drawable.mainback_test));
-        progressCircle.setVisibility(GONE);
+    public ImageView getImageView(){
+        return image;
+    }
 
-       /* Picasso.with(context)
-                .load(getURL())
-                .error(R.drawable.error_placeholder)
-                .into(image, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        setBackgroundColor(Color.TRANSPARENT);
-                        Log.i("YammImageView/loadImage", "Successfully loaded " + path + " "  + id);
-                        progressCircle.setVisibility(GONE);
-                    }
 
-                    @Override
-                    public void onError() {
-                        Log.e("YammImageView/loadImage", "Image Loading Error " + path + " " + id);
-                    }
-                });*/
+    public void setID(long id){
+        this.id = id;
+    }
+
+    public void setPath(String path){
+        this.path = path;
     }
 
     public void setDimension(int w, int h){
@@ -119,19 +116,58 @@ public class YammImageView extends FrameLayout {
     }
 
     public String getURL(){
-        if (path == DISH){
+        if (path == DISH)
+            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + id + ".jpg";
 
-        }
         return "";
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }
 
-    public void setID(int id){
-        this.id = id;
+    private void loadImage(){
+        if (width!=0 && height!=0 && id!=0) {
+            final String url = getURL();
+            Picasso.with(context)
+                    .load(url)
+                    .error(R.drawable.mainback_test)
+                    .into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            setBackgroundColor(Color.TRANSPARENT);
+                            Log.i("YammImageView/loadImage", "Successfully loaded " + url );
+                            progressCircle.setVisibility(GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e("YammImageView/loadImage", "Image Loading Error " + url );
+                            progressCircle.setVisibility(GONE);
+                        }
+                    });
+        }
     }
 
-    public ImageView getImageView(){
-        return image;
+
+
+
+    private void measureDynamicDimension(){
+        final YammImageView div = this;
+        ViewTreeObserver vto = image.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+
+                if (div.width == 0 && div.height == 0 ) {
+                    div.setDimension(getMeasuredWidth(), image.getMeasuredHeight());
+                    div.loadImage();
+
+                    Log.i("YammImageView/onPreDraw", "Width " + div.width + " Height " + div.height);
+
+
+
+                    image.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
+                return true;
+            }
+        });
     }
 
 }

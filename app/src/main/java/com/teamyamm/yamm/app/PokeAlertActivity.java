@@ -40,7 +40,7 @@ public class PokeAlertActivity extends Activity {
         title = (TextView) findViewById(R.id.poke_alert_title);
         dish = (TextView) findViewById(R.id.poke_alert_dish);
 
-        image.loadImage(content.getDish().getId());
+        image.setID(content.getDish().getId());
         title.setText(findFriendName(content.getSender(), getFriendList()) + "님이 같이 먹재요~");
         dish.setText(content.getDish().getName());
 

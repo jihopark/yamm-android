@@ -154,7 +154,8 @@ public class DishFragment extends Fragment {
         comment.setText(item.getComment());
 
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
-        image.loadImage(item.getId());
+        image.setID(item.getId());
+        image.setPath(YammImageView.DISH);
     }
 
     public void showTexts(){
@@ -251,7 +252,8 @@ public class DishFragment extends Fragment {
                                 }
                             }
                             else {
-                                ((BaseActivity)getActivity()).makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                                if (getActivity() instanceof BaseActivity)
+                                    ((BaseActivity)getActivity()).makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                             }
                         }
                     };

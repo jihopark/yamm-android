@@ -115,7 +115,7 @@ public class DishBattleView extends FrameLayout {
 
         Log.i("DishBattleView/setImageView", "DishText " + tv.getText() );
         imageView.setDimension(width, height);
-        imageView.loadImage(item.getId());
+        imageView.setID(item.getId());
     }
 
     private void measureDynamicDimension(){
