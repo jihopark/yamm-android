@@ -23,16 +23,16 @@
                 android:layout_above="@+id/poke_alert_dish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="#ffffffff"
                 android:id="@+id/poke_alert_title"/>
             <TextView
                 android:layout_alignParentBottom="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginBottom="12dp"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:textColor="#ffffffff"
                 android:id="@+id/poke_alert_dish"/>
             </RelativeLayout>

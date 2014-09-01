@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -21,7 +22,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +50,8 @@ public class MainFragment extends Fragment {
     private boolean isGroup;
     private boolean hasPerformed = false;
 
-    private Animation buttonAnimation, mainBarAnimation, textAnimation1, textAnimation2;
+    private Animation buttonAnimation, buttonAnimation2, buttonAnimation3, buttonAnimation4,
+            mainBarAnimation, textAnimation1, textAnimation2;
 
     //For Place Pick
     //private AutoCompleteTextView placePickEditText;
@@ -343,11 +344,67 @@ public class MainFragment extends Fragment {
 
     public void startButtonsAnimation() {
         buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
-        mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
-        textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
-        textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_alpha);
+        buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
+        buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
+        buttonAnimation4 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
 
-        textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
+        mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
+        textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
+        textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
+
+        //textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
+      //  buttonAnimation2.setStartOffset(getResources().getInteger(R.integer.main_buttons_animation_duration));
+      //  buttonAnimation3.setStartOffset(2*getResources().getInteger(R.integer.main_buttons_animation_duration));
+      //  buttonAnimation4.setStartOffset(3*getResources().getInteger(R.integer.main_buttons_animation_duration));
+
+        buttonAnimation2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                searchMap.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //dislike.startAnimation(buttonAnimation3);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                dislike.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //next.startAnimation(buttonAnimation4);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        buttonAnimation4.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                next.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         mainBarAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -357,14 +414,6 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                TextView tv1 = dishAdapter.getFirstFragment().getNameText();
-                TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
-
-                tv1.setVisibility(View.VISIBLE);
-                tv2.setVisibility(View.VISIBLE);
-
-                tv1.startAnimation(textAnimation1);
-                tv2.startAnimation(textAnimation2);
             }
 
             @Override
@@ -379,6 +428,8 @@ public class MainFragment extends Fragment {
             public void onAnimationStart(Animation animation) {
                 hasPerformed = true;
                 try {
+                    pokeFriend.setVisibility(View.VISIBLE);
+
                     dishAdapter.getFirstFragment().getMainBar().setVisibility(View.INVISIBLE);
                     dishAdapter.getFirstFragment().getNameText().setVisibility(View.INVISIBLE);
                     dishAdapter.getFirstFragment().getCommentText().setVisibility(View.INVISIBLE);
@@ -394,6 +445,18 @@ public class MainFragment extends Fragment {
                 try {
                     dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
                     dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
+
+                    TextView tv1 = dishAdapter.getFirstFragment().getNameText();
+                    TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
+
+                    tv1.setVisibility(View.VISIBLE);
+                    tv2.setVisibility(View.VISIBLE);
+
+                    tv1.startAnimation(textAnimation1);
+                    tv2.startAnimation(textAnimation2);
+
+                    //searchMap.startAnimation(buttonAnimation2);
+
                 }catch(NullPointerException e){
                     Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
                     e.printStackTrace();
@@ -423,10 +486,15 @@ public class MainFragment extends Fragment {
         }
 
         if (dishAdapter.getFirstFragment()!=null){
-            next.startAnimation(buttonAnimation);
-            searchMap.startAnimation(buttonAnimation);
+            next.setVisibility(View.INVISIBLE);
+            searchMap.setVisibility(View.INVISIBLE);
+            pokeFriend.setVisibility(View.INVISIBLE);
+            dislike.setVisibility(View.INVISIBLE);
+
             pokeFriend.startAnimation(buttonAnimation);
-            dislike.startAnimation(buttonAnimation);
+            searchMap.startAnimation(buttonAnimation2);
+            dislike.startAnimation(buttonAnimation3);
+            next.startAnimation(buttonAnimation4);
             Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons");
         }
         else{

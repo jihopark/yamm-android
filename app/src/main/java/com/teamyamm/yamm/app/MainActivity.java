@@ -68,6 +68,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (findViewById(android.R.id.home)!=null) {
+            findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.logo_padding), 0,(int) getResources().getDimension(R.dimen.logo_padding), 0);
+            Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
+        }
+
         setLeftDrawer();
         setFriendPickButton();
     }
@@ -273,7 +278,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            toast.show();
+                    //        toast.show();
 
                             closeFullScreenDialog();
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");

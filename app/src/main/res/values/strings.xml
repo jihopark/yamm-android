@@ -85,7 +85,7 @@
     <string name="dish_dislike_toast">그럼 딴거 드셔야죠!</string>
     <string name="dish_too_many_dislike_toast">너무 다 싫어하는거 아니에요ㅠㅠ?</string>
 
-    <string name="dialog_main">당신의 입맛에 맞는 메뉴를 고르고 있어요\n새롭게 추천되는 4개 중 몇 개나 입맛에 맞을까요?</string>
+    <string name="dialog_main">당신의 입맛에 맞는 메뉴를 고르고 있어요\n새롭게 추천되는 4개 중\n몇 개나 입맛에 맞을까요?</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>

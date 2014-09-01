@@ -110,6 +110,13 @@ public class BaseActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
+    protected void setPaddingOnHomeAsUpIndicator(){
+        if (findViewById(android.R.id.home)!=null) {
+            findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.home_padding), 0,(int) getResources().getDimension(R.dimen.home_padding), 0);
+            Log.i("BaseActivity/setPaddingONHomeAsUpIndicator","Setting Padding " + getResources().getDimension(R.dimen.home_padding));
+        }
+    }
+
     public static boolean checkIfAppIsRunning(){
         return isAppRunning;
     }
@@ -150,6 +157,7 @@ public class BaseActivity extends ActionBarActivity {
     * */
     protected void setActionBarBackButton(boolean b){
         getSupportActionBar().setDisplayHomeAsUpEnabled(b);
+        setPaddingOnHomeAsUpIndicator();
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.home_as_up_indicator);
     }
 

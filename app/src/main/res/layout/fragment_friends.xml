@@ -28,6 +28,7 @@
             android:layout_below="@+id/selected_items_textview"
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_height"
-            android:background="#ffe2ddcb"/>
+            android:background="#ffe2ddcb"
+            />
     </RelativeLayout>
 </LinearLayout>

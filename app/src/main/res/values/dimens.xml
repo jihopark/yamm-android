@@ -3,6 +3,8 @@
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="home_padding">8dp</dimen>
+    <dimen name="logo_padding">12dp</dimen>
 
     <dimen name="yamm_item_text_size">10sp</dimen>
     <dimen name="yamm_item_height">47dp</dimen>

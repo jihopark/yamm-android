@@ -3,12 +3,8 @@ package com.teamyamm.yamm.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -141,7 +137,13 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         String s = "";
         int count = 0;
 
-        for (Friend f : selectedFriend) {
+        if (selectedFriend.size() == 1)
+            selectedItemsText.setText(selectedFriend.get(0).getName() + "님과의 추천입니다" );
+        else
+            selectedItemsText.setText(selectedFriend.get(0).getName()
+                    + "님 외 " +(selectedFriend.size() - 1) + "명과의 추천입니다" );
+
+       /* for (Friend f : selectedFriend) {
             if (count++ != 0) {
                 Spannable newSpan = new SpannableString(" ");
                 newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
@@ -157,7 +159,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                     0, newSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             selectedItemsText.append(newSpan);
-        }
+        }*/
     }
 
     private void setFragment(){

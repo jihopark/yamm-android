@@ -61,12 +61,11 @@
             android:layout_height="wrap_content"
             android:text="@string/forgot_password"
             android:id="@+id/forgot_password"
-            android:layout_marginTop="28dp"
+            android:padding="10dp"
+            android:layout_marginTop="8dp"
             android:textSize="16sp"
             android:gravity="center_horizontal"
             android:textColor="#ff00e4ff"
-            android:shadowColor="#ffffffff"
-            android:shadowRadius="20"
             />
     </LinearLayout>
 </FrameLayout>
