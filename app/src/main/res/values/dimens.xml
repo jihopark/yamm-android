@@ -14,6 +14,8 @@
 
     <dimen name="line_height">1dp</dimen>
 
+    <dimen name="image_progress_circle_radius">20dp</dimen>
+
     <!-- FriendsFragment -->
 
     <dimen name="selected_item_x_padding">10dp</dimen>

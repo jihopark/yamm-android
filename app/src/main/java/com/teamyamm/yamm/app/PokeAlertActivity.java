@@ -41,6 +41,7 @@ public class PokeAlertActivity extends Activity {
         dish = (TextView) findViewById(R.id.poke_alert_dish);
 
         image.setID(content.getDish().getId());
+        image.setPath(YammImageView.DISH);
         title.setText(findFriendName(content.getSender(), getFriendList()) + "님이 같이 먹재요~");
         dish.setText(content.getDish().getName());
 

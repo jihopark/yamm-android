@@ -26,7 +26,7 @@ public class YammImageView extends FrameLayout {
     private final static float imageRatio = 1.5f;
     private final static float progressCircleRatio = 0.2f;
 
-    private String path;
+    private String path="";
     private int width=0, height=0;
     private long id=0;
 
@@ -57,7 +57,8 @@ public class YammImageView extends FrameLayout {
         measureDynamicDimension();
 
         progressCircle = new ProgressBar(context);
-        FrameLayout.LayoutParams params = new LayoutParams((int) (width*progressCircleRatio),(int) (height*progressCircleRatio));
+        FrameLayout.LayoutParams params = new LayoutParams((int)getResources().getDimension(R.dimen.image_progress_circle_radius),
+                (int)getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
@@ -87,7 +88,8 @@ public class YammImageView extends FrameLayout {
         addView(image);
 
         progressCircle = new ProgressBar(context);
-        FrameLayout.LayoutParams params = new LayoutParams((int) (width*progressCircleRatio),(int) (height*progressCircleRatio));
+        FrameLayout.LayoutParams params = new LayoutParams((int)getResources().getDimension(R.dimen.image_progress_circle_radius),
+                (int)getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
@@ -115,7 +117,11 @@ public class YammImageView extends FrameLayout {
         height = h;
     }
 
-    public String getURL(){
+    public int getImageHeight(){return height; }
+
+    public int getImageWidth(){return width;}
+
+    public static String getURL(String path, int width, int height, long id){
         if (path == DISH)
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + id + ".jpg";
 
@@ -124,8 +130,8 @@ public class YammImageView extends FrameLayout {
     }
 
     private void loadImage(){
-        if (width!=0 && height!=0 && id!=0) {
-            final String url = getURL();
+        if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
+            final String url = getURL(path, width, height, id);
             Picasso.with(context)
                     .load(url)
                     .error(R.drawable.mainback_test)
@@ -144,6 +150,9 @@ public class YammImageView extends FrameLayout {
                         }
                     });
         }
+        else{
+            Log.e("YammImageView/loadImage","Image not Ready");
+        }
     }
 
 
@@ -156,7 +165,7 @@ public class YammImageView extends FrameLayout {
             public boolean onPreDraw() {
 
                 if (div.width == 0 && div.height == 0 ) {
-                    div.setDimension(getMeasuredWidth(), image.getMeasuredHeight());
+                    div.setDimension(image.getMeasuredWidth(), image.getMeasuredHeight());
                     div.loadImage();
 
                     Log.i("YammImageView/onPreDraw", "Width " + div.width + " Height " + div.height);

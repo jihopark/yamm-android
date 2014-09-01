@@ -66,6 +66,7 @@ public class BattleFragment extends Fragment{
         layout1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                toggleClicks(false);
                 item.setResult(BattleItem.FIRST);
                 first.showThumbsUp();
                 startBattleChoiceAnimation(0);
@@ -76,6 +77,7 @@ public class BattleFragment extends Fragment{
         layout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                toggleClicks(false);
                 item.setResult(BattleItem.SECOND);
                 second.showThumbsUp();
                 startBattleChoiceAnimation(1);
@@ -90,6 +92,7 @@ public class BattleFragment extends Fragment{
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                toggleClicks(false);
                 item.setResult(BattleItem.NONE);
                 Log.i("BattleFragment/onClickListener", "No Dish Selected");
                 startBattleChoiceAnimation(2);
@@ -119,6 +122,7 @@ public class BattleFragment extends Fragment{
             @Override
             public void onAnimationEnd(Animation animation) {
                 Log.i("BattleFragment/onAnimationEnd","Animation Listener for NO selection");
+                toggleClicks(true);
                 ((BattleActivity)getActivity()).loadNextItem(item);
             }
 
@@ -177,8 +181,17 @@ public class BattleFragment extends Fragment{
             second.getTextView().startAnimation(battleToRight);
             first.getTextView().startAnimation(animationWithListener);
         }
+    }
+
+    public void toggleClicks(boolean b){
+        layout1.setEnabled(b);
+        layout2.setEnabled(b);
+        battleNoneButton.setEnabled(b);
 
     }
+
+    public int getImageWidth(){ return first.getImageWidth(); }
+    public int getImageHeight(){ return first.getImageHeight(); }
 
 
 }

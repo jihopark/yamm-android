@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,8 +52,9 @@ public class BattleActivity extends BaseActivity {
 
         service = YammAPIAdapter.getTokenService();
 
-        hideActionBar();
         setBattleFragments();
+
+        hideActionBar();
     }
     /*
     * Go to Home Screen When Back Button of IntroActivity
@@ -71,7 +74,6 @@ public class BattleActivity extends BaseActivity {
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     private void setInitialLoading(){
-
         fullScreenDialog = createBattleFullScreenDialog(BattleActivity.this, getString(R.string.battle_intro_dialog));
         fullScreenDialog.show();
 
@@ -95,6 +97,7 @@ public class BattleActivity extends BaseActivity {
                     makeYammToast(R.string.battle_loading_toast, Toast.LENGTH_SHORT);
                     return ;
                 }
+                preloadImages(0);
                 fullScreenDialog.dismiss();
                 bf.startBattleIntroAnimation();
             }
@@ -135,30 +138,6 @@ public class BattleActivity extends BaseActivity {
     * Set totalBattleCount and get InitialBattleItem
     * */
     private void getInitialBattleItem(){
-        /*service.getBattleItem("",new Callback<YammAPIService.RawBattleItem>() {
-            @Override
-            public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
-                Log.i("BattleActivity/getBattleItem","Success " + rawBattleItem.getBattleItem());
-                totalBattle = rawBattleItem.getRounds();
-                Log.i("BattleActivity/getBattleItem","Total Rounds: " + totalBattle);
-
-                bf.setDishItemView(rawBattleItem.getBattleItem());
-           //     battleCountText.setText("1 out of " + totalBattle);
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.e("BattleActivity/getBattleItem", "Fail");
-                retrofitError.printStackTrace();
-                if (retrofitError.isNetworkError())
-                    Toast.makeText(getApplicationContext(), getString(R.string.network_error_message), Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(), getString(R.string.unidentified_error_message), Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-                showInternetConnectionAlert(new CustomInternetListener(internetAlert));
-            }
-        });*/
         service.getBattleItems(new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
@@ -193,6 +172,8 @@ public class BattleActivity extends BaseActivity {
     * */
     public void loadNextItem(BattleItem item){
         battleCount++;
+        preloadImages(battleCount);
+
         previousLength = result.length();
         result = result + item;
         battleItems.add(new YammAPIService.RawBattleItemForPost(item));
@@ -280,6 +261,37 @@ public class BattleActivity extends BaseActivity {
                 finalDialog.dismiss();
             }
         });
+    }
+
+    private void preloadImages(int n){
+        int w = bf.getImageWidth();
+        int h = bf.getImageHeight();
+        if (n+2 >= totalBattle)
+            return ;
+
+        if (n==0){
+            for (int i=0;i<2;i++) {
+                DishItem a = dishes.getBattleItem(i).getFirst();
+                DishItem b = dishes.getBattleItem(i).getSecond();
+                Log.i("BattleActivity/preloadImages", "Preloading:" +
+                        a + "," + b + " " + w + "x" + h);
+
+                Picasso.with(BattleActivity.this)
+                        .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
+                        .error(R.drawable.mainback_test)
+                        .fetch();
+            }
+            return ;
+        }
+        DishItem a = dishes.getBattleItem(n+2).getFirst();
+        DishItem b = dishes.getBattleItem(n+2).getSecond();
+        Log.i("BattleActivity/preloadImages", "Preloading:" +
+                a + "," + b + " " + w + "x" + h);
+
+        Picasso.with(BattleActivity.this)
+                .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
+                .error(R.drawable.mainback_test)
+                .fetch();
     }
 
 

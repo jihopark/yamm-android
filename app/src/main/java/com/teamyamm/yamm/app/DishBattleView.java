@@ -40,10 +40,6 @@ public class DishBattleView extends FrameLayout {
         super(context);
 
         this.context = context;
-        //this.width = ((BaseActivity)context).getScreenWidth();
-        //this.height = getHeight();
-
-        //this.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, context.getResources().getDisplayMetrics());
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -54,12 +50,13 @@ public class DishBattleView extends FrameLayout {
         imageView = (YammImageView) layout.findViewById(R.id.dish_image);
         thumb = (ImageView) layout.findViewById(R.id.thumb);
 
-        measureDynamicDimension();
 
         setClickable(true);
         setFocusable(true);
 
         setDishItemText((TextView) layout.findViewById(R.id.dish_item_text));
+        setImageView();
+
     }
 
     public void showThumbsUp(){
@@ -76,6 +73,7 @@ public class DishBattleView extends FrameLayout {
                 thumb.setVisibility(View.GONE);
                 Fragment fragment = ((BaseActivity) context).getSupportFragmentManager().findFragmentByTag("bfragment");
                 if (fragment instanceof BattleFragment) {
+                    ((BattleFragment)fragment).toggleClicks(true);
                     ((BattleFragment)fragment).loadNextItem();
                 }
             }
@@ -116,6 +114,7 @@ public class DishBattleView extends FrameLayout {
         Log.i("DishBattleView/setImageView", "DishText " + tv.getText() );
         imageView.setDimension(width, height);
         imageView.setID(item.getId());
+        imageView.setPath(YammImageView.DISH);
     }
 
     private void measureDynamicDimension(){
@@ -130,7 +129,6 @@ public class DishBattleView extends FrameLayout {
                     div.height = imageView.getMeasuredHeight();
 
                     //Set Image here
-                    setImageView();
 
                     imageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
@@ -138,6 +136,9 @@ public class DishBattleView extends FrameLayout {
             }
         });
     }
+
+    public int getImageWidth(){ return imageView.getImageWidth(); }
+    public int getImageHeight(){ return imageView.getImageHeight(); }
 
     public TextView getTextView(){
         return dishText;
