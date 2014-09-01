@@ -50,6 +50,7 @@ public class MainFragment extends Fragment {
     private int currentPage = 0;
     private boolean isGroup;
     private boolean hasPerformed = false;
+    public boolean isPerforming = false;
 
     private Animation buttonAnimation, buttonAnimation2, buttonAnimation3, buttonAnimation4,
             mainBarAnimation, textAnimation1, textAnimation2;
@@ -379,6 +380,9 @@ public class MainFragment extends Fragment {
     }
 
     public void startButtonsAnimation() {
+
+        isPerforming = true;
+
         buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
         buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha2);
         buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha3);
@@ -387,11 +391,6 @@ public class MainFragment extends Fragment {
         mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
-
-        //textAnimation1.setStartOffset(getResources().getInteger(R.integer.main_text_animation_offset));
-       // buttonAnimation2.setStartOffset(getResources().getInteger(R.integer.main_buttons_animation_duration));
-        //buttonAnimation3.setStartOffset(2*getResources().getInteger(R.integer.main_buttons_animation_duration));
-        //buttonAnimation4.setStartOffset(3*getResources().getInteger(R.integer.main_buttons_animation_duration));
 
         buttonAnimation2.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -504,6 +503,9 @@ public class MainFragment extends Fragment {
 
     private void startMainBarTextAnimation(Animation animation){
         try {
+
+            isPerforming = false;
+
             TextView tv1 = dishAdapter.getFirstFragment().getNameText();
             TextView tv2 = dishAdapter.getFirstFragment().getCommentText();
 

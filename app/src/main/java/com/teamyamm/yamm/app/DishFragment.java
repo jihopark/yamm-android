@@ -88,6 +88,12 @@ public class DishFragment extends Fragment {
 
         if (getParentFragment() instanceof MainFragment){
             parentFragment = (MainFragment) getParentFragment();
+            if (parentFragment.isPerforming){
+                mainBar.setVisibility(View.INVISIBLE);
+                nameText.setVisibility(View.INVISIBLE);
+                commentText.setVisibility(View.INVISIBLE);
+            }
+
         }
         else{
             Log.e("DishFragment/onCreateView", "Parent Fragment of DishFragment should be instanceof MainFragment!");
@@ -98,7 +104,6 @@ public class DishFragment extends Fragment {
         if (index == parentFragment.getCurrentPage()) {
             Log.i("DishFragment/onCreateView",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
             setButtons();
-            showTexts();
         }
 
 
