@@ -10,7 +10,7 @@
     <integer name="confirm_button_slide_duration">300</integer>
 
     <integer name="dialog_delay_duration">2500</integer>
-    <integer name="main_buttons_animation_duration">400</integer>
+    <integer name="main_buttons_animation_duration">200</integer>
 
     <integer name="main_buttons_animation_offset0">2300</integer>
 
