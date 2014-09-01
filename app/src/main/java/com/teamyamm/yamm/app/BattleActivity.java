@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
@@ -253,9 +252,8 @@ public class BattleActivity extends BaseActivity {
 * */
     private void finishBattle(){
         Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ battleItems);
-        final ProgressDialog finalDialog =  createProgressDialog(BattleActivity.this,
-                R.string.progress_dialog_title,
-                R.string.progress_dialog_message);
+        final Dialog finalDialog = createFullScreenDialog(BattleActivity.this, getString(R.string.progress_dialog_message));
+
 
         finalDialog.show();
 

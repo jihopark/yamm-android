@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -203,12 +202,6 @@ public class BaseActivity extends ActionBarActivity {
     /*
     * Builds Progress Dialog with title & message
     * */
-    protected ProgressDialog createProgressDialog(Context context, int title, int message){
-        ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setTitle(getString(title));
-        dialog.setMessage(getString(message));
-        return dialog;
-    }
 
     protected Dialog createFullScreenDialog(Context context, String message){
         Dialog dialog = new Dialog(context);

@@ -1,7 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -42,7 +42,7 @@ public class JoinActivity extends BaseActivity {
     private SmsListener smsListener;
     private Button joinConfirmButton;
     private EditText emailText, nameText, pwText, phoneText, veriText;
-    private ProgressDialog progressDialog;
+    private Dialog progressDialog;
     private int loginAttempt = 0;
 
     @Override
@@ -278,9 +278,7 @@ public class JoinActivity extends BaseActivity {
 
         //To Prevent Double Fire
         joinConfirmButton.setEnabled(false);
-        progressDialog = createProgressDialog(JoinActivity.this,
-                R.string.join_progress_dialog_title,
-                R.string.join_progress_dialog_message);
+        progressDialog = createFullScreenDialog(JoinActivity.this, getString(R.string.join_progress_dialog_title));
         progressDialog.show();
 
         service.userRegistration(name.toString(), email.toString(), password.toString(), phone.toString(), veri.toString(), new Callback<String>() {

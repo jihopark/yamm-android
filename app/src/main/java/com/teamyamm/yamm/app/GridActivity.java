@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +29,7 @@ public class GridActivity extends BaseActivity {
     private CheckBox checkbox;
     private ArrayList<GridItem> selectedItems = new ArrayList<GridItem>();
     private GridItem vegi;
-    private ProgressDialog progressDialog;
+    private Dialog progressDialog;
     private Button finishButton;
 
 
@@ -95,11 +94,9 @@ public class GridActivity extends BaseActivity {
 
         YammAPIService service = YammAPIAdapter.getTokenService();
 
-        final ProgressDialog progressDialog;
+        final Dialog progressDialog;
         // Show Progress Dialog
-        progressDialog = createProgressDialog(GridActivity.this,
-                R.string.progress_dialog_title,
-                R.string.progress_dialog_message);
+        progressDialog = createFullScreenDialog(GridActivity.this, getString(R.string.progress_dialog_message));
         progressDialog.show();
 
         service.postGridItems(s, new Callback<String>() {
@@ -223,9 +220,7 @@ public class GridActivity extends BaseActivity {
     private GridSelectionListView initGridSelectionListView(){
         GridSelectionListView view = (GridSelectionListView) findViewById(R.id.grid_selection_list_view);
 
-        progressDialog = createProgressDialog(GridActivity.this,
-                R.string.join_progress_dialog_title,
-                R.string.join_progress_dialog_message);
+        progressDialog = createFullScreenDialog(GridActivity.this, getString(R.string.progress_dialog_message));
         progressDialog.show();
 
         view.setAdapter(initiateAdapter());

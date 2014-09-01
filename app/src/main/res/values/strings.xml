@@ -61,10 +61,8 @@
     <string name="meal_picker_dialog_title">설마 아침부터...</string>
     <string name="invalid_date_message">오늘 이후의 날짜를 입력해주세요</string>
     <string name="invalid_date_title">과거</string>
-    <string name="progress_dialog_title">로딩 중</string>
-    <string name="progress_dialog_message">좀만 기다려주세요</string>
-    <string name="join_progress_dialog_title">가입 처리 중</string>
-    <string name="join_progress_dialog_message">좀만 기다려주세요</string>
+    <string name="progress_dialog_message">조금만 기다려주세요!</string>
+    <string name="join_progress_dialog_title">가입 처리 중입니다\n조금만 기다려주세요!</string>
     <string name="poke_method_dialog_title">어떻게 찌를까요?</string>
     <string name="map_dialog_title">어디서 먹을꺼에요?</string>
     <string name="map_dialog_positive">찾기</string>

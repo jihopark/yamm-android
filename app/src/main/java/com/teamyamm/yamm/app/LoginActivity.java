@@ -1,6 +1,6 @@
 package com.teamyamm.yamm.app;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,7 +72,7 @@ public class LoginActivity extends BaseActivity {
                     requestEmail();
                 }
                 else{
-                    final ProgressDialog progress = createProgressDialog(LoginActivity.this, R.string.progress_dialog_title, R.string.progress_dialog_message);
+                    final Dialog progress = createFullScreenDialog(LoginActivity.this, getString(R.string.progress_dialog_message));
 
                     DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -143,11 +143,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void postLoginToServer(String email, String pw){
-        final ProgressDialog progressDialog;
+        final Dialog progressDialog;
         // Show Progress Dialog
-        progressDialog = createProgressDialog(LoginActivity.this,
-                R.string.progress_dialog_title,
-                R.string.progress_dialog_message);
+        progressDialog = createFullScreenDialog(LoginActivity.this, getString(R.string.progress_dialog_message));
         progressDialog.show();
 
         YammAPIService service = YammAPIAdapter.getLoginService(email, pw);
