@@ -61,13 +61,13 @@
             android:text="@string/poke_alert_positive"
             android:id="@+id/poke_alert_positive"/>
     </LinearLayout>
-    <Button
+    <ImageButton
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@color/default_color"
-        android:textColor="#ffffffff"
-        android:text="@string/poke_alert_confirm"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:src="@drawable/icon_dialog_close"
         android:id="@+id/poke_alert_confirm"/>
 </RelativeLayout>

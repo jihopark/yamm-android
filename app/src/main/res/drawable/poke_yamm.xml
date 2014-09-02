@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_selected="true" android:drawable="@drawable/invite_facebook_sel" />
-    <item android:drawable="@drawable/invite_facebook_dis" />
+    <item android:state_selected="true" android:drawable="@drawable/invite_yamm_sel" />
+    <item android:drawable="@drawable/invite_yamm_dis" />
 </selector>

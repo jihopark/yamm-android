@@ -116,6 +116,30 @@
         <item name="actionBarStyle">@style/YammGroupRecommendationActionBar</item>
     </style>
 
+    <style name="YammPokeActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_hiton</item>
+        <item name="icon">@drawable/title_text_hiton</item>
+    </style>
+
+    <style name="YammPokeActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammPokeActionBar</item>
+        <item name="actionBarStyle">@style/YammPokeActionBar</item>
+    </style>
+
+    <style name="YammFriendActionBar"
+        parent="YammLogoActionBar">
+        <item name="android:icon">@drawable/title_text_yammlist</item>
+        <item name="icon">@drawable/title_text_yammlist</item>
+    </style>
+
+    <style name="YammFriendActionBarTheme"
+        parent="YammActionBarTheme">
+        <item name="android:actionBarStyle">@style/YammFriendActionBar</item>
+        <item name="actionBarStyle">@style/YammFriendActionBar</item>
+    </style>
+
 
     <style name="YammPokeDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@null</item>

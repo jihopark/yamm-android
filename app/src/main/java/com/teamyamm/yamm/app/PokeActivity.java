@@ -51,6 +51,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poke);
 
+        setActionBarBackButton(true);
+
         getBundle();
         setContactList();
         setFriendList();

@@ -102,7 +102,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.FriendActivity"
             android:label="@string/title_activity_friend"
-            android:theme="@style/YammActionBarTheme" >
+            android:theme="@style/YammFriendActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
@@ -132,7 +132,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.PokeActivity"
             android:label="@string/title_activity_poke"
-            android:theme="@style/YammActionBarTheme" >
+            android:theme="@style/YammPokeActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
