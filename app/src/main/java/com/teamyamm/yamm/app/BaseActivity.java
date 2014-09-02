@@ -60,7 +60,7 @@ public class BaseActivity extends ActionBarActivity {
     protected static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
-    private static final String MIXPANEL_TOKEN = "5bebb04a41c88c1fad928b5526990d03";
+    public static final String MIXPANEL_TOKEN = "5bebb04a41c88c1fad928b5526990d03";
     protected MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;

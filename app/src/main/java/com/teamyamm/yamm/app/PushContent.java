@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -11,21 +12,27 @@ public class PushContent {
     public final static String ADMIN = "ADMIN";
     public final static String POKE = "POKE";
     public final static String FACEBOOK ="FB";
+    public final static String POKE_RESPONSE = "POKE_RESPONSE";
+
+    private String type;
+    private Friend sender;
 
     /*
     for POKE
     * */
-    private String type;
     private DishItem dish;
     private String date;
     private String meal;
-    private Friend sender;
-
     /*
     for ADMIN
     * */
     private String title;
     private String message;
+
+    /*
+    * for POKE Response
+    * */
+    private boolean response;
 
     public PushContent(Bundle extras){
         Gson gson = new Gson();
@@ -43,8 +50,20 @@ public class PushContent {
             else
                 title = "";
         }
+        else if (type.equals(POKE_RESPONSE)){
+            String r = extras.getString("response");
+            if (!r.isEmpty())
+                response = r.equals("true");
+            else{
+                Log.e("PushContent/constructor", "Poke Response should contain response");
+                return ;
+            }
+            sender = gson.fromJson(extras.getString("sender"), Friend.class);
+            dish = gson.fromJson(extras.getString("dish"), DishItem.class);
+        }
     }
 
+    public Boolean getResponse(){return response; }
     public String getType(){ return type; }
     public String getDate(){ return date; }
     public String getMeal(){ return meal; }

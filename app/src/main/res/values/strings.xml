@@ -166,6 +166,10 @@
     <string name="poke_alert_confirm">닫기</string>
     <string name="poke_alert_negative">딴거 먹자</string>
     <string name="poke_alert_positive">좋아</string>
+    <string name="poke_response_positive_title">그래 먹자</string>
+    <string name="poke_response_negative_title">그건 별로</string>
+
+
     <!-- Place Pick Autocomplete -->
     <string name="place_pick_edit_text">현재 위치</string>
 

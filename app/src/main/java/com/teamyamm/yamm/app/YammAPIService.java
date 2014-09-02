@@ -255,6 +255,7 @@ public interface YammAPIService {
         private int dishId;
         private String date;
         private String meal;
+        private boolean response;
 
         public RawPokeMessage(List<Long> uids, int dishId, String date, String meal){
             this.uids = uids;
@@ -262,7 +263,18 @@ public interface YammAPIService {
             this.date = date;
             this.meal = meal;
         }
+
+        public RawPokeMessage(List<Long> uids, boolean response, int dishId){
+            this.response = response;
+            this.uids = uids;
+            this.dishId = dishId;
+        }
     }
+
+    @POST ("/push/poke-response")
+    void sendPokeResponse(@Body RawPokeMessage message, Callback<String> callback);
+
+
 
     /*
     * Error
