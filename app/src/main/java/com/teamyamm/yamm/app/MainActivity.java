@@ -15,6 +15,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,6 +79,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public void onStart(){
         super.onStart();
 
+        drawerLayout.closeDrawers();
+
         friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
@@ -102,6 +105,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     @Override
     public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)){
+            drawerLayout.closeDrawers();
+            return ;
+        }
         goBackHome();
     }
 
@@ -431,6 +438,13 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
+
+        //To disable swipe open
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        //To enable back prssed
+        drawerLayout.setFocusableInTouchMode(false);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
