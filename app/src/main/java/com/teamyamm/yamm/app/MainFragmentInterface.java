@@ -11,8 +11,14 @@ import java.util.List;
 public interface MainFragmentInterface {
 
     public void changeInDishItem(List<DishItem> list);
+
     public Dialog getFullScreenDialog();
+
     public boolean isFullScreenDialogOpen();
+
     public void setFullScreenDialogOpen(boolean b);
+
     public void closeFullScreenDialog();
+
+    public boolean isLoading();
 }

@@ -72,6 +72,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         }
     }
 
+    public boolean isLoading(){return false; }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

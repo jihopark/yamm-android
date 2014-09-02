@@ -12,14 +12,14 @@
     <integer name="dialog_delay_duration">2500</integer>
     <integer name="main_buttons_animation_duration">200</integer>
 
-    <integer name="main_buttons_animation_offset0">2300</integer>
+    <integer name="main_buttons_animation_offset0">300</integer>
 
     <!-- (dialog_delay_duration-500) + (main_buttons_animation_duration)
         - (main_buttons_animation_offset) -->
     <!--2300 + (500 - 400) -->
-    <integer name="main_buttons_animation_offset1">200</integer>
+    <integer name="main_buttons_animation_offset1">400</integer>
     <!--2300 +  2*(500 - 400) -->
-    <integer name="main_buttons_animation_offset2">400</integer>
+    <integer name="main_buttons_animation_offset2">500</integer>
     <!--2300 + 3*(500 - 400) -->
     <integer name="main_buttons_animation_offset3">600</integer>
 

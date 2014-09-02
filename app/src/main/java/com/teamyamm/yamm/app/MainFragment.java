@@ -395,8 +395,8 @@ public class MainFragment extends Fragment {
         buttonAnimation2.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                Log.d("Animation","Button2 on Animation Start");
                 searchMap.setVisibility(View.VISIBLE);
+                Log.d("Animation", "Button2 on Animation Start");
             }
 
             @Override
@@ -413,7 +413,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 dislike.setVisibility(View.VISIBLE);
-                Log.d("Animation","Button3 on Animation Start");
             }
 
             @Override
@@ -430,13 +429,11 @@ public class MainFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 next.setVisibility(View.VISIBLE);
-                Log.d("Animation","Button4 on Animation Start");
 
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                startMainBarTextAnimation(animation);
             }
 
             @Override
@@ -449,13 +446,32 @@ public class MainFragment extends Fragment {
         buttonAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                hasPerformed = true;
                 pokeFriend.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
 
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mainBarAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                hasPerformed = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                pokeFriend.startAnimation(buttonAnimation);
+                searchMap.startAnimation(buttonAnimation2);
+                dislike.startAnimation(buttonAnimation3);
+                next.startAnimation(buttonAnimation4);
             }
 
             @Override
@@ -475,10 +491,13 @@ public class MainFragment extends Fragment {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    main.closeFullScreenDialog();
-                    Log.d("MainFragment/run", "Dialog Dismissed here - 6");
+                    if (!main.isLoading()) {
+                        main.closeFullScreenDialog();
+                        Log.d("MainFragment/run", "Dialog Dismissed here - 6");
+                    }
                     actuallyRunAnimations();
                     Log.i("MainFragment/startButtonsAnimation", "Animation Started for Main Buttons after Dialog");
+
                 }
             }, getResources().getInteger(R.integer.dialog_delay_duration));
         }
@@ -490,10 +509,7 @@ public class MainFragment extends Fragment {
 
     private void actuallyRunAnimations(){
         if (dishAdapter.getFirstFragment() != null) {
-            pokeFriend.startAnimation(buttonAnimation);
-            searchMap.startAnimation(buttonAnimation2);
-            dislike.startAnimation(buttonAnimation3);
-            next.startAnimation(buttonAnimation4);
+            startMainBarTextAnimation();
         }
         else {
             ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
@@ -501,7 +517,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void startMainBarTextAnimation(Animation animation){
+    private void startMainBarTextAnimation(){
         try {
 
             isPerforming = false;
@@ -518,9 +534,8 @@ public class MainFragment extends Fragment {
             dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
             dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
         }catch(NullPointerException e){
-            Log.e("MainFragment/AnimationListener","Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar()==null));
+            Log.e("MainFragment/AnimationListener", "Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar() == null));
             e.printStackTrace();
-            animation.cancel();
         }
     }
 

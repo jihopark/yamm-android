@@ -58,6 +58,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private List<DishItem> dishItems;
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
+    private boolean isLoading = false;
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
 
@@ -124,6 +125,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     public void setFullScreenDialogOpen(boolean b){ isDialogOpen = b; }
+
+    public boolean isLoading(){return isLoading;}
 
     public boolean isFriendLoaded(){
         SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
@@ -244,7 +247,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             setMainFragment();
         }
 
-
+        isLoading = true;
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
@@ -257,7 +260,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         isDialogOpen = true;
                         Log.d("MainActivity/getPersonalDishes", "Dialog Opened here - 2");
                     }
-
+                    isLoading = false;
                     Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
 
                     dishItems = items;
@@ -291,6 +294,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                isLoading = false;
                 String msg = retrofitError.getCause().getMessage();
                 if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
                     Log.e("MainActivity/getPersonalDishes", "Invalid Token, Logging out");
