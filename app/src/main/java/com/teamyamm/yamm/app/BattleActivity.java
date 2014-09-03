@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,7 @@ public class BattleActivity extends BaseActivity {
     private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
     private YammAPIService.RawBattleItem dishes;
     private Dialog fullScreenDialog;
+    CallPreloadImageAsyncTask imagePreloadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +56,18 @@ public class BattleActivity extends BaseActivity {
 
         setBattleFragments();
 
+        imagePreloadTask = new CallPreloadImageAsyncTask();
+
         hideActionBar();
     }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (!imagePreloadTask.isCancelled())
+            imagePreloadTask.cancel(true);
+    }
+
     /*
     * Go to Home Screen When Back Button of IntroActivity
     * */
@@ -97,7 +109,6 @@ public class BattleActivity extends BaseActivity {
                     makeYammToast(R.string.battle_loading_toast, Toast.LENGTH_SHORT);
                     return ;
                 }
-                preloadImages(0);
                 fullScreenDialog.dismiss();
                 bf.startBattleIntroAnimation();
             }
@@ -125,9 +136,9 @@ public class BattleActivity extends BaseActivity {
         }
     }
 
-     /*
-    * Setup Battle Fragments
-    * */
+    /*
+   * Setup Battle Fragments
+   * */
     private void setBattleFragments() {
         bf = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment);
 
@@ -149,11 +160,14 @@ public class BattleActivity extends BaseActivity {
                     Log.i("BattleActivity/getBattleItems","Round " + (i+1) + ":" +
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
+
                 bf.setDishItemView(dishes.getBattleItem(0));
+                imagePreloadTask.execute();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                imagePreloadTask.cancel(true);
                 Log.e("BattleActivity/getBattleItems", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
@@ -172,7 +186,6 @@ public class BattleActivity extends BaseActivity {
     * */
     public void loadNextItem(BattleItem item){
         battleCount++;
-        preloadImages(battleCount);
 
         previousLength = result.length();
         result = result + item;
@@ -263,35 +276,62 @@ public class BattleActivity extends BaseActivity {
         });
     }
 
-    private void preloadImages(int n){
-        int w = bf.getImageWidth();
-        int h = bf.getImageHeight();
-        if (n+2 >= totalBattle)
-            return ;
-
-        if (n==0){
-            for (int i=0;i<2;i++) {
-                DishItem a = dishes.getBattleItem(i).getFirst();
-                DishItem b = dishes.getBattleItem(i).getSecond();
-                Log.i("BattleActivity/preloadImages", "Preloading:" +
-                        a + "," + b + " " + w + "x" + h);
-
-                Picasso.with(BattleActivity.this)
-                        .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
-                        .error(R.drawable.mainback_test)
-                        .fetch();
-            }
-            return ;
+    private void preloadImages(int w, int h){
+        for (int i=1;i<totalBattle;i++) {
+            DishItem a = dishes.getBattleItem(i).getFirst();
+            DishItem b = dishes.getBattleItem(i).getSecond();
+            Log.i("BattleActivity/preloadImages", "Preloading:" +
+                    a + "," + b + " " + w + "x" + h);
+            Picasso.with(BattleActivity.this)
+                    .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
+                    .error(R.drawable.mainback_test)
+                    .fetch();
+            Picasso.with(BattleActivity.this)
+                    .load(YammImageView.getURL(YammImageView.DISH, w, h, b.getId()))
+                    .error(R.drawable.mainback_test)
+                    .fetch();
         }
-        DishItem a = dishes.getBattleItem(n+2).getFirst();
-        DishItem b = dishes.getBattleItem(n+2).getSecond();
-        Log.i("BattleActivity/preloadImages", "Preloading:" +
-                a + "," + b + " " + w + "x" + h);
+        return ;
+    }
 
-        Picasso.with(BattleActivity.this)
-                .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
-                .error(R.drawable.mainback_test)
-                .fetch();
+
+    public class CallPreloadImageAsyncTask extends AsyncTask<Integer, Integer, Integer> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            while(true){
+                Log.d("BattleActivity/CallPreloadImageAsyncTask", "Checking");
+                if (bf!=null)
+                    Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured"
+                            + bf.getImageWidth() + "x" + bf.getImageHeight());
+
+                if (bf!=null && bf.getImageHeight() != 0 && bf.getImageWidth() != 0) {
+                    int w = bf.getImageWidth();
+                    int h = bf.getImageHeight();
+
+                    Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured" + w + "x" + h);
+                    preloadImages(w, h);
+                    break;
+                }
+
+            }
+            return 1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            Log.i("BattleActivity/CallPreloadImageAsyncTask", "Done");
+        }
     }
 
 

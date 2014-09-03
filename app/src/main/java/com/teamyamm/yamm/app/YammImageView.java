@@ -21,6 +21,7 @@ public class YammImageView extends FrameLayout {
 
     private final static String imageURL = "http://res.cloudinary.com/yamm/image/upload/";
     public final static String DISH = "dish";
+    public final static String MAIN = "main";
     public final static String GRID = "grid";
 
     private final static float imageRatio = 1.5f;
@@ -124,7 +125,8 @@ public class YammImageView extends FrameLayout {
     public static String getURL(String path, int width, int height, long id){
         if (path == DISH)
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + id + ".jpg";
-
+        if (path == MAIN)
+            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_south/dish/" + id + ".jpg";
         return "";
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
     }

@@ -160,7 +160,7 @@ public class DishFragment extends Fragment {
 
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
         image.setID(item.getId());
-        image.setPath(YammImageView.DISH);
+        image.setPath(YammImageView.MAIN);
     }
 
     public void showTexts(){
