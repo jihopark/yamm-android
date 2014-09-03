@@ -179,6 +179,21 @@ public class DishFragment extends Fragment {
 
             dislike = parentFragment.getButton(R.id.dish_dislike_button);
 
+            mainBar.setSoundEffectsEnabled(false);
+            mainBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (next.getVisibility() == View.INVISIBLE)
+                        next.setVisibility(View.VISIBLE);
+                    if (searchMap.getVisibility() == View.INVISIBLE)
+                        searchMap.setVisibility(View.VISIBLE);
+                    if (pokeFriend.getVisibility() == View.INVISIBLE)
+                        pokeFriend.setVisibility(View.VISIBLE);
+                    if (dislike.getVisibility() == View.INVISIBLE)
+                        dislike.setVisibility(View.VISIBLE);
+                    Log.i("DishFragment/onClickListener","MainBar Clicked");
+                }
+            });
 
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
