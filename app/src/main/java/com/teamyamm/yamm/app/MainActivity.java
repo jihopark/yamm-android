@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -59,6 +59,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
+    private boolean isLeftMenuLoaded = false;
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
 
@@ -80,7 +81,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public void onStart(){
         super.onStart();
 
+        if (!isLeftMenuLoaded){
+            loadLeftMenu();
+        }
         drawerLayout.closeDrawers();
+
 
         friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
@@ -92,12 +97,13 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onPostResume(){
         super.onPostResume();
+        drawerLayout.closeDrawers();
         loadDishes();
     }
 
     @Override
     public void onStop(){
-        Log.i("MainActivity/onStop","isLoggingOut " +isLoggingOut);
+        Log.i("MainActivity/onStop", "isLoggingOut " + isLoggingOut);
         if (!BaseActivity.isLoggingOut) {
             saveDishItemsInPref();
         }
@@ -150,7 +156,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
+            if (isLeftMenuLoaded)
+                return true;
+            makeYammToast(R.string.friend_not_loaded_message, Toast.LENGTH_SHORT);
+            return false;
         }
         // Handle presses on the action bar items
         switch (item.getItemId()) {
@@ -251,17 +260,17 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
-                Log.i("MainActivity/getPersonalDishes","Dishes Loaded");
+                Log.i("MainActivity/getPersonalDishes", "Dishes Loaded");
 
-                if (!isSameDishItems(items)){
+                if (!isSameDishItems(items)) {
                     //if there is new list, show newDialog
-                    if (isDialogOpen == false){
+                    if (isDialogOpen == false) {
                         fullScreenDialog.show();
                         isDialogOpen = true;
                         Log.d("MainActivity/getPersonalDishes", "Dialog Opened here - 2");
                     }
                     isLoading = false;
-                    Log.i("MainActivity/getPersonalDishes","Different List. Init MainFragment");
+                    Log.i("MainActivity/getPersonalDishes", "Different List. Init MainFragment");
 
                     dishItems = items;
                     setMainFragment();
@@ -269,14 +278,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            makeYammToast(getString(R.string.new_recommendation_message),Toast.LENGTH_SHORT);
+                            makeYammToast(getString(R.string.new_recommendation_message), Toast.LENGTH_SHORT);
                         }
                     }, getResources().getInteger(R.integer.dialog_delay_duration));
 
                     trackNewRecommendationMixpanel();
-                    return ;
+                    return;
                 }
-                if (isDialogOpen){
+                if (isDialogOpen) {
                     // To delay Toast
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -287,8 +296,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");
                         }
                     }, getResources().getInteger(R.integer.dialog_delay_duration) - 2000);
-                   // fullScreenDialog.dismiss();
-                   // isDialogOpen = false;
+                    // fullScreenDialog.dismiss();
+                    // isDialogOpen = false;
                 }
             }
 
@@ -304,7 +313,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 Log.e("MainActivity/getPersonalDishes", "Server Error, setting saved list");
                 retrofitError.printStackTrace();
                 closeFullScreenDialog();
-                Log.i("MainActivity/getPersonalDishes","Dialog Dismissed here - 4");
+                Log.i("MainActivity/getPersonalDishes", "Dialog Dismissed here - 4");
             }
         });
     }
@@ -358,9 +367,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         friendPickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isFriendLoaded()){
+                if (!isFriendLoaded()) {
                     makeYammToast(R.string.friend_not_loaded_message, Toast.LENGTH_LONG);
-                    return ;
+                    return;
                 }
                 Intent intent = new Intent(MainActivity.this, FriendActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -374,52 +383,15 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
+    /*
+    * LeftDrawer Methods
+    * */
+
     private void setLeftDrawer(){
         navMenuTitles = getResources().getStringArray(R.array.nav_menu_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        leftDrawer = (ListView) findViewById(R.id.left_drawer);
+        leftDrawer = (ListView) findViewById(R.id.left_drawer_menu_list);
 
-        // Set the adapter for the list view
-        leftDrawer.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.left_drawer_item, navMenuTitles));
-
-        //Set Item Click Listener
-
-        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("MainActivity/onItemClick","Left Drawer Item Clicked at " + position);
-                if (position == DRAWER_LOGOUT){
-                    createDialog(MainActivity.this,
-                            R.string.logout_dialog_title, R.string.logout_dialog_message,
-                            R.string.dialog_positive, R.string.dialog_negative,
-                            setPositiveListener(), null).show();
-                }
-                else if (position == 1){
-                    goToActivity(GridActivity.class);
-                }
-                else if (position == 2){
-                    goToActivity(BattleActivity.class);
-                }
-                else if (position == 3){
-                    boolean result = YammAPIAdapter.toggleProtocol();
-                    if (result == YammAPIAdapter.HTTP)
-                        Toast.makeText(MainActivity.this, "H!T!T!P!", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(MainActivity.this, "H!T!T!P!S!", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            private DialogInterface.OnClickListener setPositiveListener(){
-                return new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logOut();
-                    }
-                };
-            }
-        });
 
         drawerToggle = new ActionBarDrawerToggle(
                 MainActivity.this,                  /* host Activity */
@@ -437,6 +409,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
             }
         };
 
@@ -469,7 +442,98 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    //For Contact Reading
+    private void loadLeftMenu(){
+        YammAPIAdapter.getTokenService().getUserInfo(new Callback<YammAPIService.RawInfo>() {
+            @Override
+            public void success(YammAPIService.RawInfo info, Response response) {
+                Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
+                setMenuList(info.name, info.email, info.phone);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("MainActivity/loadLeftMenu", "Fail to load personal info from Server");
+
+            }
+        });
+    }
+
+    private void setMenuList(String name, String email, String phone){
+
+        Log.i("MainActivity/setMenuList", "Name " + name + " Email " +email);
+        YammLeftDrawerAdapter adapter = new YammLeftDrawerAdapter(MainActivity.this);
+
+        View.OnClickListener notReady = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeYammToast(R.string.left_drawer_not_ready, Toast.LENGTH_SHORT);
+            }
+        };
+
+        adapter.addMenuItems(new LeftDrawerItem(name, getString(R.string.left_drawer_logout), 0, null,
+                new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        createDialog(MainActivity.this,
+                                R.string.logout_dialog_title, R.string.logout_dialog_message,
+                                R.string.dialog_positive, R.string.dialog_negative,
+                                setPositiveListener(), null).show();
+                    }
+                    private DialogInterface.OnClickListener setPositiveListener(){
+                        return new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                logOut();
+                            }
+                        };
+                    }
+                }));
+
+        adapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
+        adapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 2, null, notReady));
+
+        if (getRegistrationId(MainActivity.this).isEmpty())
+            adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_alarm_title),
+                    getString(R.string.left_drawer_alarm_status_negative),3));
+        else
+            adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_alarm_title),
+                    getString(R.string.left_drawer_alarm_status_positive),3));
+
+        adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, notReady));
+
+        // Should be deleted for production
+        adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기","", 5, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToActivity(BattleActivity.class);
+            }
+        }));
+        adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기","", 6, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToActivity(GridActivity.class);
+            }
+        }));
+        adapter.addMenuItems(new LeftDrawerItem("API Protocol 바꾸기","", 7, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean result = YammAPIAdapter.toggleProtocol();
+                if (result == YammAPIAdapter.HTTP)
+                    Toast.makeText(MainActivity.this, "H!T!T!P!", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "H!T!T!P!S!", Toast.LENGTH_SHORT).show();
+            }
+        }));
+
+
+        leftDrawer.setAdapter(adapter);
+        leftDrawer.setSelector(new ColorDrawable(Color.TRANSPARENT));
+
+        isLeftMenuLoaded = true;
+    }
+    /*
+    * Contact Reading Methods
+    * */
     private static final String[] PROJECTION = new String[] {
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,

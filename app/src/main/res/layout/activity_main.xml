@@ -22,18 +22,34 @@
                 android:text="@string/friend_pick_button"
                 />
 
-            </RelativeLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
     <!-- The left navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+    <RelativeLayout
+        android:layout_width="285dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#87a2a2a2"/>
+        android:id="@+id/left_drawer"
+        android:background="#e6000000"
+        android:paddingTop="28dp"
+        android:layout_gravity="start">
+        <ListView
+            android:id="@+id/left_drawer_menu_list"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="28dp"/>
+          <ImageView
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/sidemenu_version"
+            />
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
