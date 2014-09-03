@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
@@ -212,7 +211,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
     }
 
     private void setViewPager(){
-        IconPageIndicator indicator = (IconPageIndicator) findViewById(R.id.invite_page_indicator);
+        YammIconPageIndicator indicator = (YammIconPageIndicator) findViewById(R.id.invite_page_indicator);
         InviteFragmentPagerAdapter adapter= new InviteFragmentPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.invite_view_pager);

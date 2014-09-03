@@ -14,7 +14,7 @@
         android:background="@color/brown_color"
         android:id="@+id/invite_intro"
         />
-    <com.viewpagerindicator.IconPageIndicator
+    <com.teamyamm.yamm.app.YammIconPageIndicator
         android:layout_below="@+id/invite_intro"
         android:background="@color/brown_color"
         android:layout_width="match_parent"

@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
@@ -208,7 +207,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
 
     private void setViewPager(){
-        IconPageIndicator indicator = (IconPageIndicator) findViewById(R.id.poke_page_indicator);
+        YammIconPageIndicator indicator = (YammIconPageIndicator) findViewById(R.id.poke_page_indicator);
         PokeFragmentPagerAdapter adapter= new PokeFragmentPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.poke_view_pager);
