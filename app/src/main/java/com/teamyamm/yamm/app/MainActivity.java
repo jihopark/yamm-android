@@ -95,10 +95,18 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        //To disable swipe open
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    @Override
     public void onPostResume(){
         super.onPostResume();
         drawerLayout.closeDrawers();
         loadDishes();
+
     }
 
     @Override
@@ -416,8 +424,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
 
-        //To disable swipe open
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         //To enable back prssed
         drawerLayout.setFocusableInTouchMode(false);
