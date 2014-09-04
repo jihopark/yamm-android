@@ -102,9 +102,9 @@
     <string name="battle_dialog_message">배틀을 종료하시겠습니까?</string>
     <string name="battle_dialog_title">왜 하다말고</string>
     <string name="battle_none_button">둘다 싫어</string>
-    <string name="battle_intro_dialog">당신의 입맛을 알아내기 위해 음식 이상형 월드컵을 준비했어요\n자기 입맛에 맞는 음식을 골라주세요!</string>
+    <string name="battle_intro_dialog">당신의 입맛을 알아내기 위해\n음식 이상형 월드컵을 준비했어요\n자기 입맛에 맞는 음식을 골라주세요!</string>
     <string name="battle_loading_toast">잠..잠깐만요! 곧 준비되요</string>
-
+    <string name="battle_intro_button">시 작</string>
     <!-- Join Activity-->
     <string name="join_message">가입을 위해 이름과 전화번호를</string>
     <string name="verification_text">인증번호 문자를 보냈슴</string>
