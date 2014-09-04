@@ -8,7 +8,11 @@
     <color name="selected_item_color">#ffc29443</color>
     <color name="divider_color">#ffe2ddcb</color>
     <color name="tutorial_background">#b4000000</color>
+
     <color name="dialog_dim_background">#d8000000</color>
+    <color name="dialog_title_background">#ffd4d1c2</color>
+    <color name="dialog_content_background">#fff3f1e6</color>
+    <color name="place_pick_text_background">#ffc4bfb1</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>

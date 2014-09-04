@@ -64,9 +64,6 @@
     <string name="progress_dialog_message">조금만 기다려주세요!</string>
     <string name="join_progress_dialog_title">가입 처리 중입니다\n조금만 기다려주세요!</string>
     <string name="poke_method_dialog_title">어떻게 찌를까요?</string>
-    <string name="map_dialog_title">어디서 먹을꺼에요?</string>
-    <string name="map_dialog_positive">찾기</string>
-    <string name="map_dialog_negative">취소</string>
     <string name="new_recommendation_message">새로운 음식이 추천되었습니다</string>
     <string name="no_new_recommendation_message">새로운 추천이 없네요ㅠㅠ \n점심, 저녁 한번씩 추천되요\n여기에 어떤식으로 하루에 몇번 언제 추천되는지가 들어가야할듯!!!!!!!!!!!!!!!</string>
 
@@ -84,6 +81,11 @@
     <string name="dish_too_many_dislike_toast">너무 다 싫어하는거 아니에요ㅠㅠ?</string>
 
     <string name="dialog_main">당신의 입맛에 맞는 메뉴를 고르고 있어요\n새롭게 추천되는 4개 중\n몇 개나 입맛에 맞을까요?</string>
+
+    <string name="map_dialog_title">어디서 먹을꺼에요?</string>
+    <string name="map_dialog_positive">찾아줘!</string>
+    <string name="place_pick_title">음식점 검색</string>
+    <string name="place_pick_message">드시고 싶은 위치에서 음식점을 검색해 보세요.</string>
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>

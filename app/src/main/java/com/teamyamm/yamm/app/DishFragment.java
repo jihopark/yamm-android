@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -348,14 +351,14 @@ public class DishFragment extends Fragment {
     private void showLocationDialog(){
         final Dialog dialog = new Dialog(activity);
 
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_map);
-        dialog.setTitle(R.string.map_dialog_title);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.map_autocomplete_text);
 
-        Button negative = (Button) dialog.findViewById(R.id.map_dialog_negative_button);
+        ImageButton negative = (ImageButton) dialog.findViewById(R.id.map_dialog_negative_button);
         Button positive = (Button) dialog.findViewById(R.id.map_dialog_positive_button);
-        Button current = (Button) dialog.findViewById(R.id.map_dialog_current_button);
 
         setPlacePickEditText(textView);
 
@@ -374,15 +377,6 @@ public class DishFragment extends Fragment {
             }
         });
 
-        current.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DishFragment.this.isAdded())
-                    searchMap(activity.getString(R.string.place_pick_edit_text));
-                dialog.dismiss();
-            }
-        });
-
         dialog.show();
     }
 
@@ -392,7 +386,7 @@ public class DishFragment extends Fragment {
         placePickEditText.setThreshold(1);
         placePickEditText.setSelectAllOnFocus(true);
         ArrayAdapter<String> place_adapter =
-                new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.places_array));
+                new ArrayAdapter<String>(activity, R.layout.place_pick_item, getResources().getStringArray(R.array.places_array));
         placePickEditText.setAdapter(place_adapter);
         placePickEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
