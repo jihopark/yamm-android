@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -62,6 +63,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private boolean isLeftMenuLoaded = false;
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
+    private TutorialFragment tutorial;
+    private RelativeLayout tutorialContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -505,7 +508,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_alarm_title),
                     getString(R.string.left_drawer_alarm_status_positive),3));
 
-        adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, notReady));
+        adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTutorialFragment();
+            }
+        }));
 
         // Should be deleted for production
         adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기","", 5, new View.OnClickListener() {
@@ -520,16 +528,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 goToActivity(GridActivity.class);
             }
         }));
-        adapter.addMenuItems(new LeftDrawerItem("API Protocol 바꾸기","", 7, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean result = YammAPIAdapter.toggleProtocol();
-                if (result == YammAPIAdapter.HTTP)
-                    Toast.makeText(MainActivity.this, "H!T!T!P!", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(MainActivity.this, "H!T!T!P!S!", Toast.LENGTH_SHORT).show();
-            }
-        }));
 
 
         leftDrawer.setAdapter(adapter);
@@ -537,6 +535,25 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         isLeftMenuLoaded = true;
     }
+
+    private void showTutorialFragment(){
+        tutorialContainer = (RelativeLayout) findViewById(R.id.tutorial_container);
+        drawerLayout.closeDrawers();
+        if (tutorial==null) {
+            tutorial = new TutorialFragment();
+
+            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+            tact.add(R.id.tutorial_container, tutorial, TutorialFragment.TAG);
+            tact.commit();
+        }
+        tutorialContainer.setVisibility(View.VISIBLE);
+    }
+
+    public void closeTutorialFragment(){
+        if (tutorial!=null && tutorialContainer!=null)
+            tutorialContainer.setVisibility(View.GONE);
+    }
+
     /*
     * Contact Reading Methods
     * */

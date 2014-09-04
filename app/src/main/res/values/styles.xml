@@ -43,6 +43,14 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <!-- FullScren Dialog -->
+
+    <style name="FullScreenDialogText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ffe5a46a</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
     <!-- Intro Activity -->
     <style name="IntroButton">
         <item name="android:layout_width">match_parent</item>
@@ -209,6 +217,41 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:background">@drawable/friend_pick_round_button</item>
+    </style>
+
+    <style name="MainButton">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginBottom">89dp</item>
+        <item name="android:layout_marginRight">14dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="DislikeButton" parent="MainButton">
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:src">@drawable/main_dislike</item>
+        <item name="android:background">@drawable/negative_main_circle</item>
+    </style>
+
+    <style name="SearchMapButton" parent="MainButton">
+        <item name="android:src">@drawable/main_locate</item>
+        <item name="android:background">@drawable/positive_main_circle</item>
+    </style>
+
+    <style name="PokeFriendButton" parent="MainButton">
+        <item name="android:src">@drawable/main_yamm_select</item>
+        <item name="android:background">@drawable/positive_main_circle</item>
+    </style>
+
+    <style name="NextButton">
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginBottom">147dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/arrow_right</item>
+        <item name="android:background">@drawable/arrow_circle</item>
     </style>
 
     <!-- Friends Fragment -->

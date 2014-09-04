@@ -9,15 +9,13 @@
         android:id="@+id/dialog_progress_bar"
         />
     <TextView
+        style="@style/FullScreenDialogText"
         android:layout_below="@+id/dialog_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:textSize="20sp"
-        android:textColor="#ffe5a46a"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:id="@+id/dialog_message"/>
 </RelativeLayout>
