@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
-    private boolean isLeftMenuLoaded = false;
+    protected boolean isLeftMenuLoaded = false;
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;

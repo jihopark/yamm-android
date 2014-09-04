@@ -395,6 +395,9 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void logOut(){
+        if (this instanceof MainActivity)
+            ((MainActivity)this).isLeftMenuLoaded = false;
+
         isLoggingOut = true;
         removeAuthToken();
         removePersonalData();
