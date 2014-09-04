@@ -37,7 +37,7 @@
         android:layout_width="285dp"
         android:layout_height="match_parent"
         android:id="@+id/left_drawer"
-        android:background="#e6000000"
+        android:background="#cc000000"
         android:paddingTop="28dp"
         android:layout_gravity="start">
         <ListView
