@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="342dp" android:layout_height="342dp"
-    android:padding="1dp" android:background="#ffffffff">
+    android:layout_width="340dp" android:layout_height="380dp"
+    android:background="@android:color/transparent">
     <RelativeLayout
+        android:layout_marginTop="20dp"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="280dp">
@@ -38,22 +39,25 @@
             </RelativeLayout>
         </RelativeLayout>
     <LinearLayout
+        android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="174.5dp"
             android:layout_height="match_parent"
             android:background="@color/default_color"
             android:textColor="#ffffffff"
             android:textSize="24sp"
             android:text="@string/poke_alert_negative"
             android:id="@+id/poke_alert_negative"/>
+        <View
+            android:background="@android:color/transparent"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
         <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="174.5dp"
             android:layout_height="match_parent"
             android:background="@color/default_color"
             android:textColor="#ffffffff"
@@ -62,12 +66,11 @@
             android:id="@+id/poke_alert_positive"/>
     </LinearLayout>
     <ImageButton
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
         android:src="@drawable/icon_dialog_close"
         android:id="@+id/poke_alert_confirm"/>
 </RelativeLayout>

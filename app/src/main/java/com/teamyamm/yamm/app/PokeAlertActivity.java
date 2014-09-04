@@ -101,7 +101,7 @@ public class PokeAlertActivity extends Activity {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeYammToast(content.getSender().getName() + "님한테 좋다고 했어요!", Toast.LENGTH_SHORT);
+                makeYammToast(findFriendName(content.getSender(), getFriendList()) + "님한테 좋다고 했어요!", Toast.LENGTH_SHORT);
                 YammAPIAdapter.getTokenService().sendPokeResponse(new YammAPIService.RawPokeMessage(uids, true, content.getDish().getId()), callback);
                 trackPokeResponseMixpanel(true);
                 finish();
@@ -110,7 +110,7 @@ public class PokeAlertActivity extends Activity {
         negative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeYammToast(content.getSender().getName() + "님한테 딴거 먹자고 했어요!", Toast.LENGTH_SHORT);
+                makeYammToast(findFriendName(content.getSender(), getFriendList()) + "님한테 딴거 먹자고 했어요!", Toast.LENGTH_SHORT);
                 YammAPIAdapter.getTokenService().sendPokeResponse(new YammAPIService.RawPokeMessage(uids, false, content.getDish().getId()), callback);
                 trackPokeResponseMixpanel(false);
                 finish();

@@ -142,8 +142,8 @@
 
 
     <style name="YammPokeDialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowBackground">@null</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 
