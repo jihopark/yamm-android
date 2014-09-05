@@ -116,6 +116,21 @@ public class GcmIntentService extends IntentService {
                     .setContentText(msg)
                     .setAutoCancel(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+
+            final String fMsg = msg;
+            try {
+                Log.d("GcmIntentService/sendNotification", "Post on Handler");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        displayToast(fMsg);
+                    }
+                });
+            }catch(Exception e){
+                Log.e("GcmIntentService/sendNotification","Something Went Wrong");
+                e.printStackTrace();
+            }
+
         }
         else if (content.getType().equals(PushContent.FACEBOOK)){
             SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);

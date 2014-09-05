@@ -171,7 +171,7 @@
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
 
     <!-- Push Messages -->
-    <string name="poke_push_title">밥 한번 같이 먹어요</string>
+    <string name="poke_push_title">밥 같이 먹어요</string>
     <string name="push_facebook_title">Yamm 페이스북 좋아요!</string>
     <string name="push_facebook_message">Yamm 얌의 소식을 페이스북 통해서 확인하세요</string>
     <string name="push_admin_default_title">Yamm 얌</string>
