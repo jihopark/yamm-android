@@ -145,6 +145,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             public void success(String s, Response response) {
                 Log.i("PokeActivity/sendPushMessage", "Push " + s);
                 trackPokeFriendMixpanel("YAMM", yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
+                finish();
             }
 
             @Override
