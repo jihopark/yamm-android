@@ -67,6 +67,8 @@ public class JoinActivity extends BaseActivity {
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String phone = manager.getLine1Number();
 
+        if (phone==null)
+            return ;
         phone = MainActivity.parsePhoneNumber(phone);
 
         Log.i("JoinActivity/getPhoneNumber","Read Phone Number : " + phone);

@@ -640,6 +640,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     public static String parsePhoneNumber(String s){
         //Remove Korean National Code
+        if (s.isEmpty())
+            return "";
+
         s = s.replace("+82","0");
         //Remove non digits
         s = s.replaceAll("\\D+","");

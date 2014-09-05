@@ -84,14 +84,14 @@ public class BaseActivity extends ActionBarActivity {
         mixpanel =
                 MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN);
 
-        checkPlayServices();
+       // checkPlayServices();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
-        checkPlayServices();
+      //  checkPlayServices();
         isAppRunning = true;
         Log.d("BaseActivity/onResume","App is Running " + isAppRunning);
     }
