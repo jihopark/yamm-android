@@ -100,7 +100,7 @@ public class BaseActivity extends ActionBarActivity {
     protected void onPause(){
         super.onPause();
         isAppRunning = false;
-        Log.d("BaseActivity/onPause","App is Running " + isAppRunning);
+        Log.d("BaseActivity/onPause", "App is Running " + isAppRunning);
     }
 
     @Override
@@ -358,20 +358,22 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void makeYammToast(String message, int duration){
-        LayoutInflater inflater = getLayoutInflater();
+        if (BaseActivity.checkIfAppIsRunning()) {
+            LayoutInflater inflater = getLayoutInflater();
 
-        View layout = inflater.inflate(R.layout.yamm_toast,
-                (ViewGroup) findViewById(R.id.toast_layout));
+            View layout = inflater.inflate(R.layout.yamm_toast,
+                    (ViewGroup) findViewById(R.id.toast_layout));
 
-        TextView text = (TextView) layout.findViewById(R.id.toast_text);
-        // Set the Text to show in TextView
-        text.setText(message);
-        Toast toast = new Toast(getApplicationContext());
+            TextView text = (TextView) layout.findViewById(R.id.toast_text);
+            // Set the Text to show in TextView
+            text.setText(message);
+            Toast toast = new Toast(getApplicationContext());
 
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0 ,0);
-        toast.setDuration(duration);
-        toast.setView(layout);
-        toast.show();
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(duration);
+            toast.setView(layout);
+            toast.show();
+        }
     }
 
     protected void startInviteActivity(Context context){
