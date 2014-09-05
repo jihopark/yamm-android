@@ -287,13 +287,13 @@ public class YammAPIAdapter {
             }
             else if (error.getCode().equals("IncorrectAuthCode"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE);
-            else if (error.getCode().equals("InvalidParam:password:numchars"))
+            else if (error.getCode().equals("InvalidParam:password:minlen"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_MIN);
-            else if (error.getCode().equals("InvalidParam:password:specialchars"))
+            else if (error.getCode().equals("InvalidParam:password:pattern"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PASSWORD_FORMAT);
-            else if (error.getCode().equals("InvalidParam:email"))
+            else if (error.getCode().equals("InvalidParam:email:pattern"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.EMAIL_FORMAT);
-            else if (error.getCode().equals("InvalidParam:phone"))
+            else if (error.getCode().equals("InvalidParam:phone:pattern"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PHONE_FORMAT);
 
             Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
