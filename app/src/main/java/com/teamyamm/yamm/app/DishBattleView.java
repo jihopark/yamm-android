@@ -59,9 +59,10 @@ public class DishBattleView extends FrameLayout {
 
     }
 
-    public void showThumbsUp(){
+    public void showThumbsUp(int i){
         Animation thumbsUpAnimation = AnimationUtils.loadAnimation(context, R.anim.thumbs_up_animation);
         final Animation putdown = AnimationUtils.loadAnimation(context, R.anim.battle_put_down);
+        final int choice = i;
         putdown.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -92,6 +93,11 @@ public class DishBattleView extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                Fragment fragment = ((BaseActivity) context).getSupportFragmentManager().findFragmentByTag("bfragment");
+
+                if (fragment instanceof BattleFragment) {
+                    ((BattleFragment) fragment).startBattleChoiceAnimation(choice);
+                }
                 dishText.startAnimation(putdown);
 
             }

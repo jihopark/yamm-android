@@ -68,8 +68,8 @@ public class BattleFragment extends Fragment{
             public void onClick(View v) {
                 toggleClicks(false);
                 item.setResult(BattleItem.FIRST);
-                first.showThumbsUp();
-                startBattleChoiceAnimation(0);
+                first.showThumbsUp(0);
+         //       startBattleChoiceAnimation(0);
                 Log.i("BattleFragment/onClickListener", "First Dish Selected " + item.getFirst());
 
             }
@@ -79,8 +79,8 @@ public class BattleFragment extends Fragment{
             public void onClick(View v) {
                 toggleClicks(false);
                 item.setResult(BattleItem.SECOND);
-                second.showThumbsUp();
-                startBattleChoiceAnimation(1);
+                second.showThumbsUp(1);
+      //          startBattleChoiceAnimation(1);
                 Log.i("BattleFragment/onClickListener", "Second Dish Selected " + item.getSecond());
             }
         });
@@ -138,7 +138,7 @@ public class BattleFragment extends Fragment{
         second.getTextView().startAnimation(battleFromRight);
     }
 
-    private void startBattleChoiceAnimation(int win){
+    public void startBattleChoiceAnimation(int win){
         if (win == 0){
             battleToRight.setAnimationListener(new Animation.AnimationListener() {
                 @Override
