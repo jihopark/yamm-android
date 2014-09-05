@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -56,15 +57,23 @@ public class FriendsFragment extends Fragment {
         friendListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         friendListView.setDivider(new ColorDrawable(getResources().getColor(R.color.divider_color)));
         friendListView.setDividerHeight((int) getResources().getDimension(R.dimen.line_height));
-        friendsListEmptyText = new TextView(getActivity());
-        friendsListEmptyText.setText(getActivity().getResources().getString(R.string.friends_list_empty));
-        friendListView.setEmptyView(friendsListEmptyText);
+
+        LinearLayout emptyLayout = (LinearLayout) yammItemLayout.findViewById(R.id.empty_view);
+        Button emptyInvite = (Button) emptyLayout.findViewById(R.id.empty_invite_button);
+        emptyInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity)getActivity()).startInviteActivity(getActivity());
+                }
+            }
+        });
+        friendListView.setEmptyView(emptyLayout);
 
         setYammItemList();
         setSelectedItems();
 
         yammItemLayout.addView(friendListView);
-        yammItemLayout.addView(friendsListEmptyText);
 
         return yammItemLayout;
     }

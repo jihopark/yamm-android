@@ -31,4 +31,32 @@
             android:background="#ffe2ddcb"
             />
     </RelativeLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/empty_view">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/friends_list_empty"
+            android:id="@+id/empty_view_text"
+            android:textSize="24sp"
+            android:textColor="#757466"
+            android:layout_marginTop="28dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"/>
+        <Button
+            android:layout_marginTop="23dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_invite_button"
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:background="@drawable/enabled_round_button"
+            android:id="@+id/empty_invite_button"/>
+        </LinearLayout>
 </LinearLayout>
