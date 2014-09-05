@@ -250,7 +250,7 @@ public class DishFragment extends Fragment {
                     Log.i("DishFragment/onClick", "Dislike pressed for " + getDishItem().getName());
                     trackDislikeMixpanel();
                     ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
-
+                    toggleEnableButtons(false);
                     YammAPIService service = YammAPIAdapter.getDislikeService();
 
                     Callback<DishItem> callback = new Callback<DishItem>() {
@@ -278,6 +278,7 @@ public class DishFragment extends Fragment {
                                 if (getActivity() instanceof BaseActivity)
                                     ((BaseActivity)getActivity()).makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                             }
+                            toggleEnableButtons(true);
                         }
                     };
 
@@ -317,8 +318,17 @@ public class DishFragment extends Fragment {
         }
     }
 
+    private void toggleEnableButtons(boolean b){
+        dislike.setEnabled(b);
+        searchMap.setEnabled(b);
+        pokeFriend.setEnabled(b);
+        next.setEnabled(b);
+
+    }
+
     private void changeInDishItems(DishItem original, DishItem replace){
         ((MainFragment)getParentFragment()).changeInDishItem(original, replace);
+        toggleEnableButtons(true);
     }
 
     private void addDishToPositive(String category, String detail){
