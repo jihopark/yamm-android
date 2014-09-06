@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
@@ -63,6 +64,7 @@ public class BaseActivity extends ActionBarActivity {
     public static final boolean DEVELOPMENT = true;
     public static final boolean CURRENT_APPLICATION_STATUS = DEVELOPMENT;
 
+    protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
@@ -630,6 +632,40 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
     }
+
+    protected void startSMSIntent(String msg, List<YammItem> items){
+        Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
+        sendIntent.putExtra("sms_body", msg);
+
+        //Get Senders
+
+        String separator = "; ";
+        if(android.os.Build.MANUFACTURER.equalsIgnoreCase("samsung")){
+            separator = ", ";
+        }
+        try {
+            String s = "";
+            //List<YammItem> items = contactFriendsFragment.getSelectedItems();
+            if (items.size() == 1){
+                s = ((Friend)items.get(0)).getPhone();
+            }
+            else {
+                for (YammItem i : items){
+                    s += ((Friend)i).getPhone();
+                    s += separator;
+                }
+                s = s.substring(0, s.length() - 1);
+            }
+            sendIntent.setData(Uri.parse("smsto:" + s));
+
+        } catch (Exception e) {
+            makeYammToast(getString(R.string.invite_sms_error_message), Toast.LENGTH_SHORT);
+            Log.e("BaseActivity/startSMSIntent","SMS Error");
+            e.printStackTrace();
+        }
+        startActivity(sendIntent);
+    }
+
 
     /*
     * Related to Push Services

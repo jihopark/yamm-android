@@ -166,6 +166,8 @@
     <string name="invite_sms_body">Yamm 우리 뭐 먹지? http://yamm.me</string>
     <string name="invite_sms_error_message">SMS를 보낼 수가 없어요</string>
     <string name="kakao_invite_button">카카오톡 친구 초대하기</string>
+    <string name="invite_message">같이 밥 먹을래요?\nYamm 얌으로 골라봐요</string>
+    <string name="kakao_app_message">얌 - 우리 뭐 먹지?</string>
 
     <!-- Poke Activity -->
     <string name="poke_contact_confirm">친구한테 물어보기!</string>

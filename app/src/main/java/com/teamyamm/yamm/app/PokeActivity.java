@@ -102,6 +102,10 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         yammFriendsList = FriendsFragment.setFriendListToYammItemList(list);
     }
 
+    public String getSelectedTime(){
+        return datePickSpinner.getSelectedItem().toString();
+    }
+
     private void setButtons(){
         yammConfirmButton = (Button) findViewById(R.id.poke_yamm_confirm);
         contactConfirmButton = (Button) findViewById(R.id.poke_contact_confirm);
@@ -165,6 +169,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
 
     private void pokeWithSMS(){
+        startSMSIntent(getPokeMessage(datePickSpinner.getSelectedItem().toString(),currentItem.getName()
+                ) + " " + appURL,contactFriendsFragment.getSelectedItems());
         trackPokeFriendMixpanel("SMS",contactFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName() );
     }
 
@@ -329,6 +335,10 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             public void onNothingSelected(AdapterView<?> parent) { }
 
         });
+    }
+
+    public String getPokeMessage(String time, String name){
+        return time + "에 우리 " + name + " 먹을래요?";
     }
 
     public void trackPokeFriendMixpanel(String method, int count, String time, String dish){

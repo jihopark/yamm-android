@@ -1,8 +1,6 @@
 package com.teamyamm.yamm.app;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +10,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -147,45 +144,9 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             @Override
             public void onClick(View v) {
                 Log.i("InviteActivity/confirmButtonOnClick",friendsFragment.getSelectedItems().toString());
-                startSMSIntent();
+                startSMSIntent(getString(R.string.invite_message) + " " + appURL, friendsFragment.getSelectedItems());
             }
         });
-    }
-
-    private void startSMSIntent(){
-        Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
-        sendIntent.putExtra("sms_body", getString(R.string.invite_sms_body));
-
-        //Get Senders
-
-        String separator = "; ";
-        if(android.os.Build.MANUFACTURER.equalsIgnoreCase("samsung")){
-            separator = ", ";
-        }
-        try {
-            String s = "";
-            List<YammItem> items = friendsFragment.getSelectedItems();
-            if (items.size() == 1){
-                s = ((Friend)items.get(0)).getPhone();
-            }
-            else {
-                for (YammItem i : items){
-                    s += ((Friend)i).getPhone();
-                    s += separator;
-                }
-                s = s.substring(0, s.length() - 1);
-            }
-            Log.d("aa",s);
-            sendIntent.setData(Uri.parse("smsto:"+s));
-
-            trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
-
-        } catch (Exception e) {
-            makeYammToast(getString(R.string.invite_sms_error_message), Toast.LENGTH_SHORT);
-            Log.e("InviteActivity/startSMSIntent","SMS Error");
-            e.printStackTrace();
-        }
-        startActivity(sendIntent);
     }
 
     private void setContactList(){

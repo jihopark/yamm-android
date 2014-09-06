@@ -89,6 +89,6 @@ public class YammDatePickerFragment extends DialogFragment implements DatePicker
 
     public String dateToString(int year, int month, int day){
         //Android month starts from 0
-        return year + "년 " + (month + 1) + "월 " + day + "일";
+        return (month + 1) + "월 " + day + "일";
     }
 }

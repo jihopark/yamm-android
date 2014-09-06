@@ -98,8 +98,16 @@ public class KakaoFragment extends Fragment {
         try {
             final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getActivity());
             final KakaoTalkLinkMessageBuilder msgBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
+            msgBuilder.addAppButton(getString(R.string.kakao_app_message),
+                    new AppActionBuilder().setAndroidExecuteURLParam("https://play.google.com/store/apps/details?id=com.teamyamm.yamm").build());
 
-            msgBuilder.addText(time + "에 " + currentItem.getName() + " 같이 먹을래요?");
+            if (getActivity() instanceof PokeActivity) {
+                PokeActivity activity = (PokeActivity) getActivity();
+                time = activity.getSelectedTime();
+                msgBuilder.addText(activity.getPokeMessage(time, currentItem.getName()));
+            }
+            else
+                Log.e("KakaoFragment/sendPokeKakaoLink","Wrong Activity");
 
             final String linkContents = msgBuilder.build();
             kakaoLink.sendMessage(linkContents, getActivity());
@@ -115,16 +123,10 @@ public class KakaoFragment extends Fragment {
             final KakaoLink kakaoLink = KakaoLink.getKakaoLink(getActivity());
             final KakaoTalkLinkMessageBuilder msgBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            String imageURL = "https://parkjiho.files.wordpress.com/2014/07/yamm_google_play.png";
-            msgBuilder.addText("Yamm 다운받기");
-            msgBuilder.addImage(imageURL, 80, 80);
+            msgBuilder.addText(getString(R.string.invite_message));
+            msgBuilder.addAppButton(getString(R.string.kakao_app_message),
+                    new AppActionBuilder().setAndroidExecuteURLParam("https://play.google.com/store/apps/details?id=com.teamyamm.yamm").build());
 
-            AppActionBuilder app = new AppActionBuilder();
-
-            app.setAndroidExecuteURLParam("market://details?id=com.google.android.youtube");
-            app.setIOSExecuteURLParam("https://itunes.apple.com/us/app/secret-speak-freely/id775307543");
-
-            msgBuilder.addAppButton("앱으로 이동", app.build());
 
             final String linkContents = msgBuilder.build();
             kakaoLink.sendMessage(linkContents, getActivity());
