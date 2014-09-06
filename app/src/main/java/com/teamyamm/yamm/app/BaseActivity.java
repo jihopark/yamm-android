@@ -82,6 +82,8 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        isAppRunning = true;
+
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
 
         setDefaultOrientation(); //Set Portrait Orientation for whole application
@@ -321,7 +323,8 @@ public class BaseActivity extends ActionBarActivity {
         if (!checkInternetConnection()) {
             if (listener == null)
                 listener = new CustomListener(internetAlert);
-            internetAlert.show();
+            if (checkIfAppIsRunning())
+                internetAlert.show();
             internetAlert.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(listener);
         }
     }
@@ -676,6 +679,21 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
+    protected void checkIfPushTokenIsIssued(){
+        if (regid == null || regid.isEmpty())
+            regid = getRegistrationId(getApplicationContext());
+        else {
+            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is Issued");
+            return;
+        }
+        Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid " + regid);
+
+        if (regid.isEmpty()) {
+            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is empty. Receiving from GCM");
+            registerInBackground();
+        }
+    }
+
     protected String getRegistrationId(Context context) {
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
@@ -695,7 +713,7 @@ public class BaseActivity extends ActionBarActivity {
         return registrationId;
     }
 
-    private void registerInBackground() {
+    protected void registerInBackground() {
         new AsyncTask<Void, Integer, String>() {
             @Override
             protected String doInBackground(Void... params) {

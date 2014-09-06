@@ -130,7 +130,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         Dialog askPoke = createDialog(GroupRecommendationActivity.this,
                 R.string.dialog_group_poke_title, R.string.dialog_group_poke_message,
                 R.string.dialog_positive, R.string.dialog_negative, positiveListener, null);
-        askPoke.show();
+        if (checkIfAppIsRunning())
+            askPoke.show();
     }
 
     private void setSelectedItems(){
@@ -192,7 +193,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         fullScreenDialog = createFullScreenDialog(GroupRecommendationActivity.this, getString(R.string.dialog_group_recommendation));
         isDialogOpen = true;
 
-        fullScreenDialog.show();
+        if (checkIfAppIsRunning())
+            fullScreenDialog.show();
 
         service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
             @Override
@@ -256,7 +258,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                     }
                 },
             null);
-        dialog.show();
+        if (checkIfAppIsRunning())
+            dialog.show();
     }
 
     private void trackReceivedGroupRecommendation(){

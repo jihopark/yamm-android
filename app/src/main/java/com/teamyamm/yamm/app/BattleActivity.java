@@ -79,15 +79,17 @@ public class BattleActivity extends BaseActivity {
                 dismissCurrentDialog();
             }
         };
-
-        createDialog(BattleActivity.this, R.string.battle_dialog_title, R.string.battle_dialog_message,
-                R.string.dialog_positive, R.string.dialog_negative,positiveListener, null).show();
+        if (checkIfAppIsRunning()) {
+            createDialog(BattleActivity.this, R.string.battle_dialog_title, R.string.battle_dialog_message,
+                    R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+        }
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     private void setInitialLoading(){
         fullScreenDialog = createBattleFullScreenDialog(BattleActivity.this, getString(R.string.battle_intro_dialog));
-        fullScreenDialog.show();
+        if (checkIfAppIsRunning())
+            fullScreenDialog.show();
 
     }
     private Dialog createBattleFullScreenDialog(Context context, String message){
@@ -248,8 +250,8 @@ public class BattleActivity extends BaseActivity {
         Log.i("BattleResult/finishBattle", battleCount + " rounds done. Result : "+ battleItems);
         final Dialog finalDialog = createFullScreenDialog(BattleActivity.this, getString(R.string.progress_dialog_message));
 
-
-        finalDialog.show();
+        if (checkIfAppIsRunning())
+            finalDialog.show();
 
         service.postBattleItem(new YammAPIService.RawBattleItemList(battleItems), new Callback<String>() {
             @Override

@@ -322,7 +322,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 // parent.getItemAtPosition(pos)
                 if (pos == spinnerAdapter.getCount()-1 ){
                     datePickerFragment = new YammDatePickerFragment(PokeActivity.this);
-                    datePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                    if (checkIfAppIsRunning())
+                        datePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) { }

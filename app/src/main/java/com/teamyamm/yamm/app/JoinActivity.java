@@ -281,7 +281,8 @@ public class JoinActivity extends BaseActivity {
         //To Prevent Double Fire
         joinConfirmButton.setEnabled(false);
         progressDialog = createFullScreenDialog(JoinActivity.this, getString(R.string.join_progress_dialog_title));
-        progressDialog.show();
+        if (checkIfAppIsRunning())
+            progressDialog.show();
 
         service.userRegistration(name.toString(), email.toString(), password.toString(), phone.toString(), veri.toString(), new Callback<String>() {
             @Override
@@ -446,7 +447,8 @@ public class JoinActivity extends BaseActivity {
                             .setTitle(getString(R.string.verification_dialog_title))
                             .setMessage(getVeriDialogMessage(phone))
                             .create();
-                    alert.show();
+                    if (checkIfAppIsRunning())
+                        alert.show();
 
                     //Center Text
                     TextView messageView = (TextView) alert.findViewById(android.R.id.message);
@@ -491,9 +493,10 @@ public class JoinActivity extends BaseActivity {
                         dismissCurrentDialog();
                     }
                 };
-
-                createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
-                        R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+                if (checkIfAppIsRunning()) {
+                    createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
+                            R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+                }
             }
         });
     }
