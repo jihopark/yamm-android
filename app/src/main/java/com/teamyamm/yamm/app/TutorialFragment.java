@@ -73,11 +73,9 @@ public class TutorialFragment extends Fragment {
         pager = (ViewPager) main_layout.findViewById(R.id.tutorial_view_pager);
         pager.setAdapter(adapter);
         YammCirclePageIndicator indicator = (YammCirclePageIndicator) main_layout.findViewById(R.id.tutorial_view_pager_indicator);
-
         indicator.setRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
-
         indicator.setViewPager(pager);
-        pager.setOnPageChangeListener(adapter);
+        indicator.setOnPageChangeListener(adapter);
     }
 
     private class TutorialPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {

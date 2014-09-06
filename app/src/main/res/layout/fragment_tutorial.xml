@@ -8,16 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tutorial_view_pager"/>
-    <com.teamyamm.yamm.app.YammCirclePageIndicator
-        android:id="@+id/tutorial_view_pager_indicator"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="2dp"
-        app:pageColor="@android:color/transparent"
-        app:fillColor="#c3ffffff"
-        app:strokeColor="#c3ffffff"
-        android:layout_marginBottom="34dp"
-        />
     <RelativeLayout
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
@@ -57,12 +47,23 @@
         android:visibility="invisible"
         />
     <ImageButton
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="62dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/icon_dialog_close"
+        android:src="@drawable/icon_help_close"
+        android:background="@android:color/transparent"
         android:id="@+id/tutorial_close"/>
+    <com.teamyamm.yamm.app.YammCirclePageIndicator
+        android:id="@+id/tutorial_view_pager_indicator"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="2dp"
+        app:pageColor="@android:color/transparent"
+        app:fillColor="#c3ffffff"
+        app:strokeColor="#c3ffffff"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        />
 </RelativeLayout>
