@@ -515,19 +515,20 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             }
         }));
 
-        // Should be deleted for production
-        adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기","", 5, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToActivity(BattleActivity.class);
-            }
-        }));
-        adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기","", 6, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToActivity(GridActivity.class);
-            }
-        }));
+        if (CURRENT_APPLICATION_STATUS == DEVELOPMENT) {
+            adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기", "", 5, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToActivity(BattleActivity.class);
+                }
+            }));
+            adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 6, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToActivity(GridActivity.class);
+                }
+            }));
+        }
 
 
         leftDrawer.setAdapter(adapter);

@@ -59,10 +59,15 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
+    public static final boolean PRODUCTION = false;
+    public static final boolean DEVELOPMENT = true;
+    public static final boolean CURRENT_APPLICATION_STATUS = DEVELOPMENT;
+
     protected static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
-    public static final String MIXPANEL_TOKEN = "5bebb04a41c88c1fad928b5526990d03";
+    public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
+    public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
     protected MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;
@@ -85,17 +90,20 @@ public class BaseActivity extends ActionBarActivity {
 
         YammAPIAdapter.setToken(getAuthToken());
 
-        mixpanel =
-                MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN);
-
-       // checkPlayServices();
+        if (CURRENT_APPLICATION_STATUS == DEVELOPMENT)
+            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);
+        else
+            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
-      //  checkPlayServices();
+
+        if (CURRENT_APPLICATION_STATUS == PRODUCTION)
+            checkPlayServices();
+
         isAppRunning = true;
         Log.d("BaseActivity/onResume","App is Running " + isAppRunning);
     }

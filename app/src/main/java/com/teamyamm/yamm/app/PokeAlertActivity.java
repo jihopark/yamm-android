@@ -179,8 +179,10 @@ public class PokeAlertActivity extends Activity {
         }catch(JSONException e){
             Log.e("PokeAlertActivity/trackPokeResponseMixpanel","JSON Error");
         }
-        MixpanelAPI.getInstance(PokeAlertActivity.this, BaseActivity.MIXPANEL_TOKEN)
-                .track("Poke Response", props);
+        if (BaseActivity.CURRENT_APPLICATION_STATUS == BaseActivity.DEVELOPMENT)
+            MixpanelAPI.getInstance(PokeAlertActivity.this, BaseActivity.MIXPANEL_TOKEN_DEVELOPMENT).track("Poke Response", props);
+        else
+            MixpanelAPI.getInstance(PokeAlertActivity.this, BaseActivity.MIXPANEL_TOKEN_PRODUCTION).track("Poke Response", props);
         Log.i("PokeAlertActivity/trackPokeResponseMixpanel","Poke Response Tracked " + response);
     }
 
