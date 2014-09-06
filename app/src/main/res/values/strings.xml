@@ -189,7 +189,7 @@
 
     <!-- Group Recommendation Activity-->
     <string name="group_finish_dialog_title">다 골랐나요</string>
-    <string name="group_finish_dialog_message">얌친들과 먹을 메뉴를 다 보셨나요?\n지금 뒤로 가면 현재 추천 결과를 다시 못볼지도 몰라요</string>
+    <string name="group_finish_dialog_message">얌친들과 먹을 메뉴를 다 보셨나요?\n지금 뒤로 가면 현재 추천 결과를\n다시 못볼지도 몰라요</string>
     <string name="group_finish_dialog_positive">다 봤어요</string>
     <string name="group_finish_dialog_negative">더 볼래요</string>
     <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>

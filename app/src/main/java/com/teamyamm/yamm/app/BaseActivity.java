@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -30,6 +31,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +70,8 @@ public class BaseActivity extends ActionBarActivity {
     protected SharedPreferences prefs;
 
     protected static boolean isLoggingOut = false;
+
+    protected Dialog currentDialog = null;
 
 
     @Override
@@ -186,17 +190,68 @@ public class BaseActivity extends ActionBarActivity {
      /*
     * Builds Alert Dialog with positive and negative buttons
     * */
-    protected AlertDialog createDialog(Context context, int title, int message, int positive, int negative,
-                                       DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
+                                       View.OnClickListener positiveListener, View.OnClickListener negativeListener){
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         AlertDialog alert = builder.setPositiveButton(getString(positive),positiveListener)
                 .setNegativeButton(getString(negative),negativeListener)
                 .setTitle(getString(title))
                 .setMessage(getString(message))
-                .create();
+                .create();*/
 
-        return alert;
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_default);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        TextView titleText = (TextView) dialog.findViewById(R.id.dialog_title);
+        TextView messageText = (TextView) dialog.findViewById(R.id.dialog_message);
+        Button positiveButton = (Button) dialog.findViewById(R.id.dialog_positive_button);
+        Button negativeButton = (Button) dialog.findViewById(R.id.dialog_negative_button);
+        ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
+
+        if (title==0){
+            titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
+            titleText.setText("");
+        }
+        else
+            titleText.setText(getString(title));
+
+        messageText.setText(getString(message));
+        positiveButton.setText(getString(positive));
+        negativeButton.setText(getString(negative));
+
+        View.OnClickListener dismissListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCurrentDialog();
+            }
+        };
+
+        closeButton.setOnClickListener(dismissListener);
+
+        if (positiveListener==null)
+            positiveListener = dismissListener;
+        if (negativeListener==null)
+            negativeListener = dismissListener;
+
+        positiveButton.setOnClickListener(positiveListener);
+        negativeButton.setOnClickListener(negativeListener);
+
+        currentDialog = dialog;
+
+        return dialog;
+    }
+
+    protected void dismissCurrentDialog(){
+        if (currentDialog==null){
+            Log.e("BaseActivity/onClick", "Current Dialog null");
+            return ;
+        }
+        currentDialog.dismiss();
+        currentDialog = null;
     }
 
     /*

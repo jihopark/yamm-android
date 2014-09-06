@@ -1,12 +1,11 @@
 package com.teamyamm.yamm.app;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,14 +97,13 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             sendIds.add(i.getID());
 
 
-        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+        View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
+            public void onClick(View v) {
+            YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
 
                 makeYammToast("친구들한테 " + selectedTime + "에 "
                         + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
-
                 YammAPIAdapter.getTokenService().sendPokeMessage(msg, new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
@@ -125,6 +123,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                         makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                     }
                 });
+                dismissCurrentDialog();
             }
         };
 
@@ -247,20 +246,16 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     }
 
     private void showFinishDialog(){
-        AlertDialog dialog = createDialog(GroupRecommendationActivity.this, R.string.group_finish_dialog_title,
+        Dialog dialog = createDialog(GroupRecommendationActivity.this, R.string.group_finish_dialog_title,
                 R.string.group_finish_dialog_message,R.string.group_finish_dialog_positive, R.string.group_finish_dialog_negative,
-                new DialogInterface.OnClickListener() {
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         finish();
+                        dismissCurrentDialog();
                     }
                 },
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            null);
         dialog.show();
     }
 

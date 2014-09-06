@@ -482,12 +482,13 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                View.OnClickListener positiveListener = new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         hideSoftKeyboard(JoinActivity.this);
                         String phone = ((EditText) joinLayout.findViewById(R.id.phone_field)).getText().toString();
                         sendVeriMessage(phone);
+                        dismissCurrentDialog();
                     }
                 };
 

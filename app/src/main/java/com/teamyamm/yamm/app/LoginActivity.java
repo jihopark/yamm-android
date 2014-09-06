@@ -1,7 +1,6 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -74,9 +73,9 @@ public class LoginActivity extends BaseActivity {
                 else{
                     final Dialog progress = createFullScreenDialog(LoginActivity.this, getString(R.string.progress_dialog_message));
 
-                    DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                    View.OnClickListener positiveListener = new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View v) {
                             progress.show();
                             YammAPIAdapter.getService().requestPasswordRecovery(emailField.getText().toString(), new Callback<String>() {
                                 @Override
@@ -91,12 +90,14 @@ public class LoginActivity extends BaseActivity {
                                     makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
                                 }
                             });
+                            dismissCurrentDialog();
                         }
                     };
-                    DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+                    View.OnClickListener negativeListener = new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View v) {
                             requestEmail();
+                            dismissCurrentDialog();
                         }
                     };
                     createDialog(LoginActivity.this, R.string.forgot_password_dialog_title,

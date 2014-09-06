@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -484,15 +483,16 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     @Override
                     public void onClick(View v){
                         createDialog(MainActivity.this,
-                                R.string.logout_dialog_title, R.string.logout_dialog_message,
+                                0, R.string.logout_dialog_message,
                                 R.string.dialog_positive, R.string.dialog_negative,
                                 setPositiveListener(), null).show();
                     }
-                    private DialogInterface.OnClickListener setPositiveListener(){
-                        return new DialogInterface.OnClickListener() {
+                    private View.OnClickListener setPositiveListener(){
+                        return new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(View v) {
                                 logOut();
+                                dismissCurrentDialog();
                             }
                         };
                     }

@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -73,10 +72,11 @@ public class BattleActivity extends BaseActivity {
     * */
     @Override
     public void onBackPressed() {
-        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+        View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 goBackHome();
+                dismissCurrentDialog();
             }
         };
 

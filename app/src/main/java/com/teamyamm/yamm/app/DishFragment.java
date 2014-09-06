@@ -2,10 +2,8 @@ package com.teamyamm.yamm.app;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -244,9 +242,9 @@ public class DishFragment extends Fragment {
             });
 
 
-            final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            final View.OnClickListener positiveListener = new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     Log.i("DishFragment/onClick", "Dislike pressed for " + getDishItem().getName());
                     trackDislikeMixpanel();
                     ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
@@ -287,8 +285,7 @@ public class DishFragment extends Fragment {
                         Log.i("DishFragment/onClickListener", "Group Dislike API Called");
                     } else
                         service.postDislikeDish(new YammAPIService.RawDislike(getDishItem().getId()), callback);
-
-
+                    ((BaseActivity)getActivity()).dismissCurrentDialog();
                 }
             };
 
@@ -296,15 +293,9 @@ public class DishFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     trackClickedDislikeMixpanel();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-                    AlertDialog alert = builder.setPositiveButton(R.string.dish_dislike_positive, positiveListener)
-                            .setNegativeButton(R.string.dish_dislike_negative, null)
-                            .setTitle(R.string.dish_dislike_title)
-                            .setMessage(R.string.dish_dislike_message)
-                            .create();
-
-                    alert.show();
+                    ((BaseActivity)getActivity()).createDialog(getActivity(),R.string.dish_dislike_title,
+                            R.string.dish_dislike_message, R.string.dish_dislike_positive, R.string.dish_dislike_negative,
+                            positiveListener, null).show();
                 }
             });
         }catch(NullPointerException e){
