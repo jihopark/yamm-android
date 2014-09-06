@@ -358,11 +358,18 @@ public class DishFragment extends Fragment {
 
         final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.map_autocomplete_text);
 
+        ImageButton setMap = (ImageButton) dialog.findViewById(R.id.map_icon);
         ImageButton negative = (ImageButton) dialog.findViewById(R.id.map_dialog_negative_button);
         Button positive = (Button) dialog.findViewById(R.id.map_dialog_positive_button);
 
         setPlacePickEditText(textView);
 
+        setMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText(getString(R.string.place_pick_edit_text));
+            }
+        });
         negative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

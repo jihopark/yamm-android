@@ -42,17 +42,30 @@
                     android:textColor="#ff53514b"
                     android:textSize="16sp"
                     android:text="@string/place_pick_message"/>
-                <AutoCompleteTextView
-                    android:background="@drawable/place_pick_text_background"
+                <RelativeLayout
+                    android:layout_width="260dp"
+                    android:layout_height="45dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:layout_marginBottom="19dp"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:layout_width="260dp"
-                    android:layout_height="45dp"
-                    android:id="@+id/map_autocomplete_text"/>
+                    android:layout_marginBottom="19dp">
+                    <AutoCompleteTextView
+                        android:background="@color/place_pick_text_background"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/map_autocomplete_text"/>
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_width="19dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/map_icon"
+                        android:id="@+id/map_icon"/>
+                </RelativeLayout>
             </RelativeLayout>
             <Button
                 style="@style/RedButton"
