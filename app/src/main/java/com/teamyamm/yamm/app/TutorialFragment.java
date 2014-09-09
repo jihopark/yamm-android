@@ -1,6 +1,9 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -10,18 +13,24 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 /**
  * Created by parkjiho on 9/3/14.
  */
-public class TutorialFragment extends Fragment {
+public class TutorialFragment extends DialogFragment {
     public final static String TAG = "tutorial";
-    public final int NUM_PAGES = 6;
+    public final int NUM_PAGES = 7;
 
     private RelativeLayout main_layout;
     private ViewPager pager;
+    private Dialog dialog;
+
+    public TutorialFragment(){
+
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,6 +42,23 @@ public class TutorialFragment extends Fragment {
         setCloseButton();
 
         return main_layout;
+    }
+
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+
+        // the content
+        final RelativeLayout root = new RelativeLayout(getActivity());
+        root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        // creating the fullscreen dialog
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(root);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.tutorial_background)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        return dialog;
     }
 
     public void toggleView(int resId){
@@ -58,10 +84,7 @@ public class TutorialFragment extends Fragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getActivity() instanceof MainActivity){
-                    MainActivity activity = (MainActivity) getActivity();
-                    activity.closeTutorialFragment();
-                }
+                dismiss();
 
             }
         });
@@ -100,11 +123,9 @@ public class TutorialFragment extends Fragment {
             switch(i) {
                 case 0:
                     disableAllView();
-                    main_layout.setBackgroundResource(R.drawable.tutorial_background);
                     break;
                 case 1:
                     disableAllView();
-                    main_layout.setBackgroundColor(getResources().getColor(R.color.tutorial_background));
                     toggleView(R.id.fake_poke_friend_button);
                     break;
                 case 2:
@@ -117,11 +138,14 @@ public class TutorialFragment extends Fragment {
                     break;
                 case 4:
                     disableAllView();
-                    toggleView(R.id.fake_dish_next_button);
+                    toggleView(R.id.fake_friend_pick_button);
                     break;
                 case 5:
                     disableAllView();
-                    toggleView(R.id.fake_friend_pick_button);
+                    toggleView(R.id.fake_invite_button);
+                    break;
+                case 6:
+                    disableAllView();
                     break;
             }
         }
@@ -136,5 +160,4 @@ public class TutorialFragment extends Fragment {
             return NUM_PAGES;
         }
     }
-
 }

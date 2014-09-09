@@ -2,13 +2,13 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@drawable/tutorial_background">
+    android:layout_width="match_parent" android:layout_height="match_parent">
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tutorial_view_pager"/>
     <RelativeLayout
+        android:layout_marginTop="43dp"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="62dp"
@@ -47,7 +47,18 @@
         android:visibility="invisible"
         />
     <ImageButton
-        android:layout_marginTop="62dp"
+        android:background="@android:color/transparent"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="5.5dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/fake_invite_button"
+        android:src="@drawable/icon_invite"
+        android:visibility="invisible"/>
+    <ImageButton
+        android:layout_marginTop="105dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
@@ -64,6 +75,6 @@
         app:fillColor="#c3ffffff"
         app:strokeColor="#c3ffffff"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="123dp"
         />
 </RelativeLayout>

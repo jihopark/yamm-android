@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -23,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -63,7 +63,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
-    private RelativeLayout tutorialContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +118,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             saveDishItemsInPref();
         }
         closeFullScreenDialog();
+
+        if (tutorial!=null)
+            tutorial.dismissAllowingStateLoss();
 
         super.onStop();
     }
@@ -438,7 +440,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        Log.i("MainActivity/onCreate","Drawer Initialized");
+        Log.i("MainActivity/onCreate", "Drawer Initialized");
     }
 
     @Override
@@ -543,21 +545,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     private void showTutorialFragment(){
-        tutorialContainer = (RelativeLayout) findViewById(R.id.tutorial_container);
         drawerLayout.closeDrawers();
-        if (tutorial==null) {
-            tutorial = new TutorialFragment();
+        tutorial = new TutorialFragment();
 
-            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-            tact.add(R.id.tutorial_container, tutorial, TutorialFragment.TAG);
-            tact.commit();
-        }
-        tutorialContainer.setVisibility(View.VISIBLE);
-    }
-
-    public void closeTutorialFragment(){
-        if (tutorial!=null && tutorialContainer!=null)
-            tutorialContainer.setVisibility(View.GONE);
+        FragmentManager fm = getSupportFragmentManager();
+        tutorial.show(fm,"TUTORIAL");
     }
 
     /*

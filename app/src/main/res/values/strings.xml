@@ -199,18 +199,20 @@
     <string name="dialog_group_poke_message">얌친들에게 이 음식을 먹자고 보내볼까요?</string>
 
     <!-- Tutorial Fragment -->
-    <string name="tutorial_page_1">""</string>
+    <string name="tutorial_page_1">페이지를 넘겨서\n간단한 사용법을 확인해보세요</string>
     <string name="tutorial_page_2">친구에게 같이 먹자고 해보세요.\n얌친, 주소록에 있는 친구, 또는 카카오톡\n친구들에게 메세지를 보낼 수 있어요 </string>
     <string name="tutorial_page_3">드실 수 있는 식당을 지도에서 검색해보세요</string>
     <string name="tutorial_page_4">싫어하시는 메뉴를 알려주시면\n다시 좋아하실 메뉴들\n추천해드릴게요</string>
     <string name="tutorial_page_5">친구들과 본인의 취향에 맞게\n좋아할 만한 음식을 추천해드립니다</string>
     <string name="tutorial_page_6">친구들과 같이 음식 취향을 분석해서\n같이 먹을 메뉴를 추천 받으세요</string>
+    <string name="tutorial_page_7"></string>
 
-    <string name="tutorial_page_1_title">페이지를 넘겨서\n간단한 사용법을 확인해보세요</string>
+    <string name="tutorial_page_1_title">안녕하세요, 얌 Yamm입니다!</string>
     <string name="tutorial_page_2_title">새로 받은 추천 메뉴가 마음에 드세요?</string>
     <string name="tutorial_page_3_title">추천 받은 메뉴를 드시고 싶으세요?</string>
     <string name="tutorial_page_4_title">싫어하는 음식이 추천되었나요?</string>
     <string name="tutorial_page_5_title">얌친들과 같이 먹을 음식을 추천받아요</string>
     <string name="tutorial_page_6_title">친구들을 초대해보세요</string>
+    <string name="tutorial_page_7_title">지금 바로 먹을 메뉴를 골라보세요!</string>
 
 </resources>
