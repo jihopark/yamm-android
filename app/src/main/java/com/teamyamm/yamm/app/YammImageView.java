@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by parkjiho on 6/19/14.
@@ -26,6 +27,7 @@ public class YammImageView extends FrameLayout {
 
     private final static float imageRatio = 1.5f;
     private final static float progressCircleRatio = 0.2f;
+    private static boolean skipCache = false;
 
     private String path="";
     private int width=0, height=0;
@@ -134,23 +136,31 @@ public class YammImageView extends FrameLayout {
     private void loadImage(){
         if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
             final String url = getURL(path, width, height, id);
-            Picasso.with(context)
-                    .load(url)
-                    .error(R.drawable.mainback_test)
-                    .into(image, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            setBackgroundColor(Color.TRANSPARENT);
-                            Log.i("YammImageView/loadImage", "Successfully loaded " + url );
-                            progressCircle.setVisibility(GONE);
-                        }
+            try {
+                RequestCreator creator = Picasso.with(context).load(url);
+                if (skipCache)
+                    creator.skipMemoryCache();
 
-                        @Override
-                        public void onError() {
-                            Log.e("YammImageView/loadImage", "Image Loading Error " + url );
-                            progressCircle.setVisibility(GONE);
-                        }
-                    });
+                creator.into(image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        setBackgroundColor(Color.TRANSPARENT);
+                        Log.i("YammImageView/loadImage", "Successfully loaded " + url);
+                        progressCircle.setVisibility(GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("YammImageView/loadImage", "Image Loading Error " + url);
+                        progressCircle.setVisibility(GONE);
+                    }
+                });
+            }catch(OutOfMemoryError e){
+                Log.e("YammImageView/loadImage","Out of Memory Error Caught. Skipping Cache");
+                e.printStackTrace();
+                skipCache = true;
+                loadImage();
+            }
         }
         else{
             Log.e("YammImageView/loadImage","Image not Ready");
