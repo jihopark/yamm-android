@@ -87,6 +87,9 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
             case R.id.friend_invite_button:
                 startInviteActivity(FriendActivity.this);
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
