@@ -60,9 +60,12 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
-    public static final boolean PRODUCTION = false;
-    public static final boolean DEVELOPMENT = true;
-    public static final boolean CURRENT_APPLICATION_STATUS = DEVELOPMENT;
+    public static final String PRODUCTION = "PROD";
+    public static final String TESTING = "TEST";
+    public static final String STAGING = "STAGING";
+
+
+    public static final String CURRENT_APPLICATION_STATUS = PRODUCTION;
 
     protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
@@ -94,7 +97,7 @@ public class BaseActivity extends ActionBarActivity {
 
         YammAPIAdapter.setToken(getAuthToken());
 
-        if (CURRENT_APPLICATION_STATUS == DEVELOPMENT)
+        if (CURRENT_APPLICATION_STATUS.equals(TESTING))
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);
         else
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
@@ -105,7 +108,7 @@ public class BaseActivity extends ActionBarActivity {
         super.onResume();
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
-        if (CURRENT_APPLICATION_STATUS == PRODUCTION)
+        if (CURRENT_APPLICATION_STATUS.equals(PRODUCTION))
             checkPlayServices();
 
         isAppRunning = true;

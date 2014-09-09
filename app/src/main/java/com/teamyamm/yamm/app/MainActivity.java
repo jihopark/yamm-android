@@ -518,7 +518,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             }
         }));
 
-        if (CURRENT_APPLICATION_STATUS == DEVELOPMENT) {
+        if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
             adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기", "", 5, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

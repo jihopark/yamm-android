@@ -19,12 +19,9 @@ import retrofit.client.Response;
  * Created by parkjiho on 8/3/14.
  */
 public class YammAPIAdapter {
-    public static String apiURL = "https://api.yamm.me";
-
-
-    public final static boolean HTTP = false;
-    public final static boolean HTTPS = true;
-    public static boolean protocol = HTTPS;
+    public static String apiURL = "";
+    public static final String testURL = "http://yammapitest-22293.onmodulus.net/";
+    public static final String prodURL = "https://api.yamm.me";
 
     private static YammAPIService service = null;
     public static YammAPIService tokenService = null;
@@ -33,44 +30,12 @@ public class YammAPIAdapter {
     private static YammAPIService loginService = null;
     private static String token = null;
 
-    public static boolean toggleProtocol(){
-        protocol = !protocol;
-        if (protocol == HTTP) {
-            apiURL = "http://api.yamm.me";
-            Log.i("YammAPIAdapter/toggleProtocol","Set to HTTP");
-        }
-        else {
-            apiURL = "https://api.yamm.me";
-            Log.i("YammAPIAdapter/toggleProtocol","Set to HTTPS");
-        }
-
-        service = null;
-        tokenService = null;
-        joinService = null;
-        dislikeService = null;
-        loginService = null;
-
-        return protocol;
-    }
-    public static void setProtocol(boolean b){
-        if (protocol==b)
-            return ;
-
-        toggleProtocol();
-
-        service = null;
-        tokenService = null;
-        joinService = null;
-        dislikeService = null;
-        loginService = null;
-    }
-
-    private static void checkProtocol(){
-        Log.i("YammAPIAdapter/checkProtocol","Checking Protocol.");
-        if (BaseActivity.CURRENT_APPLICATION_STATUS == BaseActivity.DEVELOPMENT)
-            setProtocol(HTTPS);
+    private static void checkAPIURL(){
+        Log.i("YammAPIAdapter/checkAPIURL","Checking URL");
+        if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING))
+            apiURL = testURL;
         else
-            setProtocol(HTTPS);
+            apiURL = prodURL;
     }
 
     /*
@@ -78,7 +43,7 @@ public class YammAPIAdapter {
     * */
     public static YammAPIService getService(){
         if (service == null){
-            checkProtocol();
+            checkAPIURL();
             Log.i("YammAPIAdapter/getService", "Service initiated");
 
             RestAdapter restAdapter = new RestAdapter.Builder()
@@ -102,7 +67,7 @@ public class YammAPIAdapter {
     * */
     public static YammAPIService getTokenService(){
         if (tokenService == null){
-            checkProtocol();
+            checkAPIURL();
             if (token==null){
                 Log.e("YammAPIAdapter/getTokenService","Token should be set first!!");
                 return null;
@@ -135,7 +100,7 @@ public class YammAPIAdapter {
     * */
     public static YammAPIService getDislikeService(){
         if (dislikeService == null){
-            checkProtocol();
+            checkAPIURL();
             Log.i("YammAPIAdapter/getDislikeService", "dislikeService initiated with " + token);
 
             RequestInterceptor interceptor = new RequestInterceptor() {
@@ -164,7 +129,7 @@ public class YammAPIAdapter {
     * */
     public static YammAPIService getJoinService(){
         if (joinService == null){
-            checkProtocol();
+            checkAPIURL();
             Log.i("YammAPIAdapter/getJoinService", "JoinService initiated");
 
             RestAdapter restAdapter = new RestAdapter.Builder()
@@ -187,7 +152,7 @@ public class YammAPIAdapter {
         final String username = email;
         final String pwd = pw;
 
-        checkProtocol();
+        checkAPIURL();
 
         Log.i("YammAPIAdapter/getLoginService", "LoginService initiated");
         RequestInterceptor interceptor = new RequestInterceptor() {
