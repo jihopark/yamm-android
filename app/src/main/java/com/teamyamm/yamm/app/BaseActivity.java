@@ -411,12 +411,22 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }catch(Exception e){
+            Log.i("BaseActivity/hideSoftKeyboard","Exception in softkeyboard manipulation");
+            e.printStackTrace();
+        }
     }
     protected static void showSoftKeyboard(View view, Activity activity){
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        try {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        }catch(Exception e){
+            Log.i("BaseActivity/showSoftKeyboard","Exception in softkeyboard manipulation");
+            e.printStackTrace();
+        }
     }
 
     protected String phoneNumberFormat(String phone){
