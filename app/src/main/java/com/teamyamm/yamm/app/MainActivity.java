@@ -105,7 +105,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onPostResume(){
         super.onPostResume();
-        drawerLayout.closeDrawers();
         loadDishes();
 
     }
@@ -117,7 +116,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             saveDishItemsInPref();
         }
         closeFullScreenDialog();
-
+        drawerLayout.closeDrawers();
         if (tutorial!=null)
             tutorial.dismissAllowingStateLoss();
 

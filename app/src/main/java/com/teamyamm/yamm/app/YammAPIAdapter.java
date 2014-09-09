@@ -22,6 +22,8 @@ public class YammAPIAdapter {
     public static String apiURL = "";
     public static final String testURL = "http://yammapitest-22293.onmodulus.net/";
     public static final String prodURL = "https://api.yamm.me";
+    public static final String stagURL = "https://yammapistaging-22297.onmodulus.net";
+
 
     private static YammAPIService service = null;
     public static YammAPIService tokenService = null;
@@ -34,6 +36,8 @@ public class YammAPIAdapter {
         Log.i("YammAPIAdapter/checkAPIURL","Checking URL");
         if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING))
             apiURL = testURL;
+        else if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.STAGING))
+            apiURL = stagURL;
         else
             apiURL = prodURL;
     }

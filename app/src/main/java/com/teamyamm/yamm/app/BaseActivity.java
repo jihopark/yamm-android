@@ -65,7 +65,7 @@ public class BaseActivity extends ActionBarActivity {
     public static final String STAGING = "STAGING";
 
 
-    public static final String CURRENT_APPLICATION_STATUS = TESTING;
+    public static final String CURRENT_APPLICATION_STATUS = STAGING;
 
     protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
