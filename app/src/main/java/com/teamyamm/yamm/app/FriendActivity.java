@@ -216,8 +216,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
                 // parent.getItemAtPosition(pos)
                 if (pos == spinnerAdapter.getCount()-1 ){
                     datePickerFragment = new YammDatePickerFragment(FriendActivity.this);
-                    if (checkIfAppIsRunning())
-                        datePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                    datePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) { }

@@ -76,7 +76,6 @@ public class LoginActivity extends BaseActivity {
                     View.OnClickListener positiveListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (checkIfAppIsRunning())
                                 progress.show();
                             YammAPIAdapter.getService().requestPasswordRecovery(emailField.getText().toString(), new Callback<String>() {
                                 @Override
@@ -101,11 +100,10 @@ public class LoginActivity extends BaseActivity {
                             dismissCurrentDialog();
                         }
                     };
-                    if (checkIfAppIsRunning()) {
                         createDialog(LoginActivity.this, R.string.forgot_password_dialog_title,
                                 R.string.forgot_password_dialog_message, R.string.dialog_positive, R.string.dialog_negative,
                                 positiveListener, negativeListener).show();
-                    }
+
 
                 }
             }
@@ -150,8 +148,7 @@ public class LoginActivity extends BaseActivity {
         final Dialog progressDialog;
         // Show Progress Dialog
         progressDialog = createFullScreenDialog(LoginActivity.this, getString(R.string.progress_dialog_message));
-        if (checkIfAppIsRunning())
-            progressDialog.show();
+        progressDialog.show();
 
         YammAPIService service = YammAPIAdapter.getLoginService(email, pw);
 

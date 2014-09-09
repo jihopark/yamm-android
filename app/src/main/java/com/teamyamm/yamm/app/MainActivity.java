@@ -259,8 +259,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         if (mainFragment==null) {
             //If no mainfragment, show progress dialog
-            if (checkIfAppIsRunning())
-                fullScreenDialog.show();
+            fullScreenDialog.show();
 
             isDialogOpen = true;
             Log.d("MainActivity/loadDishes", "Dialog Opened here - 1");
@@ -278,8 +277,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 if (!isSameDishItems(items)) {
                     //if there is new list, show newDialog
                     if (isDialogOpen == false) {
-                        if (checkIfAppIsRunning())
-                            fullScreenDialog.show();
+                        fullScreenDialog.show();
                         isDialogOpen = true;
                         Log.d("MainActivity/getPersonalDishes", "Dialog Opened here - 2");
                     }
@@ -486,12 +484,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        if (checkIfAppIsRunning()) {
                             createDialog(MainActivity.this,
                                     0, R.string.logout_dialog_message,
                                     R.string.dialog_positive, R.string.dialog_negative,
                                     setPositiveListener(), null).show();
-                        }
+
                     }
                     private View.OnClickListener setPositiveListener(){
                         return new View.OnClickListener() {

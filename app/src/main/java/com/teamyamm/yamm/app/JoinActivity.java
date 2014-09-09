@@ -447,8 +447,7 @@ public class JoinActivity extends BaseActivity {
                             .setTitle(getString(R.string.verification_dialog_title))
                             .setMessage(getVeriDialogMessage(phone))
                             .create();
-                    if (checkIfAppIsRunning())
-                        alert.show();
+                    alert.show();
 
                     //Center Text
                     TextView messageView = (TextView) alert.findViewById(android.R.id.message);
@@ -493,11 +492,10 @@ public class JoinActivity extends BaseActivity {
                         dismissCurrentDialog();
                     }
                 };
-                if (checkIfAppIsRunning()) {
-                    createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
+                createDialog(JoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
                             R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
                 }
-            }
+
         });
     }
 

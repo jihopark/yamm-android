@@ -325,8 +325,7 @@ public class BaseActivity extends ActionBarActivity {
         if (!checkInternetConnection()) {
             if (listener == null)
                 listener = new CustomListener(internetAlert);
-            if (checkIfAppIsRunning())
-                internetAlert.show();
+            internetAlert.show();
             internetAlert.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(listener);
         }
     }

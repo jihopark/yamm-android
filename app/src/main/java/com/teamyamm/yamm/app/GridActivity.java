@@ -58,10 +58,9 @@ public class GridActivity extends BaseActivity {
                 dismissCurrentDialog();
             }
         };
-        if (checkIfAppIsRunning()) {
-            createDialog(GridActivity.this, R.string.grid_dialog_title, R.string.grid_dialog_message,
+        createDialog(GridActivity.this, R.string.grid_dialog_title, R.string.grid_dialog_message,
                     R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
-        }
+
     }
 
     /*
@@ -98,8 +97,7 @@ public class GridActivity extends BaseActivity {
         final Dialog progressDialog;
         // Show Progress Dialog
         progressDialog = createFullScreenDialog(GridActivity.this, getString(R.string.progress_dialog_message));
-        if (checkIfAppIsRunning())
-            progressDialog.show();
+        progressDialog.show();
 
         service.postGridItems(s, new Callback<String>() {
             @Override
@@ -223,8 +221,7 @@ public class GridActivity extends BaseActivity {
         GridSelectionListView view = (GridSelectionListView) findViewById(R.id.grid_selection_list_view);
 
         progressDialog = createFullScreenDialog(GridActivity.this, getString(R.string.progress_dialog_message));
-        if (checkIfAppIsRunning())
-            progressDialog.show();
+        progressDialog.show();
 
         view.setAdapter(initiateAdapter());
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
