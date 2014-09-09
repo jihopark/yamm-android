@@ -168,6 +168,18 @@ public class DishFragment extends Fragment {
         mainBar.setVisibility(View.VISIBLE);
         nameText.setVisibility(View.VISIBLE);
         commentText.setVisibility(View.VISIBLE);
+        showButtons();
+    }
+
+    private void showButtons(){
+        if (next.getVisibility() == View.INVISIBLE)
+            next.setVisibility(View.VISIBLE);
+        if (searchMap.getVisibility() == View.INVISIBLE)
+            searchMap.setVisibility(View.VISIBLE);
+        if (pokeFriend.getVisibility() == View.INVISIBLE)
+            pokeFriend.setVisibility(View.VISIBLE);
+        if (dislike.getVisibility() == View.INVISIBLE)
+            dislike.setVisibility(View.VISIBLE);
     }
 
     public void setButtons(){
@@ -184,14 +196,7 @@ public class DishFragment extends Fragment {
             mainBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (next.getVisibility() == View.INVISIBLE)
-                        next.setVisibility(View.VISIBLE);
-                    if (searchMap.getVisibility() == View.INVISIBLE)
-                        searchMap.setVisibility(View.VISIBLE);
-                    if (pokeFriend.getVisibility() == View.INVISIBLE)
-                        pokeFriend.setVisibility(View.VISIBLE);
-                    if (dislike.getVisibility() == View.INVISIBLE)
-                        dislike.setVisibility(View.VISIBLE);
+                    showButtons();
                     Log.i("DishFragment/onClickListener","MainBar Clicked");
                 }
             });
