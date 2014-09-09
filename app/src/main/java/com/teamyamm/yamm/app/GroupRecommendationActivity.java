@@ -48,6 +48,12 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
     }
 
     @Override
+    public void onStop(){
+        closeFullScreenDialog();
+        super.onStop();
+    }
+
+    @Override
     public void onBackPressed() {
         showFinishDialog();
     }

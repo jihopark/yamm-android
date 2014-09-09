@@ -118,6 +118,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         if (!BaseActivity.isLoggingOut) {
             saveDishItemsInPref();
         }
+        closeFullScreenDialog();
+
         super.onStop();
     }
 

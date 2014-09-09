@@ -65,7 +65,7 @@ public class BaseActivity extends ActionBarActivity {
     public static final String STAGING = "STAGING";
 
 
-    public static final String CURRENT_APPLICATION_STATUS = PRODUCTION;
+    public static final String CURRENT_APPLICATION_STATUS = TESTING;
 
     protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
@@ -780,6 +780,10 @@ public class BaseActivity extends ActionBarActivity {
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
                     // exponential back-off.
+                } catch(NullPointerException e){
+                    Log.e("BaseActivity/registerInBackground","Nullpointer spotted in AsyncTask");
+                    e.printStackTrace();
+                    this.cancel(true);
                 }
                 return msg;
             }
