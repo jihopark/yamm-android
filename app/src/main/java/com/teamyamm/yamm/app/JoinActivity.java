@@ -358,6 +358,9 @@ public class JoinActivity extends BaseActivity {
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), yammToken.toString());
                 YammAPIAdapter.setToken(yammToken.toString());
 
+                //Get Push Token
+                registerGCM();
+
                 //Move onto Next Activity
                 goToActivity(GridActivity.class);
 

@@ -65,7 +65,7 @@ public class BaseActivity extends ActionBarActivity {
     public static final String STAGING = "STAGING";
 
 
-    public static final String CURRENT_APPLICATION_STATUS = STAGING;
+    public static final String CURRENT_APPLICATION_STATUS = TESTING;
 
     protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
@@ -739,7 +739,7 @@ public class BaseActivity extends ActionBarActivity {
 
         if (regid.isEmpty()) {
             Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is empty. Receiving from GCM");
-            registerInBackground();
+            registerGCM();
         }
     }
 
@@ -769,7 +769,7 @@ public class BaseActivity extends ActionBarActivity {
                 String msg = "";
                 try {
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                        gcm = GoogleCloudMessaging.getInstance(BaseActivity.this);
                     }
                     regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
