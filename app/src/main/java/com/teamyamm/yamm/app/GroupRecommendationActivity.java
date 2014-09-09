@@ -186,9 +186,13 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
 
-        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
-        tact.add(R.id.main_fragment_container, mainFragment, MainFragment.MAIN_FRAGMENT);
-        tact.commitAllowingStateLoss();
+        try {
+            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+            tact.add(R.id.main_fragment_container, mainFragment, MainFragment.MAIN_FRAGMENT);
+            tact.commitAllowingStateLoss();
+        }catch (IllegalStateException e){
+            Log.e("GroupRecommendation/setFragment","Activity Destroyed");
+        }
     }
 
     private void loadDishes(){

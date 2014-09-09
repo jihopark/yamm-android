@@ -209,35 +209,37 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         Type type = new TypeToken<List<DishItem>>(){}.getType();
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+        try {
+            if (mainFragment != null) {
+                tact.remove(mainFragment);
+                tact.commitAllowingStateLoss();
+                tact = getSupportFragmentManager().beginTransaction();
+            }
 
-        if (mainFragment!= null){
-            tact.remove(mainFragment);
-            tact.commitAllowingStateLoss();
-            tact = getSupportFragmentManager().beginTransaction();
+
+            Bundle bundle = new Bundle();
+
+            bundle.putString("dishes", new Gson().toJson(dishItems, type));
+            bundle.putBoolean("isGroup", false);
+
+            MainFragment newMainFragment = new MainFragment();
+            newMainFragment.setArguments(bundle);
+
+            if (mainFragment == null) {
+                Log.i("MainActivity/setMainFragment", "Added new fragment");
+
+                tact.add(R.id.main_layout, newMainFragment, MainFragment.MAIN_FRAGMENT);
+                tact.commitAllowingStateLoss();
+            } else {
+                Log.i("MainActivity/setMainFragment", "Replacing previous fragment");
+                tact.replace(R.id.main_layout, newMainFragment);
+                tact.commitAllowingStateLoss();
+
+            }
+            mainFragment = newMainFragment;
+        }catch (IllegalStateException e){
+            Log.e("MainActivity/setMainFragment","Activity Destroyed");
         }
-
-
-        Bundle bundle = new Bundle();
-
-        bundle.putString("dishes", new Gson().toJson(dishItems, type));
-        bundle.putBoolean("isGroup", false);
-
-        MainFragment newMainFragment = new MainFragment();
-        newMainFragment.setArguments(bundle);
-
-        if (mainFragment == null) {
-            Log.i("MainActivity/setMainFragment","Added new fragment");
-
-            tact.add(R.id.main_layout, newMainFragment, MainFragment.MAIN_FRAGMENT);
-            tact.commitAllowingStateLoss();
-        }
-        else{
-            Log.i("MainActivity/setMainFragment","Replacing previous fragment");
-            tact.replace(R.id.main_layout, newMainFragment);
-            tact.commitAllowingStateLoss();
-
-        }
-        mainFragment = newMainFragment;
     }
 
     /*
