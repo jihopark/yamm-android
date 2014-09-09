@@ -79,6 +79,9 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
 
     public boolean isLoading(){return false; }
 
+    public boolean shouldTutorialOpen(){ return false; }
+
+    public void showTutorial(){ return ; }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

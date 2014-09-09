@@ -434,6 +434,11 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                MainFragmentInterface activity = null;
+                if (getActivity() instanceof MainFragmentInterface)
+                    activity = (MainFragmentInterface) getActivity();
+                if (activity!=null && activity.shouldTutorialOpen())
+                    activity.showTutorial();
             }
 
             @Override

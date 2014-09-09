@@ -73,7 +73,7 @@ public class TutorialFragment extends DialogFragment {
 
     public void disableAllView(){
         int[] resIds = {R.id.fake_dish_dislike_button, R.id.fake_dish_next_button, R.id.fake_poke_friend_button,
-                            R.id.fake_friend_pick_button, R.id.fake_search_map_button};
+                            R.id.fake_friend_pick_button, R.id.fake_search_map_button, R.id.fake_invite_button};
         for (int id : resIds){
             main_layout.findViewById(id).setVisibility(View.INVISIBLE);
         }

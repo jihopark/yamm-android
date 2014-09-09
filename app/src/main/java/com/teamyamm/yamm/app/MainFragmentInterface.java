@@ -21,4 +21,8 @@ public interface MainFragmentInterface {
     public void closeFullScreenDialog();
 
     public boolean isLoading();
+
+    public boolean shouldTutorialOpen();
+
+    public void showTutorial();
 }

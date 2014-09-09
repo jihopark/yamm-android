@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -42,7 +41,7 @@ import retrofit.client.Response;
 
 public class MainActivity extends BaseActivity implements MainFragmentInterface {
     public final static int DRAWER_LOGOUT = 0;
-
+    public final static String TUTORIAL = "tutorial";
     private boolean neutral = false;
 
 
@@ -149,9 +148,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     public boolean isLoading(){return isLoading;}
 
-    public boolean isFriendLoaded(){
-        SharedPreferences prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+    public boolean shouldTutorialOpen(){
+        return prefs.getBoolean(TUTORIAL, true);
+    }
 
+    public boolean isFriendLoaded(){
         String value = prefs.getString(getString(R.string.FRIEND_LIST),"none");
 
         return value != "none";
@@ -518,7 +519,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTutorialFragment();
+                showTutorial();
             }
         }));
 
@@ -544,12 +545,16 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         isLeftMenuLoaded = true;
     }
 
-    private void showTutorialFragment(){
+    public void showTutorial(){
         drawerLayout.closeDrawers();
         tutorial = new TutorialFragment();
 
         FragmentManager fm = getSupportFragmentManager();
         tutorial.show(fm,"TUTORIAL");
+
+        prefs.edit().putBoolean(TUTORIAL, false).commit();
+
+        Log.i("MainFragmentInterface/showTutorial","Set TUTORIAL prefs to false");
     }
 
     /*
