@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -36,6 +37,13 @@ public class BattleFragment extends Fragment{
       //  thumb1 = (ImageView) mainLayout.findViewById(R.id.first_thumb);
       //  thumb2 = (ImageView) mainLayout.findViewById(R.id.second_thumb);
         loadAnimations();
+
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 &&
+                android.os.Build.VERSION.SDK_INT >= 11){
+            Log.i("BattleFragment/onCreateView","Disabling Hardware acceleration");
+            mainLayout.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
         return mainLayout;
     }
 
@@ -51,11 +59,12 @@ public class BattleFragment extends Fragment{
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
         layout2 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout2);
 
+
         layout1.removeAllViews();
         layout2.removeAllViews();
-
         first = new DishBattleView(getActivity(),item.getFirst(), layout1);
         second = new DishBattleView(getActivity(),item.getSecond(), layout2);
+
 
         //Set Battle Non Button
         battleNoneButton = (Button) mainLayout.findViewById(R.id.battle_none_button);

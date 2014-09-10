@@ -89,9 +89,17 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-
         isAppRunning = true;
+
+        //Check If WTFException was Handled
+        if (getIntent().getExtras()!=null) {
+            if (getIntent().getExtras().get("error")!=null) {
+                WTFExceptionHandler.sendLogToServer(BaseActivity.this, getIntent().getExtras().get("error").toString());
+                makeYammToast(R.string.wtf_error_handle_message, Toast.LENGTH_LONG);
+                getIntent().getExtras().clear();
+            }
+        }
+
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));

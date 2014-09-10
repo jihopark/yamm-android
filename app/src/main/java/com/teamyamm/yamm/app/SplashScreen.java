@@ -15,12 +15,15 @@ public class SplashScreen extends Activity {
 
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 1000;
-
+    private Bundle bundle = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
+
+        if (getIntent().getExtras()!=null && getIntent().getExtras().getString("error")!=null)
+            bundle = getIntent().getExtras();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -36,6 +39,9 @@ public class SplashScreen extends Activity {
 
                 if (!checkPreviousActivity()) { // If first execution of the app, go to IntroActivity
                     Intent i = new Intent(SplashScreen.this, IntroActivity.class);
+                    if (bundle!=null)
+                        i.putExtras(bundle);
+
                     startActivity(i);
                 }
                 // close this activity
@@ -106,6 +112,10 @@ public class SplashScreen extends Activity {
 
         if (activity!=null){
             Log.v("SplashScreen","Activity Start");
+
+            if (bundle!=null)
+                activity.putExtras(bundle);
+
             startActivity(activity);
             return true;
         }

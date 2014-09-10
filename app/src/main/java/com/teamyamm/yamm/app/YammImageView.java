@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,9 +30,9 @@ public class YammImageView extends FrameLayout {
     private final static float progressCircleRatio = 0.2f;
     private static boolean skipCache = false;
 
-    private String path="";
-    private int width=0, height=0;
-    private long id=0;
+    private String path = "";
+    private int width = 0, height = 0;
+    private long id = 0;
 
     private Context context;
     private ImageView image;
@@ -42,7 +43,7 @@ public class YammImageView extends FrameLayout {
     * When added in xml
     * */
 
-    public YammImageView(Context context, AttributeSet attrs){
+    public YammImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Log.i("YammImageView/constructor", "Yamm ImageView XML Constructor");
@@ -60,8 +61,8 @@ public class YammImageView extends FrameLayout {
         measureDynamicDimension();
 
         progressCircle = new ProgressBar(context);
-        FrameLayout.LayoutParams params = new LayoutParams((int)getResources().getDimension(R.dimen.image_progress_circle_radius),
-                (int)getResources().getDimension(R.dimen.image_progress_circle_radius));
+        FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
+                (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
@@ -72,7 +73,7 @@ public class YammImageView extends FrameLayout {
     * When added dynamically
     * */
 
-    public YammImageView(Context context, String path, int width, int height, int id){
+    public YammImageView(Context context, String path, int width, int height, int id) {
         super(context);
 
         Log.i("YammImageView/constructor", "Yamm ImageView Constructor Dynamic");
@@ -91,14 +92,14 @@ public class YammImageView extends FrameLayout {
         addView(image);
 
         progressCircle = new ProgressBar(context);
-        FrameLayout.LayoutParams params = new LayoutParams((int)getResources().getDimension(R.dimen.image_progress_circle_radius),
-                (int)getResources().getDimension(R.dimen.image_progress_circle_radius));
+        FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
+                (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
         addView(progressCircle);
 
-        if (width!=0 && height!=0)
+        if (width != 0 && height != 0)
             setID(id);
     }
 
@@ -140,7 +141,7 @@ public class YammImageView extends FrameLayout {
                 RequestCreator creator = Picasso.with(context).load(url);
                 if (skipCache)
                     creator.skipMemoryCache();
-
+                creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
                 creator.into(image, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -190,5 +191,4 @@ public class YammImageView extends FrameLayout {
             }
         });
     }
-
 }

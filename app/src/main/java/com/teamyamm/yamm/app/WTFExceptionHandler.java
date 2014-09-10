@@ -20,6 +20,7 @@ import java.io.StringWriter;
  */
 public class WTFExceptionHandler implements
         java.lang.Thread.UncaughtExceptionHandler {
+
     private final Activity myContext;
     private final String LINE_SEPARATOR = "\n";
     private SharedPreferences prefs;
@@ -88,7 +89,7 @@ public class WTFExceptionHandler implements
         errorReport.append(LINE_SEPARATOR);
         errorReport.append("App Version Code: " + code + "(Might be Wrong)");
 
-        Intent intent = new Intent(myContext, MainActivity.class);
+        Intent intent = new Intent(myContext, SplashScreen.class);
         intent.putExtra("error", errorReport.toString());
         Log.wtf("WTFExceptionHandler", errorReport.toString());
 

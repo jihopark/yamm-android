@@ -63,8 +63,7 @@ public class BattleActivity extends BaseActivity {
     @Override
     public void onStop(){
         super.onStop();
-        if (!imagePreloadTask.isCancelled())
-            imagePreloadTask.cancel(true);
+        imagePreloadTask.cancel(true);
     }
 
     /*
@@ -162,7 +161,11 @@ public class BattleActivity extends BaseActivity {
                 }
 
                 bf.setDishItemView(dishes.getBattleItem(0));
-                imagePreloadTask.execute();
+                try {
+                    imagePreloadTask.execute();
+                }catch(IllegalStateException e){
+                    Log.e("BattleActivity/getInitialBattleItem","The task already been Executed");
+                }
             }
 
             @Override
