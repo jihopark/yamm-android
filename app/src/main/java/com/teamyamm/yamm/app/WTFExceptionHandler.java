@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -63,7 +65,28 @@ public class WTFExceptionHandler implements
         errorReport.append("\n************ User Info ***********\n");
         errorReport.append("Email: " + prefs.getString(BaseActivity.USER_EMAIL, ""));
         errorReport.append(LINE_SEPARATOR);
+        errorReport.append("\n************ Yamm App Info ***********\n");
+
+        String name, code;
+        try {
+            PackageInfo pInfo = myContext.getPackageManager().getPackageInfo(myContext.getPackageName(), 0);
+            name = myContext.getString(R.string.app_version_name);
+            code = pInfo.versionCode+"";
+        }catch(PackageManager.NameNotFoundException e){
+            Log.e("WTFExceptionHandler/uncaughtException","Cannot Get Package");
+            name = "n/a";
+            code = "n/a";
+        }catch(NullPointerException e){
+            Log.e("WTFExceptionHandler/uncaughtException","NullPointer In Package");
+            name = "n/a";
+            code = "n/a";
+        }
+
         errorReport.append("Application Status: " + BaseActivity.CURRENT_APPLICATION_STATUS);
+        errorReport.append(LINE_SEPARATOR);
+        errorReport.append("App Version Name: " + name);
+        errorReport.append(LINE_SEPARATOR);
+        errorReport.append("App Version Code: " + code + "(Might be Wrong)");
 
         Intent intent = new Intent(myContext, MainActivity.class);
         intent.putExtra("error", errorReport.toString());
