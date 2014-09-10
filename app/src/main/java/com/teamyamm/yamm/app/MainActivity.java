@@ -120,6 +120,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         if (tutorial!=null)
             tutorial.dismissAllowingStateLoss();
 
+        readContactAsyncTask.cancel(true);
+        
         super.onStop();
     }
 

@@ -309,6 +309,7 @@ public class DishFragment extends Fragment {
             if (getActivity() instanceof BaseActivity) {
                 BaseActivity activity = (BaseActivity) getActivity();
                 activity.trackCaughtExceptionMixpanel("DishFragment/setButtons", e.getMessage());
+                parentFragment = (MainFragment) getActivity().getSupportFragmentManager().findFragmentByTag(MainFragment.MAIN_FRAGMENT);
             }
 
         }
