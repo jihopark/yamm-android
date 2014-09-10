@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             tutorial.dismissAllowingStateLoss();
 
         readContactAsyncTask.cancel(true);
-        
+
         super.onStop();
     }
 
@@ -527,18 +527,20 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }));
 
         if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
-            adapter.addMenuItems(new LeftDrawerItem("배틀 다시하기", "", 5, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToActivity(BattleActivity.class);
-                }
-            }));
-            adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 6, new View.OnClickListener() {
+            adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToActivity(GridActivity.class);
                 }
             }));
+            String status = "";
+            if (CURRENT_APPLICATION_STATUS.equals(STAGING))
+                status = "STAGING";
+            else if (CURRENT_APPLICATION_STATUS.equals(TESTING))
+                status = "TESTING";
+
+            if (!status.isEmpty())
+                adapter.addMenuItems(new LeftDrawerItem(status,"",6,null));
         }
 
 
