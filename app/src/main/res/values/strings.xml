@@ -33,7 +33,7 @@
     <string name="password_format_error_message">비밀번호에 숫자나 특수문자가 포함되어야 되요</string>
     <string name="password_min_error_message">비밀번호는 최소한 8자이어야 해요</string>
     <string name="invalid_token_error">다시 한번 로그인해주세요</string>
-
+    <string name="wtf_error_handle_message">죄송합니다, 앱에 오류가 있어 재시작하였습니다</string>
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>

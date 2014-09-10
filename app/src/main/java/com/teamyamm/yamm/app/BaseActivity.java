@@ -64,8 +64,10 @@ public class BaseActivity extends ActionBarActivity {
     public static final String TESTING = "TEST";
     public static final String STAGING = "STAGING";
 
-
     public static final String CURRENT_APPLICATION_STATUS = TESTING;
+
+    public static final String USER_EMAIL = "USEREMAIL";
+
 
     protected static final String appURL = "http://goo.gl/CVtTLC";
     protected static final String packageName = "com.teamyamm.yamm.app";
@@ -87,9 +89,12 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+
         isAppRunning = true;
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
+        Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));
 
         setDefaultOrientation(); //Set Portrait Orientation for whole application
         //Set Dialog for Internet Connection

@@ -68,10 +68,20 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Check If WTFException was Handled
+        if (getIntent().getExtras()!=null) {
+            if (getIntent().getExtras().get("error")!=null) {
+                WTFExceptionHandler.sendLogToServer(MainActivity.this, getIntent().getExtras().get("error").toString());
+                makeYammToast(R.string.wtf_error_handle_message, Toast.LENGTH_SHORT);
+                getIntent().getExtras().clear();
+            }
+        }
         if (findViewById(android.R.id.home)!=null) {
             findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.logo_padding), 0,(int) getResources().getDimension(R.dimen.logo_padding), 0);
             Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
         }
+
+
 
         setLeftDrawer();
         setFriendPickButton();
@@ -466,6 +476,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             public void success(YammAPIService.RawInfo info, Response response) {
                 Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
                 setMenuList(info.name, info.email, info.phone);
+                putInPref(prefs, USER_EMAIL, info.email);
             }
 
             @Override
