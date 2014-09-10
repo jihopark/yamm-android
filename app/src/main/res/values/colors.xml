@@ -7,7 +7,7 @@
 
     <color name="selected_item_color">#ffc29443</color>
     <color name="divider_color">#ffe2ddcb</color>
-    <color name="tutorial_background">#b4000000</color>
+    <color name="tutorial_background">#64000000</color>
 
     <color name="dialog_dim_background">#d8000000</color>
     <color name="dialog_title_background">#ffd4d1c2</color>
