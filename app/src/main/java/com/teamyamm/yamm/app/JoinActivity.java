@@ -299,7 +299,7 @@ public class JoinActivity extends BaseActivity {
 
                 //To Prevent Double Fire
                 joinConfirmButton.setEnabled(true);
-                progressDialog.hide();
+                progressDialog.dismiss();
 
 
                 if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))

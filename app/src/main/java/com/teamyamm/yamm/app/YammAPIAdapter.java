@@ -4,6 +4,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -275,8 +276,25 @@ public class YammAPIAdapter {
             }
             YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
             Gson gson = new Gson();
+            try {
+                error = gson.fromJson(responseToString(r), error.getClass());
+            }catch(JsonSyntaxException e){
+                Log.e("JoinErrorHandler/handleError","Json Syntax Exception Caught");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+            }catch(IllegalStateException e){
+                Log.e("JoinErrorHandler/handleError","Illegal State Exception Caught");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+            }catch(NullPointerException e){
+                Log.e("JoinErrorHandler/handleError","NullpointerException Caught");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+            }
 
-            error = gson.fromJson(responseToString(r), error.getClass());
+            if (error == null){
+                Log.e("JoinErrorHandler/handleError","Error is Null");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+            }
+
+
             Log.e("JoinErrorHandler/handleError",error.getMessage());
 
 
