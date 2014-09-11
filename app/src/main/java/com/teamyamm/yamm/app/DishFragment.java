@@ -133,8 +133,18 @@ public class DishFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy(){
+        Log.d("DishFragment/onDestroy","Destroy DishFragment " + item.getName());
+        YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
+
+        if (getActivity() instanceof BaseActivity)
+            ((BaseActivity) getActivity()).recycleImageView(image.getImageView());
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
-        Log.d("DishFragment/onDetach","Detach DishFragment " + item.getName());
 
         super.onDetach();
         try {
@@ -171,7 +181,7 @@ public class DishFragment extends Fragment {
 
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
         image.setID(item.getId());
-        image.setPath(YammImageView.MAIN);
+        image.setPath(YammImageView.GROUP);
     }
 
     public void showTexts(){

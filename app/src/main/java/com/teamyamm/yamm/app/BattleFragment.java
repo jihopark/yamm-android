@@ -1,6 +1,8 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,13 +56,26 @@ public class BattleFragment extends Fragment{
         layout2.setEnabled(click);
     }
 
+    public void dismissDishItemView(DishBattleView v){
+        if (v!=null){
+            Drawable d = v.imageView.getImageView().getDrawable();
+            if (d instanceof BitmapDrawable) {
+                ((BitmapDrawable) d).getBitmap().recycle();
+                Log.d("BattleFragment/dismissDishItemView","Recycled Bitmap");
+                }
+        }
+    }
+
     public void setDishItemView(BattleItem i, Context context){
         item = i;
         Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
         layout2 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout2);
 
-
+        if (first!=null && second!=null && getActivity() instanceof BaseActivity) {
+            ((BaseActivity) getActivity()).recycleImageView(first.imageView.getImageView());
+            ((BaseActivity) getActivity()).recycleImageView(second.imageView.getImageView());
+        }
         layout1.removeAllViews();
         layout2.removeAllViews();
         first = new DishBattleView(context,item.getFirst(), layout1);

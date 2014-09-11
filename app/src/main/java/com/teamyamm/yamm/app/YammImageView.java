@@ -25,6 +25,9 @@ public class YammImageView extends FrameLayout {
     private final static String imageURL = "http://res.cloudinary.com/yamm/image/upload/";
     public final static String DISH = "dish";
     public final static String MAIN = "main";
+    public final static String BATTLE = "battle";
+    public final static String GROUP = "group";
+
     public final static String GRID = "grid";
 
     private final static float imageRatio = 1.5f;
@@ -127,9 +130,9 @@ public class YammImageView extends FrameLayout {
     public int getImageWidth(){return width;}
 
     public static String getURL(String path, int width, int height, long id){
-        if (path == DISH)
+        if (path.equals(DISH) || path.equals(BATTLE))
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + id + ".jpg";
-        if (path == MAIN)
+        if (path.equals(MAIN) || path.equals(GROUP))
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_south/dish/" + id + ".jpg";
         return "";
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
@@ -142,11 +145,15 @@ public class YammImageView extends FrameLayout {
                 if (picasso == null)
                     picasso = Picasso.with(context);
 
-                RequestCreator creator = picasso.load(url);
-                if (skipCache) {
+                RequestCreator creator;
+                if (skipCache || path.equals(BATTLE) || path.equals(GROUP)) {
+                    creator = picasso.load(url);
                     creator.skipMemoryCache();
                     Log.d("YammImageView/loadImage","Skip Cache");
                 }
+                else
+                    creator = picasso.load(url);
+
                 creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
                 creator.fit();
                 creator.into(image, new Callback() {

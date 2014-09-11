@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,6 +34,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -474,6 +476,13 @@ public class BaseActivity extends ActionBarActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_alpha_out);
+    }
+
+    protected void recycleImageView(ImageView v){
+        if (v.getDrawable() instanceof BitmapDrawable){
+            ((BitmapDrawable) v.getDrawable()).getBitmap().recycle();
+            Log.d("BaseActivity/recycleImageView","Recycled ImageView");
+        }
     }
 
     /*
