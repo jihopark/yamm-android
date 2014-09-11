@@ -118,6 +118,15 @@ public class DishFragment extends Fragment {
     public TextView getNameText(){ return nameText; }
     public TextView getCommentText(){ return commentText; }
 
+    public void setParentFragment(MainFragment f){
+        parentFragment = f;
+        try {
+            setButtons();
+        }catch(NullPointerException e){
+            Log.e("DishFragment/setParentFragment","Set The Wrong Parent Fragment");
+            parentFragment = null;
+        }
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -184,6 +193,9 @@ public class DishFragment extends Fragment {
 
     public void setButtons(){
         try {
+            if (parentFragment==null)
+                parentFragment = (MainFragment) getParentFragment();
+
             next = parentFragment.getButton(R.id.dish_next_button);
 
             searchMap = parentFragment.getButton(R.id.search_map_button);

@@ -268,6 +268,8 @@ public class MainFragment extends Fragment {
                 if (getActivity() instanceof BaseActivity) {
                     BaseActivity activity = (BaseActivity) getActivity();
                     activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
+                    if (fragments.get(i)!=null)
+                        fragments.get(i).setParentFragment(MainFragment.this);
                 }
             }catch (IndexOutOfBoundsException e){
                 Log.e("MainFragment/onPageSelected","IndexOutOfBoundsException caught");
