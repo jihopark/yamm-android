@@ -66,7 +66,6 @@ public class DishFragment extends Fragment {
     private DishItem item;
     private int index;
     private ImageButton searchMap, pokeFriend, dislike, next;
-    private YammImageView dishImage;
     private boolean isGroup;
     private Activity activity;
     private MainFragment parentFragment;
@@ -135,8 +134,9 @@ public class DishFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
+        Log.d("DishFragment/onDetach","Detach DishFragment " + item.getName());
 
+        super.onDetach();
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);
@@ -148,6 +148,7 @@ public class DishFragment extends Fragment {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void onResume(){

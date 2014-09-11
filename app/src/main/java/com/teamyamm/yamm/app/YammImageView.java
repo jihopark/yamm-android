@@ -20,6 +20,7 @@ import com.squareup.picasso.RequestCreator;
  * Created by parkjiho on 6/19/14.
  */
 public class YammImageView extends FrameLayout {
+    private static Picasso picasso = null;
 
     private final static String imageURL = "http://res.cloudinary.com/yamm/image/upload/";
     public final static String DISH = "dish";
@@ -138,21 +139,30 @@ public class YammImageView extends FrameLayout {
         if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
             final String url = getURL(path, width, height, id);
             try {
-                RequestCreator creator = Picasso.with(context).load(url);
-                if (skipCache)
+                if (picasso == null)
+                    picasso = Picasso.with(context);
+
+                RequestCreator creator = picasso.load(url);
+                if (skipCache) {
                     creator.skipMemoryCache();
+                    Log.d("YammImageView/loadImage","Skip Cache");
+                }
                 creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
+                creator.fit();
                 creator.into(image, new Callback() {
                     @Override
                     public void onSuccess() {
                         setBackgroundColor(Color.TRANSPARENT);
                         Log.i("YammImageView/loadImage", "Successfully loaded " + url);
+                        //Log.d("YammImageView/loadImage", picasso.getSnapshot().toString());
                         progressCircle.setVisibility(GONE);
                     }
 
                     @Override
                     public void onError() {
                         Log.e("YammImageView/loadImage", "Image Loading Error " + url);
+                        Log.e("YammImageView/loadImage", picasso.getSnapshot().toString());
+                        WTFExceptionHandler.sendLogToServer(context, "**Image Error Log**\n" + picasso.getSnapshot().toString());
                         progressCircle.setVisibility(GONE);
                     }
                 });

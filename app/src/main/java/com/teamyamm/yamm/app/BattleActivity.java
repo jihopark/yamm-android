@@ -286,10 +286,12 @@ public class BattleActivity extends BaseActivity {
                     a + "," + b + " " + w + "x" + h);
             Picasso.with(BattleActivity.this)
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
+                    .skipMemoryCache()
                     .error(R.drawable.mainback_test)
                     .fetch();
             Picasso.with(BattleActivity.this)
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, b.getId()))
+                    .skipMemoryCache()
                     .error(R.drawable.mainback_test)
                     .fetch();
         }

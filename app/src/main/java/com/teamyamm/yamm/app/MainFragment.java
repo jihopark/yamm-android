@@ -103,7 +103,6 @@ public class MainFragment extends Fragment {
         textAnimation1.cancel();
         textAnimation2.cancel();
 
-
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);
@@ -160,7 +159,7 @@ public class MainFragment extends Fragment {
     private void setDishPager(){
         dishAdapter = new DishFragmentPagerAdapter(getChildFragmentManager());
         dishPager = (ViewPager) main_layout.findViewById(R.id.dish_pager);
-        dishPager.setOffscreenPageLimit(2);
+        dishPager.setOffscreenPageLimit(3);
         dishPager.setAdapter(dishAdapter);
         dishPager.setOnPageChangeListener(dishAdapter);
     }
