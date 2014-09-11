@@ -51,7 +51,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="5.5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="12dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:id="@+id/fake_invite_button"
