@@ -160,7 +160,7 @@ public class BattleActivity extends BaseActivity {
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
 
-                bf.setDishItemView(dishes.getBattleItem(0));
+                bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this);
                 try {
                     imagePreloadTask.execute();
                 }catch(IllegalStateException e){
@@ -203,7 +203,7 @@ public class BattleActivity extends BaseActivity {
         }
 
         bf.setLayoutClickable(false);
-        bf.setDishItemView(dishes.getBattleItem(battleCount));
+        bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this);
         bf.setLayoutClickable(true);
 
 

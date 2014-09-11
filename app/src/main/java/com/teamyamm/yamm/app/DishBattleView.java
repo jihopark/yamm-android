@@ -39,6 +39,7 @@ public class DishBattleView extends FrameLayout {
     public DishBattleView(Context context, DishItem aItem, ViewGroup parent) {
         super(context);
 
+
         this.context = context;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

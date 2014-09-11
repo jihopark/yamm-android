@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +54,7 @@ public class BattleFragment extends Fragment{
         layout2.setEnabled(click);
     }
 
-    public void setDishItemView(BattleItem i){
+    public void setDishItemView(BattleItem i, Context context){
         item = i;
         Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
@@ -62,8 +63,8 @@ public class BattleFragment extends Fragment{
 
         layout1.removeAllViews();
         layout2.removeAllViews();
-        first = new DishBattleView(getActivity(),item.getFirst(), layout1);
-        second = new DishBattleView(getActivity(),item.getSecond(), layout2);
+        first = new DishBattleView(context,item.getFirst(), layout1);
+        second = new DishBattleView(context,item.getSecond(), layout2);
 
 
         //Set Battle Non Button
