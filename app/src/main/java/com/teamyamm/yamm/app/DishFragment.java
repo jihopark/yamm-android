@@ -53,7 +53,7 @@ import retrofit.client.Response;
  * Created by parkjiho on 7/17/14.
  */
 public class DishFragment extends Fragment {
-    private final static long LOCATION_MIN_TIME = 100; //0.1sec
+    private final static long LOCATION_MIN_TIME = 200; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
     private final int DEFAULT_NUMBER_OF_DISHES = 4;
 
@@ -500,11 +500,11 @@ public class DishFragment extends Fragment {
             }
 
             lastKnownLocation = locationManager.getLastKnownLocation(default_provider);
-            while(lastKnownLocation==null || lastKnownLocation.getAccuracy() > 500 || count < 20){
+            while(lastKnownLocation==null || lastKnownLocation.getAccuracy() > 500 || count < 40){
                 locationManager.requestLocationUpdates(default_provider, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, getLocationListener());
 
                 lastKnownLocation = locationManager.getLastKnownLocation(default_provider);
-                if (count++ > 150){
+                if (count++ > 200){
                     Log.e("DishFragment/getLocationURI", "Location Accuracy failed");
                     ((BaseActivity)activity).makeYammToast(activity.getString(R.string.gps_accuracy_warning_text), Toast.LENGTH_SHORT);
                     break;
