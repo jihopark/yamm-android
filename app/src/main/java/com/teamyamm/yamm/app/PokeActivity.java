@@ -144,7 +144,15 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_SHORT);
 
 
-        YammAPIAdapter.getTokenService().sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(PokeActivity.this, "WTF Invalid Token Error @PokeActivity/pokeWithYamm");
+            return ;
+        }
+
+        service.sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("PokeActivity/sendPushMessage", "Push " + s);

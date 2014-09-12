@@ -79,7 +79,7 @@ public class BattleActivity extends BaseActivity {
             }
         };
         createDialog(BattleActivity.this, R.string.battle_dialog_title, R.string.battle_dialog_message,
-                    R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+                R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
 
     }
 
@@ -148,23 +148,29 @@ public class BattleActivity extends BaseActivity {
     * Set totalBattleCount and get InitialBattleItem
     * */
     private void getInitialBattleItem(){
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(BattleActivity.this, "WTF Invalid Token Error @BattleActivity");
+            return ;
+        }
+
         service.getBattleItems(new Callback<YammAPIService.RawBattleItem>() {
             @Override
             public void success(YammAPIService.RawBattleItem rawBattleItem, Response response) {
                 totalBattle = rawBattleItem.getRounds();
                 dishes = rawBattleItem;
 
-                Log.i("BattleActivity/getBattleItems","Total Rounds: " + totalBattle);
-                for (int i=0; i< totalBattle; i++){
-                    Log.i("BattleActivity/getBattleItems","Round " + (i+1) + ":" +
+                Log.i("BattleActivity/getBattleItems", "Total Rounds: " + totalBattle);
+                for (int i = 0; i < totalBattle; i++) {
+                    Log.i("BattleActivity/getBattleItems", "Round " + (i + 1) + ":" +
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
 
                 bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this);
                 try {
                     imagePreloadTask.execute();
-                }catch(IllegalStateException e){
-                    Log.e("BattleActivity/getInitialBattleItem","The task already been Executed");
+                } catch (IllegalStateException e) {
+                    Log.e("BattleActivity/getInitialBattleItem", "The task already been Executed");
                 }
             }
 
@@ -180,6 +186,7 @@ public class BattleActivity extends BaseActivity {
                 showInternetConnectionAlert(new CustomInternetListener(internetAlert));
             }
         });
+
     }
 
 

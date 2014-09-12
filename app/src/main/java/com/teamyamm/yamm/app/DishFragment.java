@@ -357,6 +357,14 @@ public class DishFragment extends Fragment {
 
         Log.i("DishFragment/addDishToPositive","Like "  + getDishItem().getName() + " " + category + " " + detail);
 
+        if (service==null) {
+            if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity) getActivity()).invalidToken();
+                WTFExceptionHandler.sendLogToServer(getActivity(), "WTF Invalid Token Error @DishFragment/addDishToPositive");
+            }
+            return ;
+        }
+
         service.postLikeDish(new YammAPIService.RawLike(getDishItem().getId(), category, detail), new Callback<String>() {
             @Override
             public void success(String s, Response response) {

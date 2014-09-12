@@ -99,6 +99,12 @@ public class GridActivity extends BaseActivity {
         progressDialog = createFullScreenDialog(GridActivity.this, getString(R.string.progress_dialog_message));
         progressDialog.show();
 
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(GridActivity.this, "WTF Invalid Token Error @GridActivity/sendGridResult");
+            return false;
+        }
+
         service.postGridItems(s, new Callback<String>() {
             @Override
             public void success(String s, Response response) {

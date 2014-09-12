@@ -280,6 +280,13 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
         isLoading = true;
+
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(MainActivity.this, "WTF Invalid Token Error @MainActivity/loadDishes");
+            return ;
+        }
+
         service.getPersonalDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> items, Response response) {
@@ -464,7 +471,15 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     private void loadLeftMenu(){
-        YammAPIAdapter.getTokenService().getUserInfo(new Callback<YammAPIService.RawInfo>() {
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(MainActivity.this, "WTF Invalid Token Error @MainActivity/setLeftMenu");
+            return ;
+        }
+
+        service.getUserInfo(new Callback<YammAPIService.RawInfo>() {
             @Override
             public void success(YammAPIService.RawInfo info, Response response) {
                 Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
@@ -496,10 +511,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                            createDialog(MainActivity.this,
-                                    0, R.string.logout_dialog_message,
-                                    R.string.dialog_positive, R.string.dialog_negative,
-                                    setPositiveListener(), null).show();
+                        createDialog(MainActivity.this,
+                                0, R.string.logout_dialog_message,
+                                R.string.dialog_positive, R.string.dialog_negative,
+                                setPositiveListener(), null).show();
 
                     }
                     private View.OnClickListener setPositiveListener(){
@@ -619,6 +634,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         YammAPIService service = YammAPIAdapter.getTokenService();
 
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(MainActivity.this, "WTF Invalid Token Error @MainActivity/sendContactsToServer");
+            return ;
+        }
 
         service.findFriendsFromPhone(new YammAPIService.RawPhones(phoneNameMap.keySet()),
                 new Callback<YammAPIService.RawFriends>() {

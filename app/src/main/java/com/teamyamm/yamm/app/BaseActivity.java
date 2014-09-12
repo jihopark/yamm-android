@@ -217,11 +217,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
 
-     /*
-    * Builds Alert Dialog with positive and negative buttons
-    * */
+    /*
+   * Builds Alert Dialog with positive and negative buttons
+   * */
     protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
-                                       View.OnClickListener positiveListener, View.OnClickListener negativeListener){
+                                  View.OnClickListener positiveListener, View.OnClickListener negativeListener){
         /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         AlertDialog alert = builder.setPositiveButton(getString(positive),positiveListener)
@@ -300,7 +300,7 @@ public class BaseActivity extends ActionBarActivity {
         //ProgressBar spinner = (ProgressBar) dialog.findViewById(R.id.dialog_progress_bar);
 
         //spinner.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.default_color),
-         //       android.graphics.PorterDuff.Mode.MULTIPLY);
+        //       android.graphics.PorterDuff.Mode.MULTIPLY);
 
         return dialog;
     }
@@ -314,9 +314,9 @@ public class BaseActivity extends ActionBarActivity {
         editor.commit();
         Log.v("BaseActivity/putInPref", "key:" + a + " value:" + b + " saved");
     }
-     /*
-    * Hides Action Bar
-    * */
+    /*
+   * Hides Action Bar
+   * */
     protected void hideActionBar() {
         getSupportActionBar().hide();
     }
@@ -339,7 +339,7 @@ public class BaseActivity extends ActionBarActivity {
     * Show Alert Box until Internet Connection is Available
     * */
 
-     protected void showInternetConnectionAlert(View.OnClickListener listener){
+    protected void showInternetConnectionAlert(View.OnClickListener listener){
         if (!checkInternetConnection()) {
             if (listener == null)
                 listener = new CustomListener(internetAlert);
@@ -525,18 +525,21 @@ public class BaseActivity extends ActionBarActivity {
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
                 Secure.ANDROID_ID);
 
-        YammAPIAdapter.getTokenService().unregisterPushToken(deviceId, new Callback<String>() {
-            @Override
-            public void success(String s, Response response) {
-                Log.i("BaseActivity/removeAuthToken","Successfully unregistered Push Token");
-            }
+        YammAPIService service = YammAPIAdapter.getTokenService();
 
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                Log.e("BaseActivity/removeAuthToken","Error in unregistering Push Token");
-            }
-        });
+        if (service!=null) {
+            service.unregisterPushToken(deviceId, new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+                    Log.i("BaseActivity/removeAuthToken", "Successfully unregistered Push Token");
+                }
 
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    Log.e("BaseActivity/removeAuthToken", "Error in unregistering Push Token");
+                }
+            });
+        }
 
         YammAPIAdapter.setToken(null);
 
@@ -834,8 +837,15 @@ public class BaseActivity extends ActionBarActivity {
 
         YammAPIService service = YammAPIAdapter.getTokenService();
 
+
+
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
                 Secure.ANDROID_ID);
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(BaseActivity.this, "WTF Invalid Token Error @SendRegistrationToBackend");
+            return ;
+        }
 
         service.registerPushToken(regid, deviceId, new Callback<String>() {
             @Override
@@ -848,6 +858,7 @@ public class BaseActivity extends ActionBarActivity {
                 Log.e("BaseActivity/sendRegistrationIdToBackend", "Push Token not sent to server");
             }
         });
+
 
         MixpanelAPI.People people = mixpanel.getPeople();
         people.setPushRegistrationId(regid);

@@ -109,11 +109,19 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
+                YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
 
                 makeYammToast("친구들한테 " + selectedTime + "에 "
                         + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
-                YammAPIAdapter.getTokenService().sendPokeMessage(msg, new Callback<String>() {
+                YammAPIService service = YammAPIAdapter.getTokenService();
+
+                if (service==null) {
+                    invalidToken();
+                    WTFExceptionHandler.sendLogToServer(GroupRecommendationActivity.this, "WTF Invalid Token Error @GroupRecommendationActivity/sendPokeMessage");
+                    return ;
+                }
+
+                service.sendPokeMessage(msg, new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
                         Log.i("GroupRecommendationActivity/sendPushMessage", "Push " + s);
@@ -207,6 +215,12 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
 
         fullScreenDialog.show();
 
+        if (service==null) {
+            invalidToken();
+            WTFExceptionHandler.sendLogToServer(GroupRecommendationActivity.this, "WTF Invalid Token Error @GroupRecommendationActivity/loadDishes");
+            return ;
+        }
+
         service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishes, Response response) {
@@ -268,8 +282,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                         dismissCurrentDialog();
                     }
                 },
-            null);
-       dialog.show();
+                null);
+        dialog.show();
     }
 
     private void trackReceivedGroupRecommendation(){
