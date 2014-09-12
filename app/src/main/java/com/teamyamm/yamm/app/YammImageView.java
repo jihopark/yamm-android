@@ -145,6 +145,11 @@ public class YammImageView extends FrameLayout {
                 if (picasso == null)
                     picasso = Picasso.with(context);
 
+                if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING)) {
+                    picasso.setLoggingEnabled(true);
+                    picasso.setIndicatorsEnabled(true);
+                }
+
                 RequestCreator creator;
                 if (skipCache || path.equals(BATTLE) || path.equals(GROUP)) {
                     creator = picasso.load(url);
@@ -161,8 +166,9 @@ public class YammImageView extends FrameLayout {
                     public void onSuccess() {
                         setBackgroundColor(Color.TRANSPARENT);
                         Log.i("YammImageView/loadImage", "Successfully loaded " + url);
-                        //Log.d("YammImageView/loadImage", picasso.getSnapshot().toString());
+                        Log.d("YammImageView/loadImage", picasso.getSnapshot().toString());
                         progressCircle.setVisibility(GONE);
+
                     }
 
                     @Override
