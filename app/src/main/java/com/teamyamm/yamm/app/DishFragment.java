@@ -181,7 +181,10 @@ public class DishFragment extends Fragment {
 
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
         image.setID(item.getId());
-        image.setPath(YammImageView.GROUP);
+        if (isGroup)
+            image.setPath(YammImageView.GROUP);
+        else
+            image.setPath(YammImageView.MAIN);
     }
 
     public void showTexts(){
