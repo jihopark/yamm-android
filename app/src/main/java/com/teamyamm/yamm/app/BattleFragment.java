@@ -72,7 +72,7 @@ public class BattleFragment extends Fragment{
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
         layout2 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout2);
 
-     /*   if (first!=null && second!=null && getActivity() instanceof BaseActivity) {
+        /*if (first!=null && second!=null && getActivity() instanceof BaseActivity) {
             ((BaseActivity) getActivity()).recycleImageView(first.imageView.getImageView());
             ((BaseActivity) getActivity()).recycleImageView(second.imageView.getImageView());
         }*/

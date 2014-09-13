@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewTreeObserver;
@@ -12,6 +13,8 @@ import android.widget.ProgressBar;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by parkjiho on 6/19/14.
@@ -36,7 +39,7 @@ public class YammImageView extends FrameLayout {
     private long id = 0;
 
     private Context context;
-    private NetworkImageView image;
+    private ImageView image;
     private ProgressBar progressCircle;
 
     private ImageLoader imageLoader;
@@ -55,13 +58,6 @@ public class YammImageView extends FrameLayout {
         this.context = context;
 
         this.setBackgroundColor(Color.GRAY);
-        image = new NetworkImageView(context);
-        image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
-
-        addView(image);
-
-        setVolley();
 
         measureDynamicDimension();
 
@@ -90,13 +86,6 @@ public class YammImageView extends FrameLayout {
         this.height = height;
 
         this.setBackgroundColor(Color.GRAY);
-        image = new NetworkImageView(context);
-        image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
-
-        addView(image);
-
-        setVolley();
 
        /* progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
@@ -113,6 +102,21 @@ public class YammImageView extends FrameLayout {
     private void setVolley(){
         VolleyController.setVolleyController(context);
         imageLoader = VolleyController.getImageLoader();
+    }
+
+    private void setImageView(ImageView v){
+        if (v instanceof NetworkImageView) {
+            setVolley();
+            Log.d("YammImageView/setImageView","Network ImageView Set");
+        }
+        else
+            Log.d("YammImageView/setImageView","General ImageView Set");
+
+        image = v;
+        image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        image.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        addView(image);
     }
 
 
@@ -148,57 +152,57 @@ public class YammImageView extends FrameLayout {
     }
 
     private void loadImage(){
-       if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
-         /*     final String url = getURL(path, width, height, id);
-            try {
-                if (picasso == null)
-                    picasso = Picasso.with(context);
+        if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
+            final String url = getURL(path, width, height, id);
+            if (path.equals(BATTLE)) {
+                try {
+                    setImageView(new ImageView(context));
 
-                if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING)) {
-                    picasso.setLoggingEnabled(true);
-                    picasso.setIndicatorsEnabled(true);
-                }
+                    Log.d("YammImageView/loadImage","Image Loading from Picasso " + getURL(path, width, height, id));
 
-                RequestCreator creator;
-                if (skipCache || path.equals(BATTLE) || path.equals(GROUP)) {
-                    creator = picasso.load(url);
-                    creator.skipMemoryCache();
-                    Log.d("YammImageView/loadImage","Skip Cache");
-                }
-                else
-                    creator = picasso.load(url);
+                    if (picasso == null)
+                        picasso = Picasso.with(context);
 
-                creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
-                creator.fit();
-                creator.into(image, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        setBackgroundColor(Color.TRANSPARENT);
-                        Log.i("YammImageView/loadImage", "Successfully loaded " + url);
-                        Log.d("YammImageView/loadImage", picasso.getSnapshot().toString());
-                        progressCircle.setVisibility(GONE);
-
+                    if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING)) {
+                        picasso.setLoggingEnabled(true);
+                        picasso.setIndicatorsEnabled(true);
                     }
 
-                    @Override
-                    public void onError() {
-                        Log.e("YammImageView/loadImage", "Image Loading Error " + url);
-                        Log.e("YammImageView/loadImage", picasso.getSnapshot().toString());
-                        WTFExceptionHandler.sendLogToServer(context, "**Image Error Log**\n" + picasso.getSnapshot().toString());
-                        progressCircle.setVisibility(GONE);
-                    }
-                });
-            }catch(OutOfMemoryError e){
-                Log.e("YammImageView/loadImage","Out of Memory Error Caught. Skipping Cache");
-                e.printStackTrace();
-                skipCache = true;
-                loadImage();
-            } */
+                    RequestCreator creator = picasso.load(url);
+                    //creator.skipMemoryCache();
+                    creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
+                    creator.fit();
+                    creator.into(image,new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            setBackgroundColor(Color.TRANSPARENT);
+                            Log.i("YammImageView/loadImage", "Successfully loaded " + url);
+                            Log.d("YammImageView/loadImage", picasso.getSnapshot().toString());
 
-           image.setImageUrl(getURL(path, width, height, id) ,imageLoader);
-           Log.d("YammImageView/loadImage","Image Loading from Volley " + getURL(path, width, height, id));
+                        }
 
-       }
+                        @Override
+                        public void onError() {
+                            Log.e("YammImageView/loadImage", "Image Loading Error " + url);
+                            Log.e("YammImageView/loadImage", picasso.getSnapshot().toString());
+                            WTFExceptionHandler.sendLogToServer(context, "**Image Error Log**\n" + picasso.getSnapshot().toString());
+                        }
+                    });
+                } catch (OutOfMemoryError e) {
+                    Log.e("YammImageView/loadImage", "Out of Memory Error Caught. Skipping Cache");
+                    e.printStackTrace();
+                    skipCache = true;
+                    loadImage();
+                }
+                return ;
+            }
+            setImageView(new NetworkImageView(context));
+
+            if (image instanceof NetworkImageView)
+                ((NetworkImageView)image).setImageUrl(url ,imageLoader);
+            Log.d("YammImageView/loadImage","Image Loading from Volley " + getURL(path, width, height, id));
+
+        }
         else{
             Log.e("YammImageView/loadImage","Image not Ready");
         }
@@ -210,22 +214,26 @@ public class YammImageView extends FrameLayout {
 
     private void measureDynamicDimension(){
         final YammImageView div = this;
-        ViewTreeObserver vto = image.getViewTreeObserver();
-        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
+        ViewTreeObserver vto = YammImageView.this.getViewTreeObserver();
+        try {
+            vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                public boolean onPreDraw() {
+                    if (div.width == 0 && div.height == 0) {
+                        div.setDimension(YammImageView.this.getMeasuredWidth(), YammImageView.this.getMeasuredHeight());
+                        div.loadImage();
 
-                if (div.width == 0 && div.height == 0 ) {
-                    div.setDimension(image.getMeasuredWidth(), image.getMeasuredHeight());
-                    div.loadImage();
-
-                    Log.i("YammImageView/onPreDraw", "Width " + div.width + " Height " + div.height);
+                        Log.i("YammImageView/onPreDraw", "Width " + div.width + " Height " + div.height);
 
 
+                        YammImageView.this.getViewTreeObserver().removeOnPreDrawListener(this);
+                    }
+                    return true;
 
-                    image.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
-                return true;
-            }
-        });
+            });
+        }catch (NullPointerException e){
+            Log.e("YammImageView/onPreDrawListener","Nullpointer in PreDraw");
+            e.printStackTrace();
+        }
     }
 }
