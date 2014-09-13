@@ -52,6 +52,12 @@ public class PokeAlertActivity extends Activity {
         }
         setContentView(R.layout.activity_poke_alert);
 
+        if (YammAPIAdapter.isTokenEmpty()){
+            String s = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE).getString(getString(R.string.AUTH_TOKEN),"");
+            Log.i("PokeAlertActivity/onCreate","AuthToken is Empty. Retrieving " + s);
+            YammAPIAdapter.setToken(s);
+        }
+
         setDialogContent();
 
     }

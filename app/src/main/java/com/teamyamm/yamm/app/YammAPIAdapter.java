@@ -62,6 +62,10 @@ public class YammAPIAdapter {
         return service;
     }
 
+    public static boolean isTokenEmpty(){
+        return token == null;
+    }
+
     public static void setToken(String s){
         token = s;
         Log.i("YammAPIAdapter/setToken","Token set " + token);
