@@ -2,19 +2,16 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.squareup.picasso.Callback;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by parkjiho on 6/19/14.
@@ -39,8 +36,10 @@ public class YammImageView extends FrameLayout {
     private long id = 0;
 
     private Context context;
-    private ImageView image;
+    private NetworkImageView image;
     private ProgressBar progressCircle;
+
+    private ImageLoader imageLoader;
 
 
     /*
@@ -56,21 +55,23 @@ public class YammImageView extends FrameLayout {
         this.context = context;
 
         this.setBackgroundColor(Color.GRAY);
-        image = new ImageView(context);
+        image = new NetworkImageView(context);
         image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         image.setScaleType(ImageView.ScaleType.FIT_XY);
 
         addView(image);
 
+        setVolley();
+
         measureDynamicDimension();
 
-        progressCircle = new ProgressBar(context);
+       /* progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
                 (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
-        addView(progressCircle);
+        addView(progressCircle);*/
     }
 
     /*
@@ -89,23 +90,31 @@ public class YammImageView extends FrameLayout {
         this.height = height;
 
         this.setBackgroundColor(Color.GRAY);
-        image = new ImageView(context);
+        image = new NetworkImageView(context);
         image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         image.setScaleType(ImageView.ScaleType.FIT_XY);
 
         addView(image);
 
-        progressCircle = new ProgressBar(context);
+        setVolley();
+
+       /* progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
                 (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
-        addView(progressCircle);
+        addView(progressCircle);*/
 
         if (width != 0 && height != 0)
             setID(id);
     }
+
+    private void setVolley(){
+        VolleyController.setVolleyController(context);
+        imageLoader = VolleyController.getImageLoader();
+    }
+
 
     public ImageView getImageView(){
         return image;
@@ -139,8 +148,8 @@ public class YammImageView extends FrameLayout {
     }
 
     private void loadImage(){
-        if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
-            final String url = getURL(path, width, height, id);
+       if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
+         /*     final String url = getURL(path, width, height, id);
             try {
                 if (picasso == null)
                     picasso = Picasso.with(context);
@@ -184,11 +193,16 @@ public class YammImageView extends FrameLayout {
                 e.printStackTrace();
                 skipCache = true;
                 loadImage();
-            }
-        }
+            } */
+
+           image.setImageUrl(getURL(path, width, height, id) ,imageLoader);
+           Log.d("YammImageView/loadImage","Image Loading from Volley " + getURL(path, width, height, id));
+
+       }
         else{
             Log.e("YammImageView/loadImage","Image not Ready");
         }
+
     }
 
 

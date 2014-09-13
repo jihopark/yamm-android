@@ -2,6 +2,7 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,12 +14,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -38,6 +43,8 @@ public class BattleActivity extends BaseActivity {
     private YammAPIService.RawBattleItem dishes;
     private Dialog fullScreenDialog;
     CallPreloadImageAsyncTask imagePreloadTask;
+
+    private HashMap<Integer, Bitmap> preloadBitmaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,12 +293,49 @@ public class BattleActivity extends BaseActivity {
     }
 
     private void preloadImages(int w, int h){
+
+        VolleyController.setVolleyController(getApplicationContext());
+        ImageLoader imageLoader = VolleyController.getImageLoader();
+
+        preloadBitmaps = new HashMap<Integer, Bitmap>();
+
+
         for (int i=1;i<totalBattle;i++) {
-            DishItem a = dishes.getBattleItem(i).getFirst();
-            DishItem b = dishes.getBattleItem(i).getSecond();
-            Log.i("BattleActivity/preloadImages", "Preloading:" +
-                    a + "," + b + " " + w + "x" + h);
-            Picasso.with(BattleActivity.this)
+            preloadBitmaps = new HashMap<Integer, Bitmap>();
+
+            final DishItem a = dishes.getBattleItem(i).getFirst();
+            final DishItem b = dishes.getBattleItem(i).getSecond();
+
+            imageLoader.get(YammImageView.getURL(YammImageView.DISH, w, h, a.getId())
+                    , new ImageListener() {
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("BattleActivity/onErrorResponse","Volley Error on " + a.getName());
+                }
+
+                public void onResponse(ImageContainer response, boolean arg1) {
+                    if (response.getBitmap() != null) {
+                        preloadBitmaps.put(a.getId(), response.getBitmap());
+                        Log.d("BattleActivity/onResponse", "Volley Preload on " + a.getName());
+
+                    }
+                }
+            });
+            imageLoader.get(YammImageView.getURL(YammImageView.DISH, w, h, a.getId())
+                    , new ImageListener() {
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("BattleActivity/onErrorResponse","Volley Error on " + a.getName());
+                }
+
+                public void onResponse(ImageContainer response, boolean arg1) {
+                    if (response.getBitmap() != null) {
+                        preloadBitmaps.put(b.getId(), response.getBitmap());
+                        Log.d("BattleActivity/onResponse", "Volley Preload on " + a.getName());
+
+                    }
+                }
+            });
+
+            /*Picasso.with(BattleActivity.this)
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
                     .skipMemoryCache()
                     .error(R.drawable.mainback_test)
@@ -300,8 +344,8 @@ public class BattleActivity extends BaseActivity {
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, b.getId()))
                     .skipMemoryCache()
                     .error(R.drawable.mainback_test)
-                    .fetch();
-        }
+                    .fetch();*/
+            }
         return ;
     }
 
@@ -325,7 +369,7 @@ public class BattleActivity extends BaseActivity {
                     int h = bf.getImageHeight();
 
                     Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured" + w + "x" + h);
-                    preloadImages(w, h);
+                  //  preloadImages(w, h);
                     break;
                 }
 
