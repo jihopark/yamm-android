@@ -135,11 +135,13 @@ public class DishFragment extends Fragment {
     @Override
     public void onDestroy(){
         Log.d("DishFragment/onDestroy","Destroy DishFragment " + item.getName());
+        /*
+        * Removed Because It gives NullPointer Error when it reuses image from cache
         YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
 
         if (getActivity() instanceof BaseActivity)
-            ((BaseActivity) getActivity()).recycleImageView(image.getImageView());
-
+          //  ((BaseActivity) getActivity()).recycleImageView(image.getImageView());
+        */
         super.onDestroy();
     }
 
