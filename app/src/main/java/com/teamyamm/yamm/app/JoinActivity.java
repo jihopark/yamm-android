@@ -425,7 +425,7 @@ public class JoinActivity extends BaseActivity {
         agreementTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeYammToast("웹페이지로 띄우기" ,Toast.LENGTH_SHORT);
+                makeYammToast(R.string.left_drawer_not_ready ,Toast.LENGTH_SHORT);
             }
         });
 

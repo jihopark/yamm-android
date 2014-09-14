@@ -320,7 +320,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
+                     //       makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
 
                             closeFullScreenDialog();
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");

@@ -40,7 +40,7 @@ public class PokeMethodDialog extends DialogFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_poke_method, container);
-        getDialog().setTitle(getString(R.string.poke_method_dialog_title));
+      //  getDialog().setTitle(getString(R.string.poke_method_dialog_title));
         listView = (ListView) view.findViewById(R.id.poke_method_list);
         listView.setAdapter(new PokeMethodListAdapter(getActivity(), listContent));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
