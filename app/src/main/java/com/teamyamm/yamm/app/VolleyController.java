@@ -1,7 +1,10 @@
 package com.teamyamm.yamm.app;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -16,6 +19,10 @@ public class VolleyController{
     public static final String TAG = VolleyController.class
             .getSimpleName();
 
+    private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
+    private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
+
+
     private static RequestQueue mRequestQueue;
     private static ImageLoader mImageLoader;
     private static Context context;
@@ -25,11 +32,36 @@ public class VolleyController{
 
         if (context==null) {
             context = c;
-            Log.d("VolleyController/setVolleyController","New Context");
+            Log.d("VolleyController/setVolleyController", "New Context");
         }
         else{
             Log.d("VolleyController/setVolleyController","Going with Old Context");
         }
+    }
+
+    private static void createImageCache(){
+        Log.d("VolleyController/createImageCache","Image Cache Size(MB)" + getCacheSize(context) / 1024 / 1024);
+        long free = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+        Log.d("VolleyController/createImageCache","Total Free Memory Size(MB)" + (free / 1024 / 1024));
+
+        ImageCacheManager.getInstance().init(context,
+                BaseActivity.packageName
+                , getCacheSize(context)
+                , DISK_IMAGECACHE_COMPRESS_FORMAT
+                , DISK_IMAGECACHE_QUALITY
+                , ImageCacheManager.CacheType.MEMORY);
+        Log.d("VolleyController/createImageCache","Image Cache Created");
+    }
+
+    public static int getCacheSize(Context ctx) {
+        final DisplayMetrics displayMetrics = ctx.getResources().
+                getDisplayMetrics();
+        final int screenWidth = displayMetrics.widthPixels;
+        final int screenHeight = displayMetrics.heightPixels;
+        // 4 bytes per pixel
+        final int screenBytes = screenWidth * screenHeight * 4;
+
+        return screenBytes * 3;
     }
 
     public static void clearRequestQueue(){
@@ -46,6 +78,7 @@ public class VolleyController{
             }
             Log.d("VolleyController/getRequestQueue","New RequestQueue Created");
             mRequestQueue = Volley.newRequestQueue(context);
+            createImageCache();
         }
 
         return mRequestQueue;
@@ -53,13 +86,8 @@ public class VolleyController{
 
     public static ImageLoader getImageLoader() {
         getRequestQueue();
-        if (mImageLoader == null) {
-            mImageLoader = new ImageLoader(mRequestQueue,
-                    new LruBitmapCache());
-            Log.d("VolleyController/getImageLoader","New Image Loader Created");
 
-        }
-        return mImageLoader;
+        return ImageCacheManager.getInstance().getImageLoader();
     }
 
     public static <T> void addToRequestQueue(Request<T> req, String tag) {
