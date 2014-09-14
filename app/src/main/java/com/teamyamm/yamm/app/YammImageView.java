@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 public class YammImageView extends FrameLayout {
     private static Picasso picasso = null;
 
-    private final static String imageURL = "http://res.cloudinary.com/yamm/image/upload/";
+    private final static String imageURL = "http://res.cloudinary.com/yamm-img/image/upload/";
     public final static String DISH = "dish";
     public final static String MAIN = "main";
     public final static String BATTLE = "battle";
@@ -141,11 +141,19 @@ public class YammImageView extends FrameLayout {
 
     public static String getURL(String path, int width, int height, long id){
         if (path.equals(DISH) || path.equals(BATTLE))
-            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + id + ".jpg";
+            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + getNumberFormat(id) + ".jpg";
         if (path.equals(MAIN) || path.equals(GROUP))
-            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_south/dish/" + id + ".jpg";
+            return imageURL + "w_" + width +",h_" + height + ",c_crop,g_south/dish/" + getNumberFormat(id) + ".jpg";
         return "";
         //return imageURL + "/dish/" + id + "/c" + (int)(width/imageRatio) + "x" + (int)(height/imageRatio);
+    }
+
+    private static String getNumberFormat(long n){
+        if (n < 10)
+            return "00"+n;
+        if (n < 100 && n>=10)
+            return "0"+n;
+        return n+"";
     }
 
     private void loadImage(){
@@ -182,7 +190,7 @@ public class YammImageView extends FrameLayout {
                             Log.e("YammImageView/loadImage", "Image Loading Error " + url);
                             Log.e("YammImageView/loadImage", picasso.getSnapshot().toString());
                             WTFExceptionHandler.sendLogToServer(context, "**Image Error Log**\n" + picasso.getSnapshot().toString());
-                        }
+                        }x
                     });
                 } catch (OutOfMemoryError e) {
                     Log.e("YammImageView/loadImage", "Out of Memory Error Caught. Skipping Cache");

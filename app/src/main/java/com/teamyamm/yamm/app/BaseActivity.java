@@ -66,7 +66,7 @@ public class BaseActivity extends ActionBarActivity {
     public static final String TESTING = "TEST";
     public static final String STAGING = "STAGING";
 
-    public static final String CURRENT_APPLICATION_STATUS = STAGING;
+    public static final String CURRENT_APPLICATION_STATUS = TESTING;
 
     public static final String USER_EMAIL = "USEREMAIL";
 
