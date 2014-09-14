@@ -76,9 +76,11 @@ public class WTFExceptionHandler implements
 
     public static void sendLogToServer(Context context, String report){
         Log.e("WTFExceptionHandler/sendLogToServer","Sending Log to Server");
-        AndroidLogger logger = AndroidLogger.getLogger(context, "6036cb0d-331d-4124-8245-e93f91de1388", false);
+        AndroidLogger logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
         logger.error(report + getDeviceInfo());
     }
+
+
 
     private static String getDeviceInfo(){
         StringBuilder errorReport = new StringBuilder();

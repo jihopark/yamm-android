@@ -111,6 +111,7 @@ public class BaseActivity extends ActionBarActivity {
         setInternetConnectionAlert();
 
         YammAPIAdapter.setToken(getAuthToken());
+        YammAPIAdapter.setContext(getApplicationContext());
 
         if (CURRENT_APPLICATION_STATUS.equals(TESTING))
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);

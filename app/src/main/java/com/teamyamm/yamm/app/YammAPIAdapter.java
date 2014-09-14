@@ -1,10 +1,12 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.logentries.android.AndroidLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class YammAPIAdapter {
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
     private static String token = null;
+    private static Context context = null;
 
     private static void checkAPIURL(){
         Log.i("YammAPIAdapter/checkAPIURL","Checking URL");
@@ -41,6 +44,10 @@ public class YammAPIAdapter {
             apiURL = stagURL;
         else
             apiURL = prodURL;
+    }
+
+    public static void setContext(Context cxt){
+        context = cxt;
     }
 
     /*
@@ -54,7 +61,7 @@ public class YammAPIAdapter {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(apiURL)
                     .setLog(setRestAdapterLog())
-                    .setLogLevel(RestAdapter.LogLevel.BASIC)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
                     .build();
             service = restAdapter.create(YammAPIService.class);
         }
@@ -123,7 +130,7 @@ public class YammAPIAdapter {
                     .setEndpoint(apiURL)
                     .setLog(setRestAdapterLog())
                     .setErrorHandler(new DislikeErrorHandler())
-                    .setLogLevel(RestAdapter.LogLevel.BASIC)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setRequestInterceptor(interceptor)
                     .build();
 
@@ -144,8 +151,6 @@ public class YammAPIAdapter {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(apiURL)
                     .setErrorHandler(new JoinErrorHandler())
-                    .setLog(setRestAdapterLog())
-                    .setLogLevel(RestAdapter.LogLevel.BASIC)
                     .build();
 
             joinService = restAdapter.create(YammAPIService.class);
@@ -175,8 +180,6 @@ public class YammAPIAdapter {
         };
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
-                .setLog(setRestAdapterLog())
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .setRequestInterceptor(interceptor)
                 .setErrorHandler(new LoginErrorHandler())
                 .build();
@@ -192,6 +195,10 @@ public class YammAPIAdapter {
             @Override
             public void log(String s) {
                 Log.i("YammAPIServiceLog", s);
+                if (context!=null) {
+                    AndroidLogger logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
+                    logger.info(s);
+                }
             }
         };
     }
@@ -218,7 +225,7 @@ public class YammAPIAdapter {
         }
     }
 
-  //  public static interface TokenCallback<T> extends Callback<T>
+    //  public static interface TokenCallback<T> extends Callback<T>
 
     public static class DislikeErrorHandler implements ErrorHandler {
         @Override
@@ -362,5 +369,4 @@ public class YammAPIAdapter {
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
     }
-
 }
