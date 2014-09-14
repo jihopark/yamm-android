@@ -283,6 +283,7 @@ public class BattleActivity extends BaseActivity {
                 finalDialog.dismiss();
             }
         });
+        VolleyController.getRequestQueue().getCache().clear();
     }
 
     private void preloadImages(int w, int h){
@@ -293,10 +294,12 @@ public class BattleActivity extends BaseActivity {
                     a + "," + b + " " + w + "x" + h);
             Picasso.with(BattleActivity.this)
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
+                    .skipMemoryCache()
                     .error(R.drawable.mainback_test)
                     .fetch();
             Picasso.with(BattleActivity.this)
                     .load(YammImageView.getURL(YammImageView.DISH, w, h, b.getId()))
+                    .skipMemoryCache()
                     .error(R.drawable.mainback_test)
                     .fetch();
         }
@@ -322,8 +325,8 @@ public class BattleActivity extends BaseActivity {
                     int w = bf.getImageWidth();
                     int h = bf.getImageHeight();
 
-                    Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured" + w + "x" + h);
-                    preloadImages(w, h);
+                 //   Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured" + w + "x" + h);
+                 //   preloadImages(w, h);
                     break;
                 }
 

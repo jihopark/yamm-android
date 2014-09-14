@@ -20,7 +20,7 @@ public class VolleyController{
             .getSimpleName();
 
     private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
-    private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
+    private static int DISK_IMAGECACHE_QUALITY = 70;  //PNG is lossless so quality is ignored but must be provided
 
 
     private static RequestQueue mRequestQueue;
@@ -43,9 +43,12 @@ public class VolleyController{
         Log.d("VolleyController/createImageCache","Image Cache Size(MB)" + getCacheSize(context) / 1024 / 1024);
         long free = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
         Log.d("VolleyController/createImageCache","Total Free Memory Size(MB)" + (free / 1024 / 1024));
+        Log.d("VolleyController/createImageCache","Max Memory Size(MB)" + (Runtime.getRuntime().maxMemory() / 1024 / 1024));
 
         WTFExceptionHandler.sendLogToServer(context, "Image Cache Size(MB) " + getCacheSize(context) / 1024 / 1024
                                                        + "\n" + "Total Free Memory Size(MB)" + (free / 1024 / 1024));
+
+        getRequestQueue().getCache().clear();
 
         ImageCacheManager.getInstance().init(context,
                 BaseActivity.packageName
@@ -64,7 +67,10 @@ public class VolleyController{
         // 4 bytes per pixel
         final int screenBytes = screenWidth * screenHeight * 4;
 
-        return screenBytes * 3;
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory());
+        final int cacheSize = maxMemory / 8;
+
+        return Math.min(3*screenBytes, cacheSize);
     }
 
     public static void clearRequestQueue(){

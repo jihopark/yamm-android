@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewTreeObserver;
@@ -13,8 +12,6 @@ import android.widget.ProgressBar;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by parkjiho on 6/19/14.
@@ -154,7 +151,7 @@ public class YammImageView extends FrameLayout {
     private void loadImage(){
         if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
             final String url = getURL(path, width, height, id);
-            if (path.equals(BATTLE)) {
+           /* if (path.equals(BATTLE)) {
                 try {
                     setImageView(new ImageView(context));
 
@@ -162,14 +159,13 @@ public class YammImageView extends FrameLayout {
 
                     if (picasso == null)
                         picasso = Picasso.with(context);
-
                     if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING)) {
                         picasso.setLoggingEnabled(true);
                         picasso.setIndicatorsEnabled(true);
                     }
 
                     RequestCreator creator = picasso.load(url);
-                    //creator.skipMemoryCache();
+                    creator.skipMemoryCache();
                     creator.error(new ColorDrawable(getResources().getColor(R.color.brown_color)));
                     creator.fit();
                     creator.into(image,new Callback() {
@@ -195,11 +191,14 @@ public class YammImageView extends FrameLayout {
                     loadImage();
                 }
                 return ;
-            }
+            }*/
             setImageView(new NetworkImageView(context));
 
-            if (image instanceof NetworkImageView)
-                ((NetworkImageView)image).setImageUrl(url ,imageLoader);
+            if (image instanceof NetworkImageView) {
+                ((NetworkImageView) image).setImageUrl(url, imageLoader);
+            }
+
+
             Log.d("YammImageView/loadImage","Image Loading from Volley " + getURL(path, width, height, id));
 
         }
@@ -209,7 +208,11 @@ public class YammImageView extends FrameLayout {
 
     }
 
-
+    public static void removePicasso(){
+        if (picasso!=null){
+            picasso = null;
+        }
+    }
 
 
     private void measureDynamicDimension(){
