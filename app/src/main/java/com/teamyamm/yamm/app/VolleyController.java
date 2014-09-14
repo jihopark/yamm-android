@@ -44,6 +44,9 @@ public class VolleyController{
         long free = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
         Log.d("VolleyController/createImageCache","Total Free Memory Size(MB)" + (free / 1024 / 1024));
 
+        WTFExceptionHandler.sendLogToServer(context, "Image Cache Size(MB) " + getCacheSize(context) / 1024 / 1024
+                                                       + "\n" + "Total Free Memory Size(MB)" + (free / 1024 / 1024));
+
         ImageCacheManager.getInstance().init(context,
                 BaseActivity.packageName
                 , getCacheSize(context)
