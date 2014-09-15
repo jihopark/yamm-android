@@ -122,6 +122,7 @@ public class DishBattleView extends FrameLayout {
         imageView.setDimension(width, height);
         imageView.setID(item.getId());
         imageView.setPath(YammImageView.BATTLE);
+        imageView.loadImage();
     }
 
     private void measureDynamicDimension(){
