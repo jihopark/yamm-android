@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_version_name">0.1.6</string>
+    <string name="app_version_name">0.1.7</string>
     <string name="logentries_key">6036cb0d-331d-4124-8245-e93f91de1388</string>
     <string name="app_name">Yamm</string>
     <string name="hello_world">Hello world!</string>
