@@ -59,8 +59,6 @@ public class JoinActivity extends BaseActivity {
         configEditTexts();
         configJoinConfirmButton();
         getPhoneNumber();
-        trackJoiningMixpanel();
-
     }
 
     private void getPhoneNumber(){
@@ -290,6 +288,7 @@ public class JoinActivity extends BaseActivity {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 setMixpanelAlias();
                 logInAfterJoin();
+                trackJoiningMixpanel();
             }
 
             @Override
