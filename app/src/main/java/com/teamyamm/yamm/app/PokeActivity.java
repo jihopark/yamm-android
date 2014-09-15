@@ -139,8 +139,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         for (YammItem i : yammFriendsFragment.selectedItems)
             sendIds.add(i.getID());
 
-
-        makeYammToast("친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
+        makeYammToast(friendKoreanPlural(yammFriendsFragment.selectedItems.size()) + " " + datePickSpinner.getSelectedItem().toString() + "에 "
                 + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_SHORT);
 
 

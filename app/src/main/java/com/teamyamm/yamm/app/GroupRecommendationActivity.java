@@ -111,7 +111,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             public void onClick(View v) {
                 YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
 
-                makeYammToast("친구들한테 " + selectedTime + "에 "
+                makeYammToast(friendKoreanPlural(selectedFriend.size()) + " " + selectedTime + "에 "
                         + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
                 YammAPIService service = YammAPIAdapter.getTokenService();
 

@@ -168,6 +168,9 @@
     <!-- Poke Activity -->
     <string name="poke_contact_confirm">친구한테 물어보기!</string>
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
+    <string name="poke_friend_singular">친구한테</string>
+    <string name="poke_friend_plural">친구들한테</string>
+
 
     <!-- Push Messages -->
     <string name="poke_push_title">밥 같이 먹어요</string>

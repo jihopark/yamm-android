@@ -879,6 +879,13 @@ public class BaseActivity extends ActionBarActivity {
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.commit();
     }
+
+    protected String friendKoreanPlural(int n){
+        if (n > 1)
+            return getString(R.string.poke_friend_plural);
+        return getString(R.string.poke_friend_singular);
+    }
+
     /**
      * @return Application's version code from the {@code PackageManager}.
      */
