@@ -31,7 +31,7 @@ public class YammImageView extends FrameLayout {
     private final static float progressCircleRatio = 0.2f;
     private static boolean skipCache = false;
 
-    private String path = "";
+    public String path = "";
     private int width = 0, height = 0;
     private long id = 0;
 
@@ -140,7 +140,9 @@ public class YammImageView extends FrameLayout {
     public int getImageWidth(){return width;}
 
     public static String getURL(String path, int width, int height, long id){
-        if (path.equals(DISH) || path.equals(BATTLE))
+        if (path.equals(BATTLE))
+            return imageURL + "dish/battle/" + getNumberFormat(id) + ".jpg";
+        if (path.equals(DISH))
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_center/dish/" + getNumberFormat(id) + ".jpg";
         if (path.equals(MAIN) || path.equals(GROUP))
             return imageURL + "w_" + width +",h_" + height + ",c_crop,g_south/dish/" + getNumberFormat(id) + ".jpg";
@@ -156,8 +158,8 @@ public class YammImageView extends FrameLayout {
         return n+"";
     }
 
-    private void loadImage(){
-        if (width!=0 && height!=0 && id!=0 && !path.isEmpty()) {
+    public void loadImage(){
+        if (width!=0 && height!=0 && id!=0 && !path.isEmpty() || (path.equals(BATTLE) && id!=0)) {
             final String url = getURL(path, width, height, id);
            /* if (path.equals(BATTLE)) {
                 try {
@@ -231,7 +233,8 @@ public class YammImageView extends FrameLayout {
                 public boolean onPreDraw() {
                     if (div.width == 0 && div.height == 0) {
                         div.setDimension(YammImageView.this.getMeasuredWidth(), YammImageView.this.getMeasuredHeight());
-                        div.loadImage();
+                        if (!div.path.equals(BATTLE))
+                            div.loadImage();
 
                         Log.i("YammImageView/onPreDraw", "Width " + div.width + " Height " + div.height);
 
