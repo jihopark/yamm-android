@@ -55,7 +55,6 @@ import retrofit.client.Response;
 public class DishFragment extends Fragment {
     private final static long LOCATION_MIN_TIME = 200; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
-    private final int DEFAULT_NUMBER_OF_DISHES = 4;
 
 
     public final static String TOO_MANY_DISLIKE = "dis";
@@ -65,7 +64,7 @@ public class DishFragment extends Fragment {
     private RelativeLayout main_layout;
     private DishItem item;
     private int index;
-    private ImageButton searchMap, pokeFriend, dislike, next;
+    private ImageButton searchMap, pokeFriend, dislike, nextRight, nextLeft;
     private boolean isGroup;
     private Activity activity;
     private MainFragment parentFragment;
@@ -197,8 +196,8 @@ public class DishFragment extends Fragment {
     }
 
     private void showButtons(){
-        if (next.getVisibility() == View.INVISIBLE)
-            next.setVisibility(View.VISIBLE);
+        MainFragment.configureNextButtons(index, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
+
         if (searchMap.getVisibility() == View.INVISIBLE)
             searchMap.setVisibility(View.VISIBLE);
         if (pokeFriend.getVisibility() == View.INVISIBLE)
@@ -212,7 +211,9 @@ public class DishFragment extends Fragment {
             if (parentFragment==null)
                 parentFragment = (MainFragment) getParentFragment();
 
-            next = parentFragment.getButton(R.id.dish_next_button);
+            nextLeft = parentFragment.getButton(R.id.dish_next_left_button);
+
+            nextRight = parentFragment.getButton(R.id.dish_next_right_button);
 
             searchMap = parentFragment.getButton(R.id.search_map_button);
 
@@ -225,19 +226,29 @@ public class DishFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     showButtons();
-                    Log.i("DishFragment/onClickListener","MainBar Clicked");
+                    Log.i("DishFragment/onClickListener", "MainBar Clicked");
                 }
             });
 
-            next.setOnClickListener(new View.OnClickListener() {
+            nextRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ViewPager dishPager = parentFragment.getDishPager();
 
-                    if (index == DEFAULT_NUMBER_OF_DISHES - 1)
-                        dishPager.setCurrentItem(index - 1, true);
-                    else
+                    if (!(index == MainFragment.DEFAULT_NUMBER_OF_DISHES - 1))
                         dishPager.setCurrentItem(index + 1, true);
+
+                }
+            });
+
+
+            nextLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewPager dishPager = parentFragment.getDishPager();
+
+                    if (!(index == 0))
+                        dishPager.setCurrentItem(index - 1, true);
 
                 }
             });
@@ -347,7 +358,8 @@ public class DishFragment extends Fragment {
         dislike.setEnabled(b);
         searchMap.setEnabled(b);
         pokeFriend.setEnabled(b);
-        next.setEnabled(b);
+        nextRight.setEnabled(b);
+        nextLeft.setEnabled(b);
 
     }
 
