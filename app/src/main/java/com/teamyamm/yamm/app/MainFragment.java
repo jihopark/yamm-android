@@ -3,6 +3,7 @@ package com.teamyamm.yamm.app;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -246,9 +247,29 @@ public class MainFragment extends Fragment {
             else
                 currentPage = i;
 
-            if (i == DEFAULT_NUMBER_OF_DISHES - 1 && !hasReachedEnd){
-                trackEndOfRecommendationMixpanel();
-                hasReachedEnd = true;
+
+            if (i == DEFAULT_NUMBER_OF_DISHES - 1){
+                SharedPreferences pref = null;
+                String key;
+
+                if (isGroup)
+                    key = getString(R.string.PREV_END_OF_RECOMMENDATION_GROUP);
+                else
+                    key = getString(R.string.PREV_END_OF_RECOMMENDATION_PERSONAL);
+
+                if (getActivity() instanceof BaseActivity) {
+                    pref = ((BaseActivity) getActivity()).prefs;
+                    hasReachedEnd = pref.getBoolean(key, false);
+                    Log.i("DishFragmentPagerAdapter/onPageSelected",key + " retrived. " + hasReachedEnd);
+                }
+                if (!hasReachedEnd) {
+                    trackEndOfRecommendationMixpanel();
+                    hasReachedEnd = true;
+                    if (pref!=null) {
+                        pref.edit().putBoolean(key, true).commit();
+                        Log.i("DishFragmentPagerAdapter/onPageSelected",key + " set true");
+                    }
+                }
             }
             Log.i("DishFragmentPagerAdapter/onPageSelected", dishItems.get(i).getName() + " Page " + i +" : Setting Buttons Again");
 

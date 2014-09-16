@@ -293,6 +293,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 Log.i("MainActivity/getPersonalDishes", "Dishes Loaded");
 
                 if (!isSameDishItems(items)) {
+                    //if there is new list, renew hasReachedEnd
+                    String key = getString(R.string.PREV_END_OF_RECOMMENDATION_PERSONAL);
+                    prefs.edit().putBoolean(key, false).commit();
+                    Log.i("MainActivity/loadDishes",key + " removed " + prefs.getBoolean(key,false));
+
                     //if there is new list, show newDialog
                     if (isDialogOpen == false) {
                         fullScreenDialog.show();

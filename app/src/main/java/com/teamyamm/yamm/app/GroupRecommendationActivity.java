@@ -227,6 +227,13 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
                 setFragment();
+
+
+                //if there is new list, renew hasReachedEnd
+                String key = getString(R.string.PREV_END_OF_RECOMMENDATION_GROUP);
+                prefs.edit().putBoolean(key, false).commit();
+                Log.i("GroupRecommendation/loadDishes", key + " removed");
+
             }
 
             @Override

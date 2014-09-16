@@ -52,6 +52,8 @@
     <string name="AUTH_TOKEN">authtoken</string>
     <string name="FRIEND_LIST">friendlist</string>
     <string name="PREV_DISHES">prevdish</string>
+    <string name="PREV_END_OF_RECOMMENDATION_PERSONAL">endpersonal</string>
+    <string name="PREV_END_OF_RECOMMENDATION_GROUP">endgroup</string>
 
     <!-- Dialog -->
     <string name="dialog_positive">네</string>
