@@ -160,13 +160,11 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             WTFExceptionHandler.sendLogToServer(PokeActivity.this, "WTF Invalid Token Error @PokeActivity/pokeWithYamm");
             return ;
         }
-
         service.sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("PokeActivity/sendPushMessage", "Push " + s);
                 trackPokeFriendMixpanel("YAMM", yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
-                finish();
             }
 
             @Override
@@ -182,7 +180,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
             }
         });
-
+        finish();
     }
 
     private void pokeWithSMS(){
