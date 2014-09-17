@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/intro_view_pager"/>
-    <com.teamyamm.yamm.app.YammCirclePageIndicator
+    <com.teamyamm.yamm.app.widget.YammCirclePageIndicator
         android:id="@+id/intro_view_pager_indicator"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

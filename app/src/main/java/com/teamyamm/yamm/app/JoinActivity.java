@@ -26,6 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.util.SmsListener;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

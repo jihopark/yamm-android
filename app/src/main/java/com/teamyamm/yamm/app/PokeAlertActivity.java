@@ -16,6 +16,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.PushContent;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
+import com.teamyamm.yamm.app.widget.YammImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

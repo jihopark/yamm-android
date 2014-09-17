@@ -9,6 +9,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 
+import com.teamyamm.yamm.app.widget.IntroImageFragment;
+import com.teamyamm.yamm.app.widget.YammCirclePageIndicator;
+
 /**
  * Created by parkjiho on 5/31/14.
  */

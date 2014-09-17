@@ -11,6 +11,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;

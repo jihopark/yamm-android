@@ -18,7 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.YammItemsListAdapter;
 import com.teamyamm.yamm.app.widget.IndexableListView;
+import com.teamyamm.yamm.app.widget.NameSpan;
+import com.teamyamm.yamm.app.widget.YammItemView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

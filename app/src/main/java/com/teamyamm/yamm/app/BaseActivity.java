@@ -44,6 +44,12 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,19 +77,19 @@ public class BaseActivity extends ActionBarActivity {
     public static final String USER_EMAIL = "USEREMAIL";
 
 
-    protected static final String appURL = "http://goo.gl/nJEFEq";
-    protected static final String packageName = "com.teamyamm.yamm.app";
+    public static final String appURL = "http://goo.gl/nJEFEq";
+    public static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
     public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
     public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
-    protected MixpanelAPI mixpanel;
+    public MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
     protected SharedPreferences prefs;
 
-    protected static boolean isLoggingOut = false;
+    public static boolean isLoggingOut = false;
 
     protected Dialog currentDialog = null;
 
@@ -449,11 +455,11 @@ public class BaseActivity extends ActionBarActivity {
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
-    protected void makeYammToast(int rId, int duration){
+    public void makeYammToast(int rId, int duration){
         makeYammToast(getString(rId), duration);
     }
 
-    protected void makeYammToast(String message, int duration){
+    public void makeYammToast(String message, int duration){
         try {
             if (BaseActivity.checkIfAppIsRunning()) {
                 LayoutInflater inflater = getLayoutInflater();

@@ -14,6 +14,7 @@ import com.kakao.AppActionBuilder;
 import com.kakao.KakaoLink;
 import com.kakao.KakaoParameterException;
 import com.kakao.KakaoTalkLinkMessageBuilder;
+import com.teamyamm.yamm.app.pojos.DishItem;
 
 import java.lang.reflect.Field;
 
