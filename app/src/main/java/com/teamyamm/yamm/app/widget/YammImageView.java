@@ -4,14 +4,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
+import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.network.VolleyController;
 
 /**
@@ -37,7 +39,7 @@ public class YammImageView extends FrameLayout {
     private long id = 0;
 
     private Context context;
-    private ImageView image;
+    private YammNetworkImageView image;
     private ProgressBar progressCircle;
 
     private ImageLoader imageLoader;
@@ -59,13 +61,13 @@ public class YammImageView extends FrameLayout {
 
         measureDynamicDimension();
 
-       /* progressCircle = new ProgressBar(context);
+        progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
                 (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
-        addView(progressCircle);*/
+        addView(progressCircle);
     }
 
     /*
@@ -85,13 +87,13 @@ public class YammImageView extends FrameLayout {
 
         this.setBackgroundColor(Color.GRAY);
 
-       /* progressCircle = new ProgressBar(context);
+        progressCircle = new ProgressBar(context);
         FrameLayout.LayoutParams params = new LayoutParams((int) getResources().getDimension(R.dimen.image_progress_circle_radius),
                 (int) getResources().getDimension(R.dimen.image_progress_circle_radius));
         params.gravity = Gravity.CENTER;
         progressCircle.setLayoutParams(params);
         progressCircle.setVisibility(View.VISIBLE);
-        addView(progressCircle);*/
+        addView(progressCircle);
 
         if (width != 0 && height != 0)
             setID(id);
@@ -102,14 +104,8 @@ public class YammImageView extends FrameLayout {
         imageLoader = VolleyController.getImageLoader();
     }
 
-    private void setImageView(ImageView v){
-        if (v instanceof NetworkImageView) {
-            setVolley();
-            Log.d("YammImageView/setImageView","Network ImageView Set");
-        }
-        else
-            Log.d("YammImageView/setImageView","General ImageView Set");
-
+    private void setImageView(YammNetworkImageView v){
+        setVolley();
         image = v;
         image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         image.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -203,11 +199,12 @@ public class YammImageView extends FrameLayout {
                 }
                 return ;
             }*/
-            setImageView(new NetworkImageView(context));
+            setImageView(new YammNetworkImageView(context, progressCircle));
 
-            if (image instanceof NetworkImageView) {
-                ((NetworkImageView) image).setImageUrl(url, imageLoader);
+            if (path.equals(GROUP) || path.equals(MAIN)){
+                image.setErrorImageResId(R.drawable.image_notfound);
             }
+            image.setImageUrl(url, imageLoader);
 
 
             Log.d("YammImageView/loadImage","Image Loading from Volley " + getURL(path, width, height, id));
@@ -218,13 +215,6 @@ public class YammImageView extends FrameLayout {
         }
 
     }
-
-    public static void removePicasso(){
-        if (picasso!=null){
-            picasso = null;
-        }
-    }
-
 
     private void measureDynamicDimension(){
         final YammImageView div = this;
