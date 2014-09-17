@@ -1,5 +1,7 @@
 package com.teamyamm.yamm.app;
 
+import com.teamyamm.yamm.app.util.StringMatcher;
+
 /**
  * Created by parkjiho on 5/19/14.
  */
@@ -42,21 +44,21 @@ public abstract class YammItem implements Comparable<YammItem> {
         char aa = a.charAt(0);
         char bb = b.charAt(0);
 
-        boolean aEnglish = false, bEnglish = false;
-        if (aa >= 49 && aa <= 106){
-            aEnglish = true;
+        boolean aKorean = false, bKorean = false;
+        if (StringMatcher.isKorean(aa)){
+            aKorean = true;
         }
 
-        if (bb >= 49 && bb <= 106){
-            bEnglish = true;
+        if (StringMatcher.isKorean(bb)){
+            bKorean = true;
         }
 
-        if ((aEnglish && bEnglish) || (!aEnglish && !bEnglish))
+        if ((aKorean && bKorean) || (!aKorean && !bKorean))
             return a.compareTo(b);
 
-        if (aEnglish)
-            return 1;
-        return -1;
+        if (aKorean)
+            return -1;
+        return 1;
 
     }
 
