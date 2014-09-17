@@ -227,8 +227,8 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             WTFExceptionHandler.sendLogToServer(GroupRecommendationActivity.this, "WTF Invalid Token Error @GroupRecommendationActivity/loadDishes");
             return ;
         }
-
-        service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
+        String meal = getMealType();
+        service.getGroupSuggestions(meal, userIds, new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishes, Response response) {
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
@@ -298,6 +298,16 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                 },
                 null);
         dialog.show();
+    }
+
+    private String getMealType(){
+        String s = selectedTime.substring(selectedTime.length()-2,selectedTime.length());
+        Log.d("GroupRecommendationActivity/getMealType",s);
+
+        if (s.equals("점심"))
+            return "lunch";
+        else
+            return "dinner";
     }
 
     private void trackReceivedGroupRecommendation(){

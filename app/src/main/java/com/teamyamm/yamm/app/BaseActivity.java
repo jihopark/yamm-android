@@ -76,7 +76,6 @@ public class BaseActivity extends ActionBarActivity {
 
     public static final String USER_EMAIL = "USEREMAIL";
 
-
     public static final String appURL = "http://goo.gl/nJEFEq";
     public static final String packageName = "com.teamyamm.yamm.app";
 
