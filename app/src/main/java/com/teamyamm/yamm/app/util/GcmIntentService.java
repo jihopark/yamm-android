@@ -86,10 +86,30 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
+    private boolean checkEnvironment(String env){
+        if (env == null)
+            return false;
+
+        if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(env))
+            return true;
+
+        if ((BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.STAGING)
+                && env.equals(BaseActivity.PRODUCTION)) ||
+                (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.PRODUCTION)
+                && env.equals(BaseActivity.STAGING)))
+            return true;
+        return false;
+    }
+
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotification(PushContent content) {
+        if (!checkEnvironment(content.getEnvironment())){
+            Log.e("GcmIntentService/sendNotification","Wrong Environment Push");
+            return ;
+        }
+
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = null;

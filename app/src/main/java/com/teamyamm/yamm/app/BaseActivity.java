@@ -68,9 +68,9 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
-    public static final String PRODUCTION = "PROD";
-    public static final String TESTING = "TEST";
-    public static final String STAGING = "STAGING";
+    public static final String PRODUCTION = "production";
+    public static final String TESTING = "test";
+    public static final String STAGING = "staging";
 
     public static final String CURRENT_APPLICATION_STATUS = TESTING;
 
@@ -528,6 +528,7 @@ public class BaseActivity extends ActionBarActivity {
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.remove(PROPERTY_REG_ID);
         editor.remove(PROPERTY_APP_VERSION);
+        regid = null;
         editor.commit();
 
         //GCM push

@@ -16,6 +16,7 @@ public class PushContent {
 
     private String type;
     private Friend sender;
+    private String environment;
 
     /*
     for POKE
@@ -37,6 +38,9 @@ public class PushContent {
     public PushContent(Bundle extras){
         Gson gson = new Gson();
         type = extras.getString("type");
+
+        environment = extras.getString("environment");
+
         if (type.equals(POKE)){
             date = extras.getString("date");
             meal = extras.getString("meal");
@@ -72,7 +76,7 @@ public class PushContent {
     public DishItem getDish(){ return dish; }
     public String getTitle(){return title; }
     public String getMessage(){ return message; }
-
+    public String getEnvironment(){return environment; }
     public String toString(){
         return "Type:" + type + " Date/Meal:" + date + "/" + meal + " Dish:" + dish + " Sender:" + sender;
     }
