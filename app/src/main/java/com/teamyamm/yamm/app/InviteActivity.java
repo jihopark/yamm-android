@@ -144,6 +144,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             @Override
             public void onClick(View v) {
                 Log.i("InviteActivity/confirmButtonOnClick",friendsFragment.getSelectedItems().toString());
+                trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
                 startSMSIntent(getString(R.string.invite_message) + " " + appURL, friendsFragment.getSelectedItems());
             }
         });
