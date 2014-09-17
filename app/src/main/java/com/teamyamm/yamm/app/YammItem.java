@@ -34,8 +34,30 @@ public abstract class YammItem implements Comparable<YammItem> {
             return 1;
         }
         else {
-            return this.name.compareTo(compare.getName());
+            return nameCompareTo(name,compare.getName());
         }
+    }
+
+    private int nameCompareTo(String a, String b){
+        char aa = a.charAt(0);
+        char bb = b.charAt(0);
+
+        boolean aEnglish = false, bEnglish = false;
+        if (aa >= 49 && aa <= 106){
+            aEnglish = true;
+        }
+
+        if (bb >= 49 && bb <= 106){
+            bEnglish = true;
+        }
+
+        if ((aEnglish && bEnglish) || (!aEnglish && !bEnglish))
+            return a.compareTo(b);
+
+        if (aEnglish)
+            return 1;
+        return -1;
+
     }
 
     public void setSelected(boolean b){
