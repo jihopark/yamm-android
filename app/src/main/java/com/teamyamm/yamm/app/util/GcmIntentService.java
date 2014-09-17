@@ -24,20 +24,20 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.BaseActivity;
-import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.MainActivity;
 import com.teamyamm.yamm.app.PokeAlertActivity;
-import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.PushContent;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by parkjiho on 8/13/14.
  */
 public class GcmIntentService extends IntentService {
-    public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
@@ -257,8 +257,11 @@ public class GcmIntentService extends IntentService {
         if (mBuilder!=null && contentIntent!= null)
             mBuilder.setContentIntent(contentIntent);
 
-        if (mBuilder!=null)
-            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        if (mBuilder!=null) {
+            Random random = new Random();
+
+            mNotificationManager.notify(random.nextInt(), mBuilder.build());
+        }
     }
 
     private void makeNotificationSound(){

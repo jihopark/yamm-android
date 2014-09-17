@@ -49,6 +49,14 @@ public class PokeAlertActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_poke_alert);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
         if (getIntent().getExtras() != null) {
             content = new Gson().fromJson(getIntent().getExtras().getString("pushcontent"), PushContent.class);
         }
@@ -56,8 +64,6 @@ public class PokeAlertActivity extends Activity {
             Log.e("PokeAlertActivity/onCreate","PokeAlertActivity created without bundle");
             finish();
         }
-        setContentView(R.layout.activity_poke_alert);
-
         if (YammAPIAdapter.isTokenEmpty()){
             String s = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE).getString(getString(R.string.AUTH_TOKEN),"");
             Log.i("PokeAlertActivity/onCreate","AuthToken is Empty. Retrieving " + s);
@@ -65,7 +71,6 @@ public class PokeAlertActivity extends Activity {
         }
 
         setDialogContent();
-
     }
 
     private void setDialogContent(){
