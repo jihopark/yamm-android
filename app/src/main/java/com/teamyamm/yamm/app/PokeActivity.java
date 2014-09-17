@@ -347,8 +347,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) { }
-
         });
+        setDefaultValueForSpinner(datePickSpinner);
     }
 
     public String getPokeMessage(String time, String name){

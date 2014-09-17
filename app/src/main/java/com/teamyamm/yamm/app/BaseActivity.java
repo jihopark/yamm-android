@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -890,6 +892,20 @@ public class BaseActivity extends ActionBarActivity {
         if (n > 1)
             return getString(R.string.poke_friend_plural);
         return getString(R.string.poke_friend_singular);
+    }
+
+    protected void setDefaultValueForSpinner(Spinner s){
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+
+        if (hour < 14 && hour > 2){
+            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Lunch!");
+            s.setSelection(0);
+        }
+        else{
+            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Dinner!");
+            s.setSelection(1);
+        }
     }
 
     /**
