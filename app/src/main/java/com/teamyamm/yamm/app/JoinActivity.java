@@ -39,6 +39,8 @@ import retrofit.client.Response;
 
 
 public class JoinActivity extends BaseActivity {
+    private final static String JOIN_EMAIL = "JoinEmail", JOIN_NAME = "JoinName";
+
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
     private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false, flag_checkbox = false;
@@ -52,6 +54,7 @@ public class JoinActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_join);
         Log.i("JoinActivity/OnCreate", "JoinActivity onCreate");
 
@@ -64,6 +67,7 @@ public class JoinActivity extends BaseActivity {
         configJoinConfirmButton();
         getPhoneNumber();
     }
+
 
     private void getPhoneNumber(){
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -104,9 +108,19 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
+        String s = prefs.getString(JOIN_EMAIL, "");
+
+        if (!s.isEmpty())
+            emailText.setText(s);
+        s = prefs.getString(JOIN_NAME, "");
+
+        if (!s.isEmpty())
+            nameText.setText(s);
+
         //To Show Keyboard
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
     }
 
     @Override
@@ -114,6 +128,8 @@ public class JoinActivity extends BaseActivity {
         super.onPause();
         unregisterReceiver(smsListener);
         Log.i("JoinActivity/configSmsListener", "SMS Listener Unregistered");
+        putInPref(prefs,JOIN_EMAIL, emailText.getText().toString());
+        putInPref(prefs,JOIN_NAME, nameText.getText().toString());
     }
 
     public void setConfirmButtonEnabled(){
@@ -349,6 +365,9 @@ public class JoinActivity extends BaseActivity {
         String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
 
         YammAPIService service = YammAPIAdapter.getLoginService(email, password);
+
+        prefs.edit().remove(JOIN_NAME).commit();
+        prefs.edit().remove(JOIN_EMAIL).commit();
 
         service.userLogin(new YammAPIService.GrantType(), new Callback<YammAPIService.YammToken>() {
             @Override
