@@ -115,8 +115,35 @@ public class GcmIntentService extends IntentService {
         PendingIntent contentIntent = null;
         NotificationCompat.Builder mBuilder = null;
 
+        if (content.getType().equals(PushContent.UPDATE)){
+            Log.i("GcmIntentService/sendNotification","UPDATE Notification");
 
-        if (content.getType().equals(PushContent.POKE)) {
+            Intent intent;
+
+            final String appPackageName = BaseActivity.packageName; // getPackageName() from Context or Activity object
+            try {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName));
+            }
+
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    intent, 0);
+
+
+            String title = content.getTitle();
+            if (title == null || title.isEmpty())
+                title = getString(R.string.push_admin_default_title);
+            mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.yamm_stat_notify)
+                    .setContentTitle(title)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(content.getMessage()))
+                    .setContentText(content.getMessage())
+                    .setAutoCancel(true)
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        }
+        else if (content.getType().equals(PushContent.POKE)) {
             Intent intent = new Intent(this, PokeAlertActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("pushcontent", new Gson().toJson(content, PushContent.class));
@@ -196,7 +223,7 @@ public class GcmIntentService extends IntentService {
 
 
             String title = content.getTitle();
-            if (title.equals(""))
+            if (title == null || title.isEmpty())
                 title = getString(R.string.push_admin_default_title);
 
             mBuilder = new NotificationCompat.Builder(this)

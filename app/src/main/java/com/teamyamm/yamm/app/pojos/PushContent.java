@@ -9,6 +9,7 @@ import com.google.gson.Gson;
  * Created by parkjiho on 8/30/14.
  */
 public class PushContent {
+    public final static String UPDATE = "UPDATE";
     public final static String ADMIN = "ADMIN";
     public final static String POKE = "POKE";
     public final static String FACEBOOK ="FB";
@@ -47,7 +48,7 @@ public class PushContent {
             dish = gson.fromJson(extras.getString("dish"), DishItem.class);
             sender = gson.fromJson(extras.getString("sender"), Friend.class);
         }
-        else if (type.equals(ADMIN)){
+        else if (type.equals(ADMIN) || type.equals(UPDATE)){
             message = extras.getString("mp_message");
             if (extras.containsKey("title"))
                 title = extras.getString("title");
