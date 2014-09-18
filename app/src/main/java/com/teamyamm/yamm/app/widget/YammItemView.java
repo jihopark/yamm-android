@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.teamyamm.yamm.app.BaseActivity;
@@ -47,6 +48,16 @@ public class YammItemView extends LinearLayout {
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) itemCheckbox.getLayoutParams();
+
+        params.setMargins(0, 0, (int) (40*context.getResources().getDisplayMetrics().density), 0);
+
+        Log.d("YammItemView/constructor",getResources().getDimension(R.dimen.yamm_item_right_margin)+"");
+        Log.d("YammItemView/constructor",30*context.getResources().getDisplayMetrics().density+"");
+
+
+        itemCheckbox.setLayoutParams(params);
 
         fragment = (FriendsFragment) ((BaseActivity)context).getSupportFragmentManager().findFragmentByTag(((FriendListInterface)context).getFragmentTag(contentType));
 
