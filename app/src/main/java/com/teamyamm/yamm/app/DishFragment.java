@@ -89,7 +89,14 @@ public class DishFragment extends Fragment {
         nameText = (TextView) main_layout.findViewById(R.id.dish_name_text);
         commentText = (TextView) main_layout.findViewById(R.id.dish_comment_text);
 
+        loadDish();
+        return main_layout;
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d("DishFragment/onActivityCreated","onActivityCreated");
         if (getParentFragment() instanceof MainFragment){
             parentFragment = (MainFragment) getParentFragment();
             if (parentFragment.isPerforming){
@@ -100,18 +107,14 @@ public class DishFragment extends Fragment {
 
         }
         else{
-            Log.e("DishFragment/onCreateView", "Parent Fragment of DishFragment should be instanceof MainFragment!");
-            return null;
+            Log.d("DishFragment/onActivityCreated", "Parent Fragment of DishFragment should be instanceof MainFragment!");
+            return ;
         }
 
-        loadDish();
         if (index == parentFragment.getCurrentPage()) {
-            Log.i("DishFragment/onCreateView",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
+            Log.d("DishFragment/onActivityCreated",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
             setButtons();
         }
-
-
-        return main_layout;
     }
 
     public DishItem getDishItem(){
@@ -122,6 +125,8 @@ public class DishFragment extends Fragment {
     public TextView getCommentText(){ return commentText; }
 
     public void setParentFragment(MainFragment f){
+
+        Log.d("DishFragment/setParentFragment","Set ParentFragment");
         parentFragment = f;
         try {
             setButtons();

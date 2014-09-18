@@ -276,6 +276,7 @@ public class MainFragment extends Fragment {
             Log.i("DishFragmentPagerAdapter/onPageSelected", dishItems.get(i).getName() + " Page " + i +" : Setting Buttons Again");
 
             try {
+                fragments.get(i).setParentFragment(MainFragment.this);
                 fragments.get(i).setButtons();
                 fragments.get(i).showTexts();
                 configureNextButtons(i, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
