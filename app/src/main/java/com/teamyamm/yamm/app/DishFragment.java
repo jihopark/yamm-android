@@ -80,7 +80,9 @@ public class DishFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_dish, container, false);
+        Log.d("DishFragment/onCreateView","onCreateView Started");
 
         isGroup = this.getArguments().getBoolean("isGroup");
         index = this.getArguments().getInt("index");
@@ -90,6 +92,7 @@ public class DishFragment extends Fragment {
         commentText = (TextView) main_layout.findViewById(R.id.dish_comment_text);
 
         loadDish();
+        Log.d("DishFragment/onCreateView","DishFragment Created for " +item.getName());
         return main_layout;
     }
 
@@ -231,14 +234,14 @@ public class DishFragment extends Fragment {
 
             dislike = parentFragment.getButton(R.id.dish_dislike_button);
 
-            mainBar.setSoundEffectsEnabled(false);
+/*            mainBar.setSoundEffectsEnabled(false);
             mainBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showButtons();
                     Log.i("DishFragment/onClickListener", "MainBar Clicked");
                 }
-            });
+            });*/
 
             nextRight.setOnClickListener(new View.OnClickListener() {
                 @Override

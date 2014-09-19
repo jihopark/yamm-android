@@ -189,21 +189,13 @@ public class MainFragment extends Fragment {
             for (int i=0; i < DEFAULT_NUMBER_OF_DISHES ; i++){
                 fragments.add(new DishFragment());
             }
-
-         //   if (isGroup)
-        //        numPage = DEFAULT_NUMBER_OF_DISHES + 1;
-        //    else
-                numPage = DEFAULT_NUMBER_OF_DISHES;
+            Log.d("DishFragmentPagerAdapter/constructor","Constructor");
+            numPage = DEFAULT_NUMBER_OF_DISHES;
 
         }
 
         @Override
         public Fragment getItem(int index) {
-      //      if (isGroup && index == DEFAULT_NUMBER_OF_DISHES){
-        //        return  new BattleOfferFragment();
-      //      }
-
-
             DishFragment dishFragment = new DishFragment();
             Bundle bundle = new Bundle();
             bundle.putString("dish", new Gson().toJson(dishItems.get(index), DishItem.class));
@@ -213,6 +205,7 @@ public class MainFragment extends Fragment {
             dishFragment.setArguments(bundle);
             fragments.set(index, dishFragment);
             Log.i("DishFragmentPagerAdapter/getItem", "Page " + index +" : " + dishItems.get(index).getName());
+            dishFragment.setParentFragment(MainFragment.this);
 
             return dishFragment;
         }
