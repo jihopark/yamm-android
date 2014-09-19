@@ -38,6 +38,7 @@ public class YammAPIAdapter {
     private static YammAPIService loginService = null;
     private static String token = null;
     private static Context context = null;
+    private static AndroidLogger logger = null;
 
     private static void checkAPIURL(){
         Log.i("YammAPIAdapter/checkAPIURL","Checking URL");
@@ -199,7 +200,10 @@ public class YammAPIAdapter {
             public void log(String s) {
                 Log.i("YammAPIServiceLog", s);
                 if (context!=null) {
-                    AndroidLogger logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
+                    if (logger==null) {
+                        logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
+                        Log.i("YammAPIAdapter/setRestAdapterLog","Logger is null. Init Logentries Logger");
+                    }
                     logger.info(s);
                 }
             }
