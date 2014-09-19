@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
+import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.widget.YammItemView;
 
@@ -22,7 +23,7 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
     private List<YammItemView> views;
     private Context context;
     private int contentType;
-
+    private YammItem dummyItem;
     private String mSections = "";
 
 
@@ -38,6 +39,7 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
         this.contentType = contentType;
         views = new ArrayList<YammItemView>();
         createSectionsForIndex();
+        dummyItem = new Friend(-1,('z'+1)+"");
     }
 
 
@@ -92,6 +94,18 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
             }
         }
         return 0;
+    }
+
+    public void addDummyItem(){
+        Log.d("YammItemsListAdapter/addDummyItem","Added Dummy");
+        items.add(dummyItem);
+        notifyDataSetInvalidated();
+    }
+
+    public void removeDummyItem(){
+        Log.d("YammItemsListAdapter/removeDummyItem","Removed Dummy");
+        items.remove(items.size()-1);
+        notifyDataSetChanged();
     }
 
     @Override

@@ -27,6 +27,7 @@ public class YammItemView extends LinearLayout {
     private FriendsFragment fragment;
     private Context context;
     private int contentType;
+    private YammItemView layout;
 
     public YammItemView(Context context) {
         super(context);
@@ -44,7 +45,7 @@ public class YammItemView extends LinearLayout {
         contentType = type;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        YammItemView layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
+        layout = (YammItemView) inflater.inflate(R.layout.yamm_item_view, this, true);
 
         itemNameText = (TextView) layout.findViewById(R.id.yamm_item_name_text);
         itemCheckbox = (CheckBox) layout.findViewById(R.id.yamm_item_check);
@@ -54,6 +55,8 @@ public class YammItemView extends LinearLayout {
         setItemCheckBoxMargin(IndexableListView.currentMarginState);
 
         setItem(item);
+
+
         itemCheckbox.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +64,7 @@ public class YammItemView extends LinearLayout {
                 toggle();
             }
         });
+
     }
     /*
     * False = default, True = when IndexScroller is up
@@ -95,6 +99,12 @@ public class YammItemView extends LinearLayout {
         else
             itemCheckbox.setChecked(false);
 
+        if (item.getID() == -1){
+            Log.d("YammItemView/setItem","Found Dummy");
+            layout.setVisibility(INVISIBLE);
+        }
+        else
+            layout.setVisibility(VISIBLE);
     }
 
     public boolean isSelected(){

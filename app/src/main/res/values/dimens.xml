@@ -11,6 +11,8 @@
     <dimen name="yamm_item_right_margin">16dp</dimen>
     <dimen name="yamm_item_checkbox">26dp</dimen>
 
+    <dimen name="friend_confirm_button_height">60dp</dimen>
+
     <dimen name="round_button_radius">50dp</dimen>
     <dimen name="veri_round_button_radius">4dp</dimen>
 

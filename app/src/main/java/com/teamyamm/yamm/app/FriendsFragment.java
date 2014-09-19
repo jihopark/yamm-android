@@ -138,9 +138,11 @@ public class FriendsFragment extends Fragment {
         TextSwitcher textSwitcher = new TextSwitcher(getActivity());
 
 
-
-        if (selectedItems.size() == 1)
+        if (selectedItems.size() == 1) {
             selectedItemsLayout.setVisibility(View.VISIBLE);
+            //Add Dummy Item
+            adapter.addDummyItem();
+        }
         else{
             Spannable newSpan = new SpannableString(" ");
             newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
@@ -160,9 +162,10 @@ public class FriendsFragment extends Fragment {
     private void removeSelectedItemView(YammItem yammItem){
         int count = 0;
 
-        if (selectedItems.size()==1)
+        if (selectedItems.size()==1) {
             selectedItemsLayout.setVisibility(View.GONE);
-
+            adapter.removeDummyItem();
+        }
         selectedItemsTextView.setText("");
         for (YammItem i : selectedItems){
             if (i!=yammItem){
