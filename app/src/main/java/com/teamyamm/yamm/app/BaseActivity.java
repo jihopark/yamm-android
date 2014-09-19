@@ -253,6 +253,7 @@ public class BaseActivity extends ActionBarActivity {
         if (title==0){
             titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
             titleText.setText("");
+            messageText.setPadding(0,0,0,(int)(getResources().getDimension(R.dimen.custom_dialog_title_height)/2));
         }
         else
             titleText.setText(getString(title));
