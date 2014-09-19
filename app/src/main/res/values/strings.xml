@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_version_name">0.1.7</string>
+    <string name="app_version_name">0.1.9</string>
     <string name="logentries_key">6036cb0d-331d-4124-8245-e93f91de1388</string>
     <string name="app_name">Yamm</string>
     <string name="hello_world">Hello world!</string>
@@ -52,6 +52,8 @@
     <string name="AUTH_TOKEN">authtoken</string>
     <string name="FRIEND_LIST">friendlist</string>
     <string name="PREV_DISHES">prevdish</string>
+    <string name="PREV_END_OF_RECOMMENDATION_PERSONAL">endpersonal</string>
+    <string name="PREV_END_OF_RECOMMENDATION_GROUP">endgroup</string>
 
     <!-- Dialog -->
     <string name="dialog_positive">네</string>
@@ -168,6 +170,9 @@
     <!-- Poke Activity -->
     <string name="poke_contact_confirm">친구한테 물어보기!</string>
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
+    <string name="poke_friend_singular">친구한테</string>
+    <string name="poke_friend_plural">친구들한테</string>
+
 
     <!-- Push Messages -->
     <string name="poke_push_title">밥 같이 먹어요</string>

@@ -15,6 +15,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.teamyamm.yamm.app.interfaces.DatePickerFragmentInterface;
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
+import com.teamyamm.yamm.app.widget.YammDatePickerFragment;
+import com.teamyamm.yamm.app.widget.YammIconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
@@ -31,7 +41,7 @@ import retrofit.client.Response;
 /**
  * Created by parkjiho on 8/11/14.
  */
-public class PokeActivity extends BaseActivity implements FriendListInterface, DatePickerFragmentInterface{
+public class PokeActivity extends BaseActivity implements FriendListInterface, DatePickerFragmentInterface {
 
     private Spinner datePickSpinner;
     public YammDatePickerFragment datePickerFragment;
@@ -139,8 +149,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
         for (YammItem i : yammFriendsFragment.selectedItems)
             sendIds.add(i.getID());
 
-
-        makeYammToast("친구들한테 " + datePickSpinner.getSelectedItem().toString() + "에 "
+        makeYammToast(friendKoreanPlural(yammFriendsFragment.selectedItems.size()) + " " + datePickSpinner.getSelectedItem().toString() + "에 "
                 + currentItem.getName() + " 먹자고 했어요!", Toast.LENGTH_SHORT);
 
 
@@ -151,13 +160,11 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             WTFExceptionHandler.sendLogToServer(PokeActivity.this, "WTF Invalid Token Error @PokeActivity/pokeWithYamm");
             return ;
         }
-
         service.sendPokeMessage(new YammAPIService.RawPokeMessage(sendIds, currentItem.getId(), time, meal), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
                 Log.i("PokeActivity/sendPushMessage", "Push " + s);
                 trackPokeFriendMixpanel("YAMM", yammFriendsFragment.selectedItems.size(), datePickSpinner.getSelectedItem().toString(), currentItem.getName());
-                finish();
             }
 
             @Override
@@ -173,7 +180,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
             }
         });
-
+        finish();
     }
 
     private void pokeWithSMS(){
@@ -340,8 +347,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) { }
-
         });
+        setDefaultValueForSpinner(datePickSpinner);
     }
 
     public String getPokeMessage(String time, String name){

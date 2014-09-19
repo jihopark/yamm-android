@@ -13,7 +13,7 @@
             android:id="@+id/date_pick_spinner"
             style="@style/DatePickSpinner"/>
     </RelativeLayout>
-    <com.teamyamm.yamm.app.YammIconPageIndicator
+    <com.teamyamm.yamm.app.widget.YammIconPageIndicator
         android:layout_below="@+id/date_pick_spinner_container"
         android:background="@color/brown_color"
         android:layout_width="match_parent"

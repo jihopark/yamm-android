@@ -34,6 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
+import com.teamyamm.yamm.app.widget.YammImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +60,6 @@ import retrofit.client.Response;
 public class DishFragment extends Fragment {
     private final static long LOCATION_MIN_TIME = 200; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
-    private final int DEFAULT_NUMBER_OF_DISHES = 4;
 
 
     public final static String TOO_MANY_DISLIKE = "dis";
@@ -65,7 +69,7 @@ public class DishFragment extends Fragment {
     private RelativeLayout main_layout;
     private DishItem item;
     private int index;
-    private ImageButton searchMap, pokeFriend, dislike, next;
+    private ImageButton searchMap, pokeFriend, dislike, nextRight, nextLeft;
     private boolean isGroup;
     private Activity activity;
     private MainFragment parentFragment;
@@ -76,7 +80,9 @@ public class DishFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_dish, container, false);
+        Log.d("DishFragment/onCreateView","onCreateView Started");
 
         isGroup = this.getArguments().getBoolean("isGroup");
         index = this.getArguments().getInt("index");
@@ -85,7 +91,15 @@ public class DishFragment extends Fragment {
         nameText = (TextView) main_layout.findViewById(R.id.dish_name_text);
         commentText = (TextView) main_layout.findViewById(R.id.dish_comment_text);
 
+        loadDish();
+        Log.d("DishFragment/onCreateView","DishFragment Created for " +item.getName());
+        return main_layout;
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d("DishFragment/onActivityCreated","onActivityCreated");
         if (getParentFragment() instanceof MainFragment){
             parentFragment = (MainFragment) getParentFragment();
             if (parentFragment.isPerforming){
@@ -96,18 +110,14 @@ public class DishFragment extends Fragment {
 
         }
         else{
-            Log.e("DishFragment/onCreateView", "Parent Fragment of DishFragment should be instanceof MainFragment!");
-            return null;
+            Log.d("DishFragment/onActivityCreated", "Parent Fragment of DishFragment should be instanceof MainFragment!");
+            return ;
         }
 
-        loadDish();
         if (index == parentFragment.getCurrentPage()) {
-            Log.i("DishFragment/onCreateView",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
+            Log.d("DishFragment/onActivityCreated",  item.getName() + " Page " + index + " : "+ " Setting Button for Current index");
             setButtons();
         }
-
-
-        return main_layout;
     }
 
     public DishItem getDishItem(){
@@ -118,6 +128,8 @@ public class DishFragment extends Fragment {
     public TextView getCommentText(){ return commentText; }
 
     public void setParentFragment(MainFragment f){
+
+        Log.d("DishFragment/setParentFragment","Set ParentFragment");
         parentFragment = f;
         try {
             setButtons();
@@ -196,14 +208,15 @@ public class DishFragment extends Fragment {
         showButtons();
     }
 
-    private void showButtons(){
-        if (next.getVisibility() == View.INVISIBLE)
-            next.setVisibility(View.VISIBLE);
-        if (searchMap.getVisibility() == View.INVISIBLE)
+    public void showButtons(){
+        if (nextLeft!=null && nextRight!=null)
+            MainFragment.configureNextButtons(index, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
+
+        if (searchMap!=null && searchMap.getVisibility() == View.INVISIBLE)
             searchMap.setVisibility(View.VISIBLE);
-        if (pokeFriend.getVisibility() == View.INVISIBLE)
+        if (pokeFriend!=null && pokeFriend.getVisibility() == View.INVISIBLE)
             pokeFriend.setVisibility(View.VISIBLE);
-        if (dislike.getVisibility() == View.INVISIBLE)
+        if (dislike!=null && dislike.getVisibility() == View.INVISIBLE)
             dislike.setVisibility(View.VISIBLE);
     }
 
@@ -212,7 +225,9 @@ public class DishFragment extends Fragment {
             if (parentFragment==null)
                 parentFragment = (MainFragment) getParentFragment();
 
-            next = parentFragment.getButton(R.id.dish_next_button);
+            nextLeft = parentFragment.getButton(R.id.dish_next_left_button);
+
+            nextRight = parentFragment.getButton(R.id.dish_next_right_button);
 
             searchMap = parentFragment.getButton(R.id.search_map_button);
 
@@ -220,24 +235,34 @@ public class DishFragment extends Fragment {
 
             dislike = parentFragment.getButton(R.id.dish_dislike_button);
 
-            mainBar.setSoundEffectsEnabled(false);
+/*            mainBar.setSoundEffectsEnabled(false);
             mainBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showButtons();
-                    Log.i("DishFragment/onClickListener","MainBar Clicked");
+                    Log.i("DishFragment/onClickListener", "MainBar Clicked");
                 }
-            });
+            });*/
 
-            next.setOnClickListener(new View.OnClickListener() {
+            nextRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ViewPager dishPager = parentFragment.getDishPager();
 
-                    if (index == DEFAULT_NUMBER_OF_DISHES - 1)
-                        dishPager.setCurrentItem(index - 1, true);
-                    else
+                    if (!(index == MainFragment.DEFAULT_NUMBER_OF_DISHES - 1))
                         dishPager.setCurrentItem(index + 1, true);
+
+                }
+            });
+
+
+            nextLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewPager dishPager = parentFragment.getDishPager();
+
+                    if (!(index == 0))
+                        dishPager.setCurrentItem(index - 1, true);
 
                 }
             });
@@ -347,7 +372,8 @@ public class DishFragment extends Fragment {
         dislike.setEnabled(b);
         searchMap.setEnabled(b);
         pokeFriend.setEnabled(b);
-        next.setEnabled(b);
+        nextRight.setEnabled(b);
+        nextLeft.setEnabled(b);
 
     }
 

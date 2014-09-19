@@ -8,7 +8,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="280dp">
-        <com.teamyamm.yamm.app.YammImageView
+        <com.teamyamm.yamm.app.widget.YammImageView
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="280dp"

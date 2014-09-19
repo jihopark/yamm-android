@@ -16,7 +16,7 @@
             android:layout_height="match_parent">
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="@dimen/custom_dialog_title_height"
                 android:background="@color/dialog_title_background"
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"

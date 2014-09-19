@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.teamyamm.yamm.app.interfaces.DatePickerFragmentInterface;
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.widget.YammDatePickerFragment;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -212,8 +217,8 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
         spinnerAdapter = ArrayAdapter.createFromResource(FriendActivity.this, R.array.date_spinner_array, R.layout.closed_spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         datePickSpinner.setAdapter(spinnerAdapter);
-        datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
+            datePickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
                 // An item was selected. You can retrieve the selected item using
                 // parent.getItemAtPosition(pos)
@@ -225,6 +230,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
             public void onNothingSelected(AdapterView<?> parent) { }
 
         });
+        setDefaultValueForSpinner(datePickSpinner);
     }
 
 }

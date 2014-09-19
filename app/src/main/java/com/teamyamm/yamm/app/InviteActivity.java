@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.widget.YammIconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import org.json.JSONException;
@@ -144,6 +148,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             @Override
             public void onClick(View v) {
                 Log.i("InviteActivity/confirmButtonOnClick",friendsFragment.getSelectedItems().toString());
+                trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
                 startSMSIntent(getString(R.string.invite_message) + " " + appURL, friendsFragment.getSelectedItems());
             }
         });
