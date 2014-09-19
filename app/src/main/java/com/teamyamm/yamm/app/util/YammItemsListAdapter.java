@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer {
     private List<YammItem> items;
+    private List<YammItemView> views;
     private Context context;
     private int contentType;
 
@@ -35,6 +36,7 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
         items = list;
         Collections.sort(items);
         this.contentType = contentType;
+        views = new ArrayList<YammItemView>();
         createSectionsForIndex();
     }
 
@@ -42,8 +44,10 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
     public View getView(int position, View convertView, ViewGroup parent){
         YammItemView view = null;
 
-        if (convertView == null)
+        if (convertView == null) {
             view = new YammItemView(context, getItem(position), contentType);
+            views.add(view);
+        }
         else{
             view = (YammItemView) convertView;
             view.setItem(getItem(position));
@@ -51,6 +55,8 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
 
         return view;
     }
+
+    public List<YammItemView> getViews(){ return views; }
 
     private void createSectionsForIndex(){
         char current = '-';

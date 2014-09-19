@@ -128,6 +128,11 @@ public class IndexScroller {
                     // Determine which section the point is in, and move the list to that section
                     mCurrentSection = getSectionByPoint(ev.getY());
                     mListView.setSelection(mIndexer.getPositionForSection(mCurrentSection));
+
+                    if (mListView instanceof IndexableListView){
+                        ((IndexableListView)mListView).changeItemViewMargin(true);
+                    }
+
                     return true;
                 }
                 break;
@@ -204,7 +209,7 @@ public class IndexScroller {
             case STATE_HIDING:
                 // Start to fade out after three seconds
                 mAlphaRate = 1;
-                fade(1000);
+                fade(1500);
                 break;
         }
     }
@@ -257,6 +262,9 @@ public class IndexScroller {
                     if (mAlphaRate < 0.1) {
                         mAlphaRate = 0;
                         setState(STATE_HIDDEN);
+                        if (mListView instanceof IndexableListView){
+                            ((IndexableListView)mListView).changeItemViewMargin(false);
+                        }
                     }
 
                     mListView.invalidate();

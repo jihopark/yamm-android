@@ -19,12 +19,18 @@ package com.teamyamm.yamm.app.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.teamyamm.yamm.app.util.YammItemsListAdapter;
+
+import java.util.List;
+
 public class IndexableListView extends ListView {
+    public static boolean currentMarginState = false;
 
     private boolean mIsFastScrollEnabled = false;
     private IndexScroller mScroller = null;
@@ -84,6 +90,8 @@ public class IndexableListView extends ListView {
                                        float velocityX, float velocityY) {
                     // If fling happens, index bar shows
                     mScroller.show();
+                    //Change Margin
+                    changeItemViewMargin(true);
                     return super.onFling(e1, e2, velocityX, velocityY);
                 }
 
@@ -92,6 +100,17 @@ public class IndexableListView extends ListView {
         mGestureDetector.onTouchEvent(ev);
 
         return super.onTouchEvent(ev);
+    }
+
+    public void changeItemViewMargin(boolean b){
+        currentMarginState = b;
+        if (getAdapter() instanceof YammItemsListAdapter){
+            List<YammItemView> views = ((YammItemsListAdapter) getAdapter()).getViews();
+            Log.d("IndexableListView/changeItemViewMargin", "Change ItemView Margin" + views.size());
+            for (YammItemView v: views){
+                v.setItemCheckBoxMargin(b);
+            }
+        }
     }
 
     @Override
