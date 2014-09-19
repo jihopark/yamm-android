@@ -208,14 +208,15 @@ public class DishFragment extends Fragment {
         showButtons();
     }
 
-    private void showButtons(){
-        MainFragment.configureNextButtons(index, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
+    public void showButtons(){
+        if (nextLeft!=null && nextRight!=null)
+            MainFragment.configureNextButtons(index, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
 
-        if (searchMap.getVisibility() == View.INVISIBLE)
+        if (searchMap!=null && searchMap.getVisibility() == View.INVISIBLE)
             searchMap.setVisibility(View.VISIBLE);
-        if (pokeFriend.getVisibility() == View.INVISIBLE)
+        if (pokeFriend!=null && pokeFriend.getVisibility() == View.INVISIBLE)
             pokeFriend.setVisibility(View.VISIBLE);
-        if (dislike.getVisibility() == View.INVISIBLE)
+        if (dislike!=null && dislike.getVisibility() == View.INVISIBLE)
             dislike.setVisibility(View.VISIBLE);
     }
 

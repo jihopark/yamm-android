@@ -512,8 +512,13 @@ public class MainFragment extends Fragment {
             dishAdapter.getFirstFragment().getMainBar().startAnimation(mainBarAnimation);
             dishAdapter.getFirstFragment().getMainBar().setVisibility(View.VISIBLE);
         }catch(NullPointerException e){
-            Log.e("MainFragment/AnimationListener", "Is getFirstFragment Null? " + (dishAdapter.getFirstFragment().getMainBar() == null));
+            Log.e("MainFragment/AnimationListener", "Nullpointer in MainBar. Setting Buttons");
+            if (dishAdapter.getFirstFragment()!=null){
+             //   dishAdapter.getFirstFragment().setButtons();
+                dishAdapter.getFirstFragment().showButtons();
+            }
             e.printStackTrace();
+
         }
     }
 
