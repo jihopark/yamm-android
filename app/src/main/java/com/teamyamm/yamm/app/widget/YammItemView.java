@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.teamyamm.yamm.app.BaseActivity;
@@ -52,8 +51,6 @@ public class YammItemView extends LinearLayout {
 
         fragment = (FriendsFragment) ((BaseActivity)context).getSupportFragmentManager().findFragmentByTag(((FriendListInterface)context).getFragmentTag(contentType));
 
-        setItemCheckBoxMargin(IndexableListView.currentMarginState);
-
         setItem(item);
 
 
@@ -64,28 +61,6 @@ public class YammItemView extends LinearLayout {
                 toggle();
             }
         });
-
-    }
-    /*
-    * False = default, True = when IndexScroller is up
-    * */
-    public void setItemCheckBoxMargin(boolean b) {
-
-        final int margin;
-        if (b)
-            margin = (int) (40 * context.getResources().getDisplayMetrics().density);
-        else
-            margin = (int) context.getResources().getDimension(R.dimen.yamm_item_right_margin);
-
-
-        RelativeLayout.LayoutParams params =
-                new RelativeLayout.LayoutParams(itemCheckbox.getLayoutParams());
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(RelativeLayout.CENTER_VERTICAL);
-
-        params.setMargins(0, 0, margin, 0);
-
-        itemCheckbox.setLayoutParams(params);
 
     }
 

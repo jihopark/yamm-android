@@ -129,10 +129,6 @@ public class IndexScroller {
                     mCurrentSection = getSectionByPoint(ev.getY());
                     mListView.setSelection(mIndexer.getPositionForSection(mCurrentSection));
 
-                    if (mListView instanceof IndexableListView){
-                        ((IndexableListView)mListView).changeItemViewMargin(true);
-                    }
-
                     return true;
                 }
                 break;
@@ -262,9 +258,6 @@ public class IndexScroller {
                     if (mAlphaRate < 0.1) {
                         mAlphaRate = 0;
                         setState(STATE_HIDDEN);
-                        if (mListView instanceof IndexableListView){
-                            ((IndexableListView)mListView).changeItemViewMargin(false);
-                        }
                     }
 
                     mListView.invalidate();
