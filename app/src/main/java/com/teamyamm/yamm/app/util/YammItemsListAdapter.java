@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer {
     private List<YammItem> items;
-    private List<YammItemView> views;
     private Context context;
     private int contentType;
     private YammItem dummyItem;
@@ -37,7 +36,6 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
         items = list;
         Collections.sort(items);
         this.contentType = contentType;
-        views = new ArrayList<YammItemView>();
         createSectionsForIndex();
         dummyItem = new Friend(-1,('z'+1)+"");
     }
@@ -48,7 +46,6 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
 
         if (convertView == null) {
             view = new YammItemView(context, getItem(position), contentType);
-            views.add(view);
         }
         else{
             view = (YammItemView) convertView;
@@ -58,7 +55,6 @@ public class YammItemsListAdapter extends BaseAdapter implements SectionIndexer 
         return view;
     }
 
-    public List<YammItemView> getViews(){ return views; }
 
     private void createSectionsForIndex(){
         char current = '-';

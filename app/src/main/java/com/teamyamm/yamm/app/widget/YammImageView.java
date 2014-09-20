@@ -203,6 +203,7 @@ public class YammImageView extends FrameLayout {
 
             if (path.equals(GROUP) || path.equals(MAIN)){
                 image.setErrorImageResId(R.drawable.image_notfound);
+                image.setDefaultImageResId(R.drawable.image_loading);
             }
             image.setImageUrl(url, imageLoader);
 

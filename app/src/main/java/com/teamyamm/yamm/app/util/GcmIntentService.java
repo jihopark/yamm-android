@@ -137,8 +137,6 @@ public class GcmIntentService extends IntentService {
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.yamm_stat_notify)
                     .setContentTitle(title)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(content.getMessage()))
                     .setContentText(content.getMessage())
                     .setAutoCancel(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -164,8 +162,6 @@ public class GcmIntentService extends IntentService {
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.yamm_stat_notify)
                     .setContentTitle(title)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(msg))
                     .setContentText(msg)
                     .setAutoCancel(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -199,8 +195,6 @@ public class GcmIntentService extends IntentService {
                 mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.yamm_stat_notify)
                         .setContentTitle(title)
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
                         .setContentText(msg)
                         .setAutoCancel(true)
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -229,8 +223,6 @@ public class GcmIntentService extends IntentService {
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.yamm_stat_notify)
                     .setContentTitle(title)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(content.getMessage()))
                     .setContentText(content.getMessage())
                     .setAutoCancel(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -273,8 +265,6 @@ public class GcmIntentService extends IntentService {
             mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.yamm_stat_notify)
                     .setContentTitle(title)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(msg))
                     .setContentText(msg)
                     .setAutoCancel(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);

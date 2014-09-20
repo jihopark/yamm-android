@@ -96,6 +96,20 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if (!isPerforming){
+            Log.d("MainFragment/onResume","Is not Performing. Show Buttons");
+            nextLeft.setVisibility(View.VISIBLE);
+            nextRight.setVisibility(View.VISIBLE);
+            searchMap.setVisibility(View.VISIBLE);
+            dislike.setVisibility(View.VISIBLE);
+            pokeFriend.setVisibility(View.VISIBLE);
+            dislike.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
 

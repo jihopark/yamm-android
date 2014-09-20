@@ -8,7 +8,7 @@
 
     <dimen name="yamm_item_text_size">10sp</dimen>
     <dimen name="yamm_item_height">47dp</dimen>
-    <dimen name="yamm_item_right_margin">16dp</dimen>
+    <dimen name="yamm_item_margin">16dp</dimen>
     <dimen name="yamm_item_checkbox">26dp</dimen>
 
     <dimen name="friend_confirm_button_height">60dp</dimen>
