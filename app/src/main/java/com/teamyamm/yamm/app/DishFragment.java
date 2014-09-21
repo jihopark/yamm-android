@@ -145,22 +145,14 @@ public class DishFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
-        Log.d("DishFragment/onDestroy","Destroy DishFragment " + item.getName());
-        /*
-        * Removed Because It gives NullPointer Error when it reuses image from cache
-        YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
-
-        if (getActivity() instanceof BaseActivity)
-          //  ((BaseActivity) getActivity()).recycleImageView(image.getImageView());
-        */
-        super.onDestroy();
-    }
-
-    @Override
     public void onDetach() {
-
         super.onDetach();
+
+        if (parentFragment!=null) {
+            Log.d("DishFragment/onDetatch","Detatch DishFragment " + index);
+            parentFragment.detachDishFragment(index);
+        }
+
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);

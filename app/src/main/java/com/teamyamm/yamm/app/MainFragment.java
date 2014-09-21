@@ -56,6 +56,9 @@ public class MainFragment extends Fragment {
     private boolean hasPerformed = false;
     public boolean isPerforming = false;
 
+    private ArrayList<DishFragment> fragments = null;
+
+
     private Animation buttonAnimation, buttonAnimation2, buttonAnimation3, buttonAnimation4,
             mainBarAnimation, textAnimation1, textAnimation2;
 
@@ -100,12 +103,14 @@ public class MainFragment extends Fragment {
         super.onResume();
         if (!isPerforming){
             Log.d("MainFragment/onResume","Is not Performing. Show Buttons");
-            nextLeft.setVisibility(View.VISIBLE);
-            nextRight.setVisibility(View.VISIBLE);
+            configureNextButtons(currentPage, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             searchMap.setVisibility(View.VISIBLE);
             dislike.setVisibility(View.VISIBLE);
             pokeFriend.setVisibility(View.VISIBLE);
             dislike.setVisibility(View.VISIBLE);
+            if (fragments.get(currentPage)!=null){
+                fragments.get(currentPage).setButtons();
+            }
         }
     }
 
@@ -193,19 +198,20 @@ public class MainFragment extends Fragment {
 
         private final int DEFAULT_NUMBER_OF_DISHES = 4;
         private int numPage;
-        private ArrayList<DishFragment> fragments;
         private boolean hasReachedEnd = false;
         private boolean buttonToLeft = false;
 
         public DishFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            fragments = new ArrayList<DishFragment>();
-            for (int i=0; i < DEFAULT_NUMBER_OF_DISHES ; i++){
-                fragments.add(new DishFragment());
+            if (fragments==null) {
+                fragments = new ArrayList<DishFragment>();
+                for (int i = 0; i < DEFAULT_NUMBER_OF_DISHES; i++) {
+                    fragments.add(new DishFragment());
+                }
+                Log.d("DishFragmentPagerAdapter/constructor","Fragment List null. Initializing");
             }
             Log.d("DishFragmentPagerAdapter/constructor","Constructor");
             numPage = DEFAULT_NUMBER_OF_DISHES;
-
         }
 
         @Override
@@ -638,7 +644,10 @@ public class MainFragment extends Fragment {
                 right.startAnimation(disappear);
             }
         }
+    }
 
+    public void detachDishFragment(int p){
+        fragments.add(p, null);
     }
 
     private void trackEndOfRecommendationMixpanel(){

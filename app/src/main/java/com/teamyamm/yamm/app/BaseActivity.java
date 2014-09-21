@@ -25,6 +25,7 @@ import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +152,15 @@ public class BaseActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            // do nothing
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     protected void setPaddingOnHomeAsUpIndicator(){
         if (findViewById(android.R.id.home)!=null) {
             findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.home_padding), 0,(int) getResources().getDimension(R.dimen.home_padding), 0);
@@ -253,7 +263,7 @@ public class BaseActivity extends ActionBarActivity {
         if (title==0){
             titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
             titleText.setText("");
-            messageText.setPadding(0,0,0,(int)(getResources().getDimension(R.dimen.custom_dialog_title_height)/2));
+            messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
         }
         else
             titleText.setText(getString(title));
