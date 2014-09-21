@@ -100,8 +100,7 @@ public class MainFragment extends Fragment {
         super.onResume();
         if (!isPerforming){
             Log.d("MainFragment/onResume","Is not Performing. Show Buttons");
-            nextLeft.setVisibility(View.VISIBLE);
-            nextRight.setVisibility(View.VISIBLE);
+            configureNextButtons(currentPage, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             searchMap.setVisibility(View.VISIBLE);
             dislike.setVisibility(View.VISIBLE);
             pokeFriend.setVisibility(View.VISIBLE);
