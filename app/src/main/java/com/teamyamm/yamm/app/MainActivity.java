@@ -73,6 +73,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
 
+    private YammLeftDrawerAdapter leftDrawerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,6 +202,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public YammLeftDrawerAdapter getLeftDrawerAdapter(){return leftDrawerAdapter;}
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
     private void saveDishItemsInPref(){
@@ -513,7 +517,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private void setMenuList(String name, String email, String phone){
 
         Log.i("MainActivity/setMenuList", "Name " + name + " Email " +email);
-        YammLeftDrawerAdapter adapter = new YammLeftDrawerAdapter(MainActivity.this);
+        leftDrawerAdapter = new YammLeftDrawerAdapter(MainActivity.this);
 
         View.OnClickListener notReady = new View.OnClickListener() {
             @Override
@@ -522,7 +526,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             }
         };
 
-        adapter.addMenuItems(new LeftDrawerItem(name, getString(R.string.left_drawer_logout), 0, null,
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(name, getString(R.string.left_drawer_logout), 0, null,
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
@@ -543,17 +547,15 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     }
                 }));
 
-        adapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
-        adapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 2, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 2, null, notReady));
 
         if (getRegistrationId(MainActivity.this).isEmpty())
-            adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_alarm_title),
-                    getString(R.string.left_drawer_alarm_status_negative),3));
+            leftDrawerAdapter.setPushUsageMenu(false);
         else
-            adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_alarm_title),
-                    getString(R.string.left_drawer_alarm_status_positive),3));
+            leftDrawerAdapter.setPushUsageMenu(true);
 
-        adapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
@@ -561,7 +563,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }));
 
         if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
-            adapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
+            leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToActivity(GridActivity.class);
@@ -574,11 +576,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 status = "TESTING";
 
             if (!status.isEmpty())
-                adapter.addMenuItems(new LeftDrawerItem(status,"",6,null));
+                leftDrawerAdapter.addMenuItems(new LeftDrawerItem(status,"",6,null));
         }
 
 
-        leftDrawer.setAdapter(adapter);
+        leftDrawer.setAdapter(leftDrawerAdapter);
         leftDrawer.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
         isLeftMenuLoaded = true;

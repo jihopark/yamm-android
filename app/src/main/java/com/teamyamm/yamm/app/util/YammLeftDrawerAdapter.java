@@ -11,22 +11,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.teamyamm.yamm.app.pojos.LeftDrawerItem;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.pojos.LeftDrawerItem;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by parkjiho on 9/3/14.
  */
 public class YammLeftDrawerAdapter extends BaseAdapter {
+    private final static int pushUsageIndex = 3;
     private List<LeftDrawerItem> items;
     private Context context;
 
     public YammLeftDrawerAdapter(Context context) {
         this.context = context;
-        items = new ArrayList<LeftDrawerItem>();
+        items = new LinkedList<LeftDrawerItem>();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -43,6 +44,25 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
         }
 
         return view;
+    }
+
+    public void setPushUsageMenu(boolean b){
+        LeftDrawerItem item;
+        if (b){
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_alarm_title),
+                    context.getString(R.string.left_drawer_alarm_status_positive), pushUsageIndex);
+        }
+        else{
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_alarm_title),
+                    context.getString(R.string.left_drawer_alarm_status_negative), pushUsageIndex);
+        }
+        if (items.size() > pushUsageIndex)
+            items.set(pushUsageIndex, item);
+        else
+            items.add(pushUsageIndex, item);
+
+        Log.i("YammLeftDrawerAdapter/setPushUsageMenu","Push Usage Menu set to " + b);
+        notifyDataSetInvalidated();
     }
 
     public void addMenuItems(LeftDrawerItem item){
