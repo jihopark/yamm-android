@@ -511,8 +511,13 @@ public class MainFragment extends Fragment {
             startMainBarTextAnimation();
         }
         else {
-            ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
-            Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
+            try {
+                ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
+                Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
+            }catch(NullPointerException e){
+                Log.e("MainFragment/startButtonsAnimation","Nullpointer Exception");
+                e.printStackTrace();
+            };
         }
     }
 
