@@ -314,7 +314,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         JSONObject props = new JSONObject();
         try{
             props.put("count", selectedFriend.size());
-            props.put("time", selectedTime);
+            props.put("meal", selectedTime);
 
         }catch(JSONException e){
             Log.e("GroupRecommendationActivity/trackReceivedGroupRecommendation","JSON Error");
@@ -328,7 +328,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         try{
             props.put("Method", "YAMM");
             props.put("Count", count);
-            props.put("Time", time);
+            props.put("meal", time);
             props.put("Dish", dish);
         }catch(JSONException e){
             Log.e("GroupRecommendationActivity/trackGroupPokeFriend","JSON Error");
