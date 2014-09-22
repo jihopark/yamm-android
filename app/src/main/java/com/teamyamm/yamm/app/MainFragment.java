@@ -85,6 +85,7 @@ public class MainFragment extends Fragment {
         initFragment();
         setDishPager();
         setLocationManagerListener();
+        setRetainInstance(true);
 
         return main_layout;
     }
