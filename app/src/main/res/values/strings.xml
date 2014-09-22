@@ -128,6 +128,7 @@
 
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
+    <string name="login_pw">비밀번호</string>
     <string name="forgot_password"><u>비밀번호를 모르겠어요</u></string>
     <string name="forgot_password_no_email">비밀번호가 기억 안나는 이메일을 적어주세요</string>
     <string name="forgot_password_dialog_title">비밀번호 재설정</string>
