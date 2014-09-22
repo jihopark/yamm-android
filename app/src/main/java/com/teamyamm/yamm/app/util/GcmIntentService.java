@@ -110,6 +110,10 @@ public class GcmIntentService extends IntentService {
             return ;
         }
 
+        if (!checkIfLoggedIn())
+            return ;
+
+
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = null;
@@ -340,5 +344,15 @@ public class GcmIntentService extends IntentService {
         }
         else
             Log.e("GcmIntentService/displayToast", "Inflator is null. Could not display toast");
+    }
+
+    private boolean checkIfLoggedIn(){
+        String value = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE).getString(getString(R.string.AUTH_TOKEN), "none");
+
+        if (value.equals("none")) {
+            Log.e("GcmIntentService/checkIfLoggedIn","User is not logged in. Should not receive this push.");
+            return false;
+        }
+        return true;
     }
 }
