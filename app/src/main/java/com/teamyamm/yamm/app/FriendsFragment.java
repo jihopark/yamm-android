@@ -14,10 +14,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.YammItemsListAdapter;
+import com.teamyamm.yamm.app.widget.IndexableListView;
+import com.teamyamm.yamm.app.widget.NameSpan;
+import com.teamyamm.yamm.app.widget.YammItemView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,7 +46,7 @@ public class FriendsFragment extends Fragment {
     private RelativeLayout selectedItemsLayout;
     private TextView selectedItemsTextView;
 
-    public ListView friendListView;
+    public IndexableListView friendListView;
     private YammItemsListAdapter adapter;
     private TextView friendsListEmptyText;
 
@@ -53,7 +60,7 @@ public class FriendsFragment extends Fragment {
         selectedItemsLayout = (RelativeLayout) yammItemLayout.findViewById(R.id.selected_items_layout);
         selectedItemsTextView = (TextView) yammItemLayout.findViewById(R.id.selected_items_textview);
 
-        friendListView = new ListView(getActivity());
+        friendListView = new IndexableListView(getActivity());
         friendListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         friendListView.setDivider(new ColorDrawable(getResources().getColor(R.color.divider_color)));
         friendListView.setDividerHeight((int) getResources().getDimension(R.dimen.line_height));
@@ -69,6 +76,7 @@ public class FriendsFragment extends Fragment {
             }
         });
         friendListView.setEmptyView(emptyLayout);
+        friendListView.setFastScrollEnabled(true);
 
         setYammItemList();
         setSelectedItems();
@@ -130,9 +138,11 @@ public class FriendsFragment extends Fragment {
         TextSwitcher textSwitcher = new TextSwitcher(getActivity());
 
 
-
-        if (selectedItems.size() == 1)
+        if (selectedItems.size() == 1) {
             selectedItemsLayout.setVisibility(View.VISIBLE);
+            //Add Dummy Item
+            adapter.addDummyItem();
+        }
         else{
             Spannable newSpan = new SpannableString(" ");
             newSpan.setSpan(new BackgroundColorSpan(Color.TRANSPARENT),
@@ -152,9 +162,10 @@ public class FriendsFragment extends Fragment {
     private void removeSelectedItemView(YammItem yammItem){
         int count = 0;
 
-        if (selectedItems.size()==1)
+        if (selectedItems.size()==1) {
             selectedItemsLayout.setVisibility(View.GONE);
-
+            adapter.removeDummyItem();
+        }
         selectedItemsTextView.setText("");
         for (YammItem i : selectedItems){
             if (i!=yammItem){

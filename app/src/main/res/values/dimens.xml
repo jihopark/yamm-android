@@ -8,6 +8,10 @@
 
     <dimen name="yamm_item_text_size">10sp</dimen>
     <dimen name="yamm_item_height">47dp</dimen>
+    <dimen name="yamm_item_margin">16dp</dimen>
+    <dimen name="yamm_item_checkbox">26dp</dimen>
+
+    <dimen name="friend_confirm_button_height">60dp</dimen>
 
     <dimen name="round_button_radius">50dp</dimen>
     <dimen name="veri_round_button_radius">4dp</dimen>
@@ -16,6 +20,7 @@
 
     <dimen name="image_progress_circle_radius">20dp</dimen>
 
+    <dimen name="custom_dialog_title_height">36dp</dimen>
     <!-- FriendsFragment -->
 
     <dimen name="selected_item_x_padding">10dp</dimen>

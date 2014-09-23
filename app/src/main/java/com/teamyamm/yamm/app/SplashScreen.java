@@ -84,29 +84,24 @@ public class SplashScreen extends Activity {
         Log.i("SplashScreen","Token Pref value:"+token);
 
 
-        if (token == "none" || value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))){
+
+        if (token == "none" || value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))) {
             if (token == "none")
-                Log.i("SplashScreen/checkPreviousActivity","Access Token is null. Proceed to Intro");
+                Log.i("SplashScreen/checkPreviousActivity", "Access Token is null. Proceed to Intro");
 
             //Save Previous activity to shared preference
-            BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY),getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+            BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_INTRO));
             activity = new Intent(getBaseContext(), IntroActivity.class);
-        }
-        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
+        } else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
             activity = new Intent(getBaseContext(), BattleActivity.class);
-        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_JOIN)))
-            activity = new Intent(getBaseContext(), JoinActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_MAIN)))
             activity = new Intent(getBaseContext(), MainActivity.class);
-        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_LOGIN)))
-            activity = new Intent(getBaseContext(), LoginActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_GRID)))
             activity = new Intent(getBaseContext(), GridActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_FRIEND)))
             activity = new Intent(getBaseContext(), MainActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_INVITE)))
             activity = new Intent(getBaseContext(), MainActivity.class);
-
         //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Friend
         //activity = new Intent(getBaseContext(), BattleActivity.class);
 

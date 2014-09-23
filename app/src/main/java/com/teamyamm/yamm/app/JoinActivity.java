@@ -26,6 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.util.SmsListener;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +39,8 @@ import retrofit.client.Response;
 
 
 public class JoinActivity extends BaseActivity {
+    private final static String JOIN_EMAIL = "JoinEmail", JOIN_NAME = "JoinName";
+
     private LinearLayout joinLayout;
     private boolean enableButtonFlag = false;
     private boolean flag_name = false, flag_email= false, flag_phone= false, flag_pwd= false, flag_veri = false, flag_checkbox = false;
@@ -48,6 +54,7 @@ public class JoinActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_join);
         Log.i("JoinActivity/OnCreate", "JoinActivity onCreate");
 
@@ -59,9 +66,8 @@ public class JoinActivity extends BaseActivity {
         configEditTexts();
         configJoinConfirmButton();
         getPhoneNumber();
-        trackJoiningMixpanel();
-
     }
+
 
     private void getPhoneNumber(){
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -102,9 +108,19 @@ public class JoinActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
         configSmsListener();
+        String s = prefs.getString(JOIN_EMAIL, "");
+
+        if (!s.isEmpty())
+            emailText.setText(s);
+        s = prefs.getString(JOIN_NAME, "");
+
+        if (!s.isEmpty())
+            nameText.setText(s);
+
         //To Show Keyboard
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
     }
 
     @Override
@@ -112,6 +128,8 @@ public class JoinActivity extends BaseActivity {
         super.onPause();
         unregisterReceiver(smsListener);
         Log.i("JoinActivity/configSmsListener", "SMS Listener Unregistered");
+        putInPref(prefs,JOIN_EMAIL, emailText.getText().toString());
+        putInPref(prefs,JOIN_NAME, nameText.getText().toString());
     }
 
     public void setConfirmButtonEnabled(){
@@ -290,6 +308,7 @@ public class JoinActivity extends BaseActivity {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 setMixpanelAlias();
                 logInAfterJoin();
+                trackJoiningMixpanel();
             }
 
             @Override
@@ -346,6 +365,9 @@ public class JoinActivity extends BaseActivity {
         String password = ((EditText) joinLayout.findViewById(R.id.pw_field)).getText().toString();
 
         YammAPIService service = YammAPIAdapter.getLoginService(email, password);
+
+        prefs.edit().remove(JOIN_NAME).commit();
+        prefs.edit().remove(JOIN_EMAIL).commit();
 
         service.userLogin(new YammAPIService.GrantType(), new Callback<YammAPIService.YammToken>() {
             @Override
@@ -525,7 +547,7 @@ public class JoinActivity extends BaseActivity {
         mixpanel.alias(emailText.getText().toString(), null);
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Unique ID with email "+ emailText.getText().toString());
 
-        mixpanel.getPeople().identify(emailText.getText().toString());
+        mixpanel.getPeople().identify(mixpanel.getDistinctId());
         mixpanel.getPeople().set("$email",emailText.getText().toString());
         Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());
     }

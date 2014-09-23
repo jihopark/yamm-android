@@ -25,6 +25,7 @@ import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,12 +46,19 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,28 +71,27 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
-    public static final String PRODUCTION = "PROD";
-    public static final String TESTING = "TEST";
-    public static final String STAGING = "STAGING";
+    public static final String PRODUCTION = "production";
+    public static final String TESTING = "test";
+    public static final String STAGING = "staging";
 
     public static final String CURRENT_APPLICATION_STATUS = PRODUCTION;
 
     public static final String USER_EMAIL = "USEREMAIL";
 
-
-    protected static final String appURL = "http://goo.gl/nJEFEq";
-    protected static final String packageName = "com.teamyamm.yamm.app";
+    public static final String appURL = "http://goo.gl/nJEFEq";
+    public static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
     public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
     public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
-    protected MixpanelAPI mixpanel;
+    public MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
     protected SharedPreferences prefs;
 
-    protected static boolean isLoggingOut = false;
+    public static boolean isLoggingOut = false;
 
     protected Dialog currentDialog = null;
 
@@ -142,6 +150,15 @@ public class BaseActivity extends ActionBarActivity {
     protected void onDestroy() {
         mixpanel.flush();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            // do nothing
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     protected void setPaddingOnHomeAsUpIndicator(){
@@ -246,6 +263,7 @@ public class BaseActivity extends ActionBarActivity {
         if (title==0){
             titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
             titleText.setText("");
+            messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
         }
         else
             titleText.setText(getString(title));
@@ -449,11 +467,11 @@ public class BaseActivity extends ActionBarActivity {
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
-    protected void makeYammToast(int rId, int duration){
+    public void makeYammToast(int rId, int duration){
         makeYammToast(getString(rId), duration);
     }
 
-    protected void makeYammToast(String message, int duration){
+    public void makeYammToast(String message, int duration){
         try {
             if (BaseActivity.checkIfAppIsRunning()) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -522,6 +540,7 @@ public class BaseActivity extends ActionBarActivity {
         editor.remove(getString(R.string.AUTH_TOKEN));
         editor.remove(PROPERTY_REG_ID);
         editor.remove(PROPERTY_APP_VERSION);
+        regid = null;
         editor.commit();
 
         //GCM push
@@ -857,6 +876,10 @@ public class BaseActivity extends ActionBarActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to server");
+                if (BaseActivity.this instanceof MainActivity){
+                    MainActivity activity = (MainActivity) BaseActivity.this;
+                    activity.getLeftDrawerAdapter().setPushUsageMenu(true);
+                }
             }
 
             @Override
@@ -879,6 +902,27 @@ public class BaseActivity extends ActionBarActivity {
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.commit();
     }
+
+    protected String friendKoreanPlural(int n){
+        if (n > 1)
+            return getString(R.string.poke_friend_plural);
+        return getString(R.string.poke_friend_singular);
+    }
+
+    protected void setDefaultValueForSpinner(Spinner s){
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+
+        if (hour < 14 && hour > 2){
+            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Lunch!");
+            s.setSelection(0);
+        }
+        else{
+            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Dinner!");
+            s.setSelection(1);
+        }
+    }
+
     /**
      * @return Application's version code from the {@code PackageManager}.
      */

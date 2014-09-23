@@ -285,6 +285,6 @@
 
     <style name="FriendConfirmButton" parent="RedButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_height">@dimen/friend_confirm_button_height</item>
     </style>
 </resources>

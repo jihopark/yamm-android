@@ -66,7 +66,7 @@
         android:src="@drawable/icon_help_close"
         android:background="@android:color/transparent"
         android:id="@+id/tutorial_close"/>
-    <com.teamyamm.yamm.app.YammCirclePageIndicator
+    <com.teamyamm.yamm.app.widget.YammCirclePageIndicator
         android:id="@+id/tutorial_view_pager_indicator"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

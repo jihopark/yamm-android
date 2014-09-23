@@ -11,6 +11,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.Friend;
+import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,7 +118,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             public void onClick(View v) {
                 YammAPIService.RawPokeMessage msg = new YammAPIService.RawPokeMessage(sendIds, fDish.getId(), date, meal);
 
-                makeYammToast("친구들한테 " + selectedTime + "에 "
+                makeYammToast(friendKoreanPlural(selectedFriend.size()) + " " + selectedTime + "에 "
                         + fDish.getName() + " 먹자고 했어요!", Toast.LENGTH_LONG);
                 YammAPIService service = YammAPIAdapter.getTokenService();
 
@@ -220,13 +227,20 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             WTFExceptionHandler.sendLogToServer(GroupRecommendationActivity.this, "WTF Invalid Token Error @GroupRecommendationActivity/loadDishes");
             return ;
         }
-
-        service.getGroupSuggestions(userIds, new Callback<List<DishItem>>() {
+        String meal = getMealType();
+        service.getGroupSuggestions(meal, userIds, new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishes, Response response) {
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
                 setFragment();
+
+
+                //if there is new list, renew hasReachedEnd
+                String key = getString(R.string.PREV_END_OF_RECOMMENDATION_GROUP);
+                prefs.edit().putBoolean(key, false).commit();
+                Log.i("GroupRecommendation/loadDishes", key + " removed");
+
             }
 
             @Override
@@ -286,11 +300,21 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         dialog.show();
     }
 
+    private String getMealType(){
+        String s = selectedTime.substring(selectedTime.length()-2,selectedTime.length());
+        Log.d("GroupRecommendationActivity/getMealType",s);
+
+        if (s.equals("점심"))
+            return "lunch";
+        else
+            return "dinner";
+    }
+
     private void trackReceivedGroupRecommendation(){
         JSONObject props = new JSONObject();
         try{
             props.put("count", selectedFriend.size());
-            props.put("time", selectedTime);
+            props.put("meal", selectedTime);
 
         }catch(JSONException e){
             Log.e("GroupRecommendationActivity/trackReceivedGroupRecommendation","JSON Error");
@@ -304,7 +328,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         try{
             props.put("Method", "YAMM");
             props.put("Count", count);
-            props.put("Time", time);
+            props.put("meal", time);
             props.put("Dish", dish);
         }catch(JSONException e){
             Log.e("GroupRecommendationActivity/trackGroupPokeFriend","JSON Error");
