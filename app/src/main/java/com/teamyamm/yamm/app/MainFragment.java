@@ -237,6 +237,16 @@ public class MainFragment extends Fragment {
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position){
+            Object o = super.instantiateItem(container, position);
+            if (o instanceof DishFragment) {
+                fragments.set(position, (DishFragment) o);
+                Log.d("DishFragmentPagerAdapter/instantiateItem","Save Item " + position);
+            }
+            return o;
+        }
+
+        @Override
         public Fragment getItem(int index) {
             DishFragment dishFragment = new DishFragment();
             Bundle bundle = new Bundle();
@@ -245,7 +255,6 @@ public class MainFragment extends Fragment {
             bundle.putInt("index", index);
 
             dishFragment.setArguments(bundle);
-            fragments.set(index, dishFragment);
             Log.i("DishFragmentPagerAdapter/getItem", "Page " + index +" : " + dishItems.get(index).getName());
             dishFragment.setParentFragment(MainFragment.this);
 
@@ -315,7 +324,6 @@ public class MainFragment extends Fragment {
 
             try {
                 fragments.get(i).setParentFragment(MainFragment.this);
-                //  fragments.get(i).setButtons();
                 fragments.get(i).showTexts();
                 configureNextButtons(i, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             }catch(NullPointerException e){
@@ -324,8 +332,6 @@ public class MainFragment extends Fragment {
                 if (getActivity() instanceof BaseActivity) {
                     BaseActivity activity = (BaseActivity) getActivity();
                     activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
-                    if (fragments.get(i)!=null)
-                        fragments.get(i).setParentFragment(MainFragment.this);
                 }
             }catch (IndexOutOfBoundsException e){
                 Log.e("MainFragment/onPageSelected","IndexOutOfBoundsException caught");
