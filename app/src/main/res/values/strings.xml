@@ -112,7 +112,7 @@
     <string name="verification_field">인증번호</string>
     <string name="verification_name">이름</string>
     <string name="verification_email">이메일 주소</string>
-    <string name="verification_pw">비밀번호</string>
+    <string name="verification_pw">비번(8자이상,특수문자/숫자 포함)</string>
     <string name="verification_phone">전화번호</string>
     <string name="verification_button">인증</string>
     <string name="verification_sent">3분간 유효한 인증번호가 발송되었습니다</string>
@@ -128,6 +128,7 @@
 
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
+    <string name="login_pw">비밀번호</string>
     <string name="forgot_password"><u>비밀번호를 모르겠어요</u></string>
     <string name="forgot_password_no_email">비밀번호가 기억 안나는 이메일을 적어주세요</string>
     <string name="forgot_password_dialog_title">비밀번호 재설정</string>

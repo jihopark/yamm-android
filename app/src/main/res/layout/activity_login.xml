@@ -37,7 +37,7 @@
             android:layout_marginBottom="30dp"
             >
             <EditText
-                android:hint="@string/verification_pw"
+                android:hint="@string/login_pw"
                 android:id="@+id/pw_field"
                 style="@style/LoginEditText"
                 android:inputType="textPassword"

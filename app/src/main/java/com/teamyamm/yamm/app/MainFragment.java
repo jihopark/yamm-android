@@ -3,8 +3,10 @@ package com.teamyamm.yamm.app;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,18 +20,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.util.LocationSearchHelper;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
@@ -37,12 +50,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 /**
  * Created by parkjiho on 5/24/14.
  */
 public class MainFragment extends Fragment {
     public final static String MAIN_FRAGMENT = "mf";
     public final static int DEFAULT_NUMBER_OF_DISHES = 4;
+
+    public final static String SHARE = "SHARE";
+    public final static String SEARCH_MAP = "SEARCHMAP";
 
 
     private RelativeLayout main_layout;
@@ -109,9 +129,6 @@ public class MainFragment extends Fragment {
             dislike.setVisibility(View.VISIBLE);
             pokeFriend.setVisibility(View.VISIBLE);
             dislike.setVisibility(View.VISIBLE);
-            if (fragments.get(currentPage)!=null){
-                fragments.get(currentPage).setButtons();
-            }
         }
     }
 
@@ -187,6 +204,10 @@ public class MainFragment extends Fragment {
         dishPager.setOffscreenPageLimit(3);
         dishPager.setAdapter(dishAdapter);
         dishPager.setOnPageChangeListener(dishAdapter);
+        setNextButtons();
+        setPokeButton();
+        setSearchButton();
+        setDislikeButton();
     }
 
     public ViewPager getDishPager(){
@@ -262,7 +283,10 @@ public class MainFragment extends Fragment {
                 currentPage = DEFAULT_NUMBER_OF_DISHES - 1;
             else
                 currentPage = i;
-
+            setNextButtons();
+            setPokeButton();
+            setSearchButton();
+            setDislikeButton();
 
             if (i == DEFAULT_NUMBER_OF_DISHES - 1){
                 SharedPreferences pref = null;
@@ -291,7 +315,7 @@ public class MainFragment extends Fragment {
 
             try {
                 fragments.get(i).setParentFragment(MainFragment.this);
-                fragments.get(i).setButtons();
+                //  fragments.get(i).setButtons();
                 fragments.get(i).showTexts();
                 configureNextButtons(i, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             }catch(NullPointerException e){
@@ -319,7 +343,7 @@ public class MainFragment extends Fragment {
 
         public void setButtonsForCurrentIndex(){
             Log.i("DishFragmentPagerAdapter/setButtonsForCurrentIndex", dishItems.get(currentPage).getName() + "Page " + currentPage +" : Setting Buttons For Current Index");
-            fragments.get(currentPage).setButtons();
+            //    fragments.get(currentPage).setButtons();
             fragments.get(currentPage).showTexts();
         }
 
@@ -331,6 +355,230 @@ public class MainFragment extends Fragment {
         }
 
         public DishFragment getFirstFragment(){return fragments.get(0); }
+    }
+
+    private void setNextButtons(){
+        Log.d("MainFragment/setNextButtons","Set Next Buttons");
+        nextRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(currentPage == DEFAULT_NUMBER_OF_DISHES - 1))
+                    dishPager.setCurrentItem(currentPage + 1, true);
+
+            }
+        });
+
+
+        nextLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(currentPage == 0))
+                    dishPager.setCurrentItem(currentPage - 1, true);
+
+            }
+        });
+    }
+
+    private void setPokeButton(){
+        pokeFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getCurrentDishItem()==null)
+                    return ;
+
+                Log.d("MainFragment/PokeButtonOnClick","Poke " +getCurrentDishItem().getName());
+                addDishToPositive(SHARE, null, getCurrentDishItem());
+
+                if (isGroup && getActivity() instanceof GroupRecommendationActivity){
+                    GroupRecommendationActivity activity = (GroupRecommendationActivity) getActivity();
+                    activity.sendPokeMessage(getCurrentDishItem());
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), PokeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dish", new Gson().toJson(getCurrentDishItem(), DishItem.class));
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void addDishToPositive(String category, String detail, DishItem item){
+
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        Log.d("MainFragment/addDishToPositive", "Like " + item.getName() + " " + category + " " + detail);
+
+        if (service==null) {
+            if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity) getActivity()).invalidToken();
+                WTFExceptionHandler.sendLogToServer(getActivity(), "WTF Invalid Token Error @DishFragment/addDishToPositive");
+            }
+            return ;
+        }
+
+        service.postLikeDish(new YammAPIService.RawLike(item.getId(), category, detail), new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("MainFragment/postLikeDish","Success " + s);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("PokeActivity/addDishToPositive", "Invalid Token, Logging out");
+                    if (getActivity() instanceof BaseActivity) {
+                        ((BaseActivity) getActivity()).invalidToken();
+                        return ;
+                    }
+                }
+            }
+        });
+    }
+
+    private void setSearchButton(){
+        searchMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationDialog();
+            }
+        });
+    }
+
+    private void showLocationDialog(){
+        final Dialog dialog = new Dialog(getActivity());
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_map);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.map_autocomplete_text);
+
+        ImageButton setMap = (ImageButton) dialog.findViewById(R.id.map_icon);
+        ImageButton negative = (ImageButton) dialog.findViewById(R.id.map_dialog_negative_button);
+        Button positive = (Button) dialog.findViewById(R.id.map_dialog_positive_button);
+
+        setPlacePickEditText(textView);
+
+        setMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText(getString(R.string.place_pick_edit_text));
+            }
+        });
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String place = LocationSearchHelper.searchMap(getCurrentDishItem(),
+                        textView.getText().toString(), getActivity());
+                trackSearchMapMixpanel(place);
+                addDishToPositive(SEARCH_MAP, place, getCurrentDishItem());
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+
+    private void setPlacePickEditText(AutoCompleteTextView placePickEditText){
+        placePickEditText.setText(getString(R.string.place_pick_edit_text));
+        placePickEditText.setThreshold(1);
+        placePickEditText.setSelectAllOnFocus(true);
+        ArrayAdapter<String> place_adapter =
+                new ArrayAdapter<String>(getActivity(), R.layout.place_pick_item, getResources().getStringArray(R.array.places_array));
+        placePickEditText.setAdapter(place_adapter);
+        placePickEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (!hasFocus){
+                    Log.i("MainFragment/placePickEditText", "focus gone");
+                    if ( ((TextView)v).getText().toString().equals("") ) {
+                        ((TextView) v).setText(getString(R.string.place_pick_edit_text));
+                    }
+                    if (imm!=null)
+                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                }
+                else{
+                    ((TextView)v).setText("");
+                    Log.i("MainFragment/placePickEditText", "focus came");
+                    if (imm!=null)
+                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                }
+            }
+        });
+    }
+
+    private void setDislikeButton(){
+        final View.OnClickListener positiveListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("MainFragment/onClick", "Dislike pressed for " + getCurrentDishItem().getName());
+                trackDislikeMixpanel(getCurrentDishItem());
+                ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
+                toggleEnableButtons(false);
+                YammAPIService service = YammAPIAdapter.getDislikeService();
+
+                Callback<DishItem> callback = new Callback<DishItem>() {
+                    @Override
+                    public void success(DishItem dishItem, Response response) {
+                        Log.i("MainFragment/postDislikeDish", "Success " + dishItem.getName());
+                        changeInDishItem(getCurrentDishItem(), dishItem);
+                        toggleEnableButtons(true);
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        String msg = retrofitError.getCause().getMessage();
+
+                        if (msg.equals(DishFragment.TOO_MANY_DISLIKE)) {
+                            ((BaseActivity)getActivity()).makeYammToast(R.string.dish_too_many_dislike_toast, Toast.LENGTH_SHORT);
+                        }
+                        else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                            Log.e("PokeActivity/pokeWithYamm", "Invalid Token, Logging out");
+                            if (getActivity() instanceof BaseActivity) {
+                                ((BaseActivity) getActivity()).invalidToken();
+                                return;
+                            }
+                        }
+                        else {
+                            if (getActivity() instanceof BaseActivity)
+                                ((BaseActivity)getActivity()).makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                        }
+                        toggleEnableButtons(true);
+                    }
+                };
+
+                if (isGroup) {
+                    service.postDislikeDishGroup(new YammAPIService.RawDislike(getCurrentDishItem().getId()), callback);
+                    Log.i("MainFragment/onClickListener", "Group Dislike API Called");
+                } else
+                    service.postDislikeDish(new YammAPIService.RawDislike(getCurrentDishItem().getId()), callback);
+                ((BaseActivity)getActivity()).dismissCurrentDialog();
+            }
+        };
+
+        dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackClickedDislikeMixpanel(getCurrentDishItem());
+                ((BaseActivity)getActivity()).createDialog(getActivity(),R.string.dish_dislike_title,
+                        R.string.dish_dislike_message, R.string.dish_dislike_positive, R.string.dish_dislike_negative,
+                        positiveListener, null).show();
+            }
+        });
     }
 
     public void changeInDishItem(DishItem original, DishItem replace){
@@ -350,26 +598,19 @@ public class MainFragment extends Fragment {
         ((MainFragmentInterface)getActivity()).changeInDishItem(dishItems);
     }
 
+    private void toggleEnableButtons(boolean b){
+        dislike.setEnabled(b);
+        searchMap.setEnabled(b);
+        pokeFriend.setEnabled(b);
+        nextRight.setEnabled(b);
+        nextLeft.setEnabled(b);
+    }
+
 
 
     private void setLocationManagerListener(){
         //Set Location Listener
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        // Define a listener that responds to location updates
-        locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                Log.i("LocationListener/onLocationChanged", "Location Changed " + location.toString());
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
+        LocationSearchHelper.initLocationSearchHelper((LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE));
         Log.i("MainFragment/setLocationManagerListener","Location Manager and Listener Set");
     }
 
@@ -511,8 +752,13 @@ public class MainFragment extends Fragment {
             startMainBarTextAnimation();
         }
         else {
-            ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
-            Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
+            try {
+                ((MainFragmentInterface) getActivity()).closeFullScreenDialog();
+                Log.e("MainFragment/startButtonsAnimation", "First Fragment was null. Couldn't perform animation");
+            }catch(NullPointerException e){
+                Log.e("MainFragment/startButtonsAnimation","Nullpointer Exception");
+                e.printStackTrace();
+            };
         }
     }
 
@@ -658,6 +904,54 @@ public class MainFragment extends Fragment {
             JSONObject props = new JSONObject();
             base.getMixpanelAPI().track("End Of Recommendation", props);
             Log.i("MainFragment/trackEndOfRecommendationMixpanel","End of Recommendation Tracked");
+        }
+    }
+
+    private void trackSearchMapMixpanel(String place){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try {
+                props.put("Place", place);
+            }catch(JSONException e){
+                Log.e("MainFragment/trackSearchMapMixpanel","JSON Error");
+            }
+
+            base.getMixpanelAPI().track("Search Map", props);
+            Log.i("MainFragment/trackSearchMapMixpanel","Search Map Tracked " + place);
+        }
+        else
+            Log.e("MainFragment/trackSearchMapMixpanel","Wrong Activity");
+    }
+
+    private void trackDislikeMixpanel(DishItem item){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try{
+                props.put("Dish", item.getName());
+            }catch (JSONException e){
+                Log.e("MainFragment/trackDislikeMixpanel","JSON Error");
+            }
+            base.getMixpanelAPI().track("Dislike", props);
+            Log.i("MainFragment/trackDislikeMixpanel","Dislike Tracked");
+        }
+    }
+
+    private void trackClickedDislikeMixpanel(DishItem item){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            BaseActivity base = (BaseActivity) activity;
+            JSONObject props = new JSONObject();
+            try{
+                props.put("Dish", item.getName());
+            }catch (JSONException e){
+                Log.e("MainFragment/trackClickedDislikeMixpanel","JSON Error");
+            }
+            base.getMixpanelAPI().track("Clicked Dislike", props);
+            Log.i("MainFragment/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
         }
     }
 
