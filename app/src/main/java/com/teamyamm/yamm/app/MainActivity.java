@@ -25,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.Session;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
@@ -503,7 +502,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             @Override
             public void success(YammAPIService.RawInfo info, Response response) {
                 Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
-                setMenuList(info.name, info.email, info.phone);
+                setMenuList(info.name, info.email, info.phone, info.facebook_uid);
                 putInPref(prefs, USER_EMAIL, info.email);
             }
 
@@ -515,7 +514,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
-    private void setMenuList(String name, String email, String phone){
+    private void setMenuList(String name, String email, String phone, String fbUid){
 
         Log.i("MainActivity/setMenuList", "Name " + name + " Email " +email);
         leftDrawerAdapter = new YammLeftDrawerAdapter(MainActivity.this);
@@ -556,7 +555,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         else
             leftDrawerAdapter.setPushUsageMenu(true);
 
-        if (Session.getActiveSession() == null)
+        if (fbUid.isEmpty())
             leftDrawerAdapter.setFBUsageMenu(false);
         else
             leftDrawerAdapter.setFBUsageMenu(true);

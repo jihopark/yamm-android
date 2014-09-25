@@ -27,6 +27,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/intro_button_layout">
         <com.facebook.widget.LoginButton
+            xmlns:fb="http://schemas.android.com/apk/res-auto"
             android:id="@+id/fb_auth_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -34,6 +35,9 @@
             android:layout_marginRight="15dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="14dp"
+            fb:login_text="페이스북으로 시작하기"
+            fb:logout_text="페이스북으로 시작하기"
+            android:textSize="20sp"
             />
         <Button
             style="@style/IntroButton"

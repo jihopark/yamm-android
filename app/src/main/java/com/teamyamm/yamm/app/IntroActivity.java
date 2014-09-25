@@ -116,6 +116,7 @@ public class IntroActivity extends BaseActivity {
     private void setFBAuth(){
         LoginButton button = (LoginButton) findViewById(R.id.fb_auth_button);
         button.setReadPermissions("public_profile", "email");
+        button.setBackgroundResource(R.drawable.fb_round_button);
     }
 
     private void setViewPager(){

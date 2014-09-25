@@ -307,12 +307,14 @@ public interface YammAPIService {
         public String email;
         public String phone;
         public String name;
+        public String facebook_uid;
 
-        public RawInfo(long uid, String email, String phone, String name){
+        public RawInfo(long uid, String email, String phone, String name, String facebook_uid){
             this.uid = uid;
             this.email = email;
             this.phone = phone;
             this.name = name;
+            this.facebook_uid =facebook_uid;
         }
     }
 
