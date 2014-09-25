@@ -26,6 +26,15 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:id="@+id/intro_button_layout">
+        <com.facebook.widget.LoginButton
+            android:id="@+id/fb_auth_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="14dp"
+            />
         <Button
             style="@style/IntroButton"
             android:layout_marginBottom="14dp"
