@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 
@@ -168,7 +169,7 @@ public class LoginActivity extends BaseActivity {
 
                 YammAPIAdapter.setToken(yammToken.toString());
 
-                setMixpanelIdentity();
+                MixpanelController.setMixpanelIdentity(emailField.getText().toString());
 
                 //For Push Token
                 registerGCM();
@@ -193,11 +194,6 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
-    }
-
-    private void setMixpanelIdentity(){
-        mixpanel.identify(emailField.getText().toString());
-        Log.i("LoginActivity/setMixpanelIdentity","Setting Unique ID with email "+ emailField.getText().toString());
     }
 
     public static RequestInterceptor setRequestInterceptorForLogin(String email, String pw){

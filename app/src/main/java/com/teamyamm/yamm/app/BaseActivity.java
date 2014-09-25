@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.Friend;
@@ -124,10 +125,14 @@ public class BaseActivity extends ActionBarActivity {
         YammAPIAdapter.setToken(getAuthToken());
         YammAPIAdapter.setContext(getApplicationContext());
 
-        if (CURRENT_APPLICATION_STATUS.equals(TESTING))
+        if (CURRENT_APPLICATION_STATUS.equals(TESTING)) {
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);
-        else
+            MixpanelController.setMixpanel(mixpanel);
+        }
+        else {
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
+            MixpanelController.setMixpanel(mixpanel);
+        }
     }
 
     @Override
@@ -528,6 +533,11 @@ public class BaseActivity extends ActionBarActivity {
     protected void logOut(){
         if (this instanceof MainActivity)
             ((MainActivity)this).isLeftMenuLoaded = false;
+
+        if (fbSession!=null){
+            fbSession.closeAndClearTokenInformation();
+            fbSession = null;
+        }
 
         isLoggingOut = true;
         removeAuthToken();

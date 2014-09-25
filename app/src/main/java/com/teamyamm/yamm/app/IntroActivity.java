@@ -16,6 +16,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.widget.IntroImageFragment;
@@ -51,8 +52,8 @@ public class IntroActivity extends BaseActivity {
             YammAPIAdapter.getFBLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawFBToken>() {
                 @Override
                 public void success(YammAPIService.RawFBToken rawFBToken, Response response) {
-                   // putInPref(prefs, getString(R.string.AUTH_TOKEN), rawFBToken.access_token);
-                   // YammAPIAdapter.setToken(rawFBToken.access_token);
+                   putInPref(prefs, getString(R.string.AUTH_TOKEN), rawFBToken.access_token);
+                   YammAPIAdapter.setToken(rawFBToken.access_token);
                     Log.d("IntroActivity/fbLogin","FB Login Success." + rawFBToken);
                     if (rawFBToken.is_new)
                         fbToJoin(rawFBToken.email);
@@ -88,11 +89,20 @@ public class IntroActivity extends BaseActivity {
     }
 
     private void fbToJoin(String email){
-
+        MixpanelController.setMixpanelAlias(email);
+        //Get Push Token
+        registerGCM();
+        //Move onto Next Activity
+        goToActivity(GridActivity.class);
     }
 
     private void fbToLogin(String email){
+        MixpanelController.setMixpanelIdentity(email);
 
+        //For Push Token
+        registerGCM();
+
+        goToActivity(MainActivity.class);
     }
 
     @Override
