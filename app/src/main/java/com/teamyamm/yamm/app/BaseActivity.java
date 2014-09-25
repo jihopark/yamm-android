@@ -41,6 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -97,15 +99,31 @@ public class BaseActivity extends ActionBarActivity {
 
     protected Dialog currentDialog = null;
 
-    protected static Session fbSession;
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
 
+    protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isClosed()) {
+            Log.i("BaseActivity/onSessionStateChange", "Logged out...");
+            session.closeAndClearTokenInformation();
+        }
+    }
 
-    @Override
+            @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         isAppRunning = true;
 
-        //Check If WTFException was Handled
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+
+
+                //Check If WTFException was Handled
         if (getIntent().getExtras()!=null) {
             if (getIntent().getExtras().get("error")!=null) {
                 WTFExceptionHandler.sendLogToServer(BaseActivity.this, getIntent().getExtras().get("error").toString());
@@ -133,15 +151,21 @@ public class BaseActivity extends ActionBarActivity {
             mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
             MixpanelController.setMixpanel(mixpanel);
         }
+
+        Log.i("BaseActivity/onCreate","Retrieve session" + (Session.getActiveSession()==null));
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        uiHelper.onResume();
+
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
         if (CURRENT_APPLICATION_STATUS.equals(PRODUCTION))
             checkPlayServices();
+
 
         isAppRunning = true;
         Log.d("BaseActivity/onResume","App is Running " + isAppRunning);
@@ -151,12 +175,26 @@ public class BaseActivity extends ActionBarActivity {
     protected void onPause(){
         super.onPause();
         isAppRunning = false;
+        uiHelper.onPause();
         Log.d("BaseActivity/onPause", "App is Running " + isAppRunning);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         mixpanel.flush();
+        uiHelper.onDestroy();
         super.onDestroy();
     }
 
@@ -534,9 +572,10 @@ public class BaseActivity extends ActionBarActivity {
         if (this instanceof MainActivity)
             ((MainActivity)this).isLeftMenuLoaded = false;
 
-        if (fbSession!=null){
-            fbSession.closeAndClearTokenInformation();
-            fbSession = null;
+        if (Session.getActiveSession()!=null){
+            Session.getActiveSession().closeAndClearTokenInformation();
+            Session.setActiveSession(null);
+            Log.d("BaseActivity/logOut","Clear FB Session");
         }
 
         isLoggingOut = true;
@@ -580,8 +619,6 @@ public class BaseActivity extends ActionBarActivity {
         }
 
         YammAPIAdapter.setToken(null);
-
-        Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
     }
 
     protected void removePersonalData(){

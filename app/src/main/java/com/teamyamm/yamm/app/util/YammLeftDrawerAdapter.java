@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class YammLeftDrawerAdapter extends BaseAdapter {
     private final static int pushUsageIndex = 3;
+    private final static int fbUsageIndex = 4;
+
     private List<LeftDrawerItem> items;
     private Context context;
 
@@ -65,6 +67,25 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
         notifyDataSetInvalidated();
     }
 
+    public void setFBUsageMenu(boolean b){
+        LeftDrawerItem item;
+        if (b){
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
+                    context.getString(R.string.left_drawer_fb_status_positive), fbUsageIndex);
+        }
+        else{
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
+                    context.getString(R.string.left_drawer_fb_status_negative), fbUsageIndex);
+        }
+        if (items.size() > fbUsageIndex)
+            items.set(fbUsageIndex, item);
+        else
+            items.add(fbUsageIndex, item);
+
+        Log.i("YammLeftDrawerAdapter/setFBUsageMenu","FB Usage Menu set to " + b);
+        notifyDataSetInvalidated();
+    }
+
     public void addMenuItems(LeftDrawerItem item){
         items.add(item);
     }
@@ -79,7 +100,7 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
 
     private class LeftDrawerItemView extends RelativeLayout{
         private final int[] iconRes = {R.drawable.sidemenu_icon_01, R.drawable.sidemenu_icon_02,
-                                          R.drawable.sidemenu_icon_03, R.drawable.sidemenu_icon_04,
+                                          R.drawable.sidemenu_icon_03, R.drawable.sidemenu_icon_04,R.drawable.sidemenu_icon_04,
                                             R.drawable.sidemenu_icon_05};
 
         private LeftDrawerItem item;

@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
@@ -555,7 +556,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         else
             leftDrawerAdapter.setPushUsageMenu(true);
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
+        if (Session.getActiveSession() == null)
+            leftDrawerAdapter.setFBUsageMenu(false);
+        else
+            leftDrawerAdapter.setFBUsageMenu(true);
+
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
@@ -563,12 +569,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }));
 
         if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
-            leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
+      /*      leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToActivity(GridActivity.class);
                 }
-            }));
+            }));*/
             String status = "";
             if (CURRENT_APPLICATION_STATUS.equals(STAGING))
                 status = "STAGING";
