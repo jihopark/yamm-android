@@ -40,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -94,6 +95,8 @@ public class BaseActivity extends ActionBarActivity {
     public static boolean isLoggingOut = false;
 
     protected Dialog currentDialog = null;
+
+    protected static Session fbSession;
 
 
     @Override

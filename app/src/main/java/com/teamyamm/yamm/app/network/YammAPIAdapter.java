@@ -36,6 +36,8 @@ public class YammAPIAdapter {
     private static YammAPIService dislikeService = null;
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
+    private static YammAPIService fbLoginService = null;
+
     private static String token = null;
     private static Context context = null;
     private static AndroidLogger logger = null;
@@ -194,6 +196,25 @@ public class YammAPIAdapter {
         return loginService;
     }
 
+    /*
+    * Service for FB Login
+    * */
+    public static YammAPIService getFBLoginService(){
+        checkAPIURL();
+
+        Log.i("YammAPIAdapter/getFBLoginService", "FB LoginService initiated");
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setErrorHandler(new FBLoginErrorHandler())
+                .setLog(setRestAdapterLog())
+                .build();
+
+        fbLoginService = restAdapter.create(YammAPIService.class);
+
+        return fbLoginService;
+    }
+
+
     private static RestAdapter.Log setRestAdapterLog(){
         return new RestAdapter.Log() {
             @Override
@@ -213,6 +234,44 @@ public class YammAPIAdapter {
     /*
     Error Handlers
     * */
+
+    public static class FBLoginErrorHandler implements ErrorHandler{
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("FBLoginErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            if (r != null && r.getStatus() == 400) {
+                Log.e("FBLoginErrorHandler/handleError","Handling 400 Error");
+                YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
+                Gson gson = new Gson();
+                try {
+                    error = gson.fromJson(responseToString(r), error.getClass());
+                }catch(JsonSyntaxException e){
+                    Log.e("FBLoginErrorHandler/handleError","Json Syntax Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(IllegalStateException e){
+                    Log.e("FBLoginErrorHandler/handleError","Illegal State Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(NullPointerException e){
+                    Log.e("FBLoginErrorHandler/handleError","NullpointerException Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }
+
+                Log.e("FBLoginErrorHandler/handleError",error.getMessage());
+
+                if (error.getCode().equals("DuplicateEmail")) {
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
+                }
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
+            }
+            Log.e("FBLoginErrorHandler/handleError","Unidentified Error");
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+    }
 
     public static class TokenErrorHandler implements ErrorHandler{
         @Override
@@ -257,30 +316,6 @@ public class YammAPIAdapter {
                 return new YammAPIService.YammRetrofitException(cause, DishFragment.TOO_MANY_DISLIKE);
             }
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-        }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
         }
     }
 
@@ -333,30 +368,6 @@ public class YammAPIAdapter {
             Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
-        }
     }
 
     public static class LoginErrorHandler implements ErrorHandler {
@@ -375,5 +386,29 @@ public class YammAPIAdapter {
             Log.e("LoginErrorHandler/handleError","Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
+    }
+
+    private static String responseToString(Response result){
+        //Try to get response body
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+
+            String line;
+
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
     }
 }

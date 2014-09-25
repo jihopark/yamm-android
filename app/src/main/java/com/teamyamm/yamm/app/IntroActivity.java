@@ -16,8 +16,14 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.widget.IntroImageFragment;
 import com.teamyamm.yamm.app.widget.YammCirclePageIndicator;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 5/31/14.
@@ -38,15 +44,58 @@ public class IntroActivity extends BaseActivity {
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
-            Log.d("IntroActivity/onSessionStateChange", "Logged in...");
-            makeYammToast("페북 로그인!", Toast.LENGTH_SHORT);
-            Log.d("IntroActivity/onSessionStateChange",session.getAccessToken());
+            //Logging in
+            Log.d("IntroActivity/onSessionStateChange", "FB Session Created");
+            Log.d("IntroActivity/onSessionStateChange", session.getAccessToken());
+            fbSession = session;
+            YammAPIAdapter.getFBLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawFBToken>() {
+                @Override
+                public void success(YammAPIService.RawFBToken rawFBToken, Response response) {
+                   // putInPref(prefs, getString(R.string.AUTH_TOKEN), rawFBToken.access_token);
+                   // YammAPIAdapter.setToken(rawFBToken.access_token);
+                    Log.d("IntroActivity/fbLogin","FB Login Success." + rawFBToken);
+                    if (rawFBToken.is_new)
+                        fbToJoin(rawFBToken.email);
+                    else
+                        fbToLogin(rawFBToken.email);
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    String msg = retrofitError.getCause().getMessage();
+
+                    Log.e("IntroActivity/fbLogin","FB Login Error " + msg);
+                    if (fbSession!=null) {
+                        fbSession.closeAndClearTokenInformation();
+                        fbSession=null;
+                    }
+
+                    if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT))
+                        makeYammToast(getString(R.string.fb_login_duplicate_error_message), Toast.LENGTH_LONG);
+                    else if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
+                        makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
+                    else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
+                        makeYammToast(getString(R.string.fb_invalid_token_message), Toast.LENGTH_SHORT);
+                    else
+                        makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
+                }
+            });
         } else if (state.isClosed()) {
             Log.i("IntroActivity/onSessionStateChange", "Logged out...");
+            session.closeAndClearTokenInformation();
+            fbSession = null;
         }
     }
 
-        @Override
+    private void fbToJoin(String email){
+
+    }
+
+    private void fbToLogin(String email){
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

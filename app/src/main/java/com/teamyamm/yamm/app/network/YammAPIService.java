@@ -92,6 +92,25 @@ public interface YammAPIService {
     }
 
     /*
+    * FB Login. Should send FB AccessToken
+    * */
+
+    @FormUrlEncoded
+    @POST("/auth/facebook")
+    void fbLogin(@Field("fb_short_lived_token") String token, Callback<RawFBToken> callback);
+
+    public static class RawFBToken{
+        public boolean is_new;
+        public String access_token;
+        public String token_type;
+        public String email;
+
+        public String toString(){
+            return "is_new: " + is_new + " access_token: " + access_token + " email: " + email;
+        }
+    }
+
+    /*
     * Gets GridItems from Server in GridActivity
     * */
 
