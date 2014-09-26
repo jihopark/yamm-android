@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
@@ -41,6 +43,7 @@ import com.teamyamm.yamm.app.widget.TutorialFragment;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,6 +75,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ImageButton friendPickButton;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
+
+    private static boolean isLoadingFB = false;
 
     private YammLeftDrawerAdapter leftDrawerAdapter;
 
@@ -556,9 +561,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             leftDrawerAdapter.setPushUsageMenu(true);
 
         if (fbUid.isEmpty())
-            leftDrawerAdapter.setFBUsageMenu(false);
+            leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
         else
-            leftDrawerAdapter.setFBUsageMenu(true);
+            leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
 
         leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
             @Override
@@ -589,6 +594,88 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         leftDrawer.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
         isLeftMenuLoaded = true;
+    }
+
+    private Session.StatusCallback statusCallback =
+            new SessionStatusCallback();
+
+    private class SessionStatusCallback implements Session.StatusCallback {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    }
+
+    @Override
+    protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        super.onSessionStateChange(session, state, exception);
+        if (state.isOpened() && !isLoadingFB) {
+            isLoadingFB = true;
+            Log.d("MainActivity/onSessionStateChange", session.getAccessToken());
+            YammAPIAdapter.getTokenService().connectFacebook(session.getAccessToken(), new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+                    Log.d("MainActivity/connectFacebook/Success", "FB Connect Successful");
+                    leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
+                    makeYammToast(R.string.fb_connect_success, Toast.LENGTH_SHORT);
+                    isLoadingFB = false;
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    Log.e("MainActivity/connectFacebook/Failure", "FB Connect Failure");
+                    makeYammToast(R.string.fb_connect_failure, Toast.LENGTH_LONG);
+                    isLoadingFB = false;
+                }
+            });
+        }
+    }
+
+    private View.OnClickListener getFBConnectHandler(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isLoadingFB)
+                    return ;
+
+                Session session = Session.getActiveSession();
+                if (!session.isOpened() && !session.isClosed()) {
+                    session.openForRead(new Session.OpenRequest(MainActivity.this)
+                            .setPermissions(Arrays.asList("public_profile", "email"))
+                            .setCallback(statusCallback));
+                } else {
+                    Session.openActiveSession(MainActivity.this, true, statusCallback);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener getFBDisconnectHandler(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isLoadingFB)
+                    return ;
+
+                isLoadingFB = true;
+                YammAPIAdapter.getTokenService().disconnectFacebook(new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        Log.d("MainActivity/disconnectFacebook/Success", "FB Disconnect Successful");
+                        leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
+                        makeYammToast(R.string.fb_disconnect_success, Toast.LENGTH_SHORT);
+                        isLoadingFB = false;
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e("MainActivity/disconnectFacebook/Failure", "FB Disconnect Failure");
+                        makeYammToast(R.string.fb_disconnect_failure, Toast.LENGTH_LONG);
+                        isLoadingFB = false;
+                    }
+                });
+            }
+        };
     }
 
     public void showTutorial(){

@@ -15,6 +15,7 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Query;
 
 public interface YammAPIService {
@@ -301,6 +302,13 @@ public interface YammAPIService {
 
     @GET ("/user/info")
     void getUserInfo(Callback<RawInfo> callback);
+
+    @FormUrlEncoded
+    @PUT ("/user/facebook")
+    void connectFacebook(@Field("fb_short_lived_token") String token, Callback<String> callback);
+
+    @DELETE("/user/facebook")
+    void disconnectFacebook(Callback<String> callback);
 
     public class RawInfo{
         public long uid;

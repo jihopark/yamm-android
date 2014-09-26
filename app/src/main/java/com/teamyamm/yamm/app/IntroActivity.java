@@ -78,6 +78,9 @@ public class IntroActivity extends BaseActivity {
         MixpanelController.setMixpanelAlias(email);
         //Get Push Token
         registerGCM();
+
+        makeYammToast(R.string.fb_join_success, Toast.LENGTH_SHORT);
+
         //Move onto Next Activity
         goToActivity(GridActivity.class);
     }
@@ -85,6 +88,7 @@ public class IntroActivity extends BaseActivity {
     private void fbToLogin(String email){
         MixpanelController.setMixpanelIdentity(email);
 
+        makeYammToast(R.string.fb_login_success, Toast.LENGTH_SHORT);
         //For Push Token
         registerGCM();
 

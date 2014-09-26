@@ -67,15 +67,15 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
         notifyDataSetInvalidated();
     }
 
-    public void setFBUsageMenu(boolean b){
+    public void setFBUsageMenu(boolean b, View.OnClickListener click){
         LeftDrawerItem item;
         if (b){
             item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
-                    context.getString(R.string.left_drawer_fb_status_positive), fbUsageIndex);
+                    context.getString(R.string.left_drawer_fb_status_positive), fbUsageIndex, null, click);
         }
         else{
             item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
-                    context.getString(R.string.left_drawer_fb_status_negative), fbUsageIndex);
+                    context.getString(R.string.left_drawer_fb_status_negative), fbUsageIndex, null, click);
         }
         if (items.size() > fbUsageIndex)
             items.set(fbUsageIndex, item);
