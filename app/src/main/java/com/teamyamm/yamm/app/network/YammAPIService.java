@@ -50,6 +50,7 @@ public interface YammAPIService {
         public static final String PASSWORD_FORMAT = "PWF"; //password should contain at least one number or special char
         public static final String EMAIL_FORMAT = "EMF"; //email format is wrong
         public static final String PHONE_FORMAT = "PHF"; //phone format is wrong
+        public static final String NO_OTHER_AUTHENTICATION = "NOA"; //no other authentication method (email, facebook, kakao)
 
 
         public YammRetrofitException(Throwable e, String message){

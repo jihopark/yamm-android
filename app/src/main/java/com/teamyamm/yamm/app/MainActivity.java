@@ -612,7 +612,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         if (state.isOpened() && !isLoadingFB) {
             isLoadingFB = true;
             Log.d("MainActivity/onSessionStateChange", session.getAccessToken());
-            YammAPIAdapter.getTokenService().connectFacebook(session.getAccessToken(), new Callback<String>() {
+            YammAPIAdapter.getFBConnectService().connectFacebook(session.getAccessToken(), new Callback<String>() {
                 @Override
                 public void success(String s, Response response) {
                     Log.d("MainActivity/connectFacebook/Success", "FB Connect Successful");
@@ -626,6 +626,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Log.e("MainActivity/connectFacebook/Failure", "FB Connect Failure");
                     makeYammToast(R.string.fb_connect_failure, Toast.LENGTH_LONG);
                     isLoadingFB = false;
+                    if (Session.getActiveSession()!=null) {
+                        Session.getActiveSession().closeAndClearTokenInformation();
+                    }
                 }
             });
         }
@@ -658,20 +661,27 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     return ;
 
                 isLoadingFB = true;
-                YammAPIAdapter.getTokenService().disconnectFacebook(new Callback<String>() {
+                YammAPIAdapter.getFBConnectService().disconnectFacebook(new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
                         Log.d("MainActivity/disconnectFacebook/Success", "FB Disconnect Successful");
                         leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
                         makeYammToast(R.string.fb_disconnect_success, Toast.LENGTH_SHORT);
                         isLoadingFB = false;
+                        if (Session.getActiveSession()!=null) {
+                            Session.getActiveSession().closeAndClearTokenInformation();
+                        }
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         Log.e("MainActivity/disconnectFacebook/Failure", "FB Disconnect Failure");
-                        makeYammToast(R.string.fb_disconnect_failure, Toast.LENGTH_LONG);
                         isLoadingFB = false;
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION))
+                            makeYammToast(getString(R.string.fb_no_other_authentication_error), Toast.LENGTH_LONG);
+                        else
+                            makeYammToast(R.string.fb_disconnect_failure, Toast.LENGTH_LONG);
                     }
                 });
             }

@@ -37,6 +37,7 @@ public class YammAPIAdapter {
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
     private static YammAPIService fbLoginService = null;
+    private static YammAPIService fbConnectService = null;
 
     private static String token = null;
     private static Context context = null;
@@ -207,11 +208,46 @@ public class YammAPIAdapter {
                 .setEndpoint(apiURL)
                 .setErrorHandler(new FBLoginErrorHandler())
                 .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
         fbLoginService = restAdapter.create(YammAPIService.class);
 
         return fbLoginService;
+    }
+
+    /*
+   * Service for FB Connect/Disconnect
+   * */
+    public static YammAPIService getFBConnectService(){
+        checkAPIURL();
+
+        if (fbConnectService == null) {
+            if (token==null){
+                Log.e("YammAPIAdapter/getFBConnectService","Token should be set first!!");
+                return null;
+            }
+
+            Log.i("YammAPIAdapter/getFBConnectService", "FB ConnectService initiated");
+
+            RequestInterceptor interceptor = new RequestInterceptor() {
+                @Override
+                public void intercept(RequestFacade request) {
+                    request.addHeader("Authorization", "Bearer " + token);
+                }
+            };
+
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(apiURL)
+                    .setErrorHandler(new FBConnectErrorHandler())
+                    .setLog(setRestAdapterLog())
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setRequestInterceptor(interceptor)
+                    .build();
+
+            fbConnectService = restAdapter.create(YammAPIService.class);
+        }
+        return fbConnectService;
     }
 
 
@@ -234,6 +270,43 @@ public class YammAPIAdapter {
     /*
     Error Handlers
     * */
+
+    public static class FBConnectErrorHandler implements ErrorHandler{
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("FBConnectErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            if (r != null && r.getStatus() == 400) {
+                Log.e("FBConnectErrorHandler/handleError","Handling 400 Error");
+                YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
+                Gson gson = new Gson();
+                try {
+                    error = gson.fromJson(responseToString(r), error.getClass());
+                }catch(JsonSyntaxException e){
+                    Log.e("FBConnectErrorHandler/handleError","Json Syntax Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(IllegalStateException e){
+                    Log.e("FBConnectErrorHandler/handleError","Illegal State Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(NullPointerException e){
+                    Log.e("FBConnectErrorHandler/handleError","NullpointerException Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }
+
+                Log.e("FBConnectErrorHandler/handleError",error.getMessage());
+
+                if (error.getCode().equals("NoOtherAuthenticationMethod")) {
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION);
+                }
+            }
+            Log.e("FBConnectErrorHandler/handleError","Unidentified Error");
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+    }
 
     public static class FBLoginErrorHandler implements ErrorHandler{
         @Override

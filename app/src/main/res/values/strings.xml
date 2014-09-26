@@ -167,6 +167,7 @@
     <string name="fb_connect_failure">페이스북으로부터 정보를 불러오지 못했습니다\n다시 한번 해주세요</string>
     <string name="fb_login_success">로그인되었습니다</string>
     <string name="fb_join_success">페이스북으로 시작되었습니다</string>
+    <string name="fb_no_other_authentication_error">페이스북 말고 다른 인증방식이 없습니다\n먼저 비밀번호를 설정해주세요</string>
 
     <!-- Friends Activity & Fragment -->
 
