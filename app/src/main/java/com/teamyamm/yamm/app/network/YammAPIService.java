@@ -99,13 +99,18 @@ public interface YammAPIService {
 
     @FormUrlEncoded
     @POST("/auth/facebook")
-    void fbLogin(@Field("fb_short_lived_token") String token, Callback<RawFBToken> callback);
+    void fbLogin(@Field("fb_short_lived_token") String token, Callback<RawOAuthToken> callback);
 
-    public static class RawFBToken{
+    @FormUrlEncoded
+    @POST("/auth/kakao")
+    void kakaoLogin(@Field("kakao_access_token") String token, Callback<RawOAuthToken> callback);
+
+    public static class RawOAuthToken {
         public boolean is_new;
         public String access_token;
         public String token_type;
         public String email;
+        public String kakao_uid;
 
         public String toString(){
             return "is_new: " + is_new + " access_token: " + access_token + " email: " + email;

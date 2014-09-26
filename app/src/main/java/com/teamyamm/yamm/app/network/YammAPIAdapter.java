@@ -36,7 +36,7 @@ public class YammAPIAdapter {
     private static YammAPIService dislikeService = null;
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
-    private static YammAPIService fbLoginService = null;
+    private static YammAPIService oAuthLoginService = null;
     private static YammAPIService fbConnectService = null;
 
     private static String token = null;
@@ -200,20 +200,20 @@ public class YammAPIAdapter {
     /*
     * Service for FB Login
     * */
-    public static YammAPIService getFBLoginService(){
+    public static YammAPIService getOAuthLoginService(){
         checkAPIURL();
 
-        Log.i("YammAPIAdapter/getFBLoginService", "FB LoginService initiated");
+        Log.i("YammAPIAdapter/getOAuthLoginService", "Oauth LoginService initiated");
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiURL)
-                .setErrorHandler(new FBLoginErrorHandler())
+                .setErrorHandler(new OAuthLoginErrorHandler())
                 .setLog(setRestAdapterLog())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
-        fbLoginService = restAdapter.create(YammAPIService.class);
+        oAuthLoginService = restAdapter.create(YammAPIService.class);
 
-        return fbLoginService;
+        return oAuthLoginService;
     }
 
     /*
@@ -308,40 +308,40 @@ public class YammAPIAdapter {
         }
     }
 
-    public static class FBLoginErrorHandler implements ErrorHandler{
+    public static class OAuthLoginErrorHandler implements ErrorHandler{
         @Override
         public Throwable handleError(RetrofitError cause) {
             Response r = cause.getResponse();
 
             if (cause.isNetworkError()){
-                Log.e("FBLoginErrorHandler/handleError","Handling Network Error");
+                Log.e("OAuthLoginErrorHandler/handleError","Handling Network Error");
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
             }
             if (r != null && r.getStatus() == 400) {
-                Log.e("FBLoginErrorHandler/handleError","Handling 400 Error");
+                Log.e("OAuthLoginErrorHandler/handleError","Handling 400 Error");
                 YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
                 Gson gson = new Gson();
                 try {
                     error = gson.fromJson(responseToString(r), error.getClass());
                 }catch(JsonSyntaxException e){
-                    Log.e("FBLoginErrorHandler/handleError","Json Syntax Exception Caught");
+                    Log.e("OAuthLoginErrorHandler/handleError","Json Syntax Exception Caught");
                     return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
                 }catch(IllegalStateException e){
-                    Log.e("FBLoginErrorHandler/handleError","Illegal State Exception Caught");
+                    Log.e("OAuthLoginErrorHandler/handleError","Illegal State Exception Caught");
                     return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
                 }catch(NullPointerException e){
-                    Log.e("FBLoginErrorHandler/handleError","NullpointerException Caught");
+                    Log.e("OAuthLoginErrorHandler/handleError","NullpointerException Caught");
                     return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
                 }
 
-                Log.e("FBLoginErrorHandler/handleError",error.getMessage());
+                Log.e("OAuthLoginErrorHandler/handleError",error.getMessage());
 
                 if (error.getCode().equals("DuplicateEmail")) {
                     return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
                 }
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
             }
-            Log.e("FBLoginErrorHandler/handleError","Unidentified Error");
+            Log.e("OAuthLoginErrorHandler/handleError","Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
     }

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.widget.LoginButton;
+import com.kakao.SessionCallback;
+import com.kakao.exception.KakaoException;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
@@ -32,6 +34,46 @@ public class IntroActivity extends BaseActivity {
     private Button joinButton, loginButton;
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
+    private static boolean isLoadingKakao = false;
+
+    private final SessionCallback kakaoSessionCallback = new KakaoSessionStatusCallback();
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_new_intro);
+
+        setFBAuth();
+        setKakaoAuth();
+        setButtons();
+        setViewPager();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        BaseActivity.isLoggingOut = false;
+
+        if(com.kakao.Session.initializeSession(this, kakaoSessionCallback)){
+            Log.d("IntroActivity/kakao","Initializing Session");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        goBackHome();
+    }
+
+    /*
+    * Facebook Auth
+    * */
+    private void setFBAuth(){
+        LoginButton button = (LoginButton) findViewById(R.id.fb_auth_button);
+        button.setReadPermissions("public_profile", "email");
+        button.setBackgroundResource(R.drawable.fb_round_button);
+    }
 
     @Override
     protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
@@ -40,16 +82,16 @@ public class IntroActivity extends BaseActivity {
         if (state.isOpened()) {
             //Logging in
             Log.d("IntroActivity/onSessionStateChange", session.getAccessToken());
-            YammAPIAdapter.getFBLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawFBToken>() {
+            YammAPIAdapter.getOAuthLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
                 @Override
-                public void success(YammAPIService.RawFBToken rawFBToken, Response response) {
-                   putInPref(prefs, getString(R.string.AUTH_TOKEN), rawFBToken.access_token);
-                   YammAPIAdapter.setToken(rawFBToken.access_token);
-                    Log.d("IntroActivity/fbLogin","FB Login Success." + rawFBToken);
-                    if (rawFBToken.is_new)
-                        fbToJoin(rawFBToken.email);
+                public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
+                    putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
+                    YammAPIAdapter.setToken(rawOAuthToken.access_token);
+                    Log.d("IntroActivity/fbLogin","FB Login Success." + rawOAuthToken);
+                    if (rawOAuthToken.is_new)
+                        fbToJoin(rawOAuthToken.email);
                     else
-                        fbToLogin(rawFBToken.email);
+                        fbToLogin(rawOAuthToken.email);
                 }
 
                 @Override
@@ -97,33 +139,67 @@ public class IntroActivity extends BaseActivity {
         goToActivity(MainActivity.class);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    /*
+    * Kakao Auth
+    * */
 
-        setContentView(R.layout.activity_new_intro);
-
-        setFBAuth();
-        setButtons();
-        setViewPager();
+    private void setKakaoAuth(){
+        com.kakao.widget.LoginButton kakaoButton = (com.kakao.widget.LoginButton) findViewById(R.id.kakao_login_button);
+        kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        BaseActivity.isLoggingOut = false;
+    private class KakaoSessionStatusCallback implements SessionCallback {
+        @Override
+        public void onSessionOpened() {
+            // 프로그레스바를 보이고 있었다면 중지하고 세션 오픈후 보일 페이지로 이동
+            if (!isLoadingKakao)
+                IntroActivity.this.onSessionOpened();
+        }
+
+        @Override
+        public void onSessionClosed(final KakaoException exception) {
+            Log.d("IntroActivity/kakao", "Session closed");
+        }
     }
 
-    @Override
-    public void onBackPressed() {
-        goBackHome();
+    protected void onSessionOpened(){
+/*        final Intent intent = new Intent(IntroActivity.this, SampleSignupActivity.class);
+        startActivity(intent);
+        finish();*/
+        Log.d("IntroActivity/kakao", "Session Opened");
+        isLoadingKakao = true;
+        YammAPIAdapter.getOAuthLoginService().kakaoLogin(com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
+            @Override
+            public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
+                Log.d("IntroActivity/kakaoLogin", "Successful " + rawOAuthToken.kakao_uid + " is_new " + rawOAuthToken.is_new);
+                if (com.kakao.Session.getCurrentSession() != null) {
+                    com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
+                }
+                isLoadingKakao = false;
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+
+                Log.e("IntroActivity/kakaoLogin", "Kakao Login Error " + msg);
+
+                if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
+                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
+                else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
+                    makeYammToast(getString(R.string.fb_invalid_token_message), Toast.LENGTH_SHORT);
+                else
+                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
+                if (com.kakao.Session.getCurrentSession() != null) {
+                    com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
+                }
+                isLoadingKakao = false;
+            }
+        });
+
+        makeYammToast("KAKAO", Toast.LENGTH_SHORT);
     }
 
-    private void setFBAuth(){
-        LoginButton button = (LoginButton) findViewById(R.id.fb_auth_button);
-        button.setReadPermissions("public_profile", "email");
-        button.setBackgroundResource(R.drawable.fb_round_button);
-    }
 
     private void setViewPager(){
         pager = (ViewPager) findViewById(R.id.intro_view_pager);

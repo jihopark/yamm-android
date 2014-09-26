@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/intro_button_layout">
         <com.kakao.widget.LoginButton
-            android:id="@+id/com_kakao_login"
+            android:id="@+id/kakao_login_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="15dp"
