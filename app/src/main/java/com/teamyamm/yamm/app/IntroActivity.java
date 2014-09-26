@@ -81,6 +81,7 @@ public class IntroActivity extends BaseActivity {
 
         makeYammToast(R.string.fb_join_success, Toast.LENGTH_SHORT);
 
+        Session.getActiveSession().close();
         //Move onto Next Activity
         goToActivity(GridActivity.class);
     }
@@ -92,6 +93,7 @@ public class IntroActivity extends BaseActivity {
         //For Push Token
         registerGCM();
 
+        Session.getActiveSession().close();
         goToActivity(MainActivity.class);
     }
 

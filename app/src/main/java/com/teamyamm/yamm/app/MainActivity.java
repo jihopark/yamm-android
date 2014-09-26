@@ -619,6 +619,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
                     makeYammToast(R.string.fb_connect_success, Toast.LENGTH_SHORT);
                     isLoadingFB = false;
+                    if (Session.getActiveSession()!=null) {
+                        Session.getActiveSession().close();
+                    }
                 }
 
                 @Override
