@@ -102,6 +102,8 @@ public class SplashScreen extends Activity {
             activity = new Intent(getBaseContext(), MainActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_INVITE)))
             activity = new Intent(getBaseContext(), MainActivity.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_PHONE)))
+            activity = new Intent(getBaseContext(), PhoneAuthActivity.class);
         //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Friend
         //activity = new Intent(getBaseContext(), BattleActivity.class);
 

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -63,26 +62,8 @@ public class JoinActivity extends BaseActivity {
         configAgreementCheckBox();
         configEditTexts();
         configJoinConfirmButton();
-        getPhoneNumber();
+        phoneText.setText(getPhoneNumber());
     }
-
-
-    private void getPhoneNumber(){
-        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String phone = manager.getLine1Number();
-
-        if (phone==null)
-            return ;
-        phone = MainActivity.parsePhoneNumber(phone);
-
-        Log.i("JoinActivity/getPhoneNumber","Read Phone Number : " + phone);
-
-        if (phone.length() > 9){
-            //Set it on Phone Text
-            phoneText.setText(phone);
-        }
-    }
-
 
     private void configJoinConfirmButton(){
         joinConfirmButton = (Button) findViewById(R.id.join_confirm_button);

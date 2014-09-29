@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,11 +31,15 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/31/14.
  */
 public class IntroActivity extends BaseActivity {
+    private final static boolean KAKAO = true;
+    private final static boolean FB = false;
+
 
     private Button joinButton, loginButton;
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
     private static boolean isLoadingKakao = false;
+
 
     private final SessionCallback kakaoSessionCallback = new KakaoSessionStatusCallback();
 
@@ -57,7 +62,7 @@ public class IntroActivity extends BaseActivity {
         BaseActivity.isLoggingOut = false;
 
         if(com.kakao.Session.initializeSession(this, kakaoSessionCallback)){
-            Log.d("IntroActivity/kakao","Initializing Session");
+            Log.d("IntroActivity/kakao", "Initializing Session");
         }
     }
 
@@ -82,16 +87,20 @@ public class IntroActivity extends BaseActivity {
         if (state.isOpened()) {
             //Logging in
             Log.d("IntroActivity/onSessionStateChange", session.getAccessToken());
-            YammAPIAdapter.getOAuthLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
+            final Dialog dialog = createFullScreenDialog(IntroActivity.this, getString(R.string.progress_dialog_message));
+            dialog.show();
+            YammAPIAdapter.getOAuthLoginService().fbLogin(true, session.getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
                 @Override
                 public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
                     putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
                     YammAPIAdapter.setToken(rawOAuthToken.access_token);
                     Log.d("IntroActivity/fbLogin","FB Login Success." + rawOAuthToken);
+                    dialog.dismiss();
                     if (rawOAuthToken.is_new)
-                        fbToJoin(rawOAuthToken.email);
+                        toJoin(rawOAuthToken.email, FB);
                     else
-                        fbToLogin(rawOAuthToken.email);
+                        toLogin(rawOAuthToken.email, FB, rawOAuthToken.has_phone);
+
                 }
 
                 @Override
@@ -111,32 +120,49 @@ public class IntroActivity extends BaseActivity {
                         makeYammToast(getString(R.string.fb_invalid_token_message), Toast.LENGTH_SHORT);
                     else
                         makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
+                    dialog.dismiss();
                 }
             });
         }
     }
 
-    private void fbToJoin(String email){
+    private void toJoin(String email, boolean type){
         MixpanelController.setMixpanelAlias(email);
         //Get Push Token
         registerGCM();
 
-        makeYammToast(R.string.fb_join_success, Toast.LENGTH_SHORT);
+        if (type==FB) {
+            makeYammToast(R.string.fb_join_success, Toast.LENGTH_SHORT);
+            Session.getActiveSession().close();
 
-        Session.getActiveSession().close();
+        }
+        else {
+            makeYammToast(R.string.kakao_join_success, Toast.LENGTH_SHORT);
+        }
         //Move onto Next Activity
-        goToActivity(GridActivity.class);
+        goToActivity(PhoneAuthActivity.class);
     }
 
-    private void fbToLogin(String email){
+    private void toLogin(String email, boolean type, boolean hasPhone){
         MixpanelController.setMixpanelIdentity(email);
 
-        makeYammToast(R.string.fb_login_success, Toast.LENGTH_SHORT);
+        if (type==FB) {
+            Session.getActiveSession().close();
+        }
+
+        makeYammToast(R.string.oauth_login_success, Toast.LENGTH_SHORT);
+
         //For Push Token
         registerGCM();
 
-        Session.getActiveSession().close();
-        goToActivity(MainActivity.class);
+        if (hasPhone){
+            Log.d("IntroActivity/toLogin","User has phone verified.");
+            goToActivity(MainActivity.class);
+        }
+        else{
+            Log.d("IntroActivity/toLogin","User has no phone verified.");
+            goToActivity(PhoneAuthActivity.class);
+        }
     }
 
     /*
@@ -168,14 +194,29 @@ public class IntroActivity extends BaseActivity {
         finish();*/
         Log.d("IntroActivity/kakao", "Session Opened");
         isLoadingKakao = true;
-        YammAPIAdapter.getOAuthLoginService().kakaoLogin(com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
+        final Dialog dialog = createFullScreenDialog(IntroActivity.this, getString(R.string.progress_dialog_message));
+        dialog.show();
+        YammAPIAdapter.getOAuthLoginService().kakaoLogin(true, com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
             @Override
             public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
                 Log.d("IntroActivity/kakaoLogin", "Successful " + rawOAuthToken.kakao_uid + " is_new " + rawOAuthToken.is_new);
                 if (com.kakao.Session.getCurrentSession() != null) {
                     com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
                 }
+
+                putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
+                YammAPIAdapter.setToken(rawOAuthToken.access_token);
+                Log.d("IntroActivity/kakaoLogin","Kakao Login Success." + rawOAuthToken);
+
+                dialog.dismiss();
+
                 isLoadingKakao = false;
+                if (rawOAuthToken.is_new)
+                    toJoin(rawOAuthToken.kakao_uid + "@kakao.com", KAKAO);
+                else
+                    toLogin(rawOAuthToken.kakao_uid+"@kakao.com",KAKAO, rawOAuthToken.has_phone);
+
+
             }
 
             @Override
@@ -194,6 +235,7 @@ public class IntroActivity extends BaseActivity {
                     com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
                 }
                 isLoadingKakao = false;
+                dialog.dismiss();
             }
         });
 

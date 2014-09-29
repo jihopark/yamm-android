@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -242,6 +243,22 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    protected String getPhoneNumber(){
+        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String phone = manager.getLine1Number();
+
+        if (phone==null)
+            return "";
+        phone = MainActivity.parsePhoneNumber(phone);
+
+        Log.i("BaseActivity/getPhoneNumber","Read Phone Number : " + phone);
+
+        if (phone.length() > 9){
+            //Set it on Phone Text
+            return phone;
+        }
+        return "";
+    }
     /*
     * Changes Action Bar Overlay
     * */

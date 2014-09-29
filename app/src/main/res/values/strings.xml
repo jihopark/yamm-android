@@ -20,6 +20,7 @@
     <string name="title_activity_group_recommendation">그룹 추천</string>
     <string name="title_activity_poke">친구랑 같이 먹기</string>
     <string name="title_activity_poke_alert">친구랑 같이 먹어요</string>
+    <string name="title_activity_phone_auth">폰 인증</string>
 
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정합니다</string>
@@ -51,6 +52,7 @@
     <string name="PREVIOUS_ACTIVITY_GRID">GridActivity</string>
     <string name="PREVIOUS_ACTIVITY_INVITE">FriendActivity</string>
     <string name="PREVIOUS_ACTIVITY_FRIEND">InviteActivity</string>
+    <string name="PREVIOUS_ACTIVITY_PHONE">PhoneAuthActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
@@ -69,7 +71,7 @@
     <string name="meal_picker_dialog_title">설마 아침부터...</string>
     <string name="invalid_date_message">오늘 이후의 날짜를 입력해주세요</string>
     <string name="invalid_date_title">과거</string>
-    <string name="progress_dialog_message">조금만 기다려주세요!</string>
+    <string name="progress_dialog_message">잠시만 기다려주십시오</string>
     <string name="join_progress_dialog_title">가입 처리 중입니다\n조금만 기다려주세요</string>
     <string name="new_recommendation_message">당신 취향에 맞는 새로운 추천입니다</string>
 
@@ -165,8 +167,10 @@
     <string name="fb_disconnect_failure">페이스북 연동을 해제하지 못했습니다\n다시 한번 해주세요</string>
     <string name="fb_connect_success">페이스북이 연동되었습니다</string>
     <string name="fb_connect_failure">페이스북으로부터 정보를 불러오지 못했습니다\n다시 한번 해주세요</string>
-    <string name="fb_login_success">로그인되었습니다</string>
+    <string name="oauth_login_success">로그인되었습니다</string>
     <string name="fb_join_success">페이스북으로 시작되었습니다</string>
+    <string name="kakao_join_success">카카오톡으로 시작되었습니다</string>
+
     <string name="fb_no_other_authentication_error">페이스북 말고 다른 인증방식이 없습니다\n먼저 비밀번호를 설정해주세요</string>
 
     <!-- Friends Activity & Fragment -->

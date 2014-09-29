@@ -133,6 +133,13 @@
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
+        <!-- Phone Auth Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.PhoneAuthActivity"
+            android:label="@string/title_activity_phone_auth"
+            android:theme="@style/YammActionBarTheme" >
+            </activity>
+
         <!-- Poke AlertActivity -->
         <activity android:name=".PokeAlertActivity"
             android:theme="@style/YammPokeDialog"
