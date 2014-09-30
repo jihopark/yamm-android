@@ -317,6 +317,10 @@ public interface YammAPIService {
     @DELETE("/user/facebook")
     void disconnectFacebook(Callback<String> callback);
 
+    @FormUrlEncoded
+    @PUT("/user/phone")
+    void registerPhone(@Field("newPhone") String phone, @Field("authcode") String code, Callback<String> callback);
+
     public class RawInfo{
         public long uid;
         public String email;

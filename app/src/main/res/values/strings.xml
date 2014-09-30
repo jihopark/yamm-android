@@ -133,6 +133,7 @@
     <string name="verification_done_message">인증되었습니다</string>
     <string name="join_confirm_button">가입하기</string>
 
+
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
     <string name="login_pw">비밀번호</string>
