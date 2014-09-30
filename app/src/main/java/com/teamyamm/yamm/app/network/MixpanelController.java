@@ -10,14 +10,33 @@ import com.teamyamm.yamm.app.pojos.DishItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by parkjiho on 9/25/14.
  */
 public class MixpanelController {
+
+    public static final String MIXPANEL_RECOMMENDATIONS_TOKEN = "9d35ac37a71aac289e80f8a906771327";
+    public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
+    public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
+
+
     public static MixpanelAPI mixpanel = null;
+    public static MixpanelAPI mixpanelRecommendation = null;
 
     public static void setMixpanel(MixpanelAPI m){
         mixpanel = m;
+    }
+    public static void setMixpanelRecommendation(MixpanelAPI m){
+        mixpanelRecommendation = m;
+    }
+
+    public static void flushAll(){
+        if (mixpanel!=null)
+            mixpanel.flush();
+        if (mixpanelRecommendation!=null)
+            mixpanelRecommendation.flush();
     }
 
     public static boolean checkMixpanelAPI(){
@@ -195,9 +214,9 @@ public class MixpanelController {
     public static void trackPokeResponseMixpanel(boolean response, Context context){
         if (!checkMixpanelAPI()){
             if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING))
-                setMixpanel(MixpanelAPI.getInstance(context, BaseActivity.MIXPANEL_TOKEN_DEVELOPMENT));
+                setMixpanel(MixpanelAPI.getInstance(context, MIXPANEL_TOKEN_DEVELOPMENT));
             else
-                setMixpanel(MixpanelAPI.getInstance(context, BaseActivity.MIXPANEL_TOKEN_PRODUCTION));
+                setMixpanel(MixpanelAPI.getInstance(context, MIXPANEL_TOKEN_PRODUCTION));
 
             if (!checkMixpanelAPI())
                 return ;
@@ -284,6 +303,54 @@ public class MixpanelController {
         }
         mixpanel.track("Clicked Dislike", props);
         Log.i("MixpanelController/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
+    }
+
+    public static void trackNewRecommendationMixpanel(){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        mixpanel.track("New Recommendation", props);
+        Log.i("MixpanelController/trackNewRecommendationMixpanel","New Recommendation Tracked ");
+
+    }
+
+    public static void trackEnteredGroupRecommendationMixpanel(){
+        JSONObject props = new JSONObject();
+        mixpanel.track("Entered Group Recommendation", props);
+        Log.i("MixpanelController/trackEnteredGroupRecommendationMixpanel","Entered Group Recommendation Tracked ");
+    }
+
+    /*
+    *
+    *  Mixpanel Recommendation Tracking Project
+    * */
+
+
+    public static void trackRecommendationsMixpanel(DishItem i, String type){
+        if (mixpanelRecommendation==null || i==null)
+            return ;
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        try{
+            props.put("Dish", i.getName());
+            props.put("Id", i.getId());
+            props.put("RecommendationType", type);
+        }catch (JSONException e){
+            Log.e("MixpanelController/trackRecommendationsMixpanel","JSON Error");
+        }
+        mixpanelRecommendation.track("Recommendation", props);
+        Log.i("MixpanelController/trackRecommendationsMixpanel","Recommendation Tracked for " +i.getName());
+    }
+
+    public static final String GROUP = "GROUP";
+    public static final String PERSONAL = "PERSONAL";
+
+    public static void trackRecommendationsMixpanel(List<DishItem> items, String type){
+        for (DishItem i : items)
+            trackRecommendationsMixpanel(i, type);
     }
 
 

@@ -231,6 +231,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             public void success(List<DishItem> dishes, Response response) {
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
+                MixpanelController.trackRecommendationsMixpanel(dishItems, MixpanelController.GROUP);
                 setFragment();
 
 

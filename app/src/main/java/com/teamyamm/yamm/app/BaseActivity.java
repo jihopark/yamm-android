@@ -58,9 +58,6 @@ import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Calendar;
@@ -88,9 +85,6 @@ public class BaseActivity extends ActionBarActivity {
     public static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
-    public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
-    public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
-    public MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
@@ -145,13 +139,12 @@ public class BaseActivity extends ActionBarActivity {
         YammAPIAdapter.setContext(getApplicationContext());
 
         if (CURRENT_APPLICATION_STATUS.equals(TESTING)) {
-            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);
-            MixpanelController.setMixpanel(mixpanel);
+            MixpanelController.setMixpanel(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_TOKEN_DEVELOPMENT));
         }
         else {
-            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
-            MixpanelController.setMixpanel(mixpanel);
+            MixpanelController.setMixpanel(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_TOKEN_PRODUCTION));
         }
+        MixpanelController.setMixpanelRecommendation(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_RECOMMENDATIONS_TOKEN));
 
         Log.i("BaseActivity/onCreate","Retrieve session" + (Session.getActiveSession()==null));
 
@@ -194,7 +187,7 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        mixpanel.flush();
+        MixpanelController.flushAll();
         uiHelper.onDestroy();
         super.onDestroy();
     }
@@ -217,20 +210,6 @@ public class BaseActivity extends ActionBarActivity {
 
     public static boolean checkIfAppIsRunning(){
         return isAppRunning;
-    }
-
-    public MixpanelAPI getMixpanelAPI(){ return mixpanel; }
-
-    protected void trackCaughtExceptionMixpanel(String where, String message){
-        JSONObject props = new JSONObject();
-        try {
-            props.put("Where", where);
-            props.put("Message", message);
-        }catch(JSONException e){
-            Log.e("BaseActivity/trackCaughtExceptionMixpanel","JSON Error");
-        }
-        mixpanel.track("Caught Exception", props);
-        Log.i("BaseActivity/trackCaughtExceptionMixpanel","Caught Exception Tracked");
     }
 
     /*
@@ -613,7 +592,7 @@ public class BaseActivity extends ActionBarActivity {
         editor.commit();
 
         //GCM push
-        MixpanelAPI.People people = mixpanel.getPeople();
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
         people.clearPushRegistrationId();
 
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
@@ -956,7 +935,7 @@ public class BaseActivity extends ActionBarActivity {
         });
 
 
-        MixpanelAPI.People people = mixpanel.getPeople();
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
         people.setPushRegistrationId(regid);
         Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to Mixpanel");
     }

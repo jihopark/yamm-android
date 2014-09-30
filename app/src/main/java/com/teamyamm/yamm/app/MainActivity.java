@@ -30,6 +30,7 @@ import com.facebook.SessionState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
@@ -39,8 +40,6 @@ import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.util.YammLeftDrawerAdapter;
 import com.teamyamm.yamm.app.widget.TutorialFragment;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -327,6 +326,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Log.i("MainActivity/getPersonalDishes", "Different List. Init MainFragment");
 
                     dishItems = items;
+
+                    MixpanelController.trackRecommendationsMixpanel(dishItems, MixpanelController.PERSONAL);
+
                     setMainFragment();
 
                     Handler handler = new Handler();
@@ -336,7 +338,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         }
                     }, getResources().getInteger(R.integer.dialog_delay_duration));
 
-                    trackNewRecommendationMixpanel();
+                    MixpanelController.trackNewRecommendationMixpanel();
                     return;
                 }
                 if (isDialogOpen) {
@@ -430,7 +432,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 v.setEnabled(false); //To prevent double fire
                 Log.i("MainActivity/onClick", "FriendActivity called");
 
-                trackEnteredGroupRecommendationMixpanel();
+                MixpanelController.trackEnteredGroupRecommendationMixpanel();
 
                 startActivity(intent);
             }
@@ -827,19 +829,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
         }
-    }
-
-    private void trackNewRecommendationMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("New Recommendation", props);
-        Log.i("MainActivity/trackNewRecommendationMixpanel","New Recommendation Tracked ");
-
-    }
-
-    private void trackEnteredGroupRecommendationMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("Entered Group Recommendation", props);
-        Log.i("MainActivity/trackEnteredGroupRecommendationMixpanel","Entered Group Recommendation Tracked ");
     }
 }
 
