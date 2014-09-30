@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.util.SmsListener;
@@ -45,6 +46,8 @@ public class PhoneAuthActivity extends BaseActivity {
         phoneField.setText(getPhoneNumber());
 
         configSendButton();
+
+        MixpanelController.trackEnteredPhoneAuthMixpanel();
     }
 
     @Override
@@ -152,6 +155,7 @@ public class PhoneAuthActivity extends BaseActivity {
                     public void success(String s, Response response) {
                         dialog.dismiss();
                         makeYammToast(R.string.join_progress_dialog_title, Toast.LENGTH_SHORT);
+                        MixpanelController.trackSubmitPhoneAuthMixpanel();
                         goToActivity(GridActivity.class);
                     }
 

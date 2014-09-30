@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.GridItem;
@@ -17,8 +18,6 @@ import com.teamyamm.yamm.app.util.GridSelectionListAdapter;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.widget.GridItemView;
 import com.teamyamm.yamm.app.widget.GridSelectionListView;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -53,7 +52,6 @@ public class GridActivity extends BaseActivity {
         checkbox = (CheckBox) findViewById(R.id.grid_checkbox);
         checkbox.setChecked(false);
         checkbox.setClickable(false);
-        trackSelectingDislkeFoodMixpanel();
     }
 
 
@@ -117,6 +115,7 @@ public class GridActivity extends BaseActivity {
             @Override
             public void success(String s, Response response) {
                 progressDialog.dismiss();
+                MixpanelController.trackSelectingDislkeFoodMixpanel(selectedItems.size());
                 Log.i("GridActivity/sendGridResults", "Sending " + s);
                 goToActivity(BattleActivity.class);
             }
@@ -282,11 +281,5 @@ public class GridActivity extends BaseActivity {
         progressDialog.dismiss();
 
         return adapter;
-    }
-
-    private void trackSelectingDislkeFoodMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("Selecting Dislike Food", props);
-        Log.i("GridActivity/trackSelectingDislkeFoodMixpanell","Selecting Dislike Food Tracked ");
     }
 }

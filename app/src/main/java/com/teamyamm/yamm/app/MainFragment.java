@@ -1,6 +1,5 @@
 package com.teamyamm.yamm.app;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -36,14 +35,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -312,7 +309,7 @@ public class MainFragment extends Fragment {
                     Log.i("DishFragmentPagerAdapter/onPageSelected",key + " retrived. " + hasReachedEnd);
                 }
                 if (!hasReachedEnd) {
-                    trackEndOfRecommendationMixpanel();
+                    MixpanelController.trackEndOfRecommendationMixpanel();
                     hasReachedEnd = true;
                     if (pref!=null) {
                         pref.edit().putBoolean(key, true).commit();
@@ -329,17 +326,9 @@ public class MainFragment extends Fragment {
             }catch(NullPointerException e){
                 Log.e("MainFragment/onPageSelected","NullPointer Exception caught. Is fragments.get(i)==null? "+ (fragments.get(i)==null));
                 e.printStackTrace();
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity activity = (BaseActivity) getActivity();
-                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
-                }
             }catch (IndexOutOfBoundsException e){
                 Log.e("MainFragment/onPageSelected","IndexOutOfBoundsException caught");
                 e.printStackTrace();
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity activity = (BaseActivity) getActivity();
-                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
-                }
             }
         }
 
@@ -488,7 +477,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 String place = LocationSearchHelper.searchMap(getCurrentDishItem(),
                         textView.getText().toString(), getActivity());
-                trackSearchMapMixpanel(place);
+                MixpanelController.trackSearchMapMixpanel(place);
                 addDishToPositive(SEARCH_MAP, place, getCurrentDishItem());
                 dialog.dismiss();
             }
@@ -531,7 +520,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.i("MainFragment/onClick", "Dislike pressed for " + getCurrentDishItem().getName());
-                trackDislikeMixpanel(getCurrentDishItem());
+                MixpanelController.trackDislikeMixpanel(getCurrentDishItem());
                 ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
                 toggleEnableButtons(false);
                 YammAPIService service = YammAPIAdapter.getDislikeService();
@@ -579,7 +568,7 @@ public class MainFragment extends Fragment {
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackClickedDislikeMixpanel(getCurrentDishItem());
+                MixpanelController.trackClickedDislikeMixpanel(getCurrentDishItem());
                 ((BaseActivity)getActivity()).createDialog(getActivity(),R.string.dish_dislike_title,
                         R.string.dish_dislike_message, R.string.dish_dislike_positive, R.string.dish_dislike_negative,
                         positiveListener, null).show();
@@ -903,62 +892,5 @@ public class MainFragment extends Fragment {
         fragments.add(p, null);
     }
 
-    private void trackEndOfRecommendationMixpanel(){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            base.getMixpanelAPI().track("End Of Recommendation", props);
-            Log.i("MainFragment/trackEndOfRecommendationMixpanel","End of Recommendation Tracked");
-        }
-    }
-
-    private void trackSearchMapMixpanel(String place){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try {
-                props.put("Place", place);
-            }catch(JSONException e){
-                Log.e("MainFragment/trackSearchMapMixpanel","JSON Error");
-            }
-
-            base.getMixpanelAPI().track("Search Map", props);
-            Log.i("MainFragment/trackSearchMapMixpanel","Search Map Tracked " + place);
-        }
-        else
-            Log.e("MainFragment/trackSearchMapMixpanel","Wrong Activity");
-    }
-
-    private void trackDislikeMixpanel(DishItem item){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try{
-                props.put("Dish", item.getName());
-            }catch (JSONException e){
-                Log.e("MainFragment/trackDislikeMixpanel","JSON Error");
-            }
-            base.getMixpanelAPI().track("Dislike", props);
-            Log.i("MainFragment/trackDislikeMixpanel","Dislike Tracked");
-        }
-    }
-
-    private void trackClickedDislikeMixpanel(DishItem item){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try{
-                props.put("Dish", item.getName());
-            }catch (JSONException e){
-                Log.e("MainFragment/trackClickedDislikeMixpanel","JSON Error");
-            }
-            base.getMixpanelAPI().track("Clicked Dislike", props);
-            Log.i("MainFragment/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
-        }
-    }
 
 }

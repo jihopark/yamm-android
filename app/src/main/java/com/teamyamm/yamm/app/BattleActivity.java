@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.VolleyController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
@@ -21,9 +22,6 @@ import com.teamyamm.yamm.app.pojos.BattleItem;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.widget.YammImageView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -272,7 +270,7 @@ public class BattleActivity extends BaseActivity {
             public void success(String msg, Response response) {
                 finalDialog.dismiss();
 
-                trackBattleMixpanel();
+                MixpanelController.trackBattleMixpanel(battleCount);
 
                 goToActivity(MainActivity.class);
             }
@@ -352,18 +350,4 @@ public class BattleActivity extends BaseActivity {
             Log.i("BattleActivity/CallPreloadImageAsyncTask", "Done");
         }
     }
-
-
-    private void trackBattleMixpanel(){
-        JSONObject props = new JSONObject();
-        try{
-            props.put("Battle Count", battleCount);
-        }catch(JSONException e){
-            Log.e("BattleActivity/trackBattleMixpanel","Error in JSON");
-            props = new JSONObject();
-        }
-        mixpanel.track("Battle", props);
-    }
-
-
 }

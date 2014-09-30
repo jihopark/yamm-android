@@ -287,7 +287,7 @@ public class JoinActivity extends BaseActivity {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
                 MixpanelController.setMixpanelAlias(emailText.getText().toString());
                 logInAfterJoin();
-                MixpanelController.trackJoiningMixpanel();
+                MixpanelController.trackJoiningMixpanel("Email");
             }
 
             @Override

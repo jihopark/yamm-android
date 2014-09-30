@@ -14,6 +14,7 @@ import com.kakao.AppActionBuilder;
 import com.kakao.KakaoLink;
 import com.kakao.KakaoParameterException;
 import com.kakao.KakaoTalkLinkMessageBuilder;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.pojos.DishItem;
 
 import java.lang.reflect.Field;
@@ -50,15 +51,12 @@ public class KakaoFragment extends Fragment {
             public void onClick(View v) {
                 if (type == INVITE) {
                     sendInviteKakaoLink();
-                    if (getActivity() instanceof InviteActivity) {
-                        ((InviteActivity)getActivity()).trackSendInviteMixpanel("KAKAO", 0);
-                    }
+                    MixpanelController.trackSendInviteMixpanel("KAKAO", 0);
+
                 }
                 else if (type == POKE){
                     sendPokeKakaoLink();
-                    if (getActivity() instanceof PokeActivity) {
-                        ((PokeActivity)getActivity()).trackPokeFriendMixpanel("KAKAO", 0, time, currentItem.getName());
-                    }
+                    MixpanelController.trackPokeFriendMixpanel("KAKAO", 0, time, currentItem.getName());
                 }
             }
         });
