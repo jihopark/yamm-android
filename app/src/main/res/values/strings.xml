@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_version_name">0.1.10</string>
+    <string name="app_version_name">0.2.1</string>
     <string name="facebook_app_test_id">842999912412097</string>
     <string name="facebook_app_id">842551369123618</string>
     <string name="logentries_key">6036cb0d-331d-4124-8245-e93f91de1388</string>
