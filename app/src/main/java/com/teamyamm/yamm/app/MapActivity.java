@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 
@@ -14,6 +15,8 @@ import com.teamyamm.yamm.app.util.LocationSearchHelper;
  * Created by parkjiho on 10/2/14.
  */
 public class MapActivity extends BaseActivity {
+    private final int DEFAULT_ZOOM_LEVEL = 14;
+
     private GoogleMap map;
     private double x,y;
     private String dishName;
@@ -53,15 +56,15 @@ public class MapActivity extends BaseActivity {
     private void initMap(){
         if (map==null){
             map =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment)).getMap();
-            if (map!=null){
+            if (map!=null) {
                 map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                if (x!=0 && y!=0){
-                    myLocation = new LatLng(x,y);
+                map.setMyLocationEnabled(true);
+                if (x != 0 && y != 0) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(x, y)).zoom(DEFAULT_ZOOM_LEVEL).build();
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
-                map.animateCamera(CameraUpdateFactory.newLatLng(myLocation));
-
             }
-
         }
     }
 }
