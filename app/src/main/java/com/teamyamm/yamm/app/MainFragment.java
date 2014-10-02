@@ -475,10 +475,10 @@ public class MainFragment extends Fragment {
         positive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String place = LocationSearchHelper.searchMap(getCurrentDishItem(),
+                LocationSearchHelper.searchMap(getCurrentDishItem(),
                         textView.getText().toString(), getActivity());
-                MixpanelController.trackSearchMapMixpanel(place);
-                addDishToPositive(SEARCH_MAP, place, getCurrentDishItem());
+                MixpanelController.trackSearchMapMixpanel("");
+                addDishToPositive(SEARCH_MAP, "", getCurrentDishItem());
                 dialog.dismiss();
             }
         });

@@ -7,21 +7,16 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.MapActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.pojos.DishItem;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by parkjiho on 9/23/14.
@@ -39,8 +34,6 @@ public class LocationSearchHelper {
     private static LocationManager manager = null;
     private static LocationListener listener = null;
 
-    private static double x=0,y=0;
-
     public static void initLocationSearchHelper(LocationManager m){
         manager = m;
         listener = new LocationListener() {
@@ -57,16 +50,31 @@ public class LocationSearchHelper {
         };
     }
 
-    public static String searchMap(DishItem item, String input, Context context){
-        RawURI raw = getLocationURI(item, input, context);
+    public static void searchMap(DishItem item, String input, Context context){
+      /*  RawURI raw = getLocationURI(item, input, context);
         Uri location = raw.uri;
         if (location == null){
             if (context instanceof BaseActivity) {
                 ((BaseActivity) context).makeYammToast(context.getString(R.string.location_error), Toast.LENGTH_SHORT);
                 location = Uri.parse("geo:0,0?q=" + item.getName());
             }
+        }*/
+        double x=0, y=0;
+        if (!input.equals(context.getString(R.string.place_pick_edit_text))){
+            //만약 custom 주소일 시
+            Geocoder geoCoder = new Geocoder(context, Locale.KOREAN);
+            try {
+                List<Address> list = geoCoder.getFromLocationName(input, 1);
+                if (list!=null){
+                    x = list.get(0).getLatitude();
+                    y = list.get(0).getLongitude();
+                    Log.i("LocationSearchHelper/searchMap","Found Location from " + input);
+                }
+            }catch(IOException e){
+                Log.e("LocationSearchHelper/searchMap","Cannot perform Geocoding");
+                e.printStackTrace();
+            }
         }
-
         Intent mapIntent = new Intent(context, MapActivity.class);
         mapIntent.putExtra(LANG, x);
         mapIntent.putExtra(LONG, y);
@@ -89,10 +97,10 @@ public class LocationSearchHelper {
         else
             Log.e("LocationSearchHelper/searchMap", "Intent not safe");
         */
-        return raw.place;
+//        return raw.place;
     }
 
-    private static RawURI getLocationURI(DishItem item, String input, Context context){
+    /*private static RawURI getLocationURI(DishItem item, String input, Context context){
         int count = 0;
         String default_provider = LocationManager.NETWORK_PROVIDER; //default provider
         String place = input;
@@ -216,5 +224,5 @@ public class LocationSearchHelper {
             this.uri = uri;
             this.place= place;
         }
-    }
+    }*/
 }
