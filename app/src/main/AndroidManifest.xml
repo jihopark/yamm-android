@@ -7,7 +7,10 @@
     <!-- Permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -20,7 +23,6 @@
     <permission android:name="com.teamyamm.yamm.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
     <uses-permission android:name="com.teamyamm.yamm.permission.C2D_MESSAGE"/>
-
 
     <application
         android:allowBackup="true"
@@ -140,11 +142,27 @@
             android:theme="@style/YammActionBarTheme" >
             </activity>
 
+        <!-- Map Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.MapActivity"
+            android:label="@string/title_activity_map"
+            android:theme="@style/YammActionBarTheme" >
+        </activity>
+
         <!-- Poke AlertActivity -->
         <activity android:name=".PokeAlertActivity"
             android:theme="@style/YammPokeDialog"
             android:label="@string/title_activity_poke_alert"
             ></activity>
+
+        <!-- For Google Maps API -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB2cCpoRAmxqFo5JrNSZgPbGPG5nCteT_I"/>
+
+        <uses-feature
+            android:glEsVersion="0x00020000"
+            android:required="true"/>
 
         <!-- For KaKao SDK -->
         <meta-data

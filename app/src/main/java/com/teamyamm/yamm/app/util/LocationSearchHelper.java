@@ -2,8 +2,6 @@ package com.teamyamm.yamm.app.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.teamyamm.yamm.app.BaseActivity;
+import com.teamyamm.yamm.app.MapActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.pojos.DishItem;
 
@@ -28,11 +27,19 @@ import java.util.regex.Pattern;
  * Created by parkjiho on 9/23/14.
  */
 public class LocationSearchHelper {
+    public final static String LANG = "LANG";
+    public final static String LONG = "LONG";
+    public final static String DISH_NAME = "name";
+    public final static String DISH_ID = "id";
+
+
     private final static long LOCATION_MIN_TIME = 200; //0.1sec
     private final static float LOCATION_MIN_DISTANCE = 1.0f; //1 meters
 
     private static LocationManager manager = null;
     private static LocationListener listener = null;
+
+    private static double x=0,y=0;
 
     public static void initLocationSearchHelper(LocationManager m){
         manager = m;
@@ -59,18 +66,29 @@ public class LocationSearchHelper {
                 location = Uri.parse("geo:0,0?q=" + item.getName());
             }
         }
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
+
+        Intent mapIntent = new Intent(context, MapActivity.class);
+        mapIntent.putExtra(LANG, x);
+        mapIntent.putExtra(LONG, y);
+        mapIntent.putExtra(DISH_NAME, item.getName());
+        mapIntent.putExtra(DISH_ID,  item.getId());
+        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        context.startActivity(mapIntent);
+
+        /*Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
 
         //Verify Intent
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(mapIntent, 0);
         boolean isIntentSafe = activities.size() > 0;
 
+
         if (isIntentSafe)
             context.startActivity(mapIntent);
         else
             Log.e("LocationSearchHelper/searchMap", "Intent not safe");
-
+        */
         return raw.place;
     }
 
@@ -115,8 +133,11 @@ public class LocationSearchHelper {
                 }
             }
             manager.removeUpdates(listener);
-            if (lastKnownLocation != null)
+            if (lastKnownLocation != null) {
+                x = lastKnownLocation.getLatitude();
+                y = lastKnownLocation.getLongitude();
                 place = getAddressFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), context);
+            }
             else
                 place = null;
         }
