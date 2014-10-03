@@ -80,8 +80,10 @@ public class MapActivity extends BaseActivity implements
             finish();
         }
         if (!(x==0 && y==0)){
-            mLocationClient.disconnect();
-            Log.i("MapActivity/initActivity", "LocationClient Disconnected");
+            if (mLocationClient!=null) {
+                mLocationClient.disconnect();
+                Log.i("MapActivity/initActivity", "LocationClient Disconnected");
+            }
         }
         Log.i("MapActivity/initActivity", "Dish: " + dishName + " x,y:" + x + "," + y);
     }

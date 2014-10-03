@@ -461,7 +461,7 @@ public class YammAPIAdapter {
         }
     }
 
-    private static String responseToString(Response result){
+    public static String responseToString(Response result){
         //Try to get response body
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();

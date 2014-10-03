@@ -2,21 +2,27 @@ package com.teamyamm.yamm.app.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.teamyamm.yamm.app.MapActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.network.GeocodeAPIService;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.DishItem;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 9/23/14.
@@ -33,6 +39,9 @@ public class LocationSearchHelper {
 
     private static LocationManager manager = null;
     private static LocationListener listener = null;
+
+    private static DishItem mItem;
+    private static Context mContext;
 
     public static void initLocationSearchHelper(LocationManager m){
         manager = m;
@@ -60,30 +69,35 @@ public class LocationSearchHelper {
             }
         }*/
         double x=0, y=0;
+        mItem = item;
+        mContext = context;
+
         if (!input.equals(context.getString(R.string.place_pick_edit_text))){
             //만약 custom 주소일 시
-            Geocoder geoCoder = new Geocoder(context, Locale.KOREAN);
-            try {
-                List<Address> list = geoCoder.getFromLocationName(input, 1);
-                if (list!=null){
-                    x = list.get(0).getLatitude();
-                    y = list.get(0).getLongitude();
-                    Log.i("LocationSearchHelper/searchMap","Found Location from " + input);
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(GeocodeAPIService.googleGeocodeAPI)
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    .build();
+            GeocodeAPIService service = restAdapter.create(GeocodeAPIService.class);
+            service.getAddressFromLocation(input, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    Log.d("LocationSearchHelper/getAddressFromLocation", "GeoCoding Success");
+                    LatLng location = getLocationFromJson(YammAPIAdapter.responseToString(response));
+                    if (location!=null){
+                        startMapActivity(location.latitude, location.longitude);
+                    }
                 }
-            }catch(IOException e){
-                Log.e("LocationSearchHelper/searchMap","Cannot perform Geocoding");
-                e.printStackTrace();
-            }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+
+                }
+            });
         }
-        Intent mapIntent = new Intent(context, MapActivity.class);
-        mapIntent.putExtra(LANG, x);
-        mapIntent.putExtra(LONG, y);
-        mapIntent.putExtra(DISH_NAME, item.getName());
-        mapIntent.putExtra(DISH_ID,  item.getId());
-        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-        context.startActivity(mapIntent);
-
+        else {
+            startMapActivity(x,y);
+        }
         /*Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
 
         //Verify Intent
@@ -98,6 +112,43 @@ public class LocationSearchHelper {
             Log.e("LocationSearchHelper/searchMap", "Intent not safe");
         */
 //        return raw.place;
+    }
+
+    public static void startMapActivity(double x, double y){
+        Intent mapIntent = new Intent(mContext, MapActivity.class);
+        mapIntent.putExtra(LANG, x);
+        mapIntent.putExtra(LONG, y);
+        mapIntent.putExtra(DISH_NAME, mItem.getName());
+        mapIntent.putExtra(DISH_ID, mItem.getId());
+        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        mContext.startActivity(mapIntent);
+        mContext = null;
+        mItem = null;
+    }
+
+
+    public static LatLng getLocationFromJson(String json){
+        JSONObject jsonObject;
+        double lng=0, lat=0;
+
+        try {
+            jsonObject = new JSONObject(json);
+
+            lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lng");
+
+            lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lat");
+
+            Log.d("LocationSearchHelper/getLocationFromJson", "Lat: " + lat);
+            Log.d("LocationSearchHelper/getLocationFromJson", "Long: " + lng);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new LatLng(lat, lng);
     }
 
     /*private static RawURI getLocationURI(DishItem item, String input, Context context){
