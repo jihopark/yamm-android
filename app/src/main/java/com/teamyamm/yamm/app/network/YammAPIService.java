@@ -4,6 +4,7 @@ import com.teamyamm.yamm.app.pojos.BattleItem;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.GridItem;
+import com.teamyamm.yamm.app.pojos.YammPlace;
 
 import java.util.List;
 import java.util.Set;
@@ -337,6 +338,10 @@ public interface YammAPIService {
         }
     }
 
+    @FormUrlEncoded
+    @GET("/map/nearby")
+    void getPlacesNearby(@Query("lat") double lat, @Query("lng") double lng,
+                               @Query("rad") double rad, @Query("dish_id") int id, Callback<List<YammPlace>> callback);
     /*
     * Error
     * */

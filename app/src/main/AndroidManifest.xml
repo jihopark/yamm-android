@@ -147,6 +147,9 @@
             android:name="com.teamyamm.yamm.app.MapActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
         <!-- Poke AlertActivity -->
