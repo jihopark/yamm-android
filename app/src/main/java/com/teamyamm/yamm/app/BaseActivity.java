@@ -145,9 +145,6 @@ public class BaseActivity extends ActionBarActivity {
             MixpanelController.setMixpanel(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_TOKEN_PRODUCTION));
         }
         MixpanelController.setMixpanelRecommendation(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_RECOMMENDATIONS_TOKEN));
-
-        Log.i("BaseActivity/onCreate","Retrieve session" + (Session.getActiveSession()==null));
-
     }
 
     @Override

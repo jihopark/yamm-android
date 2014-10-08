@@ -140,6 +140,9 @@
             android:name="com.teamyamm.yamm.app.PhoneAuthActivity"
             android:label="@string/title_activity_phone_auth"
             android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.IntroActivity" />
             </activity>
 
         <!-- Map Activity -->

@@ -317,31 +317,11 @@ public class YammAPIAdapter {
                 Log.e("OAuthLoginErrorHandler/handleError","Handling Network Error");
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
             }
-            if (r != null && r.getStatus() == 400) {
-                Log.e("OAuthLoginErrorHandler/handleError","Handling 400 Error");
-                YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
-                Gson gson = new Gson();
-                try {
-                    error = gson.fromJson(responseToString(r), error.getClass());
-                }catch(JsonSyntaxException e){
-                    Log.e("OAuthLoginErrorHandler/handleError","Json Syntax Exception Caught");
-                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-                }catch(IllegalStateException e){
-                    Log.e("OAuthLoginErrorHandler/handleError","Illegal State Exception Caught");
-                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-                }catch(NullPointerException e){
-                    Log.e("OAuthLoginErrorHandler/handleError","NullpointerException Caught");
-                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-                }
-
-                Log.e("OAuthLoginErrorHandler/handleError",error.getMessage());
-
-                if (error.getCode().equals("DuplicateEmail")) {
-                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
-                }
+            if (r != null && r.getStatus() == 403) {
+                Log.e("OAuthLoginErrorHandler/handleError","Handling 403 Error");
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
             }
-            Log.e("OAuthLoginErrorHandler/handleError","Unidentified Error");
+            Log.e("OAuthLoginErrorHandler/handleError","Unidentified Error " + r.getStatus());
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
     }

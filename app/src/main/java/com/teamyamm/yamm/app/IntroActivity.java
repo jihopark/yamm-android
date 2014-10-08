@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,8 +33,10 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/31/14.
  */
 public class IntroActivity extends BaseActivity {
-    private final static boolean KAKAO = true;
-    private final static boolean FB = false;
+    public final static String AUTH_TYPE = "AUTH_TYPE";
+    public final static int KAKAO = 1;
+    public final static int FB = 2;
+    public final static int EMAIL = 3;
 
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
@@ -112,27 +115,25 @@ public class IntroActivity extends BaseActivity {
             //Logging in
             Log.d("IntroActivity/onSessionStateChange", session.getAccessToken());
             final Dialog dialog = createFullScreenDialog(IntroActivity.this, getString(R.string.progress_dialog_message));
-            dialog.show();
-            YammAPIAdapter.getOAuthLoginService().fbLogin(true, session.getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
+            YammAPIAdapter.getOAuthLoginService().fbLogin(session.getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
                 @Override
                 public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
                     putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
                     YammAPIAdapter.setToken(rawOAuthToken.access_token);
-                    Log.d("IntroActivity/fbLogin","FB Login Success." + rawOAuthToken);
-                    dialog.dismiss();
-                    if (rawOAuthToken.is_new)
-                        toJoin(rawOAuthToken.email, FB);
-                    else
-                        toLogin(rawOAuthToken.email, FB, rawOAuthToken.has_phone);
-
+                    Log.d("IntroActivity/fbLogin","FB Login Success. " + rawOAuthToken.uid);
+                    toLogin(rawOAuthToken.uid, FB);
                 }
 
                 @Override
                 public void failure(RetrofitError retrofitError) {
                     String msg = retrofitError.getCause().getMessage();
 
-                    Log.e("IntroActivity/fbLogin","FB Login Error " + msg);
-                    if (Session.getActiveSession()!=null) {
+                    if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)){
+                        Log.e("IntroActivity/fbLogin","FB New Entry");
+                        toJoin(FB);
+                    }
+
+                   /* if (Session.getActiveSession()!=null) {
                         Session.getActiveSession().closeAndClearTokenInformation();
                     }
 
@@ -144,49 +145,45 @@ public class IntroActivity extends BaseActivity {
                         makeYammToast(getString(R.string.fb_invalid_token_message), Toast.LENGTH_SHORT);
                     else
                         makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
-                    dialog.dismiss();
+                    */
                 }
             });
         }
     }
 
-    private void toJoin(String email, boolean type){
-        MixpanelController.setMixpanelAlias(email);
+    private void toJoin(int type){
+        //MixpanelController.setMixpanelAlias(email);
         //Get Push Token
-        registerGCM();
+        //registerGCM();
 
-        if (type==FB) {
+        /*if (type==FB) {
             makeYammToast(R.string.fb_join_success, Toast.LENGTH_SHORT);
-            Session.getActiveSession().close();
-
         }
         else {
             makeYammToast(R.string.kakao_join_success, Toast.LENGTH_SHORT);
-        }
+        }*/
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(AUTH_TYPE, type);
+
+        Intent intent = new Intent(IntroActivity.this, PhoneAuthActivity.class);
+        intent.putExtras(bundle);
+
+        putInPref(getSharedPreferences(packageName, MODE_PRIVATE)
+                ,getString(R.string.PREVIOUS_ACTIVITY), PhoneAuthActivity.class.getSimpleName());
+
         //Move onto Next Activity
-        goToActivity(PhoneAuthActivity.class);
+        startActivity(intent);
     }
 
-    private void toLogin(String email, boolean type, boolean hasPhone){
-        MixpanelController.setMixpanelIdentity(email);
-
-        if (type==FB) {
-            Session.getActiveSession().close();
-        }
+    private void toLogin(String id, int type){
+        MixpanelController.setMixpanelIdentity(id);
 
         makeYammToast(R.string.oauth_login_success, Toast.LENGTH_SHORT);
-
         //For Push Token
         registerGCM();
 
-        if (hasPhone){
-            Log.d("IntroActivity/toLogin","User has phone verified.");
-            goToActivity(MainActivity.class);
-        }
-        else{
-            Log.d("IntroActivity/toLogin","User has no phone verified.");
-            goToActivity(PhoneAuthActivity.class);
-        }
+        goToActivity(MainActivity.class);
     }
 
     /*
@@ -202,6 +199,7 @@ public class IntroActivity extends BaseActivity {
         @Override
         public void onSessionOpened() {
             // 프로그레스바를 보이고 있었다면 중지하고 세션 오픈후 보일 페이지로 이동
+            Log.d("IntroActivity/kakao", "Session is open");
             if (!isLoadingKakao)
                 IntroActivity.this.onSessionOpened();
         }
@@ -213,57 +211,36 @@ public class IntroActivity extends BaseActivity {
     }
 
     protected void onSessionOpened(){
-/*        final Intent intent = new Intent(IntroActivity.this, SampleSignupActivity.class);
-        startActivity(intent);
-        finish();*/
         Log.d("IntroActivity/kakao", "Session Opened");
         isLoadingKakao = true;
         final Dialog dialog = createFullScreenDialog(IntroActivity.this, getString(R.string.progress_dialog_message));
         dialog.show();
-        YammAPIAdapter.getOAuthLoginService().kakaoLogin(true, com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
+        YammAPIAdapter.getOAuthLoginService().kakaoLogin(com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<YammAPIService.RawOAuthToken>() {
             @Override
             public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
-                Log.d("IntroActivity/kakaoLogin", "Successful " + rawOAuthToken.kakao_uid + " is_new " + rawOAuthToken.is_new);
-                if (com.kakao.Session.getCurrentSession() != null) {
-                    com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
-                }
+                Log.d("IntroActivity/kakaoLogin", "Kakao Login Success" + rawOAuthToken.uid);
 
                 putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
                 YammAPIAdapter.setToken(rawOAuthToken.access_token);
-                Log.d("IntroActivity/kakaoLogin","Kakao Login Success." + rawOAuthToken);
 
                 dialog.dismiss();
 
                 isLoadingKakao = false;
-                if (rawOAuthToken.is_new)
-                    toJoin(rawOAuthToken.kakao_uid + "@kakao.com", KAKAO);
-                else
-                    toLogin(rawOAuthToken.kakao_uid+"@kakao.com",KAKAO, rawOAuthToken.has_phone);
-
-
+                toLogin(rawOAuthToken.uid,KAKAO);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 String msg = retrofitError.getCause().getMessage();
 
-                Log.e("IntroActivity/kakaoLogin", "Kakao Login Error " + msg);
-
-                if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
-                    makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
-                else if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
-                    makeYammToast(getString(R.string.fb_invalid_token_message), Toast.LENGTH_SHORT);
-                else
-                    makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
-                if (com.kakao.Session.getCurrentSession() != null) {
-                    com.kakao.Session.getCurrentSession().close(kakaoSessionCallback);
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)){
+                    Log.e("IntroActivity/kakaoLogin","Kakao New Entry");
+                    toJoin(KAKAO);
                 }
                 isLoadingKakao = false;
                 dialog.dismiss();
             }
         });
-
-        makeYammToast("KAKAO", Toast.LENGTH_SHORT);
     }
 
 

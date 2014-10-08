@@ -98,25 +98,16 @@ public interface YammAPIService {
     * FB Login. Should send FB AccessToken
     * */
 
-    @FormUrlEncoded
-    @POST("/auth/facebook")
-    void fbLogin(@Field("enable_registration") boolean enable_registration, @Field("fb_short_lived_token") String token, Callback<RawOAuthToken> callback);
+    @GET("/auth/facebook")
+    void fbLogin(@Query("fb_token") String token, Callback<RawOAuthToken> callback);
 
-    @FormUrlEncoded
-    @POST("/auth/kakao")
-    void kakaoLogin(@Field("enable_registration") boolean enable_registration, @Field("kakao_access_token") String token, Callback<RawOAuthToken> callback);
+    @GET("/auth/kakao")
+    void kakaoLogin(@Query("kakao_token") String token, Callback<RawOAuthToken> callback);
 
     public static class RawOAuthToken {
-        public boolean is_new;
         public String access_token;
         public String token_type;
-        public String email;
-        public String kakao_uid;
-        public boolean has_phone;
-
-        public String toString(){
-            return "is_new: " + is_new + " access_token: " + access_token + " email: " + email;
-        }
+        public String uid;
     }
 
     /*
