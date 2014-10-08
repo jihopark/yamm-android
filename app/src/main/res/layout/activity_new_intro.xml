@@ -17,50 +17,23 @@
         app:pageColor="@android:color/transparent"
         app:fillColor="#c3ffffff"
         app:strokeColor="#c3ffffff"
-        android:layout_above="@+id/intro_button_layout"
+        android:layout_above="@+id/start_button"
         android:layout_marginBottom="34dp"
         />
-    <LinearLayout
+    <Button
+        style="@style/IntroButton"
+        android:layout_marginBottom="18dp"
+        android:textColor="#ffffffff"
+        android:background="@drawable/enabled_round_button"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/intro_button_layout">
-        <com.kakao.widget.LoginButton
-            android:id="@+id/kakao_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="14dp"
-            />
-        <com.facebook.widget.LoginButton
-            xmlns:fb="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fb_auth_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="14dp"
-            fb:login_text="페이스북으로 시작하기"
-            fb:logout_text="페이스북으로 시작하기"
-            android:textSize="20sp"
-            />
-        <Button
-            style="@style/IntroButton"
-            android:layout_marginBottom="14dp"
-            android:textColor="#ffe0323b"
-            android:background="@drawable/white_round_button"
-            android:text="@string/intro_join_button"
-            android:id="@+id/join_button"/>
-        <Button
-            style="@style/IntroButton"
-            android:layout_marginBottom="18dp"
-            android:textColor="#ffffffff"
-            android:background="@drawable/enabled_round_button"
-            android:text="@string/intro_login_button"
-            android:id="@+id/login_button"/>
-    </LinearLayout>
+        android:id="@+id/start_button"
+        android:text="@string/intro_start_button"/>
+    <fragment
+        android:name="com.teamyamm.yamm.app.widget.JoinFragment"
+        android:id="@+id/join_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </RelativeLayout>

@@ -21,6 +21,7 @@ import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.widget.IntroImageFragment;
+import com.teamyamm.yamm.app.widget.JoinFragment;
 import com.teamyamm.yamm.app.widget.YammCirclePageIndicator;
 
 import retrofit.Callback;
@@ -34,12 +35,12 @@ public class IntroActivity extends BaseActivity {
     private final static boolean KAKAO = true;
     private final static boolean FB = false;
 
-
-    private Button joinButton, loginButton;
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
     private static boolean isLoadingKakao = false;
 
+    private JoinFragment joinFragment;
+    private static boolean isFragmentShown = false;
 
     private final SessionCallback kakaoSessionCallback = new KakaoSessionStatusCallback();
 
@@ -50,6 +51,11 @@ public class IntroActivity extends BaseActivity {
 
         setContentView(R.layout.activity_new_intro);
 
+        joinFragment = (JoinFragment) getSupportFragmentManager().findFragmentById(R.id.join_fragment);
+        getSupportFragmentManager().beginTransaction()
+                .hide(joinFragment).commit();
+
+        setStartButton();
         setFBAuth();
         setKakaoAuth();
         setButtons();
@@ -68,14 +74,32 @@ public class IntroActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        goBackHome();
+        if (isFragmentShown){
+            getSupportFragmentManager().beginTransaction()
+                    .hide(joinFragment).commit();
+            isFragmentShown = false;
+        }
+        else
+            goBackHome();
+    }
+
+    private void setStartButton(){
+        Button start = (Button) findViewById(R.id.start_button);
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction()
+                        .show(joinFragment).commit();
+                isFragmentShown = true;
+            }
+        });
     }
 
     /*
     * Facebook Auth
     * */
     private void setFBAuth(){
-        LoginButton button = (LoginButton) findViewById(R.id.fb_auth_button);
+        LoginButton button = joinFragment.getFacebookJoinButton();
         button.setReadPermissions("public_profile", "email");
         button.setBackgroundResource(R.drawable.fb_round_button);
     }
@@ -170,7 +194,7 @@ public class IntroActivity extends BaseActivity {
     * */
 
     private void setKakaoAuth(){
-        com.kakao.widget.LoginButton kakaoButton = (com.kakao.widget.LoginButton) findViewById(R.id.kakao_login_button);
+        com.kakao.widget.LoginButton kakaoButton = joinFragment.getKakaoJoinButton();
         kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
     }
 
@@ -255,20 +279,13 @@ public class IntroActivity extends BaseActivity {
     }
 
     private void setButtons(){
-        joinButton = (Button) findViewById(R.id.join_button);
-        loginButton = (Button) findViewById(R.id.login_button);
+        Button joinButton = joinFragment.getEmailJoinButton();
+        joinFragment.setLoginButton();
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToActivity(JoinActivity.class);
-            }
-        });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToActivity(LoginActivity.class);
             }
         });
     }

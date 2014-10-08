@@ -259,7 +259,7 @@ public class BaseActivity extends ActionBarActivity {
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
     * */
 
-    protected void goToActivity(Class<?> nextActivity){
+    public void goToActivity(Class<?> nextActivity){
         Log.v("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
 
         //Save Previous Activity

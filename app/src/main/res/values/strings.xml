@@ -98,8 +98,8 @@
 
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
-    <string name="intro_login_button">로그인</string>
-
+    <string name="intro_login_text">이미 회원이신가요? 로그인</string>
+    <string name="intro_start_button">Yamm 바로 시작</string>
     <!--Grid Activity -->
     <string name="grid_introduction">절대로 못먹는 음식이 있으면 선택하세요.</string>
     <string name="grid_checkbox_text">나는 채식주의자 얌</string>
