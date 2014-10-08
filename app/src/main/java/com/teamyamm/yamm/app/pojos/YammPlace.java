@@ -1,5 +1,7 @@
 package com.teamyamm.yamm.app.pojos;
 
+import android.util.Log;
+
 /**
  * Created by parkjiho on 10/7/14.
  */
@@ -24,7 +26,11 @@ public class YammPlace implements Comparable<YammPlace> {
     }
 
     public String getDistanceString(){
-        int meters = ((int) (distance * 1000))%1000;
+        int meters =  (int) (distance*1000);
+        meters -= meters%100;
+
+        Log.i("YammPlace/getDistanceString", meters+"");
+
         if (meters >= 1000)
             return "1km이상";
         else if (meters == 900)

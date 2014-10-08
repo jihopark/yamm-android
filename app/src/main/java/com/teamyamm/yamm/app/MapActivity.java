@@ -16,13 +16,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.YammPlacesListAdapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 10/2/14.
@@ -31,6 +35,8 @@ public class MapActivity extends BaseActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
     private final int DEFAULT_ZOOM_LEVEL = 14;
+    private final double DEFAULT_RADIUS = 1.5;
+
 
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -40,6 +46,7 @@ public class MapActivity extends BaseActivity implements
     private String dishName;
     private int dishId;
     private Dialog fullScreenDialog;
+    private ListView list;
 
     private LocationClient mLocationClient;
 
@@ -142,7 +149,7 @@ public class MapActivity extends BaseActivity implements
     }
 
     private void loadPlaces(){
-        List<YammPlace> places = new ArrayList<YammPlace>();
+        /*List<YammPlace> places = new ArrayList<YammPlace>();
         places.add(new YammPlace(2, "짬뽕집", "경기도 고양시 2", 0.5, 1, 1));
         places.add(new YammPlace(1, "설렁탕집", "경기도 고양시", 0.3, 1, 1));
         places.add(new YammPlace(3, "짜장면집", "경기도 고양시 3", 0.6, 1,1) );
@@ -152,11 +159,34 @@ public class MapActivity extends BaseActivity implements
         places.add(new YammPlace(7, "이상한집4", "경기도 파주시", 1.1,1,1));
 
 
-        Collections.sort(places);
-        ListView list = (ListView) findViewById(R.id.yamm_places_list);
-        YammPlacesListAdapter adapter = new YammPlacesListAdapter(MapActivity.this, places);
-        list.setAdapter(adapter);
-        fullScreenDialog.dismiss();
+        Collections.sort(places);*/
+        list = (ListView) findViewById(R.id.yamm_places_list);
+
+        YammAPIAdapter.getTokenService().getPlacesNearby(x,y, DEFAULT_RADIUS , dishId, new Callback<List<YammPlace>>() {
+            @Override
+            public void success(List<YammPlace> yammPlaces, Response response) {
+                YammPlacesListAdapter adapter = new YammPlacesListAdapter(MapActivity.this, yammPlaces);
+                list.setAdapter(adapter);
+                Log.i("MapActivity/getPlacesNearBy/Success", "Succeeded in Getting " + yammPlaces.size() + " Places");
+                fullScreenDialog.dismiss();
+                addMarkers(yammPlaces);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                Log.e("MapActivity/getPlacesNearBy/Failure", "Get Places Nearby Fail");
+                finish();
+            }
+        });
+    }
+
+    private void addMarkers(List<YammPlace> places){
+        for (YammPlace place : places){
+            map.addMarker(new MarkerOptions()
+            .position(new LatLng(place.lat, place.lng))
+            .title(place.name));
+        }
     }
 
     /*
