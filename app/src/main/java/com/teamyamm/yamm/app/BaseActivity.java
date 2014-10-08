@@ -619,6 +619,8 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void removePersonalData(){
 
+        MixpanelController.logOut();
+
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.PHONE_NAME_MAP));
         editor.remove(getString(R.string.FRIEND_LIST));

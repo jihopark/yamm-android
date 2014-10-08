@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by parkjiho on 9/25/14.
@@ -43,6 +44,22 @@ public class MixpanelController {
         if (mixpanel==null)
             Log.e("MixpanelController/checkMixpanelAPI","Set MixpanelAPI First.");
         return !(mixpanel == null);
+    }
+
+    public static void logOut(){
+        String uuid = UUID.randomUUID().toString();
+
+        Log.d("MixpanelController/logOut","Mixpanel distinct id was " + mixpanel.getDistinctId());
+        if (mixpanel!=null){
+            mixpanel.clearSuperProperties();
+            mixpanel.identify(uuid);
+            Log.d("MixpanelController/logOut","Reidentified with "  + uuid);
+        }
+        if (mixpanelRecommendation!=null){
+            mixpanelRecommendation.clearSuperProperties();
+            mixpanelRecommendation.identify(uuid);
+         }
+        Log.d("MixpanelController/logOut","Mixpanel distinct id is " + mixpanel.getDistinctId());
     }
 
     public static void setMixpanelAlias(String email){
