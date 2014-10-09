@@ -23,6 +23,9 @@ public interface YammAPIService {
 
 
     //User Registration
+    @FormUrlEncoded
+    @POST("/registration/facebook")
+    void facebookRegistration(@Field("name") String name, @Field("fb_token") String token, @Field("authcode") String code, Callback<String> callback);
 
     @FormUrlEncoded
     @POST("/registration/user")

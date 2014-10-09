@@ -36,7 +36,7 @@ public class IntroActivity extends BaseActivity {
     public final static String AUTH_TYPE = "AUTH_TYPE";
     public final static int KAKAO = 1;
     public final static int FB = 2;
-    public final static int EMAIL = 3;
+    public final static int PW = 3;
 
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
@@ -120,7 +120,7 @@ public class IntroActivity extends BaseActivity {
                 public void success(YammAPIService.RawOAuthToken rawOAuthToken, Response response) {
                     putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
                     YammAPIAdapter.setToken(rawOAuthToken.access_token);
-                    Log.d("IntroActivity/fbLogin","FB Login Success. " + rawOAuthToken.uid);
+                    Log.d("IntroActivity/fbLogin", "FB Login Success. " + rawOAuthToken.uid);
                     toLogin(rawOAuthToken.uid, FB);
                 }
 
@@ -166,11 +166,11 @@ public class IntroActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putInt(AUTH_TYPE, type);
 
-        Intent intent = new Intent(IntroActivity.this, PhoneAuthActivity.class);
+        Intent intent = new Intent(IntroActivity.this, NewJoinActivity.class);
         intent.putExtras(bundle);
 
         putInPref(getSharedPreferences(packageName, MODE_PRIVATE)
-                ,getString(R.string.PREVIOUS_ACTIVITY), PhoneAuthActivity.class.getSimpleName());
+                ,getString(R.string.PREVIOUS_ACTIVITY), NewJoinActivity.class.getSimpleName());
 
         //Move onto Next Activity
         startActivity(intent);
@@ -262,7 +262,7 @@ public class IntroActivity extends BaseActivity {
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToActivity(JoinActivity.class);
+                toJoin(PW);
             }
         });
     }

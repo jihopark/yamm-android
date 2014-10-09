@@ -1,18 +1,13 @@
 package com.teamyamm.yamm.app;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Request;
@@ -28,6 +23,7 @@ import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.util.SmsListener;
+import com.teamyamm.yamm.app.widget.PhoneAuthFragment;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -36,30 +32,40 @@ import retrofit.client.Response;
 /**
  * Created by parkjiho on 9/29/14.
  */
-public class PhoneAuthActivity extends BaseActivity {
-    private EditText nameField, phoneField, veriField;
+public class NewJoinActivity extends BaseActivity {
+    private final static String PHONE = "PH";
+    private final static String NAME = "NA";
+    private final static String PW = "PW";
+
+    private EditText nameField, phoneField, pwField;
+    private Button phoneAuthRequest;
+
     private SmsListener smsListener;
-    private ImageView successImage;
-    private Button submit;
     private int authType;
+
+    private boolean isNameDone = false, isPhoneDone = false, isPWDone = false;
+
+    private boolean enablePhoneAuthRequest = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity();
-        setContentView(R.layout.activity_phone_auth);
+        setContentView(R.layout.activity_new_join);
         setActionBarBackButton(true);
 
         nameField = (EditText) findViewById(R.id.name_field);
-        phoneField = (EditText) findViewById(R.id.phone_text);
-        veriField = (EditText) findViewById(R.id.verification_field);
-        submit = (Button) findViewById(R.id.verification_submit);
-        successImage = (ImageView) findViewById(R.id.veri_success_image);
+        phoneField = (EditText) findViewById(R.id.phone_field);
+        pwField = (EditText) findViewById(R.id.password_field);
+        phoneAuthRequest = (Button) findViewById(R.id.phone_auth_request);
 
         phoneField.setText(getPhoneNumber());
 
         configNameEditText();
         configPhoneEditText();
-        configSendButton();
+        configPWField();
+        configPhoneAuthRequest();
+   //     configSendButton();
 
         MixpanelController.trackEnteredPhoneAuthMixpanel();
     }
@@ -67,7 +73,7 @@ public class PhoneAuthActivity extends BaseActivity {
     private void initActivity(){
         if (getIntent().getExtras()!=null){
             authType = getIntent().getExtras().getInt(IntroActivity.AUTH_TYPE);
-            Log.i("PhoneAuthActivity/initActivity", "Auth Type is " + authType);
+            Log.i("NewJoinActivity/initActivity", "Auth Type is " + authType);
         }
     }
 
@@ -94,7 +100,7 @@ public class PhoneAuthActivity extends BaseActivity {
     }
 
     private void showBackWarningDialog(){
-        createDialog(PhoneAuthActivity.this, 0,
+        createDialog(NewJoinActivity.this, 0,
                 R.string.phone_auth_back_dialog_message, R.string.dialog_positive, R.string.dialog_negative,
                 new View.OnClickListener() {
                     @Override
@@ -119,7 +125,7 @@ public class PhoneAuthActivity extends BaseActivity {
 
                     @Override
                     public void onSessionClosed(KakaoException e) {
-                        Log.d("PhoneAuthActivity/onSessionClosed","Kakao Session Closed");
+                        Log.d("NewJoinActivity/onSessionClosed","Kakao Session Closed");
                     }
                 });
             }
@@ -136,13 +142,91 @@ public class PhoneAuthActivity extends BaseActivity {
     @Override
     public void onPause(){
         super.onPause();
-        unregisterReceiver(smsListener);
+       // unregisterReceiver(smsListener);
+
+    }
+
+    private void configPWField(){
+        if (authType!=IntroActivity.PW) {
+            pwField.setVisibility(View.GONE);
+            isPWDone = true;
+        }
+        else {
+            pwField.setTransformationMethod(new HiddenPassTransformationMethod());
+            pwField.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.toString().length() >= 8)
+                        isPWDone = true;
+                    else
+                        isPWDone = false;
+                    Log.d("NewJoinActivity/onTextChanged","PW Done " + isPWDone);
+                    setPhoneAuthButtonEnable();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+        }
+    }
+
+    private void configPhoneAuthRequest(){
+        phoneAuthRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = phoneNumberFormat(phoneField.getText().toString()) + "\n" + getString(R.string.verification_dialog_message);
+                createDialog(NewJoinActivity.this, "", message,
+                        getString(R.string.dialog_positive), getString(R.string.dialog_negative), getVeriDialogPositiveListener(), null ).show();
+            }
+
+            private View.OnClickListener getVeriDialogPositiveListener(){
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String phone = phoneField.getText().toString();
+                        Log.i("NewJoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
+                        sendVeriMessage(phone);
+                        dismissCurrentDialog();
+                        createPhoneAuthFragment();
+                    }
+                };
+            }
+        });
     }
 
     private void configNameEditText(){
+        nameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length() >= 1)
+                    isNameDone = true;
+                else
+                    isNameDone = false;
+                Log.d("NewJoinActivity/onTextChanged","Name Done " + isNameDone);
+                setPhoneAuthButtonEnable();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         if (authType == IntroActivity.FB){
             if (Session.getActiveSession()!=null) {
-                Log.d("PhoneAuthActivity/configNameEditText", "Fetching Name From FB");
+                Log.d("NewJoinActivity/configNameEditText", "Fetching Name From FB");
                 Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, com.facebook.Response response) {
@@ -150,12 +234,12 @@ public class PhoneAuthActivity extends BaseActivity {
                             try {
                                 String name = user.getName();
                                 // If you asked for email permission
-                                Log.d("PhoneAuthActivity/configNameEditText", "Name Fetched from FB: " + name);
+                                Log.d("NewJoinActivity/configNameEditText", "Name Fetched from FB: " + name);
                                 if (nameField!=null)
                                     nameField.setText(name);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Log.d("PhoneAuthActivity/configNameEditText", "Exception in loading FB Name");
+                                Log.d("NewJoinActivity/configNameEditText", "Exception in loading FB Name");
                             }
 
                         }
@@ -168,7 +252,7 @@ public class PhoneAuthActivity extends BaseActivity {
                 @Override
                 protected void onSuccess(final UserProfile userProfile) {
                     String name = userProfile.getNickname();
-                    Log.d("PhoneAuthActivity/configNameEditField", "Name Fetched from Kakao: " + name);
+                    Log.d("NewJoinActivity/configNameEditField", "Name Fetched from Kakao: " + name);
                     if (nameField!=null)
                         nameField.setText(name);
 
@@ -187,41 +271,86 @@ public class PhoneAuthActivity extends BaseActivity {
                 @Override
                 protected void onFailure(final APIErrorResult errorResult) {
                     // 실패
-                    Log.e("PhoneAuthActivity/configNameEditField","Failed to Retrieve Kakao Name");
+                    Log.e("NewJoinActivity/configNameEditField","Failed to Retrieve Kakao Name");
                 }
             });
         }
+
+    }
+
+    private void createPhoneAuthFragment(){
+        PhoneAuthFragment fragment = new PhoneAuthFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(PHONE,phoneField.getText().toString());
+        bundle.putString(NAME,nameField.getText().toString());
+        if (authType == IntroActivity.PW)
+            bundle.putString(PW, pwField.getText().toString());
+
+    }
+
+    private void setPhoneAuthButtonEnable(){
+        enablePhoneAuthRequest = isNameDone && isPhoneDone && isPWDone;
+        Log.d("NewJoinActivity/setPhoneAuthButtonEnable","Enable Button " + enablePhoneAuthRequest);
+        phoneAuthRequest.setEnabled(enablePhoneAuthRequest);
     }
 
     private void configPhoneEditText(){
+        phoneField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length() < 10)
+                    isPhoneDone = false;
+                else
+                    isPhoneDone = true;
+                Log.d("NewJoinActivity/onTextChanged","Phone Done " + isPhoneDone);
+                setPhoneAuthButtonEnable();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         phoneField.setText(getPhoneNumber());
+        Button question = (Button) findViewById(R.id.phone_question);
+        question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createDialog(NewJoinActivity.this, 0, R.string.phone_question_message, R.string.dialog_positive_formal, null).show();
+            }
+        });
     }
 
     private void configSmsListener(){
-        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+    /*    IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         filter.setPriority(10000);
         smsListener = new SmsListener(veriField, successImage);
         registerReceiver(smsListener, filter);
-        Log.i("PhoneAuthActivity/configSmsListener", "SMS Listener Registered");
+        Log.i("NewJoinActivity/configSmsListener", "SMS Listener Registered");*/
     }
 
-    private void configSendButton() {
+  /*  private void configSendButton() {
         final Button sendVButton = (Button) findViewById(R.id.verification_button);
         final Button resendVButton = (Button) findViewById(R.id.verification_resend_button);
-        Log.d("PhoneAuthActivity/configSendButton","Config");
+        Log.d("NewJoinActivity/configSendButton","Config");
         sendVButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PhoneAuthActivity/onClick","Clicked");
-                hideSoftKeyboard(PhoneAuthActivity.this);
+                Log.d("NewJoinActivity/onClick","Clicked");
+                hideSoftKeyboard(NewJoinActivity.this);
 
                 String phone = phoneField.getText().toString();
-                if (phone!=null && (phone.length() == 10 || phone.length() == 11)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PhoneAuthActivity.this);
+                    if (phone!=null && (phone.length() == 10 || phone.length() == 11)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(NewJoinActivity.this);
 
-                    AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive), getVeriDialogPositiveListener())
-                            .setNegativeButton(getString(R.string.dialog_negative), null)
-                            .setTitle(getString(R.string.verification_dialog_title))
+                        AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive), getVeriDialogPositiveListener())
+                                .setNegativeButton(getString(R.string.dialog_negative), null)
+                                .setTitle(getString(R.string.verification_dialog_title))
                             .setMessage(getVeriDialogMessage(phone))
                             .create();
                     alert.show();
@@ -246,7 +375,7 @@ public class PhoneAuthActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String phone = phoneField.getText().toString();
-                        Log.i("PhoneAuthActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
+                        Log.i("NewJoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
                         resendVButton.setVisibility(View.VISIBLE);
                         sendVButton.setVisibility(View.INVISIBLE);
 
@@ -263,13 +392,13 @@ public class PhoneAuthActivity extends BaseActivity {
                 View.OnClickListener positiveListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        hideSoftKeyboard(PhoneAuthActivity.this);
+                        hideSoftKeyboard(NewJoinActivity.this);
                         String phone = phoneField.getText().toString();
                         sendVeriMessage(phone);
                         dismissCurrentDialog();
                     }
                 };
-                createDialog(PhoneAuthActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
+                createDialog(NewJoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
                         R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
             }
 
@@ -278,25 +407,22 @@ public class PhoneAuthActivity extends BaseActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = createFullScreenDialog(PhoneAuthActivity.this, getString(R.string.progress_dialog_message));
+                final Dialog dialog = createFullScreenDialog(NewJoinActivity.this, getString(R.string.progress_dialog_message));
                 dialog.show();
-                YammAPIAdapter.getTokenService().registerPhone(phoneField.getText().toString(), veriField.getText().toString(), new Callback<String>() {
+                YammAPIAdapter.getJoinService().facebookRegistration(nameField.getText().toString(), Session.getActiveSession().getAccessToken(), veriField.getText().toString(), new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
-                        dialog.dismiss();
-                        makeYammToast(R.string.join_progress_dialog_title, Toast.LENGTH_SHORT);
-                        MixpanelController.trackSubmitPhoneAuthMixpanel();
-                        goToActivity(GridActivity.class);
+                        //MixpanelController.setMixpanelAlias(email);
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
-                        dialog.dismiss();
+
                     }
                 });
             }
         });
-    }
+    }*/
 
     private void sendVeriMessage(String phone){
         YammAPIService service = YammAPIAdapter.getService();
@@ -304,13 +430,13 @@ public class PhoneAuthActivity extends BaseActivity {
         service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
             @Override
             public void success(YammAPIService.VeriExp s, Response response) {
-                Log.i("PhoneAuthActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
+                Log.i("NewJoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
                 makeYammToast(R.string.verification_sent, Toast.LENGTH_SHORT);
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.e("PhoneAuthActivity/getVeriDialogPositiveListener", "Veri Failed ");
+                Log.e("NewJoinActivity/getVeriDialogPositiveListener", "Veri Failed ");
                 retrofitError.printStackTrace();
                 makeYammToast(R.string.verification_error_message, Toast.LENGTH_SHORT);
             }

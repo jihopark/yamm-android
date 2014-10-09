@@ -109,7 +109,7 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
-            @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         isAppRunning = true;
@@ -118,7 +118,7 @@ public class BaseActivity extends ActionBarActivity {
         uiHelper.onCreate(savedInstanceState);
 
 
-                //Check If WTFException was Handled
+        //Check If WTFException was Handled
         if (getIntent().getExtras()!=null) {
             if (getIntent().getExtras().get("error")!=null) {
                 WTFExceptionHandler.sendLogToServer(BaseActivity.this, getIntent().getExtras().get("error").toString());
@@ -277,7 +277,7 @@ public class BaseActivity extends ActionBarActivity {
     /*
    * Builds Alert Dialog with positive and negative buttons
    * */
-    protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
+    protected Dialog createDialog(Context context, String title, String message, String positive, String negative,
                                   View.OnClickListener positiveListener, View.OnClickListener negativeListener){
         /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -299,17 +299,17 @@ public class BaseActivity extends ActionBarActivity {
         Button negativeButton = (Button) dialog.findViewById(R.id.dialog_negative_button);
         ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
 
-        if (title==0){
+        if (title.equals("")){
             titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
             titleText.setText("");
             messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
         }
         else
-            titleText.setText(getString(title));
+            titleText.setText(title);
 
-        messageText.setText(getString(message));
-        positiveButton.setText(getString(positive));
-        negativeButton.setText(getString(negative));
+        messageText.setText(message);
+        positiveButton.setText(positive);
+        negativeButton.setText(negative);
 
         View.OnClickListener dismissListener = new View.OnClickListener() {
             @Override
@@ -332,6 +332,57 @@ public class BaseActivity extends ActionBarActivity {
 
         return dialog;
     }
+
+    protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
+                                  View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
+        if (title==0)
+            return createDialog(context,"",getString(message), getString(positive),getString(negative),positiveListener,negativeListener);
+        return createDialog(context,getString(title),getString(message), getString(positive),getString(negative),positiveListener,negativeListener);
+    }
+
+    protected Dialog createDialog(Context context, int title, int message, int positive,
+                                  View.OnClickListener positiveListener){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_default_one_button);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        TextView titleText = (TextView) dialog.findViewById(R.id.dialog_title);
+        TextView messageText = (TextView) dialog.findViewById(R.id.dialog_message);
+        Button positiveButton = (Button) dialog.findViewById(R.id.dialog_positive_button);
+        ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
+
+        if (title==0){
+            titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
+            titleText.setText("");
+            messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
+        }
+        else
+            titleText.setText(getString(title));
+
+        messageText.setText(getString(message));
+        positiveButton.setText(getString(positive));
+
+        View.OnClickListener dismissListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCurrentDialog();
+            }
+        };
+
+        closeButton.setOnClickListener(dismissListener);
+
+        if (positiveListener==null)
+            positiveListener = dismissListener;
+
+        positiveButton.setOnClickListener(positiveListener);
+
+        currentDialog = dialog;
+
+        return dialog;
+    }
+
 
     protected void dismissCurrentDialog(){
         if (currentDialog==null){

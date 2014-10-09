@@ -135,10 +135,10 @@
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
-        <!-- Phone Auth Activity -->
+        <!-- New Join Activity -->
         <activity
-            android:name="com.teamyamm.yamm.app.PhoneAuthActivity"
-            android:label="@string/title_activity_phone_auth"
+            android:name=".NewJoinActivity"
+            android:label="@string/title_activity_new_join"
             android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

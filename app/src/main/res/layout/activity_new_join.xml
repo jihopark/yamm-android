@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:layout_above="@+id/phone_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_field"
+        android:inputType="text"
+        android:hint="@string/verification_name"/>
+    <EditText
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_field"
+        android:inputType="phone"
+        android:hint="@string/verification_phone"/>
+    <EditText
+        android:layout_below="@+id/phone_field"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/password_field"
+        android:inputType="textPassword"
+        android:hint="@string/verification_pw"/>
+    <Button
+        android:layout_toRightOf="@+id/phone_auth_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="왜"
+        android:id="@+id/phone_question"/>
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_auth_request"
+        android:text="@string/phone_auth_request_button"
+        android:enabled="false"/>
+</RelativeLayout>
