@@ -1,47 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <EditText
-        android:layout_below="@+id/phone_text"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#ffffffff">
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/verification_field"
+        android:layout_above="@+id/verification_field"
+        android:id="@+id/phone_auth_title"/>
+    <EditText
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_auth_field"
+        android:hint="@string/verification_field"
         android:inputType="number"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/VeriButton"
-        android:layout_below="@+id/verification_field"
-        android:id="@+id/verification_button"
-        android:text="@string/verification_button"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/VeriButton"
-        android:layout_below="@+id/verification_field"
-        android:id="@+id/verification_resend_button"
-        android:visibility="gone"
-        />
-    <ImageView
-        android:layout_toRightOf="@+id/verification_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/VeriSuccessImage"
-        android:id="@+id/veri_success_image"
-        android:visibility="invisible"/>
-    <ImageView
-        android:layout_toRightOf="@+id/verification_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/JoinErrorImage"
-        android:id="@+id/veri_field_error"
-        android:visibility="gone"/>
     <Button
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/verification_submit"
+        android:id="@+id/phone_auth_submit"
         android:text="확인"/>
 </RelativeLayout>

@@ -553,7 +553,7 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
-    protected String phoneNumberFormat(String phone){
+    public String phoneNumberFormat(String phone){
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 

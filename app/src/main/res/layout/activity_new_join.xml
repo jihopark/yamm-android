@@ -38,4 +38,8 @@
         android:id="@+id/phone_auth_request"
         android:text="@string/phone_auth_request_button"
         android:enabled="false"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/phone_auth_fragment_container"/>
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package com.teamyamm.yamm.app;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,15 +35,17 @@ import retrofit.client.Response;
  * Created by parkjiho on 9/29/14.
  */
 public class NewJoinActivity extends BaseActivity {
-    private final static String PHONE = "PH";
-    private final static String NAME = "NA";
-    private final static String PW = "PW";
+    public final static String PHONE = "PH";
+    public final static String NAME = "NA";
+    public final static String PW = "PW";
 
     private EditText nameField, phoneField, pwField;
     private Button phoneAuthRequest;
+    private PhoneAuthFragment fragment;
 
     private SmsListener smsListener;
     private int authType;
+    private boolean isFragmentShown = false;
 
     private boolean isNameDone = false, isPhoneDone = false, isPWDone = false;
 
@@ -100,6 +104,23 @@ public class NewJoinActivity extends BaseActivity {
     }
 
     private void showBackWarningDialog(){
+        if (isFragmentShown){
+            createDialog(NewJoinActivity.this, 0,
+                    R.string.phone_auth_fragment_back_dialog_message, R.string.dialog_positive, R.string.dialog_negative,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setTitle(R.string.title_activity_new_join);
+                            FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+                            if (fragment!=null)
+                                tact.remove(fragment).commit();
+                            fragment = null;
+                            dismissCurrentDialog();
+                        }
+                    },null).show();
+            return ;
+        }
+
         createDialog(NewJoinActivity.this, 0,
                 R.string.phone_auth_back_dialog_message, R.string.dialog_positive, R.string.dialog_negative,
                 new View.OnClickListener() {
@@ -177,13 +198,29 @@ public class NewJoinActivity extends BaseActivity {
         }
     }
 
+    private boolean validateInputField(){
+        if (authType!=IntroActivity.PW)
+            return true;
+
+        if (pwField.getText().toString().length() < 8)
+            return false;
+
+        return pwField.getText().toString().matches("^.*[0-9~!@#\\$%\\^&\\*\\(\\)_\\+\\-=` \\{}\\|\\[\\]\\\\:\";'<>\\?,\\.\\/].*$");
+    }
+
     private void configPhoneAuthRequest(){
         phoneAuthRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = phoneNumberFormat(phoneField.getText().toString()) + "\n" + getString(R.string.verification_dialog_message);
-                createDialog(NewJoinActivity.this, "", message,
-                        getString(R.string.dialog_positive), getString(R.string.dialog_negative), getVeriDialogPositiveListener(), null ).show();
+                if (validateInputField()) {
+                    String message = phoneNumberFormat(phoneField.getText().toString()) + "\n" + getString(R.string.verification_dialog_message);
+                    createDialog(NewJoinActivity.this, "", message,
+                            getString(R.string.dialog_positive), getString(R.string.dialog_negative), getVeriDialogPositiveListener(), null).show();
+                }
+                else{
+                    makeYammToast(R.string.password_format_error_message, Toast.LENGTH_SHORT);
+                }
+
             }
 
             private View.OnClickListener getVeriDialogPositiveListener(){
@@ -194,7 +231,6 @@ public class NewJoinActivity extends BaseActivity {
                         Log.i("NewJoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
                         sendVeriMessage(phone);
                         dismissCurrentDialog();
-                        createPhoneAuthFragment();
                     }
                 };
             }
@@ -278,14 +314,28 @@ public class NewJoinActivity extends BaseActivity {
 
     }
 
+    public String getOAuthToken(){
+        if (authType == IntroActivity.KAKAO){
+            return com.kakao.Session.getCurrentSession().getAccessToken();
+        }
+        else if (authType==IntroActivity.FB){
+            return Session.getActiveSession().getAccessToken();
+        }
+        return "";
+    }
+
     private void createPhoneAuthFragment(){
-        PhoneAuthFragment fragment = new PhoneAuthFragment();
+        fragment = new PhoneAuthFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt(IntroActivity.AUTH_TYPE, authType);
         bundle.putString(PHONE,phoneField.getText().toString());
         bundle.putString(NAME,nameField.getText().toString());
         if (authType == IntroActivity.PW)
             bundle.putString(PW, pwField.getText().toString());
-
+        fragment.setArguments(bundle);
+        android.support.v4.app.FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+        tact.add(R.id.phone_auth_fragment_container, fragment).commit();
+        isFragmentShown = true;
     }
 
     private void setPhoneAuthButtonEnable(){
@@ -426,18 +476,22 @@ public class NewJoinActivity extends BaseActivity {
 
     private void sendVeriMessage(String phone){
         YammAPIService service = YammAPIAdapter.getService();
-
+        final Dialog dialog = createFullScreenDialog(NewJoinActivity.this, getString(R.string.progress_dialog_message));
+        dialog.show();
         service.phoneVerification(phone, new Callback<YammAPIService.VeriExp>() {
             @Override
             public void success(YammAPIService.VeriExp s, Response response) {
                 Log.i("NewJoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
                 makeYammToast(R.string.verification_sent, Toast.LENGTH_SHORT);
+                dialog.dismiss();
+                createPhoneAuthFragment();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("NewJoinActivity/getVeriDialogPositiveListener", "Veri Failed ");
                 retrofitError.printStackTrace();
+                dialog.dismiss();
                 makeYammToast(R.string.verification_error_message, Toast.LENGTH_SHORT);
             }
         });
