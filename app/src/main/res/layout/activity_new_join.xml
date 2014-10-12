@@ -25,6 +25,29 @@
         android:id="@+id/password_field"
         android:inputType="textPassword"
         android:hint="@string/verification_pw"/>
+    <LinearLayout
+        android:layout_below="@+id/password_field"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:orientation="horizontal"
+        >
+        <CheckBox
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/agreement_checkbox"
+            android:button="@drawable/checkbox_selector"/>
+        <TextView
+            android:layout_marginLeft="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/agreement_textview"
+            android:textColor="@color/agreement_text_color"/>
+    </LinearLayout>
     <Button
         android:layout_toRightOf="@+id/phone_auth_request"
         android:layout_width="wrap_content"

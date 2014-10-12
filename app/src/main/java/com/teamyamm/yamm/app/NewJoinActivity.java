@@ -4,12 +4,18 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Request;
@@ -47,7 +53,7 @@ public class NewJoinActivity extends BaseActivity {
     private int authType;
     private boolean isFragmentShown = false;
 
-    private boolean isNameDone = false, isPhoneDone = false, isPWDone = false;
+    private boolean isNameDone = false, isPhoneDone = false, isPWDone = false, isCheckDone = false;
 
     private boolean enablePhoneAuthRequest = false;
 
@@ -69,6 +75,8 @@ public class NewJoinActivity extends BaseActivity {
         configPhoneEditText();
         configPWField();
         configPhoneAuthRequest();
+        configAgreementCheckBox();
+
    //     configSendButton();
 
         MixpanelController.trackEnteredPhoneAuthMixpanel();
@@ -245,6 +253,37 @@ public class NewJoinActivity extends BaseActivity {
         });
     }
 
+    private void configAgreementCheckBox(){
+        CheckBox agreementCheckBox = (CheckBox) findViewById(R.id.agreement_checkbox);
+
+        agreementCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    isCheckDone = true;
+                }
+                else
+                    isCheckDone = false;
+                setPhoneAuthButtonEnable();
+            }
+        });
+
+        TextView agreementTextView = (TextView) findViewById(R.id.agreement_textview);
+
+        //Set span for blue color
+        Spannable span = new SpannableString(getString(R.string.agreement_textview));
+        span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.agreement_link_color)), 0, 17, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        agreementTextView.setText(span);
+
+        agreementTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeYammToast(R.string.left_drawer_not_ready ,Toast.LENGTH_SHORT);
+            }
+        });
+
+    }
+
     private void configNameEditText(){
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -347,7 +386,7 @@ public class NewJoinActivity extends BaseActivity {
     }
 
     private void setPhoneAuthButtonEnable(){
-        enablePhoneAuthRequest = isNameDone && isPhoneDone && isPWDone;
+        enablePhoneAuthRequest = isNameDone && isPhoneDone && isPWDone && isCheckDone;
         Log.d("NewJoinActivity/setPhoneAuthButtonEnable","Enable Button " + enablePhoneAuthRequest);
         phoneAuthRequest.setEnabled(enablePhoneAuthRequest);
     }

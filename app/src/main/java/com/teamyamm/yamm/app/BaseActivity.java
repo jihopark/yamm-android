@@ -397,7 +397,7 @@ public class BaseActivity extends ActionBarActivity {
     * Builds Progress Dialog with title & message
     * */
 
-    protected Dialog createFullScreenDialog(Context context, String message){
+    public Dialog createFullScreenDialog(Context context, String message){
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_full_screen);

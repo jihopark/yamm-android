@@ -1,5 +1,6 @@
 package com.teamyamm.yamm.app.widget;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.GridActivity;
@@ -33,6 +35,7 @@ public class PhoneAuthFragment extends Fragment {
     private TextView title;
     private EditText auth;
     private Button confirm;
+    private Dialog fullScreenDialog = null;
 
     public PhoneAuthFragment() {
 
@@ -75,8 +78,10 @@ public class PhoneAuthFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String token = "";
-                if (getActivity() instanceof NewJoinActivity)
+                if (getActivity() instanceof NewJoinActivity) {
                     token = ((NewJoinActivity) getActivity()).getOAuthToken();
+                    fullScreenDialog = ((NewJoinActivity) getActivity()).createFullScreenDialog(getActivity(), getString(R.string.join_progress_dialog_title));
+                }
 
                 if (authType == IntroActivity.KAKAO)
                     kakaoRegistration(token);
@@ -92,16 +97,11 @@ public class PhoneAuthFragment extends Fragment {
         YammAPIAdapter.getJoinService().kakaoRegistration(name, token, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
-                Log.i("PhoneAuthFragment/fbRegistration","KAKAO Registration Success");
-                MixpanelController.setMixpanelAlias(yammToken.uid+"@kakao");
+                Log.i("PhoneAuthFragment/fbRegistration", "KAKAO Registration Success");
+                MixpanelController.setMixpanelAlias(yammToken.uid + "@kakao");
                 MixpanelController.trackJoiningMixpanel("KAKAO");
 
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity act = (BaseActivity) getActivity();
-                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
-                    YammAPIAdapter.setToken(yammToken.access_token);
-                    act.goToActivity(GridActivity.class);
-                }
+                finishRegistration(yammToken.access_token);
             }
 
             @Override
@@ -119,12 +119,7 @@ public class PhoneAuthFragment extends Fragment {
                 MixpanelController.setMixpanelAlias(yammToken.uid+"@facebook");
                 MixpanelController.trackJoiningMixpanel("FB");
 
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity act = (BaseActivity) getActivity();
-                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
-                    YammAPIAdapter.setToken(yammToken.access_token);
-                    act.goToActivity(GridActivity.class);
-                }
+                finishRegistration(yammToken.access_token);
             }
 
             @Override
@@ -138,16 +133,11 @@ public class PhoneAuthFragment extends Fragment {
         YammAPIAdapter.getJoinService().pwRegistration(name, pw, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
-                Log.i("PhoneAuthFragment/fbRegistration","Password Registration Success");
-                MixpanelController.setMixpanelAlias(yammToken.uid+"@password");
+                Log.i("PhoneAuthFragment/fbRegistration", "Password Registration Success");
+                MixpanelController.setMixpanelAlias(yammToken.uid + "@password");
                 MixpanelController.trackJoiningMixpanel("PW");
 
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity act = (BaseActivity) getActivity();
-                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
-                    YammAPIAdapter.setToken(yammToken.access_token);
-                    act.goToActivity(GridActivity.class);
-                }
+                finishRegistration(yammToken.access_token);
             }
 
             @Override
@@ -155,5 +145,17 @@ public class PhoneAuthFragment extends Fragment {
 
             }
         });
+    }
+
+    private void finishRegistration(String accessToken){
+        if (fullScreenDialog!=null)
+            fullScreenDialog.dismiss();
+
+        BaseActivity act = (BaseActivity) getActivity();
+        act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), accessToken);
+        YammAPIAdapter.setToken(accessToken);
+        act.goToActivity(GridActivity.class);
+
+        act.makeYammToast(R.string.join_success, Toast.LENGTH_SHORT);
     }
 }

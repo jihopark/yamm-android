@@ -78,6 +78,8 @@
     <string name="join_progress_dialog_title">가입 처리 중입니다\n조금만 기다려주세요</string>
     <string name="new_recommendation_message">당신 취향에 맞는 새로운 추천입니다</string>
 
+    <string name="join_success">가입이 완료되었습니다</string>
+
     <string name="fb_dialog_title">좋아요 해주세요</string>
     <string name="fb_dialog_message">Yamm 페이스북에 좋아요를 누르면 더 많은 정보와 소식을 알려드려요! 다양한 이벤트와 재밌거리를 위해 페이스북 라이크 고고!!</string>
     <string name="fb_dialog_negative">싫어요</string>
