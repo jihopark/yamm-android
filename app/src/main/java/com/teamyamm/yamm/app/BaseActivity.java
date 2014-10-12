@@ -88,7 +88,7 @@ public class BaseActivity extends ActionBarActivity {
 
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    protected SharedPreferences prefs;
+    public SharedPreferences prefs;
 
     public static boolean isLoggingOut = false;
 

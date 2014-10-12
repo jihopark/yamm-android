@@ -154,6 +154,14 @@ public class NewJoinActivity extends BaseActivity {
         goToActivity(IntroActivity.class);
     }
 
+    public String getPassword(){
+        if (authType == IntroActivity.PW){
+            if (pwField!=null)
+                return pwField.getText().toString();
+        }
+        return "";
+    }
+
     @Override
     public void onResume(){
         super.onResume();

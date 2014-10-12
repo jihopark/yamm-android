@@ -11,9 +11,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.teamyamm.yamm.app.BaseActivity;
+import com.teamyamm.yamm.app.GridActivity;
 import com.teamyamm.yamm.app.IntroActivity;
 import com.teamyamm.yamm.app.NewJoinActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.network.MixpanelController;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 10/9/14.
@@ -63,14 +71,89 @@ public class PhoneAuthFragment extends Fragment {
     }
 
     private void configConfirmButton(){
-        if (authType == IntroActivity.KAKAO){
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String token = "";
+                if (getActivity() instanceof NewJoinActivity)
+                    token = ((NewJoinActivity) getActivity()).getOAuthToken();
 
-        }
-        else if (authType == IntroActivity.FB){
+                if (authType == IntroActivity.KAKAO)
+                    kakaoRegistration(token);
+                else if (authType == IntroActivity.FB)
+                    fbRegistration(token);
+                else
+                    pwRegistration(((NewJoinActivity)getActivity()).getPassword());
+            }
+        });
+    }
 
-        }
-        else{
+    private void kakaoRegistration(String token){
+        YammAPIAdapter.getJoinService().kakaoRegistration(name, token, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
+            @Override
+            public void success(YammAPIService.YammToken yammToken, Response response) {
+                Log.i("PhoneAuthFragment/fbRegistration","KAKAO Registration Success");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"@kakao");
+                MixpanelController.trackJoiningMixpanel("KAKAO");
 
-        }
+                if (getActivity() instanceof BaseActivity) {
+                    BaseActivity act = (BaseActivity) getActivity();
+                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
+                    YammAPIAdapter.setToken(yammToken.access_token);
+                    act.goToActivity(GridActivity.class);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+    }
+
+    private void fbRegistration(String token){
+        YammAPIAdapter.getJoinService().facebookRegistration(name, token, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
+            @Override
+            public void success(YammAPIService.YammToken yammToken, Response response) {
+                Log.i("PhoneAuthFragment/fbRegistration","FB Registration Success");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"@facebook");
+                MixpanelController.trackJoiningMixpanel("FB");
+
+                if (getActivity() instanceof BaseActivity) {
+                    BaseActivity act = (BaseActivity) getActivity();
+                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
+                    YammAPIAdapter.setToken(yammToken.access_token);
+                    act.goToActivity(GridActivity.class);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+    }
+
+    private void pwRegistration(String pw){
+        YammAPIAdapter.getJoinService().pwRegistration(name, pw, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
+            @Override
+            public void success(YammAPIService.YammToken yammToken, Response response) {
+                Log.i("PhoneAuthFragment/fbRegistration","Password Registration Success");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"@password");
+                MixpanelController.trackJoiningMixpanel("PW");
+
+                if (getActivity() instanceof BaseActivity) {
+                    BaseActivity act = (BaseActivity) getActivity();
+                    act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), yammToken.access_token);
+                    YammAPIAdapter.setToken(yammToken.access_token);
+                    act.goToActivity(GridActivity.class);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
     }
 }

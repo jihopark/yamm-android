@@ -25,18 +25,29 @@ public interface YammAPIService {
     //User Registration
     @FormUrlEncoded
     @POST("/registration/facebook")
-    void facebookRegistration(@Field("name") String name, @Field("fb_token") String token, @Field("authcode") String code, Callback<String> callback);
+    void facebookRegistration(@Field("name") String name, @Field("fb_token") String token, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
 
+    @FormUrlEncoded
+    @POST("/registration/kakao")
+    void kakaoRegistration(@Field("name") String name, @Field("kakao_token") String token, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
+
+    @FormUrlEncoded
+    @POST("/registration/password")
+    void pwRegistration(@Field("name") String name, @Field("password") String password, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
+
+    @Deprecated
     @FormUrlEncoded
     @POST("/registration/user")
     void userRegistration(@Field("name") String name, @Field("email") String email,
                             @Field("password") String password, @Field("phone") String phone, @Field("authcode") String authcode, Callback<String> cb);
 
     public static class YammToken{
-        private String access_token;
-        private String token_type;
+        public int uid;
+        public String access_token;
+        public String token_type;
 
-        public YammToken(String access_token, String token_type){
+        public YammToken(int uid, String access_token, String token_type){
+            this.uid = uid;
             this.access_token = access_token;
             this.token_type = token_type;
         }
