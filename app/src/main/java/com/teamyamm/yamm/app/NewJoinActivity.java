@@ -1,6 +1,7 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -77,8 +78,6 @@ public class NewJoinActivity extends BaseActivity {
         configPhoneAuthRequest();
         configAgreementCheckBox();
 
-   //     configSendButton();
-
         MixpanelController.trackEnteredPhoneAuthMixpanel();
     }
 
@@ -125,6 +124,7 @@ public class NewJoinActivity extends BaseActivity {
                             fragment = null;
                             dismissCurrentDialog();
                             isFragmentShown = false;
+                            unregisterSMSListener();
                         }
                     },null).show();
             return ;
@@ -174,14 +174,27 @@ public class NewJoinActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        configSmsListener();
+        if (isFragmentShown)
+            configSmsListener(fragment.getEditText());
     }
 
     @Override
     public void onPause(){
         super.onPause();
-       // unregisterReceiver(smsListener);
+        unregisterSMSListener();
+    }
 
+    private void unregisterSMSListener(){
+        if (smsListener!=null) {
+            Log.i("NewJoinActivity/onPause","SMS Listener Unregistered");
+            try {
+                unregisterReceiver(smsListener);
+            }catch(IllegalArgumentException e){
+                Log.e("NewJoinActivity/onPause","Already Registered");
+            }catch(RuntimeException e){
+                Log.e("NewJoinActivity/onPause","Already Registered");
+            }
+        }
     }
 
     private void configPWField(){
@@ -424,103 +437,15 @@ public class NewJoinActivity extends BaseActivity {
         });
     }
 
-    private void configSmsListener(){
-    /*    IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+    public void configSmsListener(EditText text){
+        if (text ==null)
+            return ;
+        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         filter.setPriority(10000);
-        smsListener = new SmsListener(veriField, successImage);
+        smsListener = new SmsListener(text);
         registerReceiver(smsListener, filter);
-        Log.i("NewJoinActivity/configSmsListener", "SMS Listener Registered");*/
+        Log.i("NewJoinActivity/configSmsListener", "SMS Listener Registered");
     }
-
-  /*  private void configSendButton() {
-        final Button sendVButton = (Button) findViewById(R.id.verification_button);
-        final Button resendVButton = (Button) findViewById(R.id.verification_resend_button);
-        Log.d("NewJoinActivity/configSendButton","Config");
-        sendVButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("NewJoinActivity/onClick","Clicked");
-                hideSoftKeyboard(NewJoinActivity.this);
-
-                String phone = phoneField.getText().toString();
-                    if (phone!=null && (phone.length() == 10 || phone.length() == 11)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(NewJoinActivity.this);
-
-                        AlertDialog alert = builder.setPositiveButton(getString(R.string.dialog_positive), getVeriDialogPositiveListener())
-                                .setNegativeButton(getString(R.string.dialog_negative), null)
-                                .setTitle(getString(R.string.verification_dialog_title))
-                            .setMessage(getVeriDialogMessage(phone))
-                            .create();
-                    alert.show();
-
-                    //Center Text
-                    TextView messageView = (TextView) alert.findViewById(android.R.id.message);
-                    messageView.setGravity(Gravity.CENTER);
-                }
-                else{
-                    makeYammToast(R.string.phone_number_error_message, Toast.LENGTH_SHORT);
-                }
-            }
-
-            // Set Message
-            private String getVeriDialogMessage(String phone){
-                return phoneNumberFormat(phone) + "\n\n" + getString(R.string.verification_dialog_message);
-            }
-
-            // Positive OnClick Listener
-            private DialogInterface.OnClickListener getVeriDialogPositiveListener(){
-                return new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String phone = phoneField.getText().toString();
-                        Log.i("NewJoinActivity/getVeriDialogPositiveListener", "Verification API Called for " + phone);
-                        resendVButton.setVisibility(View.VISIBLE);
-                        sendVButton.setVisibility(View.INVISIBLE);
-
-                        sendVeriMessage(phone);
-                    }
-                };
-            }
-        });
-
-        resendVButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                View.OnClickListener positiveListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        hideSoftKeyboard(NewJoinActivity.this);
-                        String phone = phoneField.getText().toString();
-                        sendVeriMessage(phone);
-                        dismissCurrentDialog();
-                    }
-                };
-                createDialog(NewJoinActivity.this, R.string.verification_resend_dialog_title, R.string.verification_resend_dialog_message,
-                        R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
-            }
-
-        });
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = createFullScreenDialog(NewJoinActivity.this, getString(R.string.progress_dialog_message));
-                dialog.show();
-                YammAPIAdapter.getJoinService().facebookRegistration(nameField.getText().toString(), Session.getActiveSession().getAccessToken(), veriField.getText().toString(), new Callback<String>() {
-                    @Override
-                    public void success(String s, Response response) {
-                        //MixpanelController.setMixpanelAlias(email);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-
-                    }
-                });
-            }
-        });
-    }*/
 
     private void sendVeriMessage(String phone){
         YammAPIService service = YammAPIAdapter.getService();

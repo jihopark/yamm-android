@@ -58,6 +58,10 @@ public class PhoneAuthFragment extends Fragment {
         return rootView;
     }
 
+    public EditText getEditText(){
+        return auth;
+    }
+
     private void initFragment(){
         Bundle bundle = this.getArguments();
         authType = bundle.getInt(IntroActivity.AUTH_TYPE);
@@ -71,6 +75,8 @@ public class PhoneAuthFragment extends Fragment {
         //set up title
         if (getActivity() instanceof BaseActivity)
             title.setText(((BaseActivity)getActivity()).phoneNumberFormat(phone)+getString(R.string.phone_auth_title_message));
+        if (getActivity() instanceof NewJoinActivity)
+            ((NewJoinActivity) getActivity()).configSmsListener(auth);
     }
 
     private void configConfirmButton(){
