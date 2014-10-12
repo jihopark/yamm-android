@@ -56,6 +56,7 @@ public interface YammAPIService {
     }
 
     public class YammRetrofitException extends RuntimeException{
+        public static final String INVALID_TOKEN = "TOK"; //Invalid OAuth Token
         public static final String UNIDENTIFIED = "WTF"; //unidentified
         public static final String NETWORK = "NET"; //network error
         public static final String AUTHENTICATION = "AUT"; //authentication is wrong
@@ -127,7 +128,7 @@ public interface YammAPIService {
     /*
     * Gets GridItems from Server in GridActivity
     * */
-
+    @Deprecated
     @GET("/cannot-eat-choices")
     void getGridItems(Callback<Choices> cb);
 
@@ -154,6 +155,7 @@ public interface YammAPIService {
     * To start battle, send ""
     * */
 
+    @Deprecated
     @GET("/battle/next-round")
     void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
 
@@ -323,6 +325,7 @@ public interface YammAPIService {
     @DELETE("/user/facebook")
     void disconnectFacebook(Callback<String> callback);
 
+    @Deprecated
     @FormUrlEncoded
     @PUT("/user/phone")
     void registerPhone(@Field("newPhone") String phone, @Field("authcode") String code, Callback<String> callback);

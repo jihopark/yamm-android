@@ -124,6 +124,7 @@ public class NewJoinActivity extends BaseActivity {
                                 tact.remove(fragment).commit();
                             fragment = null;
                             dismissCurrentDialog();
+                            isFragmentShown = false;
                         }
                     },null).show();
             return ;

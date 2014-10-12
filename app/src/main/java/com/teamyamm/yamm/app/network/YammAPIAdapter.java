@@ -404,7 +404,7 @@ public class YammAPIAdapter {
             Log.e("JoinErrorHandler/handleError",error.getMessage());
 
 
-            if (error.getCode().equals("DuplicateAccount")) {
+            if (error.getCode().equals("DuplicatePhone")) {
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
             }
             else if (error.getCode().equals("IncorrectAuthCode"))
@@ -417,7 +417,9 @@ public class YammAPIAdapter {
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.EMAIL_FORMAT);
             else if (error.getCode().equals("InvalidParam:phone:pattern"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PHONE_FORMAT);
-
+            else if (error.getCode().equals("InvalidToken")){
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INVALID_TOKEN);
+            }
             Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }

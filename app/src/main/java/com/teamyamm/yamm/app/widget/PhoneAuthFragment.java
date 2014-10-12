@@ -81,6 +81,7 @@ public class PhoneAuthFragment extends Fragment {
                 if (getActivity() instanceof NewJoinActivity) {
                     token = ((NewJoinActivity) getActivity()).getOAuthToken();
                     fullScreenDialog = ((NewJoinActivity) getActivity()).createFullScreenDialog(getActivity(), getString(R.string.join_progress_dialog_title));
+                    fullScreenDialog.show();
                 }
 
                 if (authType == IntroActivity.KAKAO)
@@ -106,7 +107,7 @@ public class PhoneAuthFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
+                handleJoinError(retrofitError.getCause().getMessage());
             }
         });
     }
@@ -124,7 +125,7 @@ public class PhoneAuthFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
+                handleJoinError(retrofitError.getCause().getMessage());
             }
         });
     }
@@ -142,7 +143,7 @@ public class PhoneAuthFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
+                handleJoinError(retrofitError.getCause().getMessage());
             }
         });
     }
@@ -157,5 +158,29 @@ public class PhoneAuthFragment extends Fragment {
         act.goToActivity(GridActivity.class);
 
         act.makeYammToast(R.string.join_success, Toast.LENGTH_SHORT);
+    }
+
+    private void handleJoinError(String msg) {
+        Log.e("PhoneAuthFragment/handleJoinError", "ERROR CODE " + msg);
+
+        BaseActivity act = (BaseActivity) getActivity();
+
+        if (fullScreenDialog!=null)
+            fullScreenDialog.dismiss();
+
+        if (msg.equals(YammAPIService.YammRetrofitException.NETWORK))
+            act.makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT))
+            act.makeYammToast(getString(R.string.duplicate_account_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.INVALID_TOKEN))
+            act.makeYammToast(getString(R.string.invalid_token_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE))
+            act.makeYammToast(getString(R.string.incorrect_authcode_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_FORMAT))
+            act.makeYammToast(getString(R.string.password_format_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN))
+            act.makeYammToast(getString(R.string.password_min_error_message), Toast.LENGTH_SHORT);
+        else
+            act.makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
     }
 }
