@@ -49,6 +49,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.SessionCallback;
+import com.kakao.exception.KakaoException;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.teamyamm.yamm.app.interfaces.FriendListInterface;
 import com.teamyamm.yamm.app.network.MixpanelController;
@@ -73,6 +75,10 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
+    public final static int KAKAO = 1;
+    public final static int FB = 2;
+    public final static int PW = 3;
+
     public static final String PRODUCTION = "production";
     public static final String TESTING = "test";
     public static final String STAGING = "staging";
@@ -615,11 +621,31 @@ public class BaseActivity extends ActionBarActivity {
     protected void logOut(){
         if (this instanceof MainActivity)
             ((MainActivity)this).isLeftMenuLoaded = false;
+        try {
+            if (Session.getActiveSession() != null) {
+                Session.getActiveSession().closeAndClearTokenInformation();
+                Session.setActiveSession(null);
+                Log.d("BaseActivity/logOut", "Clear FB Session");
+            }
+        }catch(IllegalStateException e){
+            Log.e("BaseActivity/logOut", "FB Session is invalid. Just Log out.");
+        }
+        try {
+            if (com.kakao.Session.getCurrentSession().isOpened()) {
+                com.kakao.Session.getCurrentSession().close(new SessionCallback() {
+                    @Override
+                    public void onSessionOpened() {
 
-        if (Session.getActiveSession()!=null){
-            Session.getActiveSession().closeAndClearTokenInformation();
-            Session.setActiveSession(null);
-            Log.d("BaseActivity/logOut","Clear FB Session");
+                    }
+
+                    @Override
+                    public void onSessionClosed(KakaoException e) {
+                        Log.d("BaseActivity/onSessionClosed", "Kakao Session Closed for Logout");
+                    }
+                });
+            }
+        }catch(IllegalStateException e){
+            Log.e("BaseActivity/logOut", "Kakao Session is invalid. Just Log out.");
         }
 
         isLoggingOut = true;

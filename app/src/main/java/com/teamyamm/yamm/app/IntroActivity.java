@@ -34,10 +34,6 @@ import retrofit.client.Response;
  */
 public class IntroActivity extends BaseActivity {
     public final static String AUTH_TYPE = "AUTH_TYPE";
-    public final static int KAKAO = 1;
-    public final static int FB = 2;
-    public final static int PW = 3;
-
     private final static int NUM_PAGES = 3;
     private ViewPager pager;
     private static boolean isLoadingKakao = false;
@@ -179,7 +175,7 @@ public class IntroActivity extends BaseActivity {
     private void toLogin(String id, int type){
         MixpanelController.setMixpanelIdentity(id);
 
-        makeYammToast(R.string.oauth_login_success, Toast.LENGTH_SHORT);
+        makeYammToast(R.string.login_success, Toast.LENGTH_SHORT);
         //For Push Token
         registerGCM();
 

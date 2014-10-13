@@ -272,9 +272,14 @@ public interface YammAPIService {
     @POST("/group/next-suggestion")
     void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
 
+    @Deprecated
     @FormUrlEncoded
     @POST("/password-recovery/request")
     void requestPasswordRecovery(@Field("email") String email, Callback<String> cb);
+
+    @FormUrlEncoded
+    @POST("/password-recovery/request")
+    void requestPasswordRecoveryFromPhone(@Field("phone") String phone, Callback<String> cb);
 
     /*
     * About Push Messages
