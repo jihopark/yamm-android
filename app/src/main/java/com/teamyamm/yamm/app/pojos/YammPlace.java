@@ -31,10 +31,14 @@ public class YammPlace implements Comparable<YammPlace> {
 
         Log.i("YammPlace/getDistanceString", meters+"");
 
+
         if (meters >= 1000)
             return "1km이상";
         else if (meters == 900)
             return "1km이내";
+        else if (meters==0){
+            return "바로 앞";
+        }
         else
             return meters+"m이내";
     }

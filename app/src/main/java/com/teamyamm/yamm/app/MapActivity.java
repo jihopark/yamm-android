@@ -6,7 +6,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,6 +21,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.teamyamm.yamm.app.network.GeocodeAPIService;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
@@ -26,6 +31,7 @@ import com.teamyamm.yamm.app.util.YammPlacesListAdapter;
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -48,6 +54,9 @@ public class MapActivity extends BaseActivity implements
     private int dishId;
     private Dialog fullScreenDialog;
     private ListView list;
+    private TextView descriptionText;
+    private Button currentLocationText;
+    private String currentLocation;
 
     private LocationClient mLocationClient;
 
@@ -56,11 +65,13 @@ public class MapActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        currentLocationText = (Button) findViewById(R.id.current_location_text);
+        descriptionText = (TextView) findViewById(R.id.current_page_description);
+
         initActivity();
-        setTitle(dishName + " 음식점 보기");
         fullScreenDialog = createFullScreenDialog(MapActivity.this, getString(R.string.progress_dialog_message));
         setActionBarBackButton(true);
-
+        setCurrentLocationText();
         mLocationClient = new LocationClient(this, this, this);
         fullScreenDialog.show();
     }
@@ -131,6 +142,15 @@ public class MapActivity extends BaseActivity implements
         }
     }
 
+    private void setCurrentLocationText(){
+        currentLocationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationSearchHelper.showLocationDialog(MapActivity.this);
+            }
+        });
+    }
+
     /*
      * Called by Location Services when the request to connect the
      * client finishes successfully. At this point, you can
@@ -140,14 +160,27 @@ public class MapActivity extends BaseActivity implements
     public void onConnected(Bundle dataBundle) {
         // Display the connection status
         Log.d("MapActivity/onConnected", "Location Service Connected");
-        Location mCurrentLocation = mLocationClient.getLastLocation();
 
         if (x==0 && y==0) {
-            x = mCurrentLocation.getLatitude();
-            y = mCurrentLocation.getLongitude();
-            setMapCamera(x, y);
-
+            findCurrentLocation();
+            MixpanelController.trackSearchMapMixpanel(currentLocation);
         }
+    }
+
+    private void findCurrentLocation(){
+        Location mCurrentLocation = mLocationClient.getLastLocation();
+
+        x = mCurrentLocation.getLatitude();
+        y = mCurrentLocation.getLongitude();
+        setMapCamera(x, y);
+        setTextViews(LocationSearchHelper.getAddressFromLocation(x,y,MapActivity.this));
+    }
+
+    private void setTextViews(String place){
+        currentLocation = place;
+        currentLocationText.setText("현재 위치 : " + currentLocation);
+        descriptionText.setText(currentLocation + " 근처 " + dishName + "에 대한 검색결과입니다");
+
     }
 
     private void setMapCamera(double xx, double yy){
@@ -161,17 +194,6 @@ public class MapActivity extends BaseActivity implements
     }
 
     private void loadPlaces(){
-        /*List<YammPlace> places = new ArrayList<YammPlace>();
-        places.add(new YammPlace(2, "짬뽕집", "경기도 고양시 2", 0.5, 1, 1));
-        places.add(new YammPlace(1, "설렁탕집", "경기도 고양시", 0.3, 1, 1));
-        places.add(new YammPlace(3, "짜장면집", "경기도 고양시 3", 0.6, 1,1) );
-        places.add(new YammPlace(4, "이상한집", "경기도 파주시", 0.8,1,1));
-        places.add(new YammPlace(5, "이상한집2", "경기도 파주시", 0.2,1,1));
-        places.add(new YammPlace(6, "이상한집3", "경기도 파주시", 0.1,1,1));
-        places.add(new YammPlace(7, "이상한집4", "경기도 파주시", 1.1,1,1));
-
-
-        Collections.sort(places);*/
         list = (ListView) findViewById(R.id.yamm_places_list);
 
         YammAPIAdapter.getTokenService().getPlacesNearby(x,y, DEFAULT_RADIUS , dishId, new Callback<List<YammPlace>>() {
@@ -245,5 +267,45 @@ public class MapActivity extends BaseActivity implements
             */
             makeYammToast(R.string.location_api_error, Toast.LENGTH_SHORT);
         }
+    }
+
+    public void changeLocation(String place){
+        fullScreenDialog.show();
+
+        if (place.equals(getString(R.string.place_pick_edit_text))){
+            Log.d("LocationSearchHelper/changeLocation", "Setting Current Location");
+            findCurrentLocation();
+            return ;
+        }
+
+        //Perform Geocoding
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(GeocodeAPIService.googleGeocodeAPI)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        GeocodeAPIService service = restAdapter.create(GeocodeAPIService.class);
+        service.getAddressFromLocation(place, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d("LocationSearchHelper/changeLocation", "GeoCoding Success");
+                LatLng location = LocationSearchHelper.getLocationFromJson(YammAPIAdapter.responseToString(response));
+                if (location==null){
+                    fullScreenDialog.dismiss();
+                    makeYammToast(R.string.geocoding_error,Toast.LENGTH_SHORT);
+                    return ;
+                }
+
+                x = location.latitude;
+                y = location.longitude;
+                setMapCamera(x,y);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                fullScreenDialog.dismiss();
+                makeYammToast(R.string.geocoding_error,Toast.LENGTH_SHORT);
+            }
+        });
+        setTextViews(place);
     }
 }

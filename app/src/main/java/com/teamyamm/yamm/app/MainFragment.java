@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,14 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -440,77 +433,9 @@ public class MainFragment extends Fragment {
         searchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLocationDialog();
-            }
-        });
-    }
-
-    private void showLocationDialog(){
-        final Dialog dialog = new Dialog(getActivity());
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_map);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.map_autocomplete_text);
-
-        ImageButton setMap = (ImageButton) dialog.findViewById(R.id.map_icon);
-        ImageButton negative = (ImageButton) dialog.findViewById(R.id.map_dialog_negative_button);
-        Button positive = (Button) dialog.findViewById(R.id.map_dialog_positive_button);
-
-        setPlacePickEditText(textView);
-
-        setMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(getString(R.string.place_pick_edit_text));
-            }
-        });
-        negative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LocationSearchHelper.searchMap(getCurrentDishItem(),
-                        textView.getText().toString(), getActivity());
-                MixpanelController.trackSearchMapMixpanel("");
+                //showLocationDialog();
+                LocationSearchHelper.startMapActivity(getActivity(), getCurrentDishItem());
                 addDishToPositive(SEARCH_MAP, "", getCurrentDishItem());
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-
-    private void setPlacePickEditText(AutoCompleteTextView placePickEditText){
-        placePickEditText.setText(getString(R.string.place_pick_edit_text));
-        placePickEditText.setThreshold(1);
-        placePickEditText.setSelectAllOnFocus(true);
-        ArrayAdapter<String> place_adapter =
-                new ArrayAdapter<String>(getActivity(), R.layout.place_pick_item, getResources().getStringArray(R.array.places_array));
-        placePickEditText.setAdapter(place_adapter);
-        placePickEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (!hasFocus){
-                    Log.i("MainFragment/placePickEditText", "focus gone");
-                    if ( ((TextView)v).getText().toString().equals("") ) {
-                        ((TextView) v).setText(getString(R.string.place_pick_edit_text));
-                    }
-                    if (imm!=null)
-                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                }
-                else{
-                    ((TextView)v).setText("");
-                    Log.i("MainFragment/placePickEditText", "focus came");
-                    if (imm!=null)
-                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                }
             }
         });
     }

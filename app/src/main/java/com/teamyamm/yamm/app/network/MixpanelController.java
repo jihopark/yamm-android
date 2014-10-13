@@ -293,6 +293,22 @@ public class MixpanelController {
         Log.i("MixpanelController/trackSearchMapMixpanel","Search Map Tracked " + place);
     }
 
+    public static void trackChangeMapLocationMixpanel(String place){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Place", place);
+        }catch(JSONException e){
+            Log.e("MixpanelController/trackChangeMapLocationMixpanel","JSON Error");
+        }
+
+        mixpanel.track("Change Search Map Location", props);
+        Log.i("MixpanelController/trackChangeMapLocationMixpanel","Change Search Map Location Tracked " + place);
+
+    }
+
     public static void trackDislikeMixpanel(DishItem item) {
         if (!checkMixpanelAPI())
             return;
