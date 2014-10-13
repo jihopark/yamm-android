@@ -2,6 +2,8 @@ package com.teamyamm.yamm.app.pojos;
 
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Created by parkjiho on 10/7/14.
  */
@@ -11,14 +13,21 @@ public class YammPlace implements Comparable<YammPlace> {
     public String address;
     public double distance;
     public double lat, lng;
+    public String phone;
+    public String type;
+    public List<DishItem> dishes;
 
-    public YammPlace(int id, String name, String address, double distance, double lat, double lng){
+    public YammPlace(int id, String name, String address, double distance, double lat, double lng,
+                     String phone, String type, List<DishItem> dishes){
         this.id = id;
         this.name = name;
         this.address = address;
         this.distance = distance;
         this.lat = lat;
         this.lng = lng;
+        this.phone = phone;
+        this.type = type;
+        this.dishes = dishes;
     }
 
     public int compareTo(YammPlace compare){
@@ -41,5 +50,14 @@ public class YammPlace implements Comparable<YammPlace> {
         }
         else
             return meters+"m이내";
+    }
+
+    public String getDishesString(){
+        String s = "";
+        for (DishItem dish : dishes) {
+            s += dish.getName() + " ";
+        }
+        s+="등";
+        return s;
     }
 }

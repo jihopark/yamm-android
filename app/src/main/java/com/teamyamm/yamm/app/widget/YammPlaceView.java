@@ -1,11 +1,17 @@
 package com.teamyamm.yamm.app.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.teamyamm.yamm.app.PlaceActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 
@@ -16,6 +22,8 @@ public class YammPlaceView extends RelativeLayout {
 
     private RelativeLayout layout;
     private TextView nameText, addressText, distanceText;
+    private Button placeDetailButton;
+    private Context context;
 
     public YammPlaceView(Context context) {
         super(context);
@@ -27,17 +35,35 @@ public class YammPlaceView extends RelativeLayout {
 
     public YammPlaceView(Context context, YammPlace item) {
         super(context);
+        this.context = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layout = (YammPlaceView) inflater.inflate(R.layout.yamm_place_view, this, true);
         nameText = (TextView) layout.findViewById(R.id.name_text);
         addressText = (TextView) layout.findViewById(R.id.address_text);
         distanceText = (TextView) layout.findViewById(R.id.distance_text);
+        placeDetailButton = (Button) layout.findViewById(R.id.place_detail_button);
+
         setItem(item);
     }
 
     public void setItem(YammPlace item){
+        final YammPlace i = item;
         nameText.setText(item.name);
         addressText.setText(item.address);
         distanceText.setText(item.getDistanceString());
+        placeDetailButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PlaceActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                Gson gson = new Gson();
+                intent.putExtra(PlaceActivity.YAMM_PLACE, gson.toJson(i, new TypeToken<YammPlace>() {
+                }.getType()));
+
+                context.startActivity(intent);
+            }
+        });
+
     }
 }

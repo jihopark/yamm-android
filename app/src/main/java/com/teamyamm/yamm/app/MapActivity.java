@@ -220,6 +220,7 @@ public class MapActivity extends BaseActivity implements
             map.addMarker(new MarkerOptions()
             .position(new LatLng(place.lat, place.lng))
             .title(place.name));
+            Log.d("MapActivity/addMarkers",place.name + " " + place.type + " " + place.dishes);
         }
     }
 

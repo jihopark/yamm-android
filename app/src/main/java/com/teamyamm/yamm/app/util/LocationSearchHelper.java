@@ -108,7 +108,6 @@ public class LocationSearchHelper {
         mapIntent.putExtra(LONG, 0);
         mapIntent.putExtra(DISH_NAME, item.getName());
         mapIntent.putExtra(DISH_ID, item.getId());
-        mapIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         context.startActivity(mapIntent);
     }

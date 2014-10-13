@@ -153,6 +153,14 @@
             android:theme="@style/YammActionBarTheme" >
            </activity>
 
+        <!-- Place Activity -->
+        <activity
+            android:launchMode="singleTask"
+            android:name="com.teamyamm.yamm.app.PlaceActivity"
+            android:label="@string/title_activity_place"
+            android:theme="@style/YammActionBarTheme" >
+        </activity>
+
         <!-- Poke AlertActivity -->
         <activity android:name=".PokeAlertActivity"
             android:theme="@style/YammPokeDialog"

@@ -22,6 +22,7 @@
     <string name="title_activity_poke_alert">친구랑 같이 먹어요</string>
     <string name="title_activity_new_join">가입하기</string>
     <string name="title_activity_map">음식점 찾기</string>
+    <string name="title_activity_place">음식점 정보</string>
     <string name="title_fragment_phone_auth">휴대폰 인증</string>
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정합니다</string>
