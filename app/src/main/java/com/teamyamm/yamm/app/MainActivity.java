@@ -29,6 +29,8 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.SessionCallback;
+import com.kakao.exception.KakaoException;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
@@ -509,7 +511,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             @Override
             public void success(YammAPIService.RawInfo info, Response response) {
                 Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
-                setMenuList(info.name, info.email, info.phone, info.facebook_uid);
+                setMenuList(info.name, info.phone, info.facebook_uid, info.kakao_uid);
                 putInPref(prefs, USER_EMAIL, info.email);
             }
 
@@ -521,9 +523,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
-    private void setMenuList(String name, String email, String phone, String fbUid){
-
-        Log.i("MainActivity/setMenuList", "Name " + name + " Email " +email);
+    private void setMenuList(String name, String phone, String fbUid, String kakaoUid){
         leftDrawerAdapter = new YammLeftDrawerAdapter(MainActivity.this);
 
         View.OnClickListener notReady = new View.OnClickListener() {
@@ -554,8 +554,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     }
                 }));
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 2, null, notReady));
+        //leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 1, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_pw), getString(R.string.left_drawer_change_pw), 2, null, notReady));
 
         if (getRegistrationId(MainActivity.this).isEmpty())
             leftDrawerAdapter.setPushUsageMenu(false);
@@ -567,7 +568,13 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         else
             leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
+        if (kakaoUid.isEmpty())
+            leftDrawerAdapter.setKakaoUsageMenu(false, notReady);
+        else
+            leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
+
+
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",6, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
@@ -588,7 +595,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 status = "TESTING";
 
             if (!status.isEmpty())
-                leftDrawerAdapter.addMenuItems(new LeftDrawerItem(status,"",6,null));
+                leftDrawerAdapter.addMenuItems(new LeftDrawerItem(status,"",7,null));
         }
 
 
@@ -684,7 +691,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         isLoadingFB = false;
                         String msg = retrofitError.getCause().getMessage();
                         if (msg.equals(YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION))
-                            makeYammToast(getString(R.string.fb_no_other_authentication_error), Toast.LENGTH_LONG);
+                            makeYammToast(getString(R.string.no_other_authentication_error), Toast.LENGTH_LONG);
                         else
                             makeYammToast(R.string.fb_disconnect_failure, Toast.LENGTH_LONG);
                     }
@@ -693,7 +700,80 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         };
     }
 
-    public void showTutorial(){
+  /*  private View.OnClickListener getKakaoConnectHandler() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                com.kakao.widget.LoginButton button = new LoginButton(MainActivity.this);
+                button.setLoginSessionCallback(new SessionCallback() {
+                    @Override
+                    public void onSessionOpened() {
+                        Log.d("MainActivity/getKakaoConnectHandler", "Kakao Session Opened : " + com.kakao.Session.getCurrentSession().getAccessToken());
+                        YammAPIAdapter.getFBConnectService().connectKakao(com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<String>() {
+                            @Override
+                            public void success(String s, Response response) {
+                                Log.d("MainActivity/connecKakao/Success", "Kakao Connect Successful");
+                                leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
+                                makeYammToast(R.string.kakao_connect_success, Toast.LENGTH_SHORT);
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.e("MainActivity/connectKakao/Failure", "Kakao Connect Failure");
+                                makeYammToast(R.string.kakao_connect_failure, Toast.LENGTH_SHORT);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onSessionClosed(KakaoException e) {
+                        Log.d("MainActivity/getKakaoConnectHandler","Kakao Session Closed");
+                    }
+                });
+                Log.d("MainActivity/getKakaoConnectHandler", button.touch + "");
+            }
+        };
+    }*/
+
+    private View.OnClickListener getKakaoDisconnectHandler() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                YammAPIAdapter.getFBConnectService().disconnectKakao(new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        Log.d("MainActivity/disconnectKakao/Success", "Kakao Disconnect Successful");
+                        leftDrawerAdapter.setKakaoUsageMenu(false, null);
+                        makeYammToast(R.string.kakao_disconnect_success, Toast.LENGTH_SHORT);
+                        com.kakao.Session.getCurrentSession().close(new SessionCallback() {
+                            @Override
+                            public void onSessionOpened() {
+
+                            }
+
+                            @Override
+                            public void onSessionClosed(KakaoException e) {
+                                Log.d("MainActivity/onSessionClosed","Kakao Closed");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e("MainActivity/disconnectKakao/Failure", "Kakao Disconnect Failure");
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION))
+                            makeYammToast(getString(R.string.no_other_authentication_error), Toast.LENGTH_LONG);
+                        else
+                            makeYammToast(R.string.kakao_disconnect_failure, Toast.LENGTH_LONG);
+                    }
+                });
+            }
+        };
+    }
+
+        public void showTutorial(){
         drawerLayout.closeDrawers();
         tutorial = new TutorialFragment();
 

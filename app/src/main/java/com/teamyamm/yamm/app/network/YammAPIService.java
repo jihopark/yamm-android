@@ -330,6 +330,14 @@ public interface YammAPIService {
     @DELETE("/user/facebook")
     void disconnectFacebook(Callback<String> callback);
 
+    @FormUrlEncoded
+    @PUT ("/user/kakao")
+    void connectKakao(@Field("kakao_access_token") String token, Callback<String> callback);
+
+    @DELETE("/user/kakao")
+    void disconnectKakao(Callback<String> callback);
+
+
     @Deprecated
     @FormUrlEncoded
     @PUT("/user/phone")
@@ -341,13 +349,15 @@ public interface YammAPIService {
         public String phone;
         public String name;
         public String facebook_uid;
+        public String kakao_uid;
 
-        public RawInfo(long uid, String email, String phone, String name, String facebook_uid){
-            this.uid = uid;
+        public RawInfo(long uid, String email, String phone, String name, String facebook_uid, String kakao_uid){
+                this.uid = uid;
             this.email = email;
             this.phone = phone;
             this.name = name;
             this.facebook_uid =facebook_uid;
+            this.kakao_uid = kakao_uid;
         }
     }
 
