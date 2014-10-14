@@ -257,11 +257,16 @@ public class YammAPIAdapter {
             public void log(String s) {
                 Log.i("YammAPIServiceLog", s);
                 if (context!=null) {
-                    if (logger==null) {
-                        logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
-                        Log.i("YammAPIAdapter/setRestAdapterLog","Logger is null. Init Logentries Logger");
+                    try {
+                        if (logger == null) {
+                            logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
+                            Log.i("YammAPIAdapter/setRestAdapterLog", "Logger is null. Init Logentries Logger");
+                        }
+                        logger.info(s);
+                    }catch(IllegalThreadStateException e){
+                        Log.e("YammAPIAdapter/setRestAdapterLog","Fuck Logentries Error");
+                        e.printStackTrace();
                     }
-                    logger.info(s);
                 }
             }
         };
@@ -301,6 +306,9 @@ public class YammAPIAdapter {
 
                 if (error.getCode().equals("NoOtherAuthenticationMethod")) {
                     return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION);
+                }
+                else if (error.getCode().equals("AlreadyRegistered")){
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
                 }
             }
             Log.e("FBConnectErrorHandler/handleError","Unidentified Error");

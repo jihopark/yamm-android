@@ -24,6 +24,7 @@
     <string name="title_activity_map">음식점 찾기</string>
     <string name="title_activity_place">음식점 정보</string>
     <string name="title_fragment_phone_auth">휴대폰 인증</string>
+
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정합니다</string>
     <string name="location_error">위치를 확인할 수가 없습니다</string>
@@ -103,6 +104,8 @@
     <string name="place_pick_title">음식점 검색</string>
     <string name="place_pick_message">드시고 싶은 위치에서 음식점을 검색해 보세요.</string>
 
+    <string name="password_change_dialog_title">비밀번호 변경</string>
+
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
     <string name="intro_login_text">이미 회원이신가요? 로그인</string>
@@ -133,6 +136,7 @@
     <string name="verification_name">이름</string>
     <string name="verification_email">이메일 주소</string>
     <string name="verification_pw">비번(8자이상,특수문자/숫자 포함)</string>
+    <string name="verification_pw_2">비번 확인</string>
     <string name="verification_phone">전화번호</string>
     <string name="verification_button">인증</string>
     <string name="verification_sent">3분간 유효한 인증번호가 발송되었습니다</string>
@@ -145,8 +149,7 @@
     <string name="join_checkbox_message">서비스 약관와 개인정보 보호정책에 동의하시나요?</string>
     <string name="verification_done_message">인증되었습니다</string>
     <string name="join_confirm_button">가입하기</string>
-
-
+    <string name="verification_pw_not_identical">비밀번호가 일치하지 않습니다</string>
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
     <string name="login_pw">비밀번호</string>
@@ -179,6 +182,7 @@
     <string name="left_drawer_help">도움말</string>
     <string name="left_drawer_not_ready">아직 준비 중입니다ㅠㅠ</string>
 
+    <string name="password_change_success">비밀번호가 변경되었습니다</string>
     <string name="fb_disconnect_success">페이스북 연동이 해제되었습니다</string>
     <string name="fb_disconnect_failure">페이스북 연동을 해제하지 못했습니다\n다시 한번 해주세요</string>
     <string name="fb_connect_success">페이스북이 연동되었습니다</string>
@@ -192,7 +196,7 @@
     <string name="kakao_join_success">카카오톡으로 시작되었습니다</string>
     <string name="oauth_login_failure">가입되지 않은 계정입니다\n먼저 가입해주세요</string>
     <string name="no_other_authentication_error">다른 인증방식이 없습니다\n먼저 비밀번호를 설정해주세요</string>
-
+    <string name="already_registered_error">이미 다른 계정과 연동되어있습니다</string>
     <!-- Friends Activity & Fragment -->
 
     <string name="friend_invite_button">친구초대</string>

@@ -21,6 +21,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -348,7 +351,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                     //       makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
+                            //       makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
 
                             closeFullScreenDialog();
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");
@@ -556,7 +559,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         //leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
         leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 1, null, notReady));
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_pw), getString(R.string.left_drawer_change_pw), 2, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_pw), getString(R.string.left_drawer_change_pw), 2, null, getPasswordChangeHandler()));
 
         if (getRegistrationId(MainActivity.this).isEmpty())
             leftDrawerAdapter.setPushUsageMenu(false);
@@ -635,8 +638,13 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
                 @Override
                 public void failure(RetrofitError retrofitError) {
+                    String msg = retrofitError.getCause().getMessage();
+
                     Log.e("MainActivity/connectFacebook/Failure", "FB Connect Failure");
-                    makeYammToast(R.string.fb_connect_failure, Toast.LENGTH_LONG);
+                    if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
+                        makeYammToast(R.string.already_registered_error, Toast.LENGTH_SHORT);
+                    else
+                        makeYammToast(R.string.fb_connect_failure, Toast.LENGTH_LONG);
                     isLoadingFB = false;
                     if (Session.getActiveSession()!=null) {
                         Session.getActiveSession().closeAndClearTokenInformation();
@@ -745,18 +753,21 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     public void success(String s, Response response) {
                         Log.d("MainActivity/disconnectKakao/Success", "Kakao Disconnect Successful");
                         leftDrawerAdapter.setKakaoUsageMenu(false, null);
-                        makeYammToast(R.string.kakao_disconnect_success, Toast.LENGTH_SHORT);
-                        com.kakao.Session.getCurrentSession().close(new SessionCallback() {
+                        SessionCallback callback = new SessionCallback() {
                             @Override
                             public void onSessionOpened() {
-
+                                Log.d("MainActivity/onSessionOpened","Kakao Opened");
                             }
 
                             @Override
                             public void onSessionClosed(KakaoException e) {
                                 Log.d("MainActivity/onSessionClosed","Kakao Closed");
                             }
-                        });
+                        };
+
+                        makeYammToast(R.string.kakao_disconnect_success, Toast.LENGTH_SHORT);
+                        com.kakao.Session.initializeSession(MainActivity.this, callback);
+                        com.kakao.Session.getCurrentSession().close(callback);
                     }
 
                     @Override
@@ -773,7 +784,85 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         };
     }
 
-        public void showTutorial(){
+    private View.OnClickListener getPasswordChangeHandler(){
+        return new View.OnClickListener() {
+            private EditText messageText, messageText2;
+
+            @Override
+            public void onClick(View v) {
+
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_password_change);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                messageText = (EditText) dialog.findViewById(R.id.dialog_edit_text);
+                messageText2 = (EditText) dialog.findViewById(R.id.dialog_edit_text_2);
+
+                Button positiveButton = (Button) dialog.findViewById(R.id.dialog_positive_button);
+                Button negativeButton = (Button) dialog.findViewById(R.id.dialog_negative_button);
+                ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
+
+                View.OnClickListener dismissListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismissCurrentDialog();
+                    }
+                };
+                messageText.setTransformationMethod(new HiddenPassTransformationMethod());
+                messageText2.setTransformationMethod(new HiddenPassTransformationMethod());
+                closeButton.setOnClickListener(dismissListener);
+
+
+                positiveButton.setOnClickListener(getPositiveListener());
+                negativeButton.setOnClickListener(dismissListener);
+
+                dialog.show();
+                showSoftKeyboard(messageText, MainActivity.this);
+                messageText.requestFocus();
+
+                currentDialog = dialog;
+            }
+
+            private View.OnClickListener getPositiveListener(){
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (messageText.getText().toString().equals(messageText2.getText().toString())) {
+                            if (messageText.getText().toString().length() < 8 ||
+                                    !messageText.getText().toString().matches("^.*[0-9~!@#\\$%\\^&\\*\\(\\)_\\+\\-=` \\{}\\|\\[\\]\\\\:\";'<>\\?,\\.\\/].*$")){
+                                makeYammToast(R.string.password_format_error_message, Toast.LENGTH_SHORT);
+                                return ;
+                            }
+                            final Dialog dialog = createFullScreenDialog(MainActivity.this, getString(R.string.progress_dialog_message));
+                            dialog.show();
+                            YammAPIAdapter.getTokenService().changePassword(messageText.getText().toString(), new Callback<String>() {
+                                @Override
+                                public void success(String s, Response response) {
+                                    Log.d("MainActivity/getPasswordChangeHandler", "Password Change Done");
+                                    makeYammToast(R.string.password_change_success, Toast.LENGTH_SHORT);
+                                    dialog.dismiss();
+                                    dismissCurrentDialog();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    Log.e("MainActivity/getPasswordChangeHandler", "Password Change Error");
+                                    makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                        else
+                            makeYammToast(R.string.verification_pw_not_identical, Toast.LENGTH_SHORT);
+                    }
+                };
+            }
+        };
+    }
+
+
+    public void showTutorial(){
         drawerLayout.closeDrawers();
         tutorial = new TutorialFragment();
 
@@ -785,14 +874,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         Log.i("MainFragmentInterface/showTutorial","Set TUTORIAL prefs to false");
     }
 
-    /*
-    * Contact Reading Methods
-    * */
-    private static final String[] PROJECTION = new String[] {
-            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-            ContactsContract.Contacts.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.DATA
-    };
+/*
+* Contact Reading Methods
+* */
+private static final String[] PROJECTION = new String[] {
+        ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+        ContactsContract.Contacts.DISPLAY_NAME,
+        ContactsContract.CommonDataKinds.Phone.DATA
+};
 
     public void readContacts(){
         phoneNameMap = new HashMap<String, String>();
@@ -849,7 +938,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     @Override
                     public void success(YammAPIService.RawFriends rawFriends, Response response) {
                         friendsList = rawFriends.getFriendsList();
-                        Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+                        Log.i("MainActivity/sendContactsToServer", "Friend List Loaded " + friendsList);
                         setContactNames();
                         BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
                     }
@@ -863,7 +952,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         }
                         Log.e("MainActivity/sendContactsToServer", "Phone Sending Failed");
                     }
-                });
+                }
+        );
     }
 
     private void setContactNames(){
@@ -886,29 +976,29 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         return s;
     }
 
-    public class ReadContactAsyncTask extends AsyncTask<Integer, Integer, Integer>{
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            friendsList = null;
-            readContacts();
-            sendContactsToServer();
-            return 1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-        }
+public class ReadContactAsyncTask extends AsyncTask<Integer, Integer, Integer>{
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
     }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+        friendsList = null;
+        readContacts();
+        sendContactsToServer();
+        return 1;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
 }
 

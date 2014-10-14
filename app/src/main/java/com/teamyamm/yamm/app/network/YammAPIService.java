@@ -337,6 +337,10 @@ public interface YammAPIService {
     @DELETE("/user/kakao")
     void disconnectKakao(Callback<String> callback);
 
+    @FormUrlEncoded
+    @PUT ("/user/password")
+    void changePassword(@Field("password") String password, Callback<String> callback);
+
 
     @Deprecated
     @FormUrlEncoded
