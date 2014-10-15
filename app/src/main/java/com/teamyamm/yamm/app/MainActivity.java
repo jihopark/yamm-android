@@ -93,8 +93,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
         }
 
-
-
         setLeftDrawer();
         loadYammFragment();
     }
@@ -120,12 +118,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         //To disable swipe open
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         checkIfPushTokenIsIssued();
-    }
-
-    @Override
-    public void onPostResume(){
-        super.onPostResume();
-       // loadDishes();
     }
 
     @Override

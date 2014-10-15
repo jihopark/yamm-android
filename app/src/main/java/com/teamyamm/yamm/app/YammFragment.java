@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -17,16 +18,21 @@ import com.teamyamm.yamm.app.network.MixpanelController;
  * Created by parkjiho on 10/15/14.
  */
 public class YammFragment extends Fragment {
+    public final static int TODAY = 1;
+    public final static int LUNCH = 2;
+    public final static int DINNER = 3;
+
 
     private RelativeLayout main_layout;
     private ImageButton friendPickButton;
+    private Button lunchButton, dinnerButton, todayButton;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_yamm, container, false);
 
         setFriendPickButton();
-
+        setButtons();
         return main_layout;
     }
 
@@ -34,6 +40,36 @@ public class YammFragment extends Fragment {
     public void onStart(){
         super.onStart();
         friendPickButton.setEnabled(true);
+    }
+
+    private void setButtons(){
+        lunchButton = (Button) main_layout.findViewById(R.id.today_lunch_button);
+        lunchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToYammActivity(LUNCH);
+            }
+        });
+        dinnerButton = (Button) main_layout.findViewById(R.id.today_dinner_button);
+        dinnerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToYammActivity(DINNER);
+            }
+        });
+        todayButton = (Button) main_layout.findViewById(R.id.today_yamm_button);
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToYammActivity(TODAY);
+            }
+        });
+    }
+
+    private void goToYammActivity(int type){
+        Intent intent = new Intent(getActivity(), YammActivity.class);
+        intent.putExtra("TYPE",type);
+        startActivity(intent);
     }
 
     private void setFriendPickButton(){
