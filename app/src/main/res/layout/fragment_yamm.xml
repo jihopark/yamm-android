@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="#ff574d44"
+        android:id="@+id/friend_pick_button_container">
+        <ImageButton
+            style="@style/FriendPickButton"
+            android:src="@drawable/yamm_friend"
+            android:id="@+id/friends_pick_button"
+            android:text="@string/friend_pick_button"
+            />
+    </RelativeLayout>
+    <Button
+        android:layout_below="@+id/friend_pick_button_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/today_lunch_button"
+        android:text="오늘 점심"/>
+    <Button
+        android:layout_below="@+id/today_lunch_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/today_dinner_button"
+        android:text="오늘 저녁"/>
+    <Button
+        android:layout_below="@+id/today_dinner_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘의 얌"
+        android:id="@+id/today_yamm_button"/>
+</RelativeLayout>

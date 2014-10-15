@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -76,7 +75,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
     protected boolean isLeftMenuLoaded = false;
-    private ImageButton friendPickButton;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
 
@@ -98,7 +96,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
 
         setLeftDrawer();
-        setFriendPickButton();
+        loadYammFragment();
     }
 
     @Override
@@ -110,8 +108,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
         drawerLayout.closeDrawers();
 
-
-        friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
@@ -129,8 +125,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     public void onPostResume(){
         super.onPostResume();
-        loadDishes();
-
+       // loadDishes();
     }
 
     @Override
@@ -177,12 +172,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         return prefs.getBoolean(TUTORIAL, true);
     }
 
-    public boolean isFriendLoaded(){
-        String value = prefs.getString(getString(R.string.FRIEND_LIST),"none");
-
-        return value != "none";
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -225,8 +214,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
 
-
-
+    private void loadYammFragment(){
+        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+        YammFragment yammFragment = new YammFragment();
+        tact.add(R.id.main_layout, yammFragment).commit();
+    }
 
     private void setMainFragment(){
         if (dishItems == null){
@@ -274,6 +266,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     * Loads dish IDs from Server
     * Returns true if there is a new recommendation
     * */
+
+
+    @Deprecated
     private void loadDishes(){
 
         if (fullScreenDialog==null) {
@@ -420,28 +415,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
         return true;
-    }
-
-    private void setFriendPickButton(){
-        friendPickButton = (ImageButton) findViewById(R.id.friends_pick_button);
-
-        friendPickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isFriendLoaded()) {
-                    makeYammToast(R.string.friend_not_loaded_message, Toast.LENGTH_LONG);
-                    return;
-                }
-                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                v.setEnabled(false); //To prevent double fire
-                Log.i("MainActivity/onClick", "FriendActivity called");
-
-                MixpanelController.trackEnteredGroupRecommendationMixpanel();
-
-                startActivity(intent);
-            }
-        });
     }
 
     /*
