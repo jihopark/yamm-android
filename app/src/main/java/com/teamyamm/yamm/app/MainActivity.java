@@ -14,6 +14,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import com.teamyamm.yamm.app.pojos.LeftDrawerItem;
 import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.util.YammLeftDrawerAdapter;
+import com.teamyamm.yamm.app.widget.SearchWidget;
 import com.teamyamm.yamm.app.widget.TutorialFragment;
 
 import java.lang.reflect.Type;
@@ -69,6 +71,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private ReadContactAsyncTask readContactAsyncTask;
+    private SearchWidget searchWidget;
 
     private List<DishItem> dishItems;
     private Dialog fullScreenDialog;
@@ -92,7 +95,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.logo_padding), 0,(int) getResources().getDimension(R.dimen.logo_padding), 0);
             Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
         }
-
+        setCustomActionBar();
         setLeftDrawer();
         loadYammFragment();
     }
@@ -132,7 +135,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             tutorial.dismissAllowingStateLoss();
 
         readContactAsyncTask.cancel(true);
-
+        searchWidget.toggle(false);
         super.onStop();
     }
 
@@ -196,6 +199,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public YammLeftDrawerAdapter getLeftDrawerAdapter(){return leftDrawerAdapter;}
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    private void setCustomActionBar(){
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME);
+        searchWidget = new SearchWidget(MainActivity.this);
+        getSupportActionBar().setCustomView(searchWidget.getCustomView());
+    }
+
     private void saveDishItemsInPref(){
         Log.i("MainActivity/savedishItemsInPref", "List saved in Pref");
 
@@ -459,6 +468,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {

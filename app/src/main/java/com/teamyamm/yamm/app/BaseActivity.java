@@ -584,7 +584,7 @@ public class BaseActivity extends ActionBarActivity {
             e.printStackTrace();
         }
     }
-    protected static void showSoftKeyboard(View view, Activity activity){
+    public static void showSoftKeyboard(View view, Activity activity){
         try {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);

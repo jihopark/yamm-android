@@ -200,6 +200,9 @@
     <string name="oauth_login_failure">가입되지 않은 계정입니다\n먼저 가입해주세요</string>
     <string name="no_other_authentication_error">다른 인증방식이 없습니다\n먼저 비밀번호를 설정해주세요</string>
     <string name="already_registered_error">이미 다른 계정과 연동되어있습니다</string>
+
+    <string name="search_text_view_hint">메뉴를 입력하세요</string>
+
     <!-- Friends Activity & Fragment -->
 
     <string name="friend_invite_button">친구초대</string>
