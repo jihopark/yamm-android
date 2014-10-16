@@ -124,6 +124,7 @@ public class BaseActivity extends ActionBarActivity {
         uiHelper.onCreate(savedInstanceState);
 
 
+
         //Check If WTFException was Handled
         if (getIntent().getExtras()!=null) {
             if (getIntent().getExtras().get("error")!=null) {
@@ -133,6 +134,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
 
+        checkAppVersion();
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));
@@ -213,6 +215,39 @@ public class BaseActivity extends ActionBarActivity {
 
     public static boolean checkIfAppIsRunning(){
         return isAppRunning;
+    }
+
+
+    private void checkAppVersion(){
+        YammAPIAdapter.getService().getClientInfo(new Callback<YammAPIService.RawClientInfo>() {
+            View.OnClickListener positiveListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent;
+                    try {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+                    }
+                    startActivity(intent);
+                    dismissCurrentDialog();
+                }
+            };
+
+            @Override
+            public void success(YammAPIService.RawClientInfo rawClientInfo, Response response) {
+                Log.d("BaseActivity/checkAppVersion","Checking App Version... " + rawClientInfo.android_version );
+                if (!rawClientInfo.android_version.equals(getString(R.string.app_version_name))){
+                    createDialog(BaseActivity.this, 0, R.string.check_app_version_message,
+                            R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
     }
 
     /*

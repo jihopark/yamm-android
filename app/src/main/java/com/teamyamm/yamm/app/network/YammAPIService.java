@@ -22,6 +22,13 @@ import retrofit.http.Query;
 public interface YammAPIService {
 
 
+    @GET("/client-info")
+    void getClientInfo(Callback<RawClientInfo> callback);
+
+    public static class RawClientInfo{
+        public String android_version;
+    }
+
     //User Registration
     @FormUrlEncoded
     @POST("/registration/facebook")

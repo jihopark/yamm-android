@@ -131,6 +131,9 @@
     <string name="battle_intro_dialog">당신의 입맛을 알아내기 위해\n음식 배틀을 준비했어요\n좋아하는 음식을 골라주세요</string>
     <string name="battle_loading_toast">로딩 중입니다</string>
     <string name="battle_intro_button">시 작</string>
+
+    <string name="check_app_version_message">Yamm의 새로운 버전이 출시되었습니다\n업데이트하시겠습니까?</string>
+
     <!-- Join Activity-->
     <string name="verification_field">인증번호</string>
     <string name="verification_name">이름</string>
