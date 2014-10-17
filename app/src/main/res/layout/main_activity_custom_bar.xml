@@ -5,7 +5,7 @@
     <AutoCompleteTextView
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_width="150dp"
+        android:layout_width="@dimen/search_text_width"
         android:textSize="12sp"
         android:layout_height="wrap_content"
         android:hint="@string/search_text_view_hint"

@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.util.DishSearchListAdapter;
 
 /**
  * Created by parkjiho on 10/16/14.
@@ -35,6 +36,8 @@ public class SearchWidget {
         searchButton = (Button) mainView.findViewById(R.id.search_button);
         textView = (AutoCompleteTextView) mainView.findViewById(R.id.search_text_view);
 
+        setAutoCompleteTextView();
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,5 +61,14 @@ public class SearchWidget {
         if (b && context instanceof BaseActivity){
             BaseActivity.showSoftKeyboard(textView, (Activity)context);
         }
+    }
+
+    private void setAutoCompleteTextView(){
+        textView.setThreshold(1);
+        textView.setSelectAllOnFocus(true);
+
+        DishSearchListAdapter place_adapter =
+                new DishSearchListAdapter(context);
+        textView.setAdapter(place_adapter);
     }
 }
