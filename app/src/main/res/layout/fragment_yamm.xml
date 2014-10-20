@@ -33,4 +33,10 @@
         android:layout_height="wrap_content"
         android:text="오늘의 얌"
         android:id="@+id/today_yamm_button"/>
+    <Button
+        android:layout_below="@+id/today_yamm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘 술안주"
+        android:id="@+id/today_drink_button"/>
 </RelativeLayout>

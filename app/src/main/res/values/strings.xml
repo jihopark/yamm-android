@@ -264,6 +264,8 @@
     <string name="today_yamm_title">오늘의 얌</string>
     <string name="today_lunch_message">오늘 점심에는 이런 메뉴 어떠세요?</string>
     <string name="today_dinner_message">오늘 저녁에는 이런 메뉴 어떠세요?</string>
+    <string name="today_drink_title">오늘 술안주</string>
+    <string name="today_drink_message">오늘은 어떤 안주와 한잔?</string>
 
 
     <!-- Tutorial Fragment -->

@@ -19,8 +19,8 @@ import java.util.List;
  * Created by parkjiho on 10/15/14.
  */
 public class YammActivity extends BaseActivity implements MainFragmentInterface {
-    private final static int[] titleResId = {R.string.today_yamm_title, R.string.today_lunch_title, R.string.today_dinner_title};
-    private final static int[] messageResId = {0, R.string.today_lunch_message, R.string.today_dinner_message};
+    private final static int[] titleResId = {R.string.today_yamm_title, R.string.today_lunch_title, R.string.today_dinner_title, R.string.today_drink_title};
+    private final static int[] messageResId = {0, R.string.today_lunch_message, R.string.today_dinner_message, R.string.today_drink_message};
 
 
     private Dialog fullScreenDialog;

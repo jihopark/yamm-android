@@ -21,11 +21,13 @@ public class YammFragment extends Fragment {
     public final static int TODAY = 1;
     public final static int LUNCH = 2;
     public final static int DINNER = 3;
+    public final static int DRINK = 4;
+
 
 
     private RelativeLayout main_layout;
     private ImageButton friendPickButton;
-    private Button lunchButton, dinnerButton, todayButton;
+    private Button lunchButton, dinnerButton, todayButton, drinkButton;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +64,13 @@ public class YammFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goToYammActivity(TODAY);
+            }
+        });
+        drinkButton = (Button) main_layout.findViewById(R.id.today_drink_button);
+        drinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToYammActivity(DRINK);
             }
         });
     }
