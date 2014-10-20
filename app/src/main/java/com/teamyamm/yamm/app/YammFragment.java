@@ -49,35 +49,36 @@ public class YammFragment extends Fragment {
         lunchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(LUNCH);
+                goToYammActivity(LUNCH, false);
             }
         });
         dinnerButton = (Button) main_layout.findViewById(R.id.today_dinner_button);
         dinnerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(DINNER);
+                goToYammActivity(DINNER, true);
             }
         });
         todayButton = (Button) main_layout.findViewById(R.id.today_yamm_button);
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(TODAY);
+                goToYammActivity(TODAY, true);
             }
         });
         drinkButton = (Button) main_layout.findViewById(R.id.today_drink_button);
         drinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(DRINK);
+                goToYammActivity(DRINK, true);
             }
         });
     }
 
-    private void goToYammActivity(int type){
+    private void goToYammActivity(int type, boolean b){
         Intent intent = new Intent(getActivity(), YammActivity.class);
         intent.putExtra("TYPE",type);
+        intent.putExtra("LOADNEWDISHES", b);
         startActivity(intent);
     }
 

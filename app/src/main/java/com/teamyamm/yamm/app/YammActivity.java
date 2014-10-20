@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.DishItem;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 10/15/14.
@@ -21,14 +25,16 @@ import java.util.List;
 public class YammActivity extends BaseActivity implements MainFragmentInterface {
     private final static int[] titleResId = {R.string.today_yamm_title, R.string.today_lunch_title, R.string.today_dinner_title, R.string.today_drink_title};
     private final static int[] messageResId = {0, R.string.today_lunch_message, R.string.today_dinner_message, R.string.today_drink_message};
+    private final String[] suggestionType = {"lunch","dinner"};
 
 
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private TextView titleText;
     private int type;
-    private List<DishItem> dishItems;
+    private List<DishItem> dishes;
     private MainFragment mainFragment;
+    private boolean shouldLoadNewDishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
 
         try {
             type = getIntent().getExtras().getInt("TYPE");
+            shouldLoadNewDishes = getIntent().getExtras().getBoolean("LOADNEWDISHES");
         }catch(NullPointerException e){
             Log.e("YammActivity/initActivity","Type should be set for Yamm Activity.");
             finish();
@@ -56,34 +63,76 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
         else{
             //Today's Yamm Title
         }
-        loadDishes();
+        if (shouldLoadNewDishes)
+            loadNewDishes();
+        else{
+            loadOldDishes();
+        }
     }
 
-    private void loadDishes(){
+    private void loadOldDishes(){
+        String s = prefs.getString(suggestionType[type-2], "");
+        if (s.equals("")){
+            loadNewDishes();
+            return ;
+        }
+        dishes = new Gson().fromJson(s, DISH_ITEM_LIST_TYPE);
+        setMainFragment(false);
+    }
+
+    private void loadNewDishes(){
+
         fullScreenDialog = createFullScreenDialog(YammActivity.this, getString(R.string.dialog_main));
         isDialogOpen = true;
         fullScreenDialog.show();
 
-        dishItems = new ArrayList<DishItem>();
-        dishItems.add(new DishItem(181, "팟타이","맛있는"));
-        dishItems.add(new DishItem(182, "팟죽","맛있는"));
-        dishItems.add(new DishItem(183, "피자","맛있는"));
-        dishItems.add(new DishItem(184, "함박스테이크","맛있는"));
+        if (type == YammFragment.DINNER || type == YammFragment.LUNCH) {
+            Log.e("YammActivity/loadDishes","Request Dishes " + suggestionType[type-2]);
+            YammAPIAdapter.getTokenService().getSuggestion(suggestionType[type-2], new Callback<List<DishItem>>() {
+                @Override
+                public void success(List<DishItem> dishItems, Response response) {
+                    Log.i("YammActivity/getSuggestion/success",suggestionType[type-2] + " " + dishItems);
+                    dishes = dishItems;
+                    saveDishInPrefs();
+                    setMainFragment(true);
+                }
 
-        setMainFragment();
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    Log.e("YammActivity/getSuggestion/failure","Failure");
+                    if (retrofitError.isNetworkError())
+                        makeYammToast(R.string.network_error_message, Toast.LENGTH_SHORT);
+                    else
+                        makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                    fullScreenDialog.dismiss();
+                    finish();
+                }
+            });
+        }
+        else{
+            dishes = new ArrayList<DishItem>();
+            dishes.add(new DishItem(181, "팟타이", "맛있는"));
+            dishes.add(new DishItem(182, "팟죽", "맛있는"));
+            dishes.add(new DishItem(183, "피자", "맛있는"));
+            dishes.add(new DishItem(184, "함박스테이크", "맛있는"));
+            setMainFragment(true);
+        }
     }
 
-    private void setMainFragment(){
-        if (dishItems == null)
-            return ;
+    private void saveDishInPrefs(){
+        putInPref(prefs, suggestionType[type-2], new Gson().toJson(dishes, DISH_ITEM_LIST_TYPE));
+        Log.d("YammActivity/saveDishInPrefs","Save Dish in Pref " + suggestionType[type-2]);
+    }
 
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
+    private void setMainFragment(boolean shouldPerformAnimation){
+        if (dishes == null)
+            return ;
 
 
         Bundle bundle = new Bundle();
-        bundle.putString("dishes", new Gson().toJson(dishItems, type));
+        bundle.putString("dishes", new Gson().toJson(dishes, DISH_ITEM_LIST_TYPE));
         bundle.putBoolean("isGroup", false);
-
+        bundle.putBoolean("shouldPerform", shouldPerformAnimation);
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
 

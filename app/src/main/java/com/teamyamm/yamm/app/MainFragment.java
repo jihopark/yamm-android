@@ -128,12 +128,16 @@ public class MainFragment extends Fragment {
 
         Log.i("MainFragment/onDetach","Detaching all other components");
         dishPager.setOnPageChangeListener(null);
-        buttonAnimation.setAnimationListener(null);
-        mainBarAnimation.setAnimationListener(null);
-        buttonAnimation.cancel();
-        mainBarAnimation.cancel();
-        textAnimation1.cancel();
-        textAnimation2.cancel();
+
+        if (buttonAnimation!=null && mainBarAnimation!=null && buttonAnimation!=null
+                && mainBarAnimation!=null && textAnimation1!=null && textAnimation2!=null) {
+            buttonAnimation.setAnimationListener(null);
+            mainBarAnimation.setAnimationListener(null);
+            buttonAnimation.cancel();
+            mainBarAnimation.cancel();
+            textAnimation1.cancel();
+            textAnimation2.cancel();
+        }
 
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
@@ -164,6 +168,8 @@ public class MainFragment extends Fragment {
 
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
+        hasPerformed = !bundle.getBoolean("shouldPerform");
+
     }
 
     public ImageButton getButton(int viewId){

@@ -243,6 +243,7 @@ public interface YammAPIService {
         }
     }
 
+    @Deprecated
     @GET("/preferences/suggestions")
     void getPersonalDishes(Callback<List<DishItem>> cb);
 
@@ -272,6 +273,18 @@ public interface YammAPIService {
                 this.detail = detail;
         }
     }
+
+    /*
+    * Personal Recommendation
+    * */
+
+    //suggestionType SHOULD BE "lunch" or "dinner"
+    @GET("/suggestion/personal")
+    void getSuggestion(@Query("suggestionType") String type, Callback<List<DishItem>> cb);
+
+    /*
+    * Group Recommendation
+    * */
 
     @GET("/group/suggestions")
     void getGroupSuggestions(@Query("mealType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);

@@ -56,6 +56,7 @@ import com.teamyamm.yamm.app.interfaces.FriendListInterface;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
@@ -75,6 +76,8 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
+    public final static Type DISH_ITEM_LIST_TYPE = new TypeToken<List<DishItem>>(){}.getType();
+
     public final static int KAKAO = 1;
     public final static int FB = 2;
     public final static int PW = 3;
@@ -236,8 +239,8 @@ public class BaseActivity extends ActionBarActivity {
 
             @Override
             public void success(YammAPIService.RawClientInfo rawClientInfo, Response response) {
-                Log.d("BaseActivity/checkAppVersion","Checking App Version... " + rawClientInfo.android_version );
-                if (!rawClientInfo.android_version.equals(getString(R.string.app_version_name))){
+                Log.d("BaseActivity/checkAppVersion", "Checking App Version... " + rawClientInfo.android_version);
+                if (!rawClientInfo.android_version.equals(getString(R.string.app_version_name))) {
                     createDialog(BaseActivity.this, 0, R.string.check_app_version_message,
                             R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
                 }

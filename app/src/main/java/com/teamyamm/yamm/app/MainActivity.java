@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private YammLeftDrawerAdapter leftDrawerAdapter;
 
     private List<DishItem> fullDishList;
-    private final static Type DISH_ITEM_LIST_TYPE = new TypeToken<List<DishItem>>(){}.getType();
 
 
     @Override
@@ -129,7 +128,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public void onStop(){
         Log.i("MainActivity/onStop", "isLoggingOut " + isLoggingOut);
         if (!BaseActivity.isLoggingOut) {
-            saveDishItemsInPref();
+        //    saveDishItemsInPref();
         }
         closeFullScreenDialog();
         drawerLayout.closeDrawers();
