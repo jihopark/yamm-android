@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     private YammLeftDrawerAdapter leftDrawerAdapter;
 
-    private List<DishItem> fullDishList;
+    private List<DishItem> fullDishList = null;
 
 
     @Override
@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
         setLeftDrawer();
         loadYammFragment();
+        getDishListFromServer();
     }
 
     @Override
@@ -192,7 +193,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 startInviteActivity(MainActivity.this);
                 return true;
             case R.id.search_button:
-                searchWidget = new SearchWidget(MainActivity.this);
+                if (fullDishList==null)
+                    return true;
+
+                searchWidget = new SearchWidget(fullDishList, MainActivity.this);
                 searchWidget.showSearchDialog();
                 return true;
             default:
@@ -843,7 +847,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         prefs.edit().putBoolean(TUTORIAL, false).commit();
 
-        Log.i("MainFragmentInterface/showTutorial","Set TUTORIAL prefs to false");
+        Log.i("MainFragmentInterface/showTutorial", "Set TUTORIAL prefs to false");
     }
 
     /*
@@ -973,47 +977,19 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
     }
 
-    /*
-    * Get Dish List From Server
-    * */
-
-
-    public class ReadDishListAsyncTask extends AsyncTask<Integer, Integer, Integer>{
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            readDishListFromPrefs();
-            getDishListFromServer();
-            return 1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-        }
-    }
-
-    private final static String DISH_LIST = "DISH_FULL";
-
-    private void readDishListFromPrefs(){
-        String s = prefs.getString(DISH_LIST,"");
-        if (!s.equals(""))
-            fullDishList = new Gson().fromJson(s, DISH_ITEM_LIST_TYPE);
-        else
-            fullDishList = null;
-    }
-
     private void getDishListFromServer(){
+        YammAPIAdapter.getTokenService().getDishes(new Callback<List<DishItem>>() {
+            @Override
+            public void success(List<DishItem> dishItems, Response response) {
+                Log.d("MainActivity/getDishListFromServer/success","Got List From Server " + dishItems);
+                fullDishList = dishItems;
+            }
 
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("MainActivity/getDishListFromServer/failure","Fail to load Dish from Server");
+            }
+        });
     }
 
 }

@@ -20,13 +20,13 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
 
     private Context context;
     private List<DishItem> items;
-    private ArrayList<DishItem> suggestions;
+    private List<DishItem> suggestions;
 
-    public DishSearchListAdapter(Context context) {
+    public DishSearchListAdapter(List<DishItem> items, Context context) {
         super(context, 0);
         this.context = context;
         this.suggestions = new ArrayList<DishItem>();
-        loadDishes();
+        this.items = items;
     }
 
     @Override
@@ -41,14 +41,6 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
             view.setItem(getItem(position));
         }
         return view;
-    }
-
-    private void loadDishes(){
-        items = new ArrayList<DishItem>();
-        items.add(new DishItem(181, "팟타이","맛있는"));
-        items.add(new DishItem(182, "팟죽","맛있는"));
-        items.add(new DishItem(183, "피자","맛있는"));
-        items.add(new DishItem(184, "함박스테이크","맛있는"));
     }
 
     public DishItem checkIfDishIsPresent(String dish){
@@ -76,15 +68,18 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
     Filter nameFilter = new Filter() {
         @Override
         public String convertResultToString(Object resultValue) {
-            String str = ((DishItem)(resultValue)).getName();
-            return str;
+            if (resultValue!=null) {
+                String str = ((DishItem) (resultValue)).getName();
+                return str;
+            }
+            return "";
         }
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             if(constraint != null) {
                 suggestions.clear();
                 for (DishItem dish : items) {
-                    if(dish.getName().startsWith(constraint.toString())){
+                    if(dish.getName().startsWith(constraint.toString()) || dish.getName().contains(constraint)){
                         Log.d("DishSearchListAdapter/performFiltering","Match " + constraint + " with " + dish.getName());
                         suggestions.add(dish);
                     }

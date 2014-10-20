@@ -274,6 +274,8 @@ public interface YammAPIService {
         }
     }
 
+    @GET("/dish")
+    void getDishes(Callback<List<DishItem>> callback);
     /*
     * Personal Recommendation
     * */

@@ -23,6 +23,8 @@ import com.teamyamm.yamm.app.util.DishSearchListAdapter;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,18 +40,20 @@ public class SearchWidget {
     private Button searchButton;
     private boolean isSearchEnabled = false;
     private DishSearchListAdapter adapter;
+    private List<DishItem> list;
 
-    public SearchWidget(Context context){
+    public SearchWidget(List<DishItem> list, Context context){
+        this.list = list;
         this.context = context;
     }
 
     private void setAutoCompleteTextView(){
-        textView.setThreshold(1);
+        textView.setThreshold(2);
         textView.setSelectAllOnFocus(true);
         textView.requestFocus();
 
         adapter =
-                new DishSearchListAdapter(context);
+                new DishSearchListAdapter(list, context);
         textView.setAdapter(adapter);
         BaseActivity.showSoftKeyboard(textView, (Activity)context);
     }
