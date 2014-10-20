@@ -84,6 +84,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     private YammLeftDrawerAdapter leftDrawerAdapter;
 
+    private List<DishItem> fullDishList;
+    private final static Type DISH_ITEM_LIST_TYPE = new TypeToken<List<DishItem>>(){}.getType();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,10 +207,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private void saveDishItemsInPref(){
         Log.i("MainActivity/savedishItemsInPref", "List saved in Pref");
 
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
-
-
-        putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, type));
+        putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, DISH_ITEM_LIST_TYPE));
     }
 
 
@@ -216,6 +217,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         tact.add(R.id.main_layout, yammFragment).commit();
     }
 
+    @Deprecated
     private void setMainFragment(){
         if (dishItems == null){
             Log.e("MainActivity/setMainFragment","Dishes haven't loaded yet");
@@ -223,7 +225,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
 
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         try {
             if (mainFragment != null) {
@@ -235,7 +236,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
             Bundle bundle = new Bundle();
 
-            bundle.putString("dishes", new Gson().toJson(dishItems, type));
+            bundle.putString("dishes", new Gson().toJson(dishItems, DISH_ITEM_LIST_TYPE));
             bundle.putBoolean("isGroup", false);
 
             MainFragment newMainFragment = new MainFragment();
@@ -370,6 +371,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
+
     private void restoreSavedList(){
         String savedList = prefs.getString(getString(R.string.PREV_DISHES), "none");
 
@@ -384,6 +386,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             Log.i("MainActivity/restoreSavedList", "saved null");
 
     }
+
 
     public void changeInDishItem(List<DishItem> list){
         dishItems = list;
@@ -844,14 +847,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         Log.i("MainFragmentInterface/showTutorial","Set TUTORIAL prefs to false");
     }
 
-/*
-* Contact Reading Methods
-* */
-private static final String[] PROJECTION = new String[] {
-        ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-        ContactsContract.Contacts.DISPLAY_NAME,
-        ContactsContract.CommonDataKinds.Phone.DATA
-};
+    /*
+    * Contact Reading Methods
+    * */
+    private static final String[] PROJECTION = new String[] {
+            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+            ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.DATA
+    };
 
     public void readContacts(){
         phoneNameMap = new HashMap<String, String>();
@@ -946,29 +949,73 @@ private static final String[] PROJECTION = new String[] {
         return s;
     }
 
-public class ReadContactAsyncTask extends AsyncTask<Integer, Integer, Integer>{
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    public class ReadContactAsyncTask extends AsyncTask<Integer, Integer, Integer>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            friendsList = null;
+            readContacts();
+            sendContactsToServer();
+            return 1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+        }
     }
 
-    @Override
-    protected Integer doInBackground(Integer... params) {
-        friendsList = null;
-        readContacts();
-        sendContactsToServer();
-        return 1;
+    /*
+    * Get Dish List From Server
+    * */
+
+
+    public class ReadDishListAsyncTask extends AsyncTask<Integer, Integer, Integer>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            readDishListFromPrefs();
+            getDishListFromServer();
+            return 1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+        }
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
+    private final static String DISH_LIST = "DISH_FULL";
+
+    private void readDishListFromPrefs(){
+        String s = prefs.getString(DISH_LIST,"");
+        if (!s.equals(""))
+            fullDishList = new Gson().fromJson(s, DISH_ITEM_LIST_TYPE);
+        else
+            fullDishList = null;
     }
 
-    @Override
-    protected void onPostExecute(Integer result) {
-        super.onPostExecute(result);
+    private void getDishListFromServer(){
+
     }
-}
+
 }
 
