@@ -49,7 +49,14 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
         items.add(new DishItem(182, "팟죽","맛있는"));
         items.add(new DishItem(183, "피자","맛있는"));
         items.add(new DishItem(184, "함박스테이크","맛있는"));
+    }
 
+    public DishItem checkIfDishIsPresent(String dish){
+        for (DishItem i : items){
+            if (dish.equals(i.getName()))
+                return i;
+        }
+        return null;
     }
 
     public DishItem getItem(int p){

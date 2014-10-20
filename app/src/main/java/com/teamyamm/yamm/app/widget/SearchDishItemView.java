@@ -1,11 +1,13 @@
 package com.teamyamm.yamm.app.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
@@ -23,8 +25,8 @@ public class SearchDishItemView extends RelativeLayout {
         super(context);
         this.context = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        SearchDishItemView layout = (SearchDishItemView) inflater.inflate(R.layout.search_dish_item_view, this, true);
-        tv = (TextView) layout.findViewById(R.id.dish_name_text);
+        SearchDishItemView layout = (SearchDishItemView) inflater.inflate(R.layout.place_pick_item, this, true);
+        tv = (TextView) layout.findViewById(R.id.pick_field);
         setItem(item);
         setClick();
     }
@@ -38,6 +40,7 @@ public class SearchDishItemView extends RelativeLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                BaseActivity.hideSoftKeyboard((Activity) context);
                 LocationSearchHelper.startMapActivity(context, item);
             }
         });

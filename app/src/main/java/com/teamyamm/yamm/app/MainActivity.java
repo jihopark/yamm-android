@@ -14,7 +14,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -95,7 +94,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.logo_padding), 0,(int) getResources().getDimension(R.dimen.logo_padding), 0);
             Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
         }
-        setCustomActionBar();
         setLeftDrawer();
         loadYammFragment();
     }
@@ -135,7 +133,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             tutorial.dismissAllowingStateLoss();
 
         readContactAsyncTask.cancel(true);
-        searchWidget.toggle(false);
         super.onStop();
     }
 
@@ -171,7 +168,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.invite_button_actions, menu);
+        inflater.inflate(R.menu.main_buttons_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -191,6 +188,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             case R.id.friend_invite_button:
                 startInviteActivity(MainActivity.this);
                 return true;
+            case R.id.search_button:
+                searchWidget = new SearchWidget(MainActivity.this);
+                searchWidget.showSearchDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -199,12 +200,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     public YammLeftDrawerAdapter getLeftDrawerAdapter(){return leftDrawerAdapter;}
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
-    private void setCustomActionBar(){
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME);
-        searchWidget = new SearchWidget(MainActivity.this);
-        getSupportActionBar().setCustomView(searchWidget.getCustomView());
-    }
-
     private void saveDishItemsInPref(){
         Log.i("MainActivity/savedishItemsInPref", "List saved in Pref");
 

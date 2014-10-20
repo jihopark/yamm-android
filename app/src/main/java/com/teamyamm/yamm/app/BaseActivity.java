@@ -575,10 +575,10 @@ public class BaseActivity extends ActionBarActivity {
         return gson.fromJson(s, typeOfDest);
     }
 
-    protected static void hideSoftKeyboard(Activity activity) {
+    public static void hideSoftKeyboard(Activity activity) {
         try {
-            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }catch(Exception e){
             Log.i("BaseActivity/hideSoftKeyboard","Exception in softkeyboard manipulation");
             e.printStackTrace();
@@ -587,7 +587,7 @@ public class BaseActivity extends ActionBarActivity {
     public static void showSoftKeyboard(View view, Activity activity){
         try {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }catch(Exception e){
             Log.i("BaseActivity/showSoftKeyboard","Exception in softkeyboard manipulation");
             e.printStackTrace();

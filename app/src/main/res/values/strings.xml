@@ -25,6 +25,7 @@
     <string name="title_activity_place">음식점 정보</string>
     <string name="title_fragment_phone_auth">휴대폰 인증</string>
 
+
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정합니다</string>
     <string name="location_error">위치를 확인할 수가 없습니다</string>
@@ -104,6 +105,12 @@
     <string name="place_pick_title">음식점 검색</string>
     <string name="place_pick_message">드시고 싶은 위치에서 음식점을 검색해 보세요.</string>
 
+    <string name="search_button">검색</string>
+    <string name="dish_search_pick_title">음식 선택</string>
+    <string name="dish_search_pick_message">먹고 싶은 음식을 골라주세요</string>
+    <string name="dish_search_dialog_positive">찾아줘!</string>
+    <string name="no_matching_dish_error">해당 음식을 검색할 수 없습니다</string>
+
     <string name="password_change_dialog_title">비밀번호 변경</string>
 
     <!-- Intro Activity -->
@@ -153,6 +160,7 @@
     <string name="verification_done_message">인증되었습니다</string>
     <string name="join_confirm_button">가입하기</string>
     <string name="verification_pw_not_identical">비밀번호가 일치하지 않습니다</string>
+
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
     <string name="login_pw">비밀번호</string>
