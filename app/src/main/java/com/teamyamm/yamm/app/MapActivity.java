@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.teamyamm.yamm.app.network.GeocodeAPIService;
-import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
@@ -163,7 +162,6 @@ public class MapActivity extends BaseActivity implements
 
         if (x==0 && y==0) {
             findCurrentLocation();
-            MixpanelController.trackSearchMapMixpanel(currentLocation);
         }
     }
 

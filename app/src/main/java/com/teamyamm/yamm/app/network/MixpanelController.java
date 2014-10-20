@@ -386,6 +386,38 @@ public class MixpanelController {
             trackRecommendationsMixpanel(i, type);
     }
 
+    public static void trackEnteredSearchDish() {
+        if (!checkMixpanelAPI())
+            return;
 
+        JSONObject props = new JSONObject();
+
+        mixpanel.track("Entered Search Dish", props);
+        Log.i("MixpanelController/trackEnteredSearchDishMixpanel", "Entered Search Dish Tracked");
+    }
+
+    public static void trackSearchDishMixpanel(DishItem item) {
+        if (!checkMixpanelAPI())
+            return;
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Dish", item.getName());
+        } catch (JSONException e) {
+            Log.e("MixpanelController/trackSearchDishMixpanel", "JSON Error");
+        }
+        mixpanel.track("Search Dish", props);
+        Log.i("MixpanelController/trackSearchDishMixpanel", "Search Dish Tracked");
+    }
+
+    public static void trackEnteredPlaceMixpanel() {
+        if (!checkMixpanelAPI())
+            return;
+
+        JSONObject props = new JSONObject();
+
+        mixpanel.track("Entered Place", props);
+        Log.i("MixpanelController/trackEnteredPlaceMixpanel", "Entered Place Tracked");
+    }
 
 }

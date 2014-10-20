@@ -433,7 +433,7 @@ public class MainFragment extends Fragment {
         searchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showLocationDialog();
+                MixpanelController.trackSearchMapMixpanel("");
                 LocationSearchHelper.startMapActivity(getActivity(), getCurrentDishItem());
                 addDishToPositive(SEARCH_MAP, "", getCurrentDishItem());
             }

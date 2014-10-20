@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.DishSearchListAdapter;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
@@ -46,6 +47,8 @@ public class SearchWidget {
     }
 
     public void showSearchDialog(){
+        MixpanelController.trackEnteredSearchDish();
+
         final Dialog dialog = new Dialog(context);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,6 +85,7 @@ public class SearchWidget {
                 if (item!=null){
                     BaseActivity.hideSoftKeyboard((Activity)context);
                     dialog.dismiss();
+                    MixpanelController.trackSearchDishMixpanel(item);
                     LocationSearchHelper.startMapActivity(context, item);
                 }
                 else{

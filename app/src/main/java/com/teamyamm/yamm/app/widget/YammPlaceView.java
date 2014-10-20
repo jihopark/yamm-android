@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.PlaceActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 
 /**
@@ -61,6 +62,7 @@ public class YammPlaceView extends RelativeLayout {
                 intent.putExtra(PlaceActivity.YAMM_PLACE, gson.toJson(i, new TypeToken<YammPlace>() {
                 }.getType()));
 
+                MixpanelController.trackEnteredPlaceMixpanel();
                 context.startActivity(intent);
             }
         });
