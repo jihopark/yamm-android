@@ -801,7 +801,7 @@ public class BaseActivity extends ActionBarActivity {
     *
     * */
 
-    protected void invalidToken(){
+    public void invalidToken(){
         makeYammToast(R.string.invalid_token_error, Toast.LENGTH_LONG);
         logOut();
     }

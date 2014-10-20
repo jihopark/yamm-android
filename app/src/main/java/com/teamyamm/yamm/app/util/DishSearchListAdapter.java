@@ -60,7 +60,12 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
     }
 
     public DishItem getItem(int p){
-        return suggestions.get(p);
+        try {
+            return suggestions.get(p);
+        }catch(IndexOutOfBoundsException e){
+            Log.e("DishSearchListAdapter/getItem","Index out of bounds");
+            return null;
+        }
     }
 
     @Override

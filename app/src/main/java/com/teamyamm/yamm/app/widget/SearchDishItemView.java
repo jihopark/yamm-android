@@ -33,6 +33,8 @@ public class SearchDishItemView extends RelativeLayout {
     }
 
     public void setItem(DishItem item){
+        if (item == null)
+            return ;
         this.item = item;
         tv.setText(item.getName());
     }

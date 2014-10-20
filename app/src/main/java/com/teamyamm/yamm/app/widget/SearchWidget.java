@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -15,9 +16,16 @@ import android.widget.Toast;
 import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.network.MixpanelController;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.DishSearchListAdapter;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
+import com.teamyamm.yamm.app.util.WTFExceptionHandler;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 10/16/14.
@@ -57,18 +65,11 @@ public class SearchWidget {
 
         textView = (AutoCompleteTextView) dialog.findViewById(R.id.dish_search_autocomplete_text);
 
-        //ImageButton setMap = (ImageButton) dialog.findViewById(R.id.map_icon);
         ImageButton negative = (ImageButton) dialog.findViewById(R.id.dish_search_dialog_negative_button);
         Button positive = (Button) dialog.findViewById(R.id.dish_search_dialog_positive_button);
 
         setAutoCompleteTextView();
 
-        /*setMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(mContext.getString(R.string.place_pick_edit_text));
-            }
-        });*/
         negative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +86,7 @@ public class SearchWidget {
                 if (item!=null){
                     BaseActivity.hideSoftKeyboard((Activity)context);
                     dialog.dismiss();
+                    addDishToPositive(item);
                     MixpanelController.trackSearchDishMixpanel(item);
                     LocationSearchHelper.startMapActivity(context, item);
                 }
@@ -99,5 +101,40 @@ public class SearchWidget {
         });
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    private void addDishToPositive(DishItem item){
+        final String category = "SEARCHDISH";
+
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        Log.d("SearchWidget/addDishToPositive", "Like " + item.getName() + " SEARCHDISH");
+
+        if (service==null) {
+            if (context instanceof BaseActivity) {
+                ((BaseActivity) context).invalidToken();
+                WTFExceptionHandler.sendLogToServer(context, "WTF Invalid Token Error @DishFragment/addDishToPositive");
+            }
+            return ;
+        }
+
+        service.postLikeDish(new YammAPIService.RawLike(item.getId(), category, ""), new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("SearchWidget/postLikeDish","Success " + s);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("SearchWidget/addDishToPositive", "Invalid Token, Logging out");
+                    if (context instanceof BaseActivity) {
+                        ((BaseActivity) context).invalidToken();
+                        return ;
+                    }
+                }
+            }
+        });
     }
 }
