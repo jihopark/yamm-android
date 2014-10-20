@@ -13,6 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.teamyamm.yamm.app.network.MixpanelController;
+import com.teamyamm.yamm.app.network.YammAPIAdapter;
+import com.teamyamm.yamm.app.network.YammAPIService;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by parkjiho on 10/15/14.
@@ -28,6 +34,7 @@ public class YammFragment extends Fragment {
     private RelativeLayout main_layout;
     private ImageButton friendPickButton;
     private Button lunchButton, dinnerButton, todayButton, drinkButton;
+    private boolean isLunchNew = true, isDinnerNew = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,19 +51,25 @@ public class YammFragment extends Fragment {
         friendPickButton.setEnabled(true);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        checkIfNewRecommendation();
+    }
+
     private void setButtons(){
         lunchButton = (Button) main_layout.findViewById(R.id.today_lunch_button);
         lunchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(LUNCH, false);
+                goToYammActivity(LUNCH, isLunchNew);
             }
         });
         dinnerButton = (Button) main_layout.findViewById(R.id.today_dinner_button);
         dinnerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(DINNER, true);
+                goToYammActivity(DINNER, isDinnerNew);
             }
         });
         todayButton = (Button) main_layout.findViewById(R.id.today_yamm_button);
@@ -109,4 +122,22 @@ public class YammFragment extends Fragment {
 
         return value != "none";
     }
+
+    private void checkIfNewRecommendation(){
+        YammAPIAdapter.getTokenService().checkIfNewSuggestion(new Callback<YammAPIService.RawCheck>() {
+            @Override
+            public void success(YammAPIService.RawCheck rawCheck, Response response) {
+                isLunchNew = rawCheck.lunch;
+                isDinnerNew = rawCheck.dinner;
+                Log.d("YammFragment/checkIfNewRecommendation", "IsLunchNew " + isLunchNew + " IsDinnerNew " + isDinnerNew);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("YammFragment/checkIfNewReommendation","Error in checking new recommendation");
+            }
+        });
+    }
+
+
 }

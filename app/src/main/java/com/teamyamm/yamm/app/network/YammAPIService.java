@@ -276,6 +276,7 @@ public interface YammAPIService {
 
     @GET("/dish")
     void getDishes(Callback<List<DishItem>> callback);
+
     /*
     * Personal Recommendation
     * */
@@ -284,6 +285,13 @@ public interface YammAPIService {
     @GET("/suggestion/personal")
     void getSuggestion(@Query("suggestionType") String type, Callback<List<DishItem>> cb);
 
+    @GET("/suggestion/personal-check-new")
+    void checkIfNewSuggestion(Callback<RawCheck> cb);
+
+    public static class RawCheck{
+        public boolean lunch;
+        public boolean dinner;
+    }
     /*
     * Group Recommendation
     * */
