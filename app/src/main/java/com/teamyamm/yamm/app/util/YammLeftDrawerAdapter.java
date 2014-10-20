@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class YammLeftDrawerAdapter extends BaseAdapter {
     private final static int pushUsageIndex = 3;
-    private final static int fbUsageIndex = 4;
-    private final static int kakaoUsageIndex = 5;
+    private final static int fbUsageIndex = 3;
+    private final static int kakaoUsageIndex = 4;
 
 
     private List<LeftDrawerItem> items;
@@ -122,7 +122,7 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
 
     private class LeftDrawerItemView extends RelativeLayout{
         private final int[] iconRes = {R.drawable.sidemenu_icon_01, R.drawable.sidemenu_icon_03,
-                                          R.drawable.sidemenu_icon_02, R.drawable.sidemenu_icon_04,R.drawable.sidemenu_icon_04, R.drawable.sidemenu_icon_04,
+                                          R.drawable.sidemenu_icon_02,R.drawable.sidemenu_icon_04, R.drawable.sidemenu_icon_04,
                                             R.drawable.sidemenu_icon_05};
 
         private LeftDrawerItem item;

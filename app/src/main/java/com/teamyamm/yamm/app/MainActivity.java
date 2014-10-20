@@ -537,11 +537,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 1, null, notReady));
         leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_pw), getString(R.string.left_drawer_change_pw), 2, null, getPasswordChangeHandler()));
 
-        if (getRegistrationId(MainActivity.this).isEmpty())
+      /*  if (getRegistrationId(MainActivity.this).isEmpty())
             leftDrawerAdapter.setPushUsageMenu(false);
         else
             leftDrawerAdapter.setPushUsageMenu(true);
-
+*/
         if (fbUid.isEmpty())
             leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
         else
@@ -553,7 +553,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
 
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",6, new View.OnClickListener() {
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
@@ -574,7 +574,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 status = "TESTING";
 
             if (!status.isEmpty())
-                leftDrawerAdapter.addMenuItems(new LeftDrawerItem(status,"",7,null));
+                leftDrawerAdapter.addMenuItems(new LeftDrawerItem(status,"",6,null));
         }
 
 
@@ -783,6 +783,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     @Override
                     public void onClick(View v) {
                         dismissCurrentDialog();
+                        BaseActivity.hideSoftKeyboard(MainActivity.this);
                     }
                 };
                 messageText.setTransformationMethod(new HiddenPassTransformationMethod());
