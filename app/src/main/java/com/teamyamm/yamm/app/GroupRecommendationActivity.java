@@ -195,6 +195,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         Bundle bundle = new Bundle();
         bundle.putString("dishes", new Gson().toJson(dishItems, type));
         bundle.putBoolean("isGroup", true);
+        bundle.putBoolean("shouldPerform",true);
 
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
