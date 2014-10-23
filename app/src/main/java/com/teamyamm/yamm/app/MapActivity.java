@@ -40,7 +40,7 @@ import retrofit.client.Response;
 public class MapActivity extends BaseActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
-    private final int DEFAULT_ZOOM_LEVEL = 14;
+    public final static int DEFAULT_ZOOM_LEVEL = 15;
     private final double DEFAULT_RADIUS = 1.5;
 
 
@@ -165,13 +165,23 @@ public class MapActivity extends BaseActivity implements
         }
     }
 
-    private void findCurrentLocation(){
+    private void findCurrentLocation() {
         Location mCurrentLocation = mLocationClient.getLastLocation();
 
-        x = mCurrentLocation.getLatitude();
-        y = mCurrentLocation.getLongitude();
-        setMapCamera(x, y);
-        setTextViews(LocationSearchHelper.getAddressFromLocation(x,y,MapActivity.this));
+        if (mCurrentLocation == null) {
+            Log.e("MapActivity/findCurrentLocation", "Location Connected " + mLocationClient.isConnected());
+            Log.e("MapActivity/findCurrentLocation", "Cannot get Location");
+            mLocationClient.connect();
+            x = 0;
+            y = 0;
+            makeYammToast(R.string.location_error, Toast.LENGTH_SHORT);
+        }
+        else{
+            x = mCurrentLocation.getLatitude();
+            y = mCurrentLocation.getLongitude();
+            setMapCamera(x, y);
+            setTextViews(LocationSearchHelper.getAddressFromLocation(x, y, MapActivity.this));
+        }
     }
 
     private void setTextViews(String place){

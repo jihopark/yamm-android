@@ -29,7 +29,6 @@ public class PlaceActivity extends BaseActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    private final int DEFAULT_ZOOM_LEVEL = 14;
     private final double DEFAULT_RADIUS = 1.5;
 
 
@@ -119,7 +118,7 @@ public class PlaceActivity extends BaseActivity implements
         if (map!=null) {
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(place.lat, place.lng)).zoom(DEFAULT_ZOOM_LEVEL).build();
+                    .target(new LatLng(place.lat, place.lng)).zoom(MapActivity.DEFAULT_ZOOM_LEVEL+1).build();
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(place.lat, place.lng))
