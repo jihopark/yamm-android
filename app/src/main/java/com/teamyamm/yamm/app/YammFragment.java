@@ -24,17 +24,17 @@ import retrofit.client.Response;
  * Created by parkjiho on 10/15/14.
  */
 public class YammFragment extends Fragment {
-    public final static int TODAY = 1;
-    public final static int LUNCH = 2;
-    public final static int DINNER = 3;
-    public final static int DRINK = 4;
+    public final static int TODAY = 0;
+    public final static int LUNCH = 1;
+    public final static int DINNER = 2;
+    public final static int DRINK = 3;
 
 
 
     private RelativeLayout main_layout;
     private ImageButton friendPickButton;
     private Button lunchButton, dinnerButton, todayButton, drinkButton;
-    private boolean isLunchNew = true, isDinnerNew = true;
+    private boolean isLunchNew = true, isDinnerNew = true, isTodayNew = true, isAlcoholNew = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,14 +76,14 @@ public class YammFragment extends Fragment {
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(TODAY, true);
+                goToYammActivity(TODAY, isTodayNew);
             }
         });
         drinkButton = (Button) main_layout.findViewById(R.id.today_drink_button);
         drinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToYammActivity(DRINK, true);
+                goToYammActivity(DRINK, isAlcoholNew);
             }
         });
     }
@@ -129,7 +129,11 @@ public class YammFragment extends Fragment {
             public void success(YammAPIService.RawCheck rawCheck, Response response) {
                 isLunchNew = rawCheck.lunch;
                 isDinnerNew = rawCheck.dinner;
+                isAlcoholNew = rawCheck.alcohol;
+                isTodayNew = rawCheck.today;
                 Log.d("YammFragment/checkIfNewRecommendation", "IsLunchNew " + isLunchNew + " IsDinnerNew " + isDinnerNew);
+                Log.d("YammFragment/checkIfNewRecommendation", "IsAlcoholNew " + isAlcoholNew + " IsTodayNew " + isTodayNew);
+
             }
 
             @Override

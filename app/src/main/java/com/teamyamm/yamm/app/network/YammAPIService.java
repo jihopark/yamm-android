@@ -283,14 +283,18 @@ public interface YammAPIService {
 
     //suggestionType SHOULD BE "lunch" or "dinner"
     @GET("/suggestion/personal")
-    void getSuggestion(@Query("suggestionType") String type, Callback<List<DishItem>> cb);
+    void getSuggestion(@Query("suggestionType") String type, Callback<RawSuggestion> cb);
+
+    public static class RawSuggestion{
+        public String title;
+        public List<DishItem> dishes;
+    }
 
     @GET("/suggestion/personal-check-new")
     void checkIfNewSuggestion(Callback<RawCheck> cb);
 
     public static class RawCheck{
-        public boolean lunch;
-        public boolean dinner;
+        public boolean lunch, dinner, alcohol, today;
     }
     /*
     * Group Recommendation
