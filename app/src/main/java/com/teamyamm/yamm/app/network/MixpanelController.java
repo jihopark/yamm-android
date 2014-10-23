@@ -338,6 +338,7 @@ public class MixpanelController {
         Log.i("MixpanelController/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
     }
 
+    @Deprecated
     public static void trackNewRecommendationMixpanel(){
         if (!checkMixpanelAPI())
             return ;
@@ -346,6 +347,42 @@ public class MixpanelController {
         mixpanel.track("New Recommendation", props);
         Log.i("MixpanelController/trackNewRecommendationMixpanel","New Recommendation Tracked ");
 
+    }
+
+    public static void trackTodayLunchMixpanel(){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        mixpanel.track("Today Lunch", props);
+        Log.i("MixpanelController/trackTodayLunchMixpanel","Today Lunch Tracked ");
+    }
+
+    public static void trackTodayDinnerMixpanel(){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        mixpanel.track("Today Dinner", props);
+        Log.i("MixpanelController/trackTodayDinnerMixpanel","Today Dinner Tracked ");
+    }
+
+    public static void trackTodayAlcoholMixpanel(){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        mixpanel.track("Today Alcohol", props);
+        Log.i("MixpanelController/trackTodayAlcoholMixpanel","Today Alcohol Tracked ");
+    }
+
+    public static void trackTodayYammMixpanel(){
+        if (!checkMixpanelAPI())
+            return ;
+
+        JSONObject props = new JSONObject();
+        mixpanel.track("Today Yamm", props);
+        Log.i("MixpanelController/trackTodayYammMixpanel","Today Yamm Tracked ");
     }
 
     public static void trackEnteredGroupRecommendationMixpanel(){

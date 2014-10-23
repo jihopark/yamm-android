@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
@@ -97,7 +98,7 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
                     saveMessageInPrefs(suggestion.title);
                     messageText.setText(suggestion.title);
                 }
-
+                trackNewRecommendation();
                 setMainFragment(true);
             }
 
@@ -143,6 +144,22 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
             tact.commitAllowingStateLoss();
         }catch (IllegalStateException e){
             Log.e("YammActivity/setFragment","Activity Destroyed");
+        }
+    }
+
+    private void trackNewRecommendation(){
+        switch (type){
+            case YammFragment.LUNCH:
+                MixpanelController.trackTodayLunchMixpanel();
+                break;
+            case YammFragment.DINNER:
+                MixpanelController.trackTodayDinnerMixpanel();
+                break;
+            case YammFragment.TODAY:
+                MixpanelController.trackTodayYammMixpanel();
+                break;
+            case YammFragment.DRINK:
+                MixpanelController.trackTodayAlcoholMixpanel();
         }
     }
 
