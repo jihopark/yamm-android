@@ -1,42 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/login_background">
     <RelativeLayout
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="#ff574d44"
-        android:id="@+id/friend_pick_button_container">
-        <ImageButton
-            style="@style/FriendPickButton"
-            android:src="@drawable/yamm_friend"
-            android:id="@+id/friends_pick_button"
-            android:text="@string/friend_pick_button"
-            />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_centerInParent="true">
+        <Button
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="125dp"
+            android:layout_height="152dp"
+            android:background="@drawable/today_yamm_button"
+            android:id="@+id/today_yamm_button"/>
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/today_yamm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/buttons_container1">
+            <Button
+                style="@style/YammMainButton"
+                android:background="@drawable/friends_pick_button"
+                android:id="@+id/friends_pick_button"
+                />
+            <View
+                android:visibility="invisible"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"/>
+            <Button
+                style="@style/YammMainButton"
+                android:background="@drawable/today_lunch_button"
+                android:id="@+id/today_lunch_button"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="39dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/buttons_container1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                style="@style/YammMainButton"
+                android:background="@drawable/today_dinner_button"
+                android:id="@+id/today_dinner_button"/>
+            <View
+                android:visibility="invisible"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"/>
+            <Button
+                style="@style/YammMainButton"
+                android:background="@drawable/today_drink_button"
+                android:id="@+id/today_drink_button"/>
+        </LinearLayout>
     </RelativeLayout>
-    <Button
-        android:layout_below="@+id/friend_pick_button_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/today_lunch_button"
-        android:text="오늘 점심"/>
-    <Button
-        android:layout_below="@+id/today_lunch_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/today_dinner_button"
-        android:text="오늘 저녁"/>
-    <Button
-        android:layout_below="@+id/today_dinner_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="오늘의 얌"
-        android:id="@+id/today_yamm_button"/>
-    <Button
-        android:layout_below="@+id/today_yamm_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="오늘 술안주"
-        android:id="@+id/today_drink_button"/>
 </RelativeLayout>

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -32,8 +31,8 @@ public class YammFragment extends Fragment {
 
 
     private RelativeLayout main_layout;
-    private ImageButton friendPickButton;
-    private Button lunchButton, dinnerButton, todayButton, drinkButton;
+    private Button friendPickButton, todayButton;
+    private Button lunchButton, dinnerButton, drinkButton;
     private boolean isLunchNew = true, isDinnerNew = true, isTodayNew = true, isAlcoholNew = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +95,7 @@ public class YammFragment extends Fragment {
     }
 
     private void setFriendPickButton(){
-        friendPickButton = (ImageButton) main_layout.findViewById(R.id.friends_pick_button);
+        friendPickButton = (Button) main_layout.findViewById(R.id.friends_pick_button);
 
         friendPickButton.setOnClickListener(new View.OnClickListener() {
             @Override
