@@ -300,8 +300,8 @@ public interface YammAPIService {
     * Group Recommendation
     * */
 
-    @GET("/group/suggestions")
-    void getGroupSuggestions(@Query("mealType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
+    @GET("/suggestion/group")
+    void getGroupSuggestions(@Query("suggestionType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
 
     @POST("/group/next-suggestion")
     void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
