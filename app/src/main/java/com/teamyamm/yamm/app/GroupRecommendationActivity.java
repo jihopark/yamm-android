@@ -227,7 +227,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             return ;
         }
         String meal = getMealType();
-        service.getGroupSuggestions(meal, userIds, new Callback<List<DishItem>>() {
+        service.getOldGroupSuggestions(meal, userIds, new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishes, Response response) {
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);

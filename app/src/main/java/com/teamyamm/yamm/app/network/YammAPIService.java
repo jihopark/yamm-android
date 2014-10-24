@@ -300,6 +300,10 @@ public interface YammAPIService {
     * Group Recommendation
     * */
 
+    @Deprecated
+    @GET("/group/suggestions")
+    void getOldGroupSuggestions(@Query("mealType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
+
     @GET("/suggestion/group")
     void getGroupSuggestions(@Query("suggestionType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
 
