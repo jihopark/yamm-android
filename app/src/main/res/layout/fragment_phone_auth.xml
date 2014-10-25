@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/phone_auth_field"
         android:hint="@string/verification_field"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:imeOptions="actionDone"/>
     <Button
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
