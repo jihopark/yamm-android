@@ -3,6 +3,8 @@ package com.teamyamm.yamm.app.widget;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +100,40 @@ public class PhoneAuthFragment extends Fragment {
                     pwRegistration(((NewJoinActivity)getActivity()).getPassword());
             }
         });
+        auth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 4){
+                    enableConfirmButton(true);
+                }
+                else{
+                    enableConfirmButton(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void enableConfirmButton(boolean b){
+        if (b){
+            confirm.setEnabled(true);
+            confirm.setBackgroundResource(R.drawable.enabled_round_button);
+            confirm.setTextColor(getResources().getColor(R.color.button_enabled_text));
+        }
+        else{
+            confirm.setEnabled(false);
+            confirm.setBackgroundResource(R.drawable.disabled_round_button);
+            confirm.setTextColor(getResources().getColor(R.color.button_disabled_text));
+        }
     }
 
     private void kakaoRegistration(String token){

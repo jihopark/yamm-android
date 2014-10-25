@@ -121,6 +121,7 @@ public class NewJoinActivity extends BaseActivity {
                             FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
                             if (fragment!=null)
                                 tact.remove(fragment).commit();
+                            enableEditTextsFocus(true);
                             fragment = null;
                             dismissCurrentDialog();
                             isFragmentShown = false;
@@ -138,6 +139,13 @@ public class NewJoinActivity extends BaseActivity {
                         removeOAuthSessions();
                     }
                 },null).show();
+    }
+
+    private void enableEditTextsFocus(boolean b){
+        Log.d("NewJoinActivity/enableEditTextsFocus","Text Focus " + b);
+        nameField.setEnabled(b);
+        pwField.setEnabled(b);
+        phoneField.setEnabled(b);
     }
 
     private void removeOAuthSessions(){
@@ -396,6 +404,7 @@ public class NewJoinActivity extends BaseActivity {
         fragment.setArguments(bundle);
         android.support.v4.app.FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         tact.add(R.id.phone_auth_fragment_container, fragment).commit();
+        enableEditTextsFocus(false);
         isFragmentShown = true;
     }
 
@@ -403,6 +412,14 @@ public class NewJoinActivity extends BaseActivity {
         enablePhoneAuthRequest = isNameDone && isPhoneDone && isPWDone && isCheckDone;
         Log.d("NewJoinActivity/setPhoneAuthButtonEnable","Enable Button " + enablePhoneAuthRequest);
         phoneAuthRequest.setEnabled(enablePhoneAuthRequest);
+        if (enablePhoneAuthRequest){
+            phoneAuthRequest.setBackgroundResource(R.drawable.enabled_round_button);
+            phoneAuthRequest.setTextColor(getResources().getColor(R.color.button_enabled_text));
+        }
+        else{
+            phoneAuthRequest.setBackgroundResource(R.drawable.disabled_round_button);
+            phoneAuthRequest.setTextColor(getResources().getColor(R.color.button_disabled_text));
+        }
     }
 
     private void configPhoneEditText(){
