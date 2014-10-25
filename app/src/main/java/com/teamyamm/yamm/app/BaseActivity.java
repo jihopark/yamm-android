@@ -1036,10 +1036,7 @@ public class BaseActivity extends ActionBarActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to server");
-                if (BaseActivity.this instanceof MainActivity){
-                    MainActivity activity = (MainActivity) BaseActivity.this;
-                    activity.getLeftDrawerAdapter().setPushUsageMenu(true);
-                }
+
             }
 
             @Override

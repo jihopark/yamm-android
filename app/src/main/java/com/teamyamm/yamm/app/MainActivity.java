@@ -820,6 +820,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                                     makeYammToast(R.string.password_change_success, Toast.LENGTH_SHORT);
                                     dialog.dismiss();
                                     dismissCurrentDialog();
+                                    BaseActivity.hideSoftKeyboard(MainActivity.this);
                                 }
 
                                 @Override
