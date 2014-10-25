@@ -1,6 +1,8 @@
 package com.teamyamm.yamm.app;
 
+import android.content.Intent;
 import android.content.IntentSender;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -104,8 +106,11 @@ public class PlaceActivity extends BaseActivity implements
 
         tv = (TextView) findViewById(R.id.phone_text);
         tv.setText(place.phone);
+
         if (place.phone.equals(""))
             tv.setVisibility(View.GONE);
+        else
+            tv.setOnClickListener(createPhoneIntentListener());
 
         tv = (TextView) findViewById(R.id.type_text);
         tv.setText(place.type);
@@ -126,6 +131,17 @@ public class PlaceActivity extends BaseActivity implements
                     .position(new LatLng(place.lat, place.lng))
                     .title(place.name));
         }
+    }
+
+    private View.OnClickListener createPhoneIntentListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+place.phone));
+                startActivity(intent);
+            }
+        };
     }
 
     @Override
