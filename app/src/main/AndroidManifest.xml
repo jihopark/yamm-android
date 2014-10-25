@@ -66,7 +66,7 @@
             android:name="com.teamyamm.yamm.app.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/YammLoginActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.IntroActivity" />
@@ -85,7 +85,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.JoinActivity"
             android:label="@string/title_activity_join"
-            android:theme="@style/YammJoinActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.IntroActivity" />
@@ -101,7 +101,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.FriendActivity"
             android:label="@string/title_activity_friend"
-            android:theme="@style/YammFriendActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
@@ -111,7 +111,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.InviteActivity"
             android:label="@string/title_activity_invite"
-            android:theme="@style/YammInviteActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.FriendActivity" />
@@ -121,7 +121,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.GroupRecommendationActivity"
             android:label="@string/title_activity_group_recommendation"
-            android:theme="@style/YammGroupRecommendationActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
@@ -142,7 +142,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.PokeActivity"
             android:label="@string/title_activity_poke"
-            android:theme="@style/YammPokeActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
