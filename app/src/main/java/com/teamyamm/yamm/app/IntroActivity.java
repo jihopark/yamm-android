@@ -192,8 +192,7 @@ public class IntroActivity extends BaseActivity {
     * */
 
     private void setKakaoAuth(){
-        com.kakao.widget.LoginButton kakaoButton = joinFragment.getKakaoJoinButton();
-        //kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
+
     }
 
     private class KakaoSessionStatusCallback implements SessionCallback {
