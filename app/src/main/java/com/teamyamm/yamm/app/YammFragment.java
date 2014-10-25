@@ -38,6 +38,9 @@ public class YammFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         main_layout = (RelativeLayout) inflater.inflate(R.layout.fragment_yamm, container, false);
+        Log.d("YammFragment/onCreateView","Create View ");
+        Log.d("YammFragment/onCreateView", "IsLunchNew " + isLunchNew + " IsDinnerNew " + isDinnerNew);
+        Log.d("YammFragment/onCreateView", "IsAlcoholNew " + isAlcoholNew + " IsTodayNew " + isTodayNew);
 
         setFriendPickButton();
         setButtons();

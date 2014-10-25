@@ -48,7 +48,8 @@
             android:name="com.teamyamm.yamm.app.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/YammLogoActionBarTheme"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask">
         </activity>
 
         <!-- Intro Screen -->

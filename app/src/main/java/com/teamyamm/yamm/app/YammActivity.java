@@ -91,6 +91,11 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
         YammAPIAdapter.getTokenService().getSuggestion(suggestionType[type], new Callback<YammAPIService.RawSuggestion>() {
             @Override
             public void success(YammAPIService.RawSuggestion suggestion, Response response) {
+                if (!isSameDishes(suggestion.dishes)) {
+                    Log.i("YammActivity/isSameDishes","Different Dishes");
+                    trackNewRecommendation();
+                }
+
                 dishes = suggestion.dishes;
                 Log.i("YammActivity/getSuggestion/success",suggestionType[type] + " " + dishes);
                 saveDishInPrefs();
@@ -98,7 +103,6 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
                     saveMessageInPrefs(suggestion.title);
                     messageText.setText(suggestion.title);
                 }
-                trackNewRecommendation();
                 setMainFragment(true);
             }
 
@@ -113,6 +117,24 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
                 finish();
             }
         });
+    }
+
+    private boolean isSameDishes(List<DishItem> newDishes){
+        String s = prefs.getString(suggestionType[type], "");
+
+        if (s.equals(""))
+            return false;
+
+        dishes = new Gson().fromJson(s, DISH_ITEM_LIST_TYPE);
+
+        for (int i=0;i<4;i++){
+           if (!dishes.get(i).equals(newDishes.get(i)))
+               return false;
+        }
+        Log.i("YammActivity/isSameDishes","Same Dishes");
+
+        return true;
+
     }
 
     private void saveDishInPrefs(){
