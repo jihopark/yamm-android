@@ -23,7 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,7 +57,7 @@ public class MainFragment extends Fragment {
     private RelativeLayout main_layout;
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
-    private ImageButton nextLeft, nextRight, searchMap, pokeFriend, dislike;
+    private ImageButton nextLeft, nextRight, searchMap, pokeFriend;
 
     private List<DishItem> dishItems;
     private int currentPage = 0;
@@ -89,8 +88,6 @@ public class MainFragment extends Fragment {
         nextRight = (ImageButton) main_layout.findViewById(R.id.dish_next_right_button);
         searchMap = (ImageButton) main_layout.findViewById(R.id.search_map_button);
         pokeFriend = (ImageButton) main_layout.findViewById(R.id.poke_friend_button);
-        dislike = (ImageButton) main_layout.findViewById(R.id.dish_dislike_button);
-
 
         initFragment();
         setDishPager();
@@ -116,9 +113,7 @@ public class MainFragment extends Fragment {
             Log.d("MainFragment/onResume","Is not Performing. Show Buttons");
             configureNextButtons(currentPage, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             searchMap.setVisibility(View.VISIBLE);
-            dislike.setVisibility(View.VISIBLE);
             pokeFriend.setVisibility(View.VISIBLE);
-            dislike.setVisibility(View.VISIBLE);
         }
     }
 
@@ -203,7 +198,7 @@ public class MainFragment extends Fragment {
         setNextButtons();
         setPokeButton();
         setSearchButton();
-        setDislikeButton();
+        //  setDislikeButton();
     }
 
     public ViewPager getDishPager(){
@@ -291,7 +286,7 @@ public class MainFragment extends Fragment {
             setNextButtons();
             setPokeButton();
             setSearchButton();
-            setDislikeButton();
+           //setDislikeButton();
 
             if (i == DEFAULT_NUMBER_OF_DISHES - 1){
                 SharedPreferences pref = null;
@@ -445,7 +440,8 @@ public class MainFragment extends Fragment {
             }
         });
     }
-
+    /*
+    @Deprecated
     private void setDislikeButton(){
         final View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
@@ -507,6 +503,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    @Deprecated
     public void changeInDishItem(DishItem original, DishItem replace){
         Log.i("MainFragment/changeInDishItem","Original " + original + " Replace    " + replace);
         for (int i = 0; i < dishItems.size() ; i++){
@@ -522,10 +519,9 @@ public class MainFragment extends Fragment {
 
 
         ((MainFragmentInterface)getActivity()).changeInDishItem(dishItems);
-    }
+    }*/
 
     private void toggleEnableButtons(boolean b){
-        dislike.setEnabled(b);
         searchMap.setEnabled(b);
         pokeFriend.setEnabled(b);
         nextRight.setEnabled(b);
@@ -547,7 +543,6 @@ public class MainFragment extends Fragment {
         buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
         buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha2);
         buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha3);
-        buttonAnimation4 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha4);
 
         mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
@@ -562,7 +557,6 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                //dislike.startAnimation(buttonAnimation3);
             }
 
             @Override
@@ -570,7 +564,7 @@ public class MainFragment extends Fragment {
 
             }
         });
-        buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
+        /*buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 dislike.setVisibility(View.VISIBLE);
@@ -585,12 +579,11 @@ public class MainFragment extends Fragment {
             public void onAnimationRepeat(Animation animation) {
 
             }
-        });
-        buttonAnimation4.setAnimationListener(new Animation.AnimationListener() {
+        });*/
+        buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 nextRight.setVisibility(View.VISIBLE);
-
             }
 
             @Override
@@ -636,8 +629,8 @@ public class MainFragment extends Fragment {
             public void onAnimationEnd(Animation animation) {
                 pokeFriend.startAnimation(buttonAnimation);
                 searchMap.startAnimation(buttonAnimation2);
-                dislike.startAnimation(buttonAnimation3);
-                nextRight.startAnimation(buttonAnimation4);
+              //  dislike.startAnimation(buttonAnimation3);
+                nextRight.startAnimation(buttonAnimation3);
             }
 
             @Override
@@ -651,7 +644,7 @@ public class MainFragment extends Fragment {
         nextRight.setVisibility(View.INVISIBLE);
         searchMap.setVisibility(View.INVISIBLE);
         pokeFriend.setVisibility(View.INVISIBLE);
-        dislike.setVisibility(View.INVISIBLE);
+       // dislike.setVisibility(View.INVISIBLE);
 
         if (main.isFullScreenDialogOpen()){
             Handler handler = new Handler();
