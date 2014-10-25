@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class YammKakaoLoginButton extends LoginButton {
 
+    private View mainLayout;
+
     public YammKakaoLoginButton(Context context) {
         super(context);
     }
@@ -38,9 +40,11 @@ public class YammKakaoLoginButton extends LoginButton {
     public YammKakaoLoginButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
         inflate(getContext(), R.layout.kakao_login_layout, this);
         setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

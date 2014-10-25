@@ -142,6 +142,9 @@
     <string name="check_app_version_message">Yamm의 새로운 버전이 출시되었습니다\n업데이트하시겠습니까?</string>
 
     <!-- Join Activity-->
+    <string name="fb_join_text">페이스북으로 로그인</string>
+    <string name="kakao_join_text">카카오톡으로 로그인</string>
+
     <string name="verification_field">인증번호</string>
     <string name="verification_name">이름</string>
     <string name="verification_email">이메일 주소</string>

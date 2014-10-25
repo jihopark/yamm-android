@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -51,19 +52,29 @@ public class JoinFragment extends Fragment {
     }
 
     public void setLoginButton(){
-        loginSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity)getActivity()).goToActivity(LoginActivity.class);
-                }
-            }
-        };
+        loginSpan = new NonUnderlinedClickableSpan();
+
         TextView tv = (TextView) rootView.findViewById(R.id.login_text);
         SpannableString s = new SpannableString(getString(R.string.intro_login_text));
         s.setSpan(loginSpan, s.length()-3, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(s);
         tv.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    public class NonUnderlinedClickableSpan extends ClickableSpan
+    {
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            ds.setColor(getResources().getColor(R.color.join_fragment_span_color));
+            ds.setUnderlineText(false);
+        }
+
+        @Override
+        public void onClick(View widget) {
+            if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity)getActivity()).goToActivity(LoginActivity.class);
+            }
+        }
     }
 
 }

@@ -9,19 +9,45 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:id="@+id/intro_button_layout">
-        <com.facebook.widget.LoginButton
-            xmlns:fb="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fb_auth_button"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="27dp"
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:id="@+id/login_text"/>
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp"
-            fb:login_text="페이스북으로 시작하기"
-            fb:logout_text="페이스북으로 시작하기"
-            android:textSize="20sp"
-            />
+            android:layout_marginBottom="12dp">
+            <com.facebook.widget.LoginButton
+                xmlns:fb="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/fb_auth_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                fb:login_text=""
+                fb:logout_text=""
+                android:textSize="20sp"
+                />
+            <ImageView
+                android:src="@drawable/signup_icon_facebook"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="13dp"/>
+            <TextView
+                android:text="@string/fb_join_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:textColor="#ffffffff"/>
+            </RelativeLayout>
         <com.teamyamm.yamm.app.widget.YammKakaoLoginButton
             android:id="@+id/kakao_login_button"
             android:layout_width="match_parent"
@@ -33,17 +59,10 @@
             />
         <Button
             style="@style/IntroButton"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="18dp"
             android:textColor="#ffffffff"
             android:background="@drawable/enabled_round_button"
             android:text="@string/intro_join_button"
             android:id="@+id/join_button"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="18dp"
-            android:textColor="#ffffffff"
-            android:id="@+id/login_text"/>
     </LinearLayout>
 </RelativeLayout>

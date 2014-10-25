@@ -105,6 +105,7 @@ public class IntroActivity extends BaseActivity {
     private void setFBAuth(){
         LoginButton button = joinFragment.getFacebookJoinButton();
         button.setReadPermissions("public_profile", "email");
+        button.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
         button.setBackgroundResource(R.drawable.fb_round_button);
     }
 

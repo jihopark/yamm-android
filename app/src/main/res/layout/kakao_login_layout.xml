@@ -11,10 +11,11 @@
         android:layout_marginLeft="13dp"
         android:src="@drawable/signup_icon_kakao"/>
     <TextView
+        android:id="@+id/kakao_login_button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/com_kakao_login_button"
+        android:text="@string/kakao_join_text"
         android:textSize="20sp"
         android:textColor="#ff3c1e1e"/>
 </RelativeLayout>
