@@ -20,16 +20,15 @@
         android:layout_above="@+id/start_button"
         android:layout_marginBottom="34dp"
         />
-    <Button
+    <ImageButton
         style="@style/IntroButton"
         android:layout_marginBottom="18dp"
-        android:textColor="#ffffffff"
         android:background="@drawable/enabled_round_button"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:id="@+id/start_button"
-        android:text="@string/intro_start_button"/>
+        android:src="@drawable/yamm_start_text"/>
     <fragment
         android:name="com.teamyamm.yamm.app.widget.JoinFragment"
         android:id="@+id/join_fragment"

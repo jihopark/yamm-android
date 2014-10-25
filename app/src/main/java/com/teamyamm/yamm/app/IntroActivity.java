@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.facebook.Session;
@@ -87,7 +88,7 @@ public class IntroActivity extends BaseActivity {
     }
 
     private void setStartButton(){
-        Button start = (Button) findViewById(R.id.start_button);
+        ImageButton start = (ImageButton) findViewById(R.id.start_button);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,7 +201,7 @@ public class IntroActivity extends BaseActivity {
         public void onSessionOpened() {
             // 프로그레스바를 보이고 있었다면 중지하고 세션 오픈후 보일 페이지로 이동
             Log.d("IntroActivity/kakao", "Session is open");
-            if (!isLoadingKakao)
+            if (!isLoadingKakao && isFragmentShown)
                 IntroActivity.this.onSessionOpened();
         }
 
