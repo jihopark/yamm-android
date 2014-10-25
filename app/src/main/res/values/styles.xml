@@ -217,6 +217,18 @@
         <item name="android:layout_height">130dp</item>
     </style>
 
+    <style name="CurrentLocationButton">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:paddingRight">21dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/friend_pick_round_button</item>
+    </style>
     <style name="FriendPickButton">
         <item name="android:paddingLeft">9dp</item>
         <item name="android:paddingRight">21dp</item>

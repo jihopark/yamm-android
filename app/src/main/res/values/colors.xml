@@ -15,6 +15,7 @@
     <color name="dialog_content_background">#fff3f1e6</color>
     <color name="place_pick_text_background">#ffc4bfb1</color>
 
+    <color name="place_name_text">#ff626054</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>

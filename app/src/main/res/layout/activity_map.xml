@@ -2,28 +2,50 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-    <Button
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:id="@+id/current_location_text"/>
+        android:layout_height="62dp"
+        android:background="#ff574d44">
+        <Button
+            style="@style/CurrentLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:id="@+id/current_location_text"/>
+        <!--
+        <ImageView
+            android:layout_alignParentLeft="true"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/location"
+            android:layout_marginLeft="39dp"/>
+            -->
+    </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="31dp"
+        android:textSize="15sp"
+        android:textColor="#ffffffff"
+        android:gravity="center"
+        android:background="#ff342e29"
         android:id="@+id/current_page_description"/>
     <fragment
         xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:layout_weight="1"
         android:id="@+id/map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="209dp"
         />
-    <ListView
-        android:layout_weight="1"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/yamm_places_list">
+        android:layout_height="1dp"
+        android:background="#ff342e29"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/yamm_places_list"
+        android:background="@color/light_brown_background">
 
         </ListView>
 </LinearLayout>

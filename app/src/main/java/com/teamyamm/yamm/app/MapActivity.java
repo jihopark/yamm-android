@@ -186,9 +186,13 @@ public class MapActivity extends BaseActivity implements
 
     private void setTextViews(String place){
         currentLocation = place;
-        currentLocationText.setText("현재 위치 : " + currentLocation);
-        descriptionText.setText(currentLocation + " 근처 " + dishName + "에 대한 검색결과입니다");
-
+        if (place.equals("")){
+            currentLocationText.setText("현재 위치");
+        }
+        else {
+            currentLocationText.setText("현재 위치 : " + currentLocation);
+        }
+        descriptionText.setText("근처 " + dishName + "을 드실 수 있는 음식점입니다");
     }
 
     private void setMapCamera(double xx, double yy){

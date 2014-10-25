@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +23,7 @@ public class YammPlaceView extends RelativeLayout {
 
     private RelativeLayout layout;
     private TextView nameText, addressText, distanceText;
-    private Button placeDetailButton;
+    private ImageButton placeDetailButton;
     private Context context;
 
     public YammPlaceView(Context context) {
@@ -42,7 +42,7 @@ public class YammPlaceView extends RelativeLayout {
         nameText = (TextView) layout.findViewById(R.id.name_text);
         addressText = (TextView) layout.findViewById(R.id.address_text);
         distanceText = (TextView) layout.findViewById(R.id.distance_text);
-        placeDetailButton = (Button) layout.findViewById(R.id.place_detail_button);
+        placeDetailButton = (ImageButton) layout.findViewById(R.id.place_detail_button);
 
         setItem(item);
     }
@@ -50,7 +50,7 @@ public class YammPlaceView extends RelativeLayout {
     public void setItem(YammPlace item){
         final YammPlace i = item;
         nameText.setText(item.name);
-        addressText.setText(item.address);
+        addressText.setText(item.getShortenedAddress());
         distanceText.setText(item.getDistanceString());
         placeDetailButton.setOnClickListener(new OnClickListener() {
             @Override

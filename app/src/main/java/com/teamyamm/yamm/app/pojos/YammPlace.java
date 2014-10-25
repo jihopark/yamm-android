@@ -57,7 +57,19 @@ public class YammPlace implements Comparable<YammPlace> {
         for (DishItem dish : dishes) {
             s += dish.getName() + " ";
         }
-        s+="등";
+        s+=" 등";
         return s;
+    }
+    public String getShortenedAddress(){
+        String[] array = address.split(" ");
+        String result = "";
+        for (int i =1; i < array.length ; i++) {
+            result += array[i];
+            result +=" ";
+        }
+        if (result.length() < 25)
+            return result;
+        else
+            return result.substring(0,24)+"...";
     }
 }

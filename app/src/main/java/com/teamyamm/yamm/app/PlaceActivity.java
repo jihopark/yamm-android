@@ -94,6 +94,8 @@ public class PlaceActivity extends BaseActivity implements
             finish();
         }
 
+        setTitle(place.name);
+
         TextView tv = (TextView) findViewById(R.id.name_text);
         tv.setText(place.name);
 
