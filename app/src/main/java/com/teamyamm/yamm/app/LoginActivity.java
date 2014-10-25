@@ -144,7 +144,6 @@ public class LoginActivity extends BaseActivity {
                 String pwd = pwdField.getText().toString();
 
                 if (!(email.equals("") || pwd.equals(""))) {
-                    hideSoftKeyboard(LoginActivity.this);
                     postLoginToServer(email, pwd);
                 }
             }
