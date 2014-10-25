@@ -69,6 +69,10 @@ public class IntroActivity extends BaseActivity {
         if(com.kakao.Session.initializeSession(this, kakaoSessionCallback)){
             Log.d("IntroActivity/kakao", "Initializing Session");
         }
+        else if (com.kakao.Session.getCurrentSession().isOpened()){
+            Log.d("IntroActivity/kakao", "Session Opened");
+            onSessionOpened();
+        }
     }
 
     @Override
@@ -188,7 +192,7 @@ public class IntroActivity extends BaseActivity {
 
     private void setKakaoAuth(){
         com.kakao.widget.LoginButton kakaoButton = joinFragment.getKakaoJoinButton();
-        kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
+        //kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
     }
 
     private class KakaoSessionStatusCallback implements SessionCallback {

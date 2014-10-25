@@ -53,6 +53,10 @@ public class LoginActivity extends BaseActivity {
         if(com.kakao.Session.initializeSession(this, kakaoSessionCallback)){
             Log.d("LoginActivity/kakao", "Initializing Session");
         }
+        else if (com.kakao.Session.getCurrentSession().isOpened()){
+            Log.d("LoginActivity/kakao", "Session Opened");
+            onSessionOpened();
+        }
     }
 
     private void setEditTexts(){
@@ -150,7 +154,8 @@ public class LoginActivity extends BaseActivity {
         });
 
         com.kakao.widget.LoginButton kakaoButton = (com.kakao.widget.LoginButton) findViewById(R.id.kakao_login_button);
-        kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
+
+        //kakaoButton.setLoginSessionCallback(kakaoSessionCallback);
 
         setFBAuth();
     }
