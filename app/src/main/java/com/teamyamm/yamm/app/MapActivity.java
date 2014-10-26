@@ -192,7 +192,7 @@ public class MapActivity extends BaseActivity implements
         else {
             currentLocationText.setText("현재 위치 : " + currentLocation);
         }
-        descriptionText.setText("근처 " + dishName + "을(를) 드실 수 있는 음식점입니다");
+        descriptionText.setText("주변 " + dishName + "을(를) 드실 수 있는 음식점입니다");
     }
 
     private void setMapCamera(double xx, double yy){
@@ -207,7 +207,7 @@ public class MapActivity extends BaseActivity implements
 
     private void loadPlaces(){
         list = (ListView) findViewById(R.id.yamm_places_list);
-
+        list.setEmptyView(findViewById(R.id.empty_view));
         YammAPIAdapter.getTokenService().getPlacesNearby(x,y, DEFAULT_RADIUS , dishId, new Callback<List<YammPlace>>() {
             @Override
             public void success(List<YammPlace> yammPlaces, Response response) {
