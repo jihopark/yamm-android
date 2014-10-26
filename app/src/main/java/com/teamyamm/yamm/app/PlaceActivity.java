@@ -125,7 +125,7 @@ public class PlaceActivity extends BaseActivity implements
         if (map!=null) {
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(place.lat, place.lng)).zoom(MapActivity.DEFAULT_ZOOM_LEVEL+1).build();
+                    .target(new LatLng(place.lat, place.lng)).zoom(MapActivity.DEFAULT_ZOOM_LEVEL+2).build();
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(place.lat, place.lng))
