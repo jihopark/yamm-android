@@ -52,7 +52,8 @@ public class YammPlaceView extends RelativeLayout {
         nameText.setText(item.name);
         addressText.setText(item.getShortenedAddress());
         distanceText.setText(item.getDistanceString());
-        placeDetailButton.setOnClickListener(new OnClickListener() {
+
+        View.OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PlaceActivity.class);
@@ -65,7 +66,9 @@ public class YammPlaceView extends RelativeLayout {
                 MixpanelController.trackEnteredPlaceMixpanel();
                 context.startActivity(intent);
             }
-        });
+        };
+        placeDetailButton.setOnClickListener(listener);
+        this.setOnClickListener(listener);
 
     }
 }
