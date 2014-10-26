@@ -225,6 +225,7 @@ public class LoginActivity extends BaseActivity {
         LoginButton button = (LoginButton) findViewById(R.id.fb_auth_button);
         button.setReadPermissions("public_profile", "email");
         button.setBackgroundResource(R.drawable.fb_round_button);
+        button.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
     }
 
     @Override

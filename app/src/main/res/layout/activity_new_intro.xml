@@ -22,6 +22,8 @@
         />
     <ImageButton
         style="@style/IntroButton"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="18dp"
         android:background="@drawable/enabled_round_button"
         android:layout_alignParentBottom="true"

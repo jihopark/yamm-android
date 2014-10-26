@@ -47,7 +47,7 @@
                 android:layout_centerInParent="true"
                 android:textSize="20sp"
                 android:textColor="#ffffffff"/>
-            </RelativeLayout>
+        </RelativeLayout>
         <com.teamyamm.yamm.app.widget.YammKakaoLoginButton
             android:id="@+id/kakao_login_button"
             android:layout_width="match_parent"
@@ -57,12 +57,26 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="12dp"
             />
-        <Button
-            style="@style/IntroButton"
-            android:layout_marginBottom="18dp"
-            android:textColor="#ffffffff"
-            android:background="@drawable/enabled_round_button"
-            android:text="@string/intro_join_button"
-            android:id="@+id/join_button"/>
+        <RelativeLayout
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                style="@style/IntroButton"
+                android:layout_marginBottom="18dp"
+                android:textColor="#ffffffff"
+                android:background="@drawable/enabled_round_button"
+                android:text="@string/intro_join_button"
+                android:id="@+id/join_button"/>
+            <ImageView
+                android:src="@drawable/signup_icon_yamm"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="13dp"
+                />
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
