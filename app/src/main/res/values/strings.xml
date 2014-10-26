@@ -218,7 +218,7 @@
 
     <string name="friend_invite_button">친구초대</string>
     <string name="friend_pick_confirm_button">같이 먹을 메뉴 보기</string>
-    <string name="friends_list_empty">등록된 얌친이 없습니다\n주소록에 있는 친구들을 초대해보세요</string>
+    <string name="friends_list_empty">등록된 얌친이 없습니다\n주소록에 있는 친구들을\n초대해보세요</string>
     <string name="empty_invite_button">친구 초대</string>
 
     <!-- Invite Activity -->

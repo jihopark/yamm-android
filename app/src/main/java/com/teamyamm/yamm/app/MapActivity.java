@@ -192,7 +192,7 @@ public class MapActivity extends BaseActivity implements
         else {
             currentLocationText.setText("현재 위치 : " + currentLocation);
         }
-        descriptionText.setText("근처 " + dishName + "을 드실 수 있는 음식점입니다");
+        descriptionText.setText("근처 " + dishName + "을(를) 드실 수 있는 음식점입니다");
     }
 
     private void setMapCamera(double xx, double yy){

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="460"
-        android:background="#b2220002"
+        android:background="#b2000000"
         android:id="@+id/dish_views_container">
         <LinearLayout
             android:layout_alignParentTop="true"

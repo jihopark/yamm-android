@@ -61,10 +61,11 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            >
             <Button
                 style="@style/IntroButton"
-                android:layout_marginBottom="18dp"
                 android:textColor="#ffffffff"
                 android:background="@drawable/enabled_round_button"
                 android:text="@string/intro_join_button"
