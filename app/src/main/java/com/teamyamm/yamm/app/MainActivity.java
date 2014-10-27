@@ -80,6 +80,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
 
+    private boolean shouldOpenSearchWidget = false;
+
     private static boolean isLoadingFB = false;
 
     private YammLeftDrawerAdapter leftDrawerAdapter;
@@ -193,11 +195,14 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 startInviteActivity(MainActivity.this);
                 return true;
             case R.id.search_button:
-                if (fullDishList==null)
+                if (fullDishList==null) {
+                    fullScreenDialog = createFullScreenDialog(MainActivity.this, getString(R.string.progress_dialog_message));
+                    fullScreenDialog.show();
+                    shouldOpenSearchWidget = true;
                     return true;
+                }
 
-                searchWidget = new SearchWidget(fullDishList, MainActivity.this);
-                searchWidget.showSearchDialog();
+                showSearchWidget();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -985,6 +990,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             public void success(List<DishItem> dishItems, Response response) {
                 Log.d("MainActivity/getDishListFromServer/success","Got List From Server " + dishItems);
                 fullDishList = dishItems;
+                if (shouldOpenSearchWidget){
+                    if (fullScreenDialog!=null)
+                        fullScreenDialog.dismiss();
+                    showSearchWidget();
+                    shouldOpenSearchWidget = false;
+                }
             }
 
             @Override
@@ -992,6 +1003,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 Log.e("MainActivity/getDishListFromServer/failure","Fail to load Dish from Server");
             }
         });
+    }
+
+    private void showSearchWidget(){
+        searchWidget = new SearchWidget(fullDishList, MainActivity.this);
+        searchWidget.showSearchDialog();
     }
 }
 
