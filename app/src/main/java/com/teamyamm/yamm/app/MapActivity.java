@@ -263,6 +263,8 @@ public class MapActivity extends BaseActivity implements
                 Log.i("MapActivity/getPlacesNearBy/Success", "Succeeded in Getting " + yammPlaces.size() + " Places");
                 fullScreenDialog.dismiss();
                 addMarkers(yammPlaces);
+                if (yammPlaces.isEmpty())
+                    MixpanelController.trackCannotFindPlaceMixpanel(dishName);
             }
 
             @Override

@@ -457,4 +457,18 @@ public class MixpanelController {
         Log.i("MixpanelController/trackEnteredPlaceMixpanel", "Entered Place Tracked");
     }
 
+    public static void trackCannotFindPlaceMixpanel(String dishName){
+        if (!checkMixpanelAPI())
+            return;
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Dish", dishName);
+        } catch (JSONException e) {
+            Log.e("MixpanelController/trackCannotFindPlaceMixpanel", "JSON Error");
+        }
+        mixpanel.track("Cannot Find Place", props);
+        Log.i("MixpanelController/trackCannotFindPlaceMixpanel", "Cannot Find Place");
+    }
+
 }
