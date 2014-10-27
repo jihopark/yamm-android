@@ -591,8 +591,8 @@ public class MainFragment extends Fragment {
                 MainFragmentInterface activity = null;
                 if (getActivity() instanceof MainFragmentInterface)
                     activity = (MainFragmentInterface) getActivity();
-                if (activity!=null && activity.shouldTutorialOpen() && !activity.isLoading())
-                    activity.showTutorial();
+                //if (activity!=null && activity.shouldTutorialOpen() && !activity.isLoading())
+                  //  activity.showTutorial();
             }
 
             @Override

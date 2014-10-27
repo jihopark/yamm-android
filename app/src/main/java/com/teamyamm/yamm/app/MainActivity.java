@@ -558,12 +558,12 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
 
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
+        /*leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
             }
-        }));
+        }));*/
 
         if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
       /*      leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
