@@ -25,14 +25,20 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.network.GeocodeAPIService;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.YammPlacesListAdapter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -63,6 +69,8 @@ public class MapActivity extends BaseActivity implements
     private String currentLocation;
 
     private LocationClient mLocationClient;
+
+    private Map<String, YammPlace> markerMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,10 +156,34 @@ public class MapActivity extends BaseActivity implements
                 map.setMyLocationEnabled(true);
                 if (!(x==0 && y==0))
                     setMapCamera(x,y);
+                map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Log.d("MapActivity/onInfoWindowClickListener", marker.getId() + ":" + marker.getTitle());
+                        YammPlace place = markerMap.get(marker.getId());
+                        if (place!=null){
+                            goToPlaceActivity(place);
+                        }
+                    }
+                });
             }
 
         }
     }
+
+    private void goToPlaceActivity(YammPlace p){
+        Intent intent = new Intent(MapActivity.this, PlaceActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        Gson gson = new Gson();
+        intent.putExtra(PlaceActivity.YAMM_PLACE, gson.toJson(p, new TypeToken<YammPlace>() {
+        }.getType()));
+
+        MixpanelController.trackEnteredPlaceMixpanel();
+        startActivity(intent);
+    }
+
+
 
     private void setCurrentLocationText(){
         currentLocationText.setOnClickListener(new View.OnClickListener() {
@@ -243,10 +275,13 @@ public class MapActivity extends BaseActivity implements
     }
 
     private void addMarkers(List<YammPlace> places){
+        markerMap = new HashMap<String, YammPlace>();
+
         for (YammPlace place : places){
-            map.addMarker(new MarkerOptions()
-            .position(new LatLng(place.lat, place.lng))
-            .title(place.getName()));
+            Marker m = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(place.lat, place.lng))
+                    .title(place.getName()));
+            markerMap.put(m.getId(), place);
         }
     }
 
