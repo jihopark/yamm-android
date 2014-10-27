@@ -309,11 +309,6 @@ public class BaseActivity extends ActionBarActivity {
 
         Intent intent = new Intent(getBaseContext(), nextActivity);
 
-        if (nextActivity == MainActivity.class){
-            Log.i("BaseActivity/goToActivity","Setting flags for MainActivity");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        }
-
         startActivity(intent);
     }
 

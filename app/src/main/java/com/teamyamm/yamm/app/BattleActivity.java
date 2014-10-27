@@ -213,6 +213,11 @@ public class BattleActivity extends BaseActivity {
             finishBattle();
             return ;
         }
+        if (battleCount > totalBattle){
+            retrieveResult();
+            finishBattle();
+            return ;
+        }
 
         bf.setLayoutClickable(false);
         bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this);
