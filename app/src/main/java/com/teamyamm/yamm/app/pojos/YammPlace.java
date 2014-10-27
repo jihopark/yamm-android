@@ -2,6 +2,8 @@ package com.teamyamm.yamm.app.pojos;
 
 import android.util.Log;
 
+import com.teamyamm.yamm.app.util.StringMatcher;
+
 import java.util.List;
 
 /**
@@ -9,13 +11,13 @@ import java.util.List;
  */
 public class YammPlace implements Comparable<YammPlace> {
     public int id;
-    public String name;
+    private String name;
     public String address;
     public double distance;
     public double lat, lng;
     public String phone;
     public String type;
-    public List<DishItem> dishes;
+    private List<DishItem> dishes;
 
     public YammPlace(int id, String name, String address, double distance, double lat, double lng,
                      String phone, String type, List<DishItem> dishes){
@@ -28,6 +30,12 @@ public class YammPlace implements Comparable<YammPlace> {
         this.phone = phone;
         this.type = type;
         this.dishes = dishes;
+    }
+
+    public String getName(){
+        if (!StringMatcher.isKorean(name.charAt(0)) && !Character.isLetterOrDigit(name.charAt(0)))
+            name = name.substring(1,name.length());
+        return name;
     }
 
     public int compareTo(YammPlace compare){

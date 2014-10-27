@@ -49,7 +49,7 @@ public class YammPlaceView extends RelativeLayout {
 
     public void setItem(YammPlace item){
         final YammPlace i = item;
-        nameText.setText(item.name);
+        nameText.setText(item.getName());
         addressText.setText(item.getShortenedAddress());
         distanceText.setText(item.getDistanceString());
 

@@ -96,10 +96,10 @@ public class PlaceActivity extends BaseActivity implements
             finish();
         }
 
-        setTitle(place.name);
+        setTitle(place.getName());
 
         TextView tv = (TextView) findViewById(R.id.name_text);
-        tv.setText(place.name);
+        tv.setText(place.getName());
 
         tv = (TextView) findViewById(R.id.address_text);
         tv.setText(place.address);
@@ -129,7 +129,7 @@ public class PlaceActivity extends BaseActivity implements
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(place.lat, place.lng))
-                    .title(place.name));
+                    .title(place.getName()));
         }
     }
 

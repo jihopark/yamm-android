@@ -246,8 +246,7 @@ public class MapActivity extends BaseActivity implements
         for (YammPlace place : places){
             map.addMarker(new MarkerOptions()
             .position(new LatLng(place.lat, place.lng))
-            .title(place.name));
-            Log.d("MapActivity/addMarkers",place.name + " " + place.type + " " + place.dishes);
+            .title(place.getName()));
         }
     }
 
