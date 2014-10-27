@@ -136,6 +136,7 @@ public class NewJoinActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        dismissCurrentDialog();
                         removeOAuthSessions();
                     }
                 },null).show();
