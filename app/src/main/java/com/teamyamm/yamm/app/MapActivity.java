@@ -1,9 +1,14 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,6 +114,13 @@ public class MapActivity extends BaseActivity implements
     }
 
     private void initActivity(){
+
+        //Set Empty TextView
+        TextView tv = (TextView) findViewById(R.id.empty_view_text);
+        Spannable span = new SpannableString(getString(R.string.no_place_message));
+        span.setSpan(new ForegroundColorSpan(Color.WHITE), 17, 22, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(span);
+
         x = getIntent().getExtras().getDouble(LocationSearchHelper.LANG);
         y = getIntent().getExtras().getDouble(LocationSearchHelper.LONG);
 
@@ -171,10 +183,13 @@ public class MapActivity extends BaseActivity implements
         if (mCurrentLocation == null) {
             Log.e("MapActivity/findCurrentLocation", "Location Connected " + mLocationClient.isConnected());
             Log.e("MapActivity/findCurrentLocation", "Cannot get Location");
-            mLocationClient.connect();
             x = 0;
             y = 0;
             makeYammToast(R.string.location_error, Toast.LENGTH_SHORT);
+            Intent gpsOptionsIntent = new Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(gpsOptionsIntent);
+            finish();
         }
         else{
             x = mCurrentLocation.getLatitude();

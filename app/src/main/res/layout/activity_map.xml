@@ -58,7 +58,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/no_place_message"
             android:id="@+id/empty_view_text"
             android:textSize="20sp"
             android:textColor="#ff8e847c"
