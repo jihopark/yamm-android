@@ -732,6 +732,10 @@ public class BaseActivity extends ActionBarActivity {
         editor.remove(getString(R.string.PHONE_NAME_MAP));
         editor.remove(getString(R.string.FRIEND_LIST));
         editor.remove(getString(R.string.PREV_DISHES));
+
+        for (String s : YammActivity.suggestionType)
+            editor.remove(s);
+
         editor.remove(MainActivity.TUTORIAL);
         editor.commit();
         Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed " + prefs.getString(getString(R.string.PREV_DISHES), "none"));

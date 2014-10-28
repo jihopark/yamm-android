@@ -26,7 +26,7 @@ import retrofit.client.Response;
 public class YammActivity extends BaseActivity implements MainFragmentInterface {
     private final static int[] titleResId = {R.string.today_yamm_title, R.string.today_lunch_title, R.string.today_dinner_title, R.string.today_drink_title};
     private final static int[] messageResId = {R.string.today_yamm_message, R.string.today_lunch_message, R.string.today_dinner_message, R.string.today_drink_message};
-    private final String[] suggestionType = {"today","lunch","dinner", "alcohol"};
+    public static final String[] suggestionType = {"today","lunch","dinner", "alcohol"};
 
 
     private Dialog fullScreenDialog;
