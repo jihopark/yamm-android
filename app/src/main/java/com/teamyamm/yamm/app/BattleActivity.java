@@ -277,6 +277,7 @@ public class BattleActivity extends BaseActivity {
 
                 MixpanelController.trackBattleMixpanel(battleCount);
 
+                makeYammToast(R.string.join_welcome_message, Toast.LENGTH_LONG);
                 goToActivity(MainActivity.class);
             }
 

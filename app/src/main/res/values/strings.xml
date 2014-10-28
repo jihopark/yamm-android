@@ -84,6 +84,8 @@
     <string name="new_recommendation_message">당신 취향에 맞는 새로운 추천입니다</string>
 
     <string name="join_success">가입이 완료되었습니다</string>
+    <string name="join_welcome_message">Yamm에 가입되었습니다\n버튼을 눌러 추천을 받으시거나\n검색으로 무엇을 먹을지 골라보세요</string>
+
 
     <string name="fb_dialog_title">좋아요 해주세요</string>
     <string name="fb_dialog_message">Yamm 페이스북에 좋아요를 누르면 더 많은 정보와 소식을 알려드려요! 다양한 이벤트와 재밌거리를 위해 페이스북 라이크 고고!!</string>
