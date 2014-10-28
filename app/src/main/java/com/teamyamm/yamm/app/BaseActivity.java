@@ -301,7 +301,7 @@ public class BaseActivity extends ActionBarActivity {
     * */
 
     public void goToActivity(Class<?> nextActivity){
-        Log.v("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
+        Log.d("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
 
         //Save Previous Activity
         putInPref(getSharedPreferences(packageName, MODE_PRIVATE)

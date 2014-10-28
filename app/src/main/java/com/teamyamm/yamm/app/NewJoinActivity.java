@@ -138,6 +138,7 @@ public class NewJoinActivity extends BaseActivity {
                     public void onClick(View v) {
                         dismissCurrentDialog();
                         removeOAuthSessions();
+                        goToActivity(IntroActivity.class);
                     }
                 },null).show();
     }
@@ -169,7 +170,6 @@ public class NewJoinActivity extends BaseActivity {
                 });
             }
         }
-        goToActivity(IntroActivity.class);
     }
 
     public String getPassword(){

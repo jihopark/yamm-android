@@ -125,6 +125,7 @@ public class MixpanelController {
             props = new JSONObject();
         }
         mixpanel.track("Battle", props);
+        Log.i("MixpanelController/trackBattleMixpanel","Battle Tracked");
     }
 
     public static void trackSelectingDislkeFoodMixpanel(int count){
