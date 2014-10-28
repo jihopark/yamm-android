@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.teamyamm.yamm.app.pojos.BattleItem;
 import com.teamyamm.yamm.app.widget.DishBattleView;
@@ -69,11 +70,13 @@ public class BattleFragment extends Fragment{
         }
     }
 
-    public void setDishItemView(BattleItem i, Context context){
+    public void setDishItemView(BattleItem i, Context context, String roundText){
         item = i;
         Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
         layout2 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout2);
+        TextView rounds = (TextView) mainLayout.findViewById(R.id.battle_rounds_text);
+        rounds.setText(roundText);
 
         if (first!=null && second!=null && getActivity() instanceof BaseActivity) {
             try {

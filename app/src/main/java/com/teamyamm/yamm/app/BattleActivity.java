@@ -171,7 +171,7 @@ public class BattleActivity extends BaseActivity {
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
 
-                bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this);
+                bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this,"1/"+totalBattle);
                 try {
                     imagePreloadTask.execute();
                 } catch (IllegalStateException e) {
@@ -220,7 +220,7 @@ public class BattleActivity extends BaseActivity {
         }
 
         bf.setLayoutClickable(false);
-        bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this);
+        bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this, (battleCount+1)+"/"+totalBattle);
         bf.setLayoutClickable(true);
 
 

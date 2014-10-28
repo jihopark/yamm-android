@@ -41,6 +41,14 @@
             android:layout_height="74dp"
             android:src="@drawable/vs"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/battle_rounds_text"
+            android:textSize="20sp"
+            android:textColor="#ffffba00"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
