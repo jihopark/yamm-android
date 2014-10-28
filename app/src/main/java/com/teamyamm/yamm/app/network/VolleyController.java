@@ -73,7 +73,10 @@ public class VolleyController{
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory());
         final int cacheSize = maxMemory / 8;
 
-        return Math.min(3*screenBytes, cacheSize);
+        Log.d("VolleyController/getCacheSize", "cacheSize " + cacheSize + " Screenbytes" + 3*screenBytes );
+
+
+        return Math.max(3*screenBytes, cacheSize);
     }
 
     public static void clearRequestQueue(){
