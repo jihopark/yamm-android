@@ -69,7 +69,7 @@ public class BattleFragment extends Fragment{
         }
     }
 
-    public void setDishItemView(BattleItem i, Context context){
+    public void setDishItemView(BattleItem i, Context context, int round, int total){
         item = i;
         Log.i("BattleFragment setDishItemView", "BattleFragment setDishItem Started");
         layout1 = (FrameLayout) mainLayout.findViewById(R.id.battle_layout1);
@@ -94,6 +94,7 @@ public class BattleFragment extends Fragment{
         battleNoneButton = (Button) mainLayout.findViewById(R.id.battle_none_button);
         battleNoneButton.setOnClickListener(setBattleNoneButtonClickListener());
 
+        setProgressBar(round, total);
 
         //Set DishItemView onClickListener
         layout1.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +120,22 @@ public class BattleFragment extends Fragment{
         });
 
         startBattleIntroAnimation();
+    }
+
+    private void setProgressBar(int i, int total){
+        View a = mainLayout.findViewById(R.id.progress_bar_done);
+        View b = mainLayout.findViewById(R.id.progress_bar_left);
+        LinearLayout.LayoutParams aParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams bParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        bParams.weight = i;
+        aParams.weight = total-i;
+
+
+        a.setLayoutParams(aParams);
+        b.setLayoutParams(bParams);
     }
 
     private View.OnClickListener setBattleNoneButtonClickListener(){

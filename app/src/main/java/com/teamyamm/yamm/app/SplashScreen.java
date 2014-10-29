@@ -86,13 +86,13 @@ public class SplashScreen extends Activity {
 
 
         if (token == "none" || value == "none" || value.equals(getString(R.string.PREVIOUS_ACTIVITY_INTRO))) {
-            if (token == "none")
-                Log.i("SplashScreen/checkPreviousActivity", "Access Token is null. Proceed to Intro");
-
-            //Save Previous activity to shared preference
-            BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_INTRO));
-            activity = new Intent(getBaseContext(), IntroActivity.class);
-        } else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
+            if (token == "none") {
+                //Save Previous activity to shared preference
+                BaseActivity.putInPref(prefs, getString(R.string.PREVIOUS_ACTIVITY), getString(R.string.PREVIOUS_ACTIVITY_INTRO));
+                activity = new Intent(getBaseContext(), IntroActivity.class);
+            }
+        }
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_BATTLE)))
             activity = new Intent(getBaseContext(), BattleActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_MAIN)))
             activity = new Intent(getBaseContext(), MainActivity.class);
@@ -102,6 +102,8 @@ public class SplashScreen extends Activity {
             activity = new Intent(getBaseContext(), MainActivity.class);
         else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_INVITE)))
             activity = new Intent(getBaseContext(), MainActivity.class);
+        else if (value.equals(getString(R.string.PREVIOUS_ACTIVITY_PHONE)))
+            activity = new Intent(getBaseContext(), NewJoinActivity.class);
         //To be deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! For Testing Friend
         //activity = new Intent(getBaseContext(), BattleActivity.class);
 

@@ -12,13 +12,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.widget.YammIconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +44,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         setViewPager();
         setConfirmButton();
 
-        trackEnteredInviteMixpanel();
+        MixpanelController.trackEnteredInviteMixpanel();
     }
 
     @Override
@@ -148,7 +146,7 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
             @Override
             public void onClick(View v) {
                 Log.i("InviteActivity/confirmButtonOnClick",friendsFragment.getSelectedItems().toString());
-                trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
+                MixpanelController.trackSendInviteMixpanel("SMS", friendsFragment.getSelectedItems().size());
                 startSMSIntent(getString(R.string.invite_message) + " " + appURL, friendsFragment.getSelectedItems());
             }
         });
@@ -246,27 +244,5 @@ public class InviteActivity extends BaseActivity implements FriendListInterface 
         public void onPageScrollStateChanged(int i) {
         }
     }
-
-    public void trackSendInviteMixpanel(String method, int count){
-        JSONObject props = new JSONObject();
-
-        try{
-            props.put("method", method);
-            props.put("count", count);
-        }catch(JSONException e){
-            Log.e("InviteActivity/trackSendInviteMixpanel","JSON Error");
-        }
-
-        mixpanel.track("Send Invite", props);
-        Log.i("InviteActivity/trackSendInviteMixpanel","Send Invite Tracked " + method);
-    }
-
-    private void trackEnteredInviteMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("Entered Invite", props);
-        Log.i("InviteActivity/trackEnteredInviteMixpanel","Entered Invite Tracked ");
-    }
-
-
 
 }

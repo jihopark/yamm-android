@@ -1,12 +1,9 @@
 package com.teamyamm.yamm.app;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -20,30 +17,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -68,7 +57,7 @@ public class MainFragment extends Fragment {
     private RelativeLayout main_layout;
     private ViewPager dishPager;
     private DishFragmentPagerAdapter dishAdapter;
-    private ImageButton nextLeft, nextRight, searchMap, pokeFriend, dislike;
+    private ImageButton nextLeft, nextRight, searchMap, pokeFriend;
 
     private List<DishItem> dishItems;
     private int currentPage = 0;
@@ -99,8 +88,6 @@ public class MainFragment extends Fragment {
         nextRight = (ImageButton) main_layout.findViewById(R.id.dish_next_right_button);
         searchMap = (ImageButton) main_layout.findViewById(R.id.search_map_button);
         pokeFriend = (ImageButton) main_layout.findViewById(R.id.poke_friend_button);
-        dislike = (ImageButton) main_layout.findViewById(R.id.dish_dislike_button);
-
 
         initFragment();
         setDishPager();
@@ -126,9 +113,7 @@ public class MainFragment extends Fragment {
             Log.d("MainFragment/onResume","Is not Performing. Show Buttons");
             configureNextButtons(currentPage, nextLeft, nextRight, getResources().getInteger(R.integer.main_buttons_animation_duration));
             searchMap.setVisibility(View.VISIBLE);
-            dislike.setVisibility(View.VISIBLE);
             pokeFriend.setVisibility(View.VISIBLE);
-            dislike.setVisibility(View.VISIBLE);
         }
     }
 
@@ -138,12 +123,16 @@ public class MainFragment extends Fragment {
 
         Log.i("MainFragment/onDetach","Detaching all other components");
         dishPager.setOnPageChangeListener(null);
-        buttonAnimation.setAnimationListener(null);
-        mainBarAnimation.setAnimationListener(null);
-        buttonAnimation.cancel();
-        mainBarAnimation.cancel();
-        textAnimation1.cancel();
-        textAnimation2.cancel();
+
+        if (buttonAnimation!=null && mainBarAnimation!=null && buttonAnimation!=null
+                && mainBarAnimation!=null && textAnimation1!=null && textAnimation2!=null) {
+            buttonAnimation.setAnimationListener(null);
+            mainBarAnimation.setAnimationListener(null);
+            buttonAnimation.cancel();
+            mainBarAnimation.cancel();
+            textAnimation1.cancel();
+            textAnimation2.cancel();
+        }
 
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
@@ -174,6 +163,8 @@ public class MainFragment extends Fragment {
 
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
+        hasPerformed = !bundle.getBoolean("shouldPerform");
+
     }
 
     public ImageButton getButton(int viewId){
@@ -207,7 +198,7 @@ public class MainFragment extends Fragment {
         setNextButtons();
         setPokeButton();
         setSearchButton();
-        setDislikeButton();
+        //  setDislikeButton();
     }
 
     public ViewPager getDishPager(){
@@ -295,7 +286,7 @@ public class MainFragment extends Fragment {
             setNextButtons();
             setPokeButton();
             setSearchButton();
-            setDislikeButton();
+           //setDislikeButton();
 
             if (i == DEFAULT_NUMBER_OF_DISHES - 1){
                 SharedPreferences pref = null;
@@ -312,7 +303,7 @@ public class MainFragment extends Fragment {
                     Log.i("DishFragmentPagerAdapter/onPageSelected",key + " retrived. " + hasReachedEnd);
                 }
                 if (!hasReachedEnd) {
-                    trackEndOfRecommendationMixpanel();
+                    MixpanelController.trackEndOfRecommendationMixpanel();
                     hasReachedEnd = true;
                     if (pref!=null) {
                         pref.edit().putBoolean(key, true).commit();
@@ -329,17 +320,9 @@ public class MainFragment extends Fragment {
             }catch(NullPointerException e){
                 Log.e("MainFragment/onPageSelected","NullPointer Exception caught. Is fragments.get(i)==null? "+ (fragments.get(i)==null));
                 e.printStackTrace();
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity activity = (BaseActivity) getActivity();
-                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
-                }
             }catch (IndexOutOfBoundsException e){
                 Log.e("MainFragment/onPageSelected","IndexOutOfBoundsException caught");
                 e.printStackTrace();
-                if (getActivity() instanceof BaseActivity) {
-                    BaseActivity activity = (BaseActivity) getActivity();
-                    activity.trackCaughtExceptionMixpanel("MainFragment/onPageSelected", e.getMessage());
-                }
             }
         }
 
@@ -451,87 +434,20 @@ public class MainFragment extends Fragment {
         searchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLocationDialog();
+                MixpanelController.trackSearchMapMixpanel("");
+                LocationSearchHelper.startMapActivity(getActivity(), getCurrentDishItem());
+                addDishToPositive(SEARCH_MAP, "", getCurrentDishItem());
             }
         });
     }
-
-    private void showLocationDialog(){
-        final Dialog dialog = new Dialog(getActivity());
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_map);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.map_autocomplete_text);
-
-        ImageButton setMap = (ImageButton) dialog.findViewById(R.id.map_icon);
-        ImageButton negative = (ImageButton) dialog.findViewById(R.id.map_dialog_negative_button);
-        Button positive = (Button) dialog.findViewById(R.id.map_dialog_positive_button);
-
-        setPlacePickEditText(textView);
-
-        setMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(getString(R.string.place_pick_edit_text));
-            }
-        });
-        negative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String place = LocationSearchHelper.searchMap(getCurrentDishItem(),
-                        textView.getText().toString(), getActivity());
-                trackSearchMapMixpanel(place);
-                addDishToPositive(SEARCH_MAP, place, getCurrentDishItem());
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-
-    private void setPlacePickEditText(AutoCompleteTextView placePickEditText){
-        placePickEditText.setText(getString(R.string.place_pick_edit_text));
-        placePickEditText.setThreshold(1);
-        placePickEditText.setSelectAllOnFocus(true);
-        ArrayAdapter<String> place_adapter =
-                new ArrayAdapter<String>(getActivity(), R.layout.place_pick_item, getResources().getStringArray(R.array.places_array));
-        placePickEditText.setAdapter(place_adapter);
-        placePickEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (!hasFocus){
-                    Log.i("MainFragment/placePickEditText", "focus gone");
-                    if ( ((TextView)v).getText().toString().equals("") ) {
-                        ((TextView) v).setText(getString(R.string.place_pick_edit_text));
-                    }
-                    if (imm!=null)
-                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                }
-                else{
-                    ((TextView)v).setText("");
-                    Log.i("MainFragment/placePickEditText", "focus came");
-                    if (imm!=null)
-                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                }
-            }
-        });
-    }
-
+    /*
+    @Deprecated
     private void setDislikeButton(){
         final View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("MainFragment/onClick", "Dislike pressed for " + getCurrentDishItem().getName());
-                trackDislikeMixpanel(getCurrentDishItem());
+                MixpanelController.trackDislikeMixpanel(getCurrentDishItem());
                 ((BaseActivity)getActivity()).makeYammToast(R.string.dish_dislike_toast, Toast.LENGTH_SHORT);
                 toggleEnableButtons(false);
                 YammAPIService service = YammAPIAdapter.getDislikeService();
@@ -579,7 +495,7 @@ public class MainFragment extends Fragment {
         dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackClickedDislikeMixpanel(getCurrentDishItem());
+                MixpanelController.trackClickedDislikeMixpanel(getCurrentDishItem());
                 ((BaseActivity)getActivity()).createDialog(getActivity(),R.string.dish_dislike_title,
                         R.string.dish_dislike_message, R.string.dish_dislike_positive, R.string.dish_dislike_negative,
                         positiveListener, null).show();
@@ -587,6 +503,7 @@ public class MainFragment extends Fragment {
         });
     }
 
+    @Deprecated
     public void changeInDishItem(DishItem original, DishItem replace){
         Log.i("MainFragment/changeInDishItem","Original " + original + " Replace    " + replace);
         for (int i = 0; i < dishItems.size() ; i++){
@@ -602,10 +519,9 @@ public class MainFragment extends Fragment {
 
 
         ((MainFragmentInterface)getActivity()).changeInDishItem(dishItems);
-    }
+    }*/
 
     private void toggleEnableButtons(boolean b){
-        dislike.setEnabled(b);
         searchMap.setEnabled(b);
         pokeFriend.setEnabled(b);
         nextRight.setEnabled(b);
@@ -627,7 +543,6 @@ public class MainFragment extends Fragment {
         buttonAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha);
         buttonAnimation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha2);
         buttonAnimation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha3);
-        buttonAnimation4 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_buttons_alpha4);
 
         mainBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
         textAnimation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.main_text_container_slide);
@@ -642,7 +557,6 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                //dislike.startAnimation(buttonAnimation3);
             }
 
             @Override
@@ -650,7 +564,7 @@ public class MainFragment extends Fragment {
 
             }
         });
-        buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
+        /*buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 dislike.setVisibility(View.VISIBLE);
@@ -665,12 +579,11 @@ public class MainFragment extends Fragment {
             public void onAnimationRepeat(Animation animation) {
 
             }
-        });
-        buttonAnimation4.setAnimationListener(new Animation.AnimationListener() {
+        });*/
+        buttonAnimation3.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 nextRight.setVisibility(View.VISIBLE);
-
             }
 
             @Override
@@ -678,8 +591,8 @@ public class MainFragment extends Fragment {
                 MainFragmentInterface activity = null;
                 if (getActivity() instanceof MainFragmentInterface)
                     activity = (MainFragmentInterface) getActivity();
-                if (activity!=null && activity.shouldTutorialOpen() && !activity.isLoading())
-                    activity.showTutorial();
+                //if (activity!=null && activity.shouldTutorialOpen() && !activity.isLoading())
+                  //  activity.showTutorial();
             }
 
             @Override
@@ -716,8 +629,8 @@ public class MainFragment extends Fragment {
             public void onAnimationEnd(Animation animation) {
                 pokeFriend.startAnimation(buttonAnimation);
                 searchMap.startAnimation(buttonAnimation2);
-                dislike.startAnimation(buttonAnimation3);
-                nextRight.startAnimation(buttonAnimation4);
+              //  dislike.startAnimation(buttonAnimation3);
+                nextRight.startAnimation(buttonAnimation3);
             }
 
             @Override
@@ -731,7 +644,7 @@ public class MainFragment extends Fragment {
         nextRight.setVisibility(View.INVISIBLE);
         searchMap.setVisibility(View.INVISIBLE);
         pokeFriend.setVisibility(View.INVISIBLE);
-        dislike.setVisibility(View.INVISIBLE);
+       // dislike.setVisibility(View.INVISIBLE);
 
         if (main.isFullScreenDialogOpen()){
             Handler handler = new Handler();
@@ -903,62 +816,5 @@ public class MainFragment extends Fragment {
         fragments.add(p, null);
     }
 
-    private void trackEndOfRecommendationMixpanel(){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            base.getMixpanelAPI().track("End Of Recommendation", props);
-            Log.i("MainFragment/trackEndOfRecommendationMixpanel","End of Recommendation Tracked");
-        }
-    }
-
-    private void trackSearchMapMixpanel(String place){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try {
-                props.put("Place", place);
-            }catch(JSONException e){
-                Log.e("MainFragment/trackSearchMapMixpanel","JSON Error");
-            }
-
-            base.getMixpanelAPI().track("Search Map", props);
-            Log.i("MainFragment/trackSearchMapMixpanel","Search Map Tracked " + place);
-        }
-        else
-            Log.e("MainFragment/trackSearchMapMixpanel","Wrong Activity");
-    }
-
-    private void trackDislikeMixpanel(DishItem item){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try{
-                props.put("Dish", item.getName());
-            }catch (JSONException e){
-                Log.e("MainFragment/trackDislikeMixpanel","JSON Error");
-            }
-            base.getMixpanelAPI().track("Dislike", props);
-            Log.i("MainFragment/trackDislikeMixpanel","Dislike Tracked");
-        }
-    }
-
-    private void trackClickedDislikeMixpanel(DishItem item){
-        Activity activity = getActivity();
-        if (activity instanceof BaseActivity){
-            BaseActivity base = (BaseActivity) activity;
-            JSONObject props = new JSONObject();
-            try{
-                props.put("Dish", item.getName());
-            }catch (JSONException e){
-                Log.e("MainFragment/trackClickedDislikeMixpanel","JSON Error");
-            }
-            base.getMixpanelAPI().track("Clicked Dislike", props);
-            Log.i("MainFragment/trackClicked DislikeMixpanel","Clicked Dislike Tracked");
-        }
-    }
 
 }

@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.text.method.TransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,21 +41,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.SessionCallback;
+import com.kakao.exception.KakaoException;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.teamyamm.yamm.app.interfaces.FriendListInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -71,6 +76,12 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
+    public final static Type DISH_ITEM_LIST_TYPE = new TypeToken<List<DishItem>>(){}.getType();
+
+    public final static int KAKAO = 1;
+    public final static int FB = 2;
+    public final static int PW = 3;
+
     public static final String PRODUCTION = "production";
     public static final String TESTING = "test";
     public static final String STAGING = "staging";
@@ -83,23 +94,39 @@ public class BaseActivity extends ActionBarActivity {
     public static final String packageName = "com.teamyamm.yamm.app";
 
     private static boolean isAppRunning;
-    public static final String MIXPANEL_TOKEN_PRODUCTION = "5bebb04a41c88c1fad928b5526990d03";
-    public static final String MIXPANEL_TOKEN_DEVELOPMENT= "4a63eee3969860701f1e1c8189c127e0";
-    public MixpanelAPI mixpanel;
 
     protected AlertDialog.Builder builder;
     protected AlertDialog internetAlert;
-    protected SharedPreferences prefs;
+    public SharedPreferences prefs;
 
     public static boolean isLoggingOut = false;
 
     protected Dialog currentDialog = null;
 
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isClosed()) {
+            Log.i("BaseActivity/onSessionStateChange", "Logged out...");
+            session.closeAndClearTokenInformation();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         isAppRunning = true;
+
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+
+
 
         //Check If WTFException was Handled
         if (getIntent().getExtras()!=null) {
@@ -110,6 +137,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
 
+        checkAppVersion();
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));
@@ -121,19 +149,25 @@ public class BaseActivity extends ActionBarActivity {
         YammAPIAdapter.setToken(getAuthToken());
         YammAPIAdapter.setContext(getApplicationContext());
 
-        if (CURRENT_APPLICATION_STATUS.equals(TESTING))
-            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_DEVELOPMENT);
-        else
-            mixpanel = MixpanelAPI.getInstance(BaseActivity.this, MIXPANEL_TOKEN_PRODUCTION);
+        if (CURRENT_APPLICATION_STATUS.equals(TESTING)) {
+            MixpanelController.setMixpanel(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_TOKEN_DEVELOPMENT));
+        }
+        else {
+            MixpanelController.setMixpanel(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_TOKEN_PRODUCTION));
+        }
+        MixpanelController.setMixpanelRecommendation(MixpanelAPI.getInstance(BaseActivity.this, MixpanelController.MIXPANEL_RECOMMENDATIONS_TOKEN));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        uiHelper.onResume();
+
         showInternetConnectionAlert(null); //Check if Internet is connected, else Show Alert
 
         if (CURRENT_APPLICATION_STATUS.equals(PRODUCTION))
             checkPlayServices();
+
 
         isAppRunning = true;
         Log.d("BaseActivity/onResume","App is Running " + isAppRunning);
@@ -143,12 +177,26 @@ public class BaseActivity extends ActionBarActivity {
     protected void onPause(){
         super.onPause();
         isAppRunning = false;
+        uiHelper.onPause();
         Log.d("BaseActivity/onPause", "App is Running " + isAppRunning);
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onDestroy() {
-        mixpanel.flush();
+        MixpanelController.flushAll();
+        uiHelper.onDestroy();
         super.onDestroy();
     }
 
@@ -172,18 +220,37 @@ public class BaseActivity extends ActionBarActivity {
         return isAppRunning;
     }
 
-    public MixpanelAPI getMixpanelAPI(){ return mixpanel; }
 
-    protected void trackCaughtExceptionMixpanel(String where, String message){
-        JSONObject props = new JSONObject();
-        try {
-            props.put("Where", where);
-            props.put("Message", message);
-        }catch(JSONException e){
-            Log.e("BaseActivity/trackCaughtExceptionMixpanel","JSON Error");
-        }
-        mixpanel.track("Caught Exception", props);
-        Log.i("BaseActivity/trackCaughtExceptionMixpanel","Caught Exception Tracked");
+    private void checkAppVersion(){
+        YammAPIAdapter.getService().getClientInfo(new Callback<YammAPIService.RawClientInfo>() {
+            View.OnClickListener positiveListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent;
+                    try {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+                    }
+                    startActivity(intent);
+                    dismissCurrentDialog();
+                }
+            };
+
+            @Override
+            public void success(YammAPIService.RawClientInfo rawClientInfo, Response response) {
+                Log.d("BaseActivity/checkAppVersion", "Checking App Version... " + rawClientInfo.android_version);
+                if (!rawClientInfo.android_version.equals(getString(R.string.app_version_name))) {
+                    createDialog(BaseActivity.this, 0, R.string.check_app_version_message,
+                            R.string.dialog_positive, R.string.dialog_negative, positiveListener, null).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
     }
 
     /*
@@ -196,6 +263,22 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     ////////////////////////////////Private Methods/////////////////////////////////////////////////
+    protected String getPhoneNumber(){
+        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String phone = manager.getLine1Number();
+
+        if (phone==null)
+            return "";
+        phone = MainActivity.parsePhoneNumber(phone);
+
+        Log.i("BaseActivity/getPhoneNumber","Read Phone Number : " + phone);
+
+        if (phone.length() > 9){
+            //Set it on Phone Text
+            return phone;
+        }
+        return "";
+    }
     /*
     * Changes Action Bar Overlay
     * */
@@ -217,19 +300,14 @@ public class BaseActivity extends ActionBarActivity {
     * Saves PREVIOUS_ACTIVITY on Shared Pref and Moves to next Activity
     * */
 
-    protected void goToActivity(Class<?> nextActivity){
-        Log.v("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
+    public void goToActivity(Class<?> nextActivity){
+        Log.d("BaseActivity/goToActivity", "Going to " + nextActivity.getSimpleName());
 
         //Save Previous Activity
         putInPref(getSharedPreferences(packageName, MODE_PRIVATE)
                 ,getString(R.string.PREVIOUS_ACTIVITY), nextActivity.getSimpleName());
 
         Intent intent = new Intent(getBaseContext(), nextActivity);
-
-        if (nextActivity == MainActivity.class){
-            Log.i("BaseActivity/goToActivity","Setting flags for MainActivity");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        }
 
         startActivity(intent);
     }
@@ -238,7 +316,7 @@ public class BaseActivity extends ActionBarActivity {
     /*
    * Builds Alert Dialog with positive and negative buttons
    * */
-    protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
+    protected Dialog createDialog(Context context, String title, String message, String positive, String negative,
                                   View.OnClickListener positiveListener, View.OnClickListener negativeListener){
         /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -260,17 +338,17 @@ public class BaseActivity extends ActionBarActivity {
         Button negativeButton = (Button) dialog.findViewById(R.id.dialog_negative_button);
         ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
 
-        if (title==0){
+        if (title.equals("")){
             titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
             titleText.setText("");
             messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
         }
         else
-            titleText.setText(getString(title));
+            titleText.setText(title);
 
-        messageText.setText(getString(message));
-        positiveButton.setText(getString(positive));
-        negativeButton.setText(getString(negative));
+        messageText.setText(message);
+        positiveButton.setText(positive);
+        negativeButton.setText(negative);
 
         View.OnClickListener dismissListener = new View.OnClickListener() {
             @Override
@@ -294,6 +372,57 @@ public class BaseActivity extends ActionBarActivity {
         return dialog;
     }
 
+    protected Dialog createDialog(Context context, int title, int message, int positive, int negative,
+                                  View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
+        if (title==0)
+            return createDialog(context,"",getString(message), getString(positive),getString(negative),positiveListener,negativeListener);
+        return createDialog(context,getString(title),getString(message), getString(positive),getString(negative),positiveListener,negativeListener);
+    }
+
+    protected Dialog createDialog(Context context, int title, int message, int positive,
+                                  View.OnClickListener positiveListener){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_default_one_button);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        TextView titleText = (TextView) dialog.findViewById(R.id.dialog_title);
+        TextView messageText = (TextView) dialog.findViewById(R.id.dialog_message);
+        Button positiveButton = (Button) dialog.findViewById(R.id.dialog_positive_button);
+        ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
+
+        if (title==0){
+            titleText.setBackgroundColor(getResources().getColor(R.color.dialog_content_background));
+            titleText.setText("");
+            messageText.setPadding(0, 0, 0, (int) (getResources().getDimension(R.dimen.custom_dialog_title_height) / 2));
+        }
+        else
+            titleText.setText(getString(title));
+
+        messageText.setText(getString(message));
+        positiveButton.setText(getString(positive));
+
+        View.OnClickListener dismissListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCurrentDialog();
+            }
+        };
+
+        closeButton.setOnClickListener(dismissListener);
+
+        if (positiveListener==null)
+            positiveListener = dismissListener;
+
+        positiveButton.setOnClickListener(positiveListener);
+
+        currentDialog = dialog;
+
+        return dialog;
+    }
+
+
     protected void dismissCurrentDialog(){
         if (currentDialog==null){
             Log.e("BaseActivity/onClick", "Current Dialog null");
@@ -307,7 +436,7 @@ public class BaseActivity extends ActionBarActivity {
     * Builds Progress Dialog with title & message
     * */
 
-    protected Dialog createFullScreenDialog(Context context, String message){
+    public Dialog createFullScreenDialog(Context context, String message){
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_full_screen);
@@ -444,26 +573,26 @@ public class BaseActivity extends ActionBarActivity {
         return gson.fromJson(s, typeOfDest);
     }
 
-    protected static void hideSoftKeyboard(Activity activity) {
+    public static void hideSoftKeyboard(Activity activity) {
         try {
-            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }catch(Exception e){
             Log.i("BaseActivity/hideSoftKeyboard","Exception in softkeyboard manipulation");
             e.printStackTrace();
         }
     }
-    protected static void showSoftKeyboard(View view, Activity activity){
+    public static void showSoftKeyboard(View view, Activity activity){
         try {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }catch(Exception e){
             Log.i("BaseActivity/showSoftKeyboard","Exception in softkeyboard manipulation");
             e.printStackTrace();
         }
     }
 
-    protected String phoneNumberFormat(String phone){
+    public String phoneNumberFormat(String phone){
         return phone.substring(0,3) + " - " + phone.substring(3,7) + " - " + phone.substring(7, phone.length());
     }
 
@@ -525,6 +654,32 @@ public class BaseActivity extends ActionBarActivity {
     protected void logOut(){
         if (this instanceof MainActivity)
             ((MainActivity)this).isLeftMenuLoaded = false;
+        try {
+            if (Session.getActiveSession() != null) {
+                Session.getActiveSession().closeAndClearTokenInformation();
+                Session.setActiveSession(null);
+                Log.d("BaseActivity/logOut", "Clear FB Session");
+            }
+        }catch(IllegalStateException e){
+            Log.e("BaseActivity/logOut", "FB Session is invalid. Just Log out.");
+        }
+        try {
+            if (com.kakao.Session.getCurrentSession().isOpened()) {
+                com.kakao.Session.getCurrentSession().close(new SessionCallback() {
+                    @Override
+                    public void onSessionOpened() {
+
+                    }
+
+                    @Override
+                    public void onSessionClosed(KakaoException e) {
+                        Log.d("BaseActivity/onSessionClosed", "Kakao Session Closed for Logout");
+                    }
+                });
+            }
+        }catch(IllegalStateException e){
+            Log.e("BaseActivity/logOut", "Kakao Session is invalid. Just Log out.");
+        }
 
         isLoggingOut = true;
         removeAuthToken();
@@ -544,7 +699,7 @@ public class BaseActivity extends ActionBarActivity {
         editor.commit();
 
         //GCM push
-        MixpanelAPI.People people = mixpanel.getPeople();
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
         people.clearPushRegistrationId();
 
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
@@ -567,16 +722,20 @@ public class BaseActivity extends ActionBarActivity {
         }
 
         YammAPIAdapter.setToken(null);
-
-        Log.i("BaseActivity/removeAuthToken","Auth Token Removed");
     }
 
     protected void removePersonalData(){
+
+        MixpanelController.logOut();
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(getString(R.string.PHONE_NAME_MAP));
         editor.remove(getString(R.string.FRIEND_LIST));
         editor.remove(getString(R.string.PREV_DISHES));
+
+        for (String s : YammActivity.suggestionType)
+            editor.remove(s);
+
         editor.remove(MainActivity.TUTORIAL);
         editor.commit();
         Log.i("BaseActivity/removeAuthToken","Phone/Friend List Removed " + prefs.getString(getString(R.string.PREV_DISHES), "none"));
@@ -644,7 +803,7 @@ public class BaseActivity extends ActionBarActivity {
     *
     * */
 
-    protected void invalidToken(){
+    public void invalidToken(){
         makeYammToast(R.string.invalid_token_error, Toast.LENGTH_LONG);
         logOut();
     }
@@ -876,10 +1035,7 @@ public class BaseActivity extends ActionBarActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to server");
-                if (BaseActivity.this instanceof MainActivity){
-                    MainActivity activity = (MainActivity) BaseActivity.this;
-                    activity.getLeftDrawerAdapter().setPushUsageMenu(true);
-                }
+
             }
 
             @Override
@@ -889,7 +1045,7 @@ public class BaseActivity extends ActionBarActivity {
         });
 
 
-        MixpanelAPI.People people = mixpanel.getPeople();
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
         people.setPushRegistrationId(regid);
         Log.i("BaseActivity/sendRegistrationIdToBackend", "Push Token successfully sent to Mixpanel");
     }

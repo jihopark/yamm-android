@@ -15,7 +15,7 @@
     </RelativeLayout>
     <com.teamyamm.yamm.app.widget.YammIconPageIndicator
         android:layout_below="@+id/date_pick_spinner_container"
-        android:background="@color/brown_color"
+        android:background="@color/title_area_background"
         android:layout_width="match_parent"
         android:layout_height="39dp"
         android:id="@+id/poke_page_indicator"

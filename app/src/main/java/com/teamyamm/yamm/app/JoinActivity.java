@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -26,12 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.util.SmsListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -65,26 +62,8 @@ public class JoinActivity extends BaseActivity {
         configAgreementCheckBox();
         configEditTexts();
         configJoinConfirmButton();
-        getPhoneNumber();
+        phoneText.setText(getPhoneNumber());
     }
-
-
-    private void getPhoneNumber(){
-        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String phone = manager.getLine1Number();
-
-        if (phone==null)
-            return ;
-        phone = MainActivity.parsePhoneNumber(phone);
-
-        Log.i("JoinActivity/getPhoneNumber","Read Phone Number : " + phone);
-
-        if (phone.length() > 9){
-            //Set it on Phone Text
-            phoneText.setText(phone);
-        }
-    }
-
 
     private void configJoinConfirmButton(){
         joinConfirmButton = (Button) findViewById(R.id.join_confirm_button);
@@ -306,9 +285,9 @@ public class JoinActivity extends BaseActivity {
             @Override
             public void success(String s, Response response) {
                 Log.i("JoinActivity/postRegistrationToServer", "Registration " + s);
-                setMixpanelAlias();
+                MixpanelController.setMixpanelAlias(emailText.getText().toString());
                 logInAfterJoin();
-                trackJoiningMixpanel();
+                MixpanelController.trackJoiningMixpanel("Email");
             }
 
             @Override
@@ -402,7 +381,7 @@ public class JoinActivity extends BaseActivity {
                         msg = retrofitError.getMessage();
                     }
 
-                    trackLoginErrorMixpanel(msg, loginAttempt);
+                    MixpanelController.trackLoginErrorMixpanel(msg, loginAttempt);
 
                     logInAfterJoin();
                     return ;
@@ -543,30 +522,5 @@ public class JoinActivity extends BaseActivity {
         });
     }
 
-    private void setMixpanelAlias(){
-        mixpanel.alias(emailText.getText().toString(), null);
-        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Unique ID with email "+ emailText.getText().toString());
 
-        mixpanel.getPeople().identify(mixpanel.getDistinctId());
-        mixpanel.getPeople().set("$email",emailText.getText().toString());
-        Log.i("JoinActivity/setMixpanelAlias","Mixpanel - Setting Name for Account"+ emailText.getText().toString());
-    }
-
-    private void trackLoginErrorMixpanel(String errorMessage, int count){
-        JSONObject props = new JSONObject();
-        try {
-            props.put("count", count);
-            props.put("Message", errorMessage);
-        }catch(JSONException e){
-            Log.e("JoinActivity/trackLoginErrorMixpanel","JSON Error");
-        }
-        mixpanel.track("Login Error", props);
-        Log.i("JoinActivity/trackJoiningMixpanel","Login Error Tracked");
-    }
-
-    private void trackJoiningMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("Joining", props);
-        Log.i("JoinActivity/trackJoiningMixpanel","Joining Tracked");
-    }
 }

@@ -15,16 +15,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.widget.YammImageView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -125,7 +122,7 @@ public class PokeAlertActivity extends Activity {
                     return ;
                 }
                 service.sendPokeResponse(new YammAPIService.RawPokeMessage(uids, true, content.getDish().getId()), callback);
-                trackPokeResponseMixpanel(true);
+                MixpanelController.trackPokeResponseMixpanel(true, PokeAlertActivity.this);
                 finish();
             }
         });
@@ -139,7 +136,7 @@ public class PokeAlertActivity extends Activity {
                     return ;
                 }
                 service.sendPokeResponse(new YammAPIService.RawPokeMessage(uids, false, content.getDish().getId()), callback);
-                trackPokeResponseMixpanel(false);
+                MixpanelController.trackPokeResponseMixpanel(false, PokeAlertActivity.this);
                 finish();
             }
         });
@@ -195,22 +192,4 @@ public class PokeAlertActivity extends Activity {
         toast.setView(layout);
         toast.show();
     }
-
-    public void trackPokeResponseMixpanel(boolean response){
-        JSONObject props = new JSONObject();
-        try {
-            if (response)
-                props.put("Response", "OK");
-            else
-                props.put("Response", "NO");
-        }catch(JSONException e){
-            Log.e("PokeAlertActivity/trackPokeResponseMixpanel","JSON Error");
-        }
-        if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.TESTING))
-            MixpanelAPI.getInstance(PokeAlertActivity.this, BaseActivity.MIXPANEL_TOKEN_DEVELOPMENT).track("Poke Response", props);
-        else
-            MixpanelAPI.getInstance(PokeAlertActivity.this, BaseActivity.MIXPANEL_TOKEN_PRODUCTION).track("Poke Response", props);
-        Log.i("PokeAlertActivity/trackPokeResponseMixpanel","Poke Response Tracked " + response);
-    }
-
 }

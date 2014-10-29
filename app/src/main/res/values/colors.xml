@@ -2,8 +2,12 @@
 
     <color name="black_overlay">#c8000000</color>
     <color name="default_color">#ffe0323b</color>
-    <color name="brown_color">#ff574d44</color>
+    <color name="title_area_background">#ff3a332d</color>
     <color name="light_brown_background">#fff3f0e6</color>
+    <color name="fb_background">#ff39538b</color>
+    <color name="kakao_background">#ffe7d501</color>
+
+    <color name="join_fragment_span_color">#fff1212c</color>
 
     <color name="selected_item_color">#ffc29443</color>
     <color name="divider_color">#ffe2ddcb</color>
@@ -14,6 +18,7 @@
     <color name="dialog_content_background">#fff3f1e6</color>
     <color name="place_pick_text_background">#ffc4bfb1</color>
 
+    <color name="place_name_text">#ff626054</color>
 
     <!--Login Activity -->
     <color name="button_enabled_text">#ffffffff</color>

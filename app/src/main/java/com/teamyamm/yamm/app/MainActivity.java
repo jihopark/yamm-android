@@ -2,7 +2,6 @@ package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -21,13 +20,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.SessionCallback;
+import com.kakao.exception.KakaoException;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
@@ -36,11 +43,11 @@ import com.teamyamm.yamm.app.pojos.LeftDrawerItem;
 import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.util.YammLeftDrawerAdapter;
+import com.teamyamm.yamm.app.widget.SearchWidget;
 import com.teamyamm.yamm.app.widget.TutorialFragment;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,33 +70,37 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private ListView leftDrawer;
     private MainFragment mainFragment;
     private ReadContactAsyncTask readContactAsyncTask;
+    private SearchWidget searchWidget;
 
     private List<DishItem> dishItems;
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
     protected boolean isLeftMenuLoaded = false;
-    private ImageButton friendPickButton;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
 
+    private boolean shouldOpenSearchWidget = false;
+
+    private static boolean isLoadingFB = false;
+
     private YammLeftDrawerAdapter leftDrawerAdapter;
+
+    private List<DishItem> fullDishList = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         if (findViewById(android.R.id.home)!=null) {
             findViewById(android.R.id.home).setPadding((int) getResources().getDimension(R.dimen.logo_padding), 0,(int) getResources().getDimension(R.dimen.logo_padding), 0);
             Log.i("MainAcitivty/Padding","Setting Padding " + getResources().getDimension(R.dimen.logo_padding));
         }
-
-
-
         setLeftDrawer();
-        setFriendPickButton();
+        loadYammFragment();
+        getDishListFromServer();
     }
 
     @Override
@@ -101,8 +112,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
         drawerLayout.closeDrawers();
 
-
-        friendPickButton.setEnabled(true);
         Log.i("MainActivity/onStart","Execute Read Contact Async Task");
 
         readContactAsyncTask = new ReadContactAsyncTask();
@@ -118,17 +127,10 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     @Override
-    public void onPostResume(){
-        super.onPostResume();
-        loadDishes();
-
-    }
-
-    @Override
     public void onStop(){
         Log.i("MainActivity/onStop", "isLoggingOut " + isLoggingOut);
         if (!BaseActivity.isLoggingOut) {
-            saveDishItemsInPref();
+        //    saveDishItemsInPref();
         }
         closeFullScreenDialog();
         drawerLayout.closeDrawers();
@@ -136,7 +138,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             tutorial.dismissAllowingStateLoss();
 
         readContactAsyncTask.cancel(true);
-
         super.onStop();
     }
 
@@ -168,17 +169,11 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         return prefs.getBoolean(TUTORIAL, true);
     }
 
-    public boolean isFriendLoaded(){
-        String value = prefs.getString(getString(R.string.FRIEND_LIST),"none");
-
-        return value != "none";
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.invite_button_actions, menu);
+        inflater.inflate(R.menu.main_buttons_actions, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -198,6 +193,16 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             case R.id.friend_invite_button:
                 startInviteActivity(MainActivity.this);
                 return true;
+            case R.id.search_button:
+                if (fullDishList==null) {
+                    fullScreenDialog = createFullScreenDialog(MainActivity.this, getString(R.string.progress_dialog_message));
+                    fullScreenDialog.show();
+                    shouldOpenSearchWidget = true;
+                    return true;
+                }
+
+                showSearchWidget();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -209,16 +214,17 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private void saveDishItemsInPref(){
         Log.i("MainActivity/savedishItemsInPref", "List saved in Pref");
 
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
-
-
-        putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, type));
+        putInPref(prefs, getString(R.string.PREV_DISHES), new Gson().toJson(dishItems, DISH_ITEM_LIST_TYPE));
     }
 
 
+    private void loadYammFragment(){
+        FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
+        YammFragment yammFragment = new YammFragment();
+        tact.add(R.id.main_layout, yammFragment).commit();
+    }
 
-
-
+    @Deprecated
     private void setMainFragment(){
         if (dishItems == null){
             Log.e("MainActivity/setMainFragment","Dishes haven't loaded yet");
@@ -226,7 +232,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
 
-        Type type = new TypeToken<List<DishItem>>(){}.getType();
         FragmentTransaction tact = getSupportFragmentManager().beginTransaction();
         try {
             if (mainFragment != null) {
@@ -238,7 +243,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
             Bundle bundle = new Bundle();
 
-            bundle.putString("dishes", new Gson().toJson(dishItems, type));
+            bundle.putString("dishes", new Gson().toJson(dishItems, DISH_ITEM_LIST_TYPE));
             bundle.putBoolean("isGroup", false);
 
             MainFragment newMainFragment = new MainFragment();
@@ -265,6 +270,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     * Loads dish IDs from Server
     * Returns true if there is a new recommendation
     * */
+
+
+    @Deprecated
     private void loadDishes(){
 
         if (fullScreenDialog==null) {
@@ -322,6 +330,9 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Log.i("MainActivity/getPersonalDishes", "Different List. Init MainFragment");
 
                     dishItems = items;
+
+                    MixpanelController.trackRecommendationsMixpanel(dishItems, MixpanelController.PERSONAL);
+
                     setMainFragment();
 
                     Handler handler = new Handler();
@@ -331,7 +342,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         }
                     }, getResources().getInteger(R.integer.dialog_delay_duration));
 
-                    trackNewRecommendationMixpanel();
+                    MixpanelController.trackNewRecommendationMixpanel();
                     return;
                 }
                 if (isDialogOpen) {
@@ -339,7 +350,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                     //       makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
+                            //       makeYammToast(R.string.no_new_recommendation_message, Toast.LENGTH_LONG);
 
                             closeFullScreenDialog();
                             Log.d("MainActivity/getPersonalDishes", "Dialog Dismissed here - 3");
@@ -367,6 +378,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
+
     private void restoreSavedList(){
         String savedList = prefs.getString(getString(R.string.PREV_DISHES), "none");
 
@@ -381,6 +393,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             Log.i("MainActivity/restoreSavedList", "saved null");
 
     }
+
 
     public void changeInDishItem(List<DishItem> list){
         dishItems = list;
@@ -408,28 +421,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
 
         return true;
-    }
-
-    private void setFriendPickButton(){
-        friendPickButton = (ImageButton) findViewById(R.id.friends_pick_button);
-
-        friendPickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isFriendLoaded()) {
-                    makeYammToast(R.string.friend_not_loaded_message, Toast.LENGTH_LONG);
-                    return;
-                }
-                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                v.setEnabled(false); //To prevent double fire
-                Log.i("MainActivity/onClick", "FriendActivity called");
-
-                trackEnteredGroupRecommendationMixpanel();
-
-                startActivity(intent);
-            }
-        });
     }
 
     /*
@@ -483,6 +474,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         drawerToggle.syncState();
     }
 
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -502,7 +494,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             @Override
             public void success(YammAPIService.RawInfo info, Response response) {
                 Log.i("MainActivity/loadLeftMenu","Personal Info loaded from Server");
-                setMenuList(info.name, info.email, info.phone);
+                setMenuList(info.name, info.phone, info.facebook_uid, info.kakao_uid);
                 putInPref(prefs, USER_EMAIL, info.email);
             }
 
@@ -514,9 +506,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         });
     }
 
-    private void setMenuList(String name, String email, String phone){
-
-        Log.i("MainActivity/setMenuList", "Name " + name + " Email " +email);
+    private void setMenuList(String name, String phone, String fbUid, String kakaoUid){
         leftDrawerAdapter = new YammLeftDrawerAdapter(MainActivity.this);
 
         View.OnClickListener notReady = new View.OnClickListener() {
@@ -547,28 +537,40 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     }
                 }));
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 2, null, notReady));
+        //leftDrawerAdapter.addMenuItems(new LeftDrawerItem(email, getString(R.string.left_drawer_change_pw), 1, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(phone,getString(R.string.left_drawer_change_phone), 1, null, notReady));
+        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_pw), getString(R.string.left_drawer_change_pw), 2, null, getPasswordChangeHandler()));
 
-        if (getRegistrationId(MainActivity.this).isEmpty())
+      /*  if (getRegistrationId(MainActivity.this).isEmpty())
             leftDrawerAdapter.setPushUsageMenu(false);
         else
             leftDrawerAdapter.setPushUsageMenu(true);
+*/
+        if (fbUid.isEmpty())
+            leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
+        else
+            leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
 
-        leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",4, new View.OnClickListener() {
+        if (kakaoUid.isEmpty())
+            leftDrawerAdapter.setKakaoUsageMenu(false, notReady);
+        else
+            leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
+
+
+        /*leftDrawerAdapter.addMenuItems(new LeftDrawerItem(getString(R.string.left_drawer_help),"",5, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTutorial();
             }
-        }));
+        }));*/
 
         if (!CURRENT_APPLICATION_STATUS.equals(PRODUCTION)) {
-            leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
+      /*      leftDrawerAdapter.addMenuItems(new LeftDrawerItem("못먹는음식 다시하기", "", 5, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToActivity(GridActivity.class);
                 }
-            }));
+            }));*/
             String status = "";
             if (CURRENT_APPLICATION_STATUS.equals(STAGING))
                 status = "STAGING";
@@ -586,6 +588,262 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         isLeftMenuLoaded = true;
     }
 
+    private Session.StatusCallback statusCallback =
+            new SessionStatusCallback();
+
+    private class SessionStatusCallback implements Session.StatusCallback {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    }
+
+    @Override
+    protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        super.onSessionStateChange(session, state, exception);
+        if (state.isOpened() && !isLoadingFB) {
+            isLoadingFB = true;
+            Log.d("MainActivity/onSessionStateChange", session.getAccessToken());
+            YammAPIAdapter.getFBConnectService().connectFacebook(session.getAccessToken(), new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+                    Log.d("MainActivity/connectFacebook/Success", "FB Connect Successful");
+                    leftDrawerAdapter.setFBUsageMenu(true, getFBDisconnectHandler());
+                    makeYammToast(R.string.fb_connect_success, Toast.LENGTH_SHORT);
+                    isLoadingFB = false;
+                    if (Session.getActiveSession()!=null) {
+                        Session.getActiveSession().close();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    String msg = retrofitError.getCause().getMessage();
+
+                    Log.e("MainActivity/connectFacebook/Failure", "FB Connect Failure");
+                    if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION))
+                        makeYammToast(R.string.already_registered_error, Toast.LENGTH_SHORT);
+                    else
+                        makeYammToast(R.string.fb_connect_failure, Toast.LENGTH_LONG);
+                    isLoadingFB = false;
+                    if (Session.getActiveSession()!=null) {
+                        Session.getActiveSession().closeAndClearTokenInformation();
+                    }
+                }
+            });
+        }
+    }
+
+    private View.OnClickListener getFBConnectHandler(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isLoadingFB)
+                    return ;
+
+                Session session = Session.getActiveSession();
+                if (!session.isOpened() && !session.isClosed()) {
+                    session.openForRead(new Session.OpenRequest(MainActivity.this)
+                            .setPermissions(Arrays.asList("public_profile", "user_friends"))
+                            .setCallback(statusCallback));
+                } else {
+                    Session.openActiveSession(MainActivity.this, true, statusCallback);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener getFBDisconnectHandler(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isLoadingFB)
+                    return ;
+
+                isLoadingFB = true;
+                YammAPIAdapter.getFBConnectService().disconnectFacebook(new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        Log.d("MainActivity/disconnectFacebook/Success", "FB Disconnect Successful");
+                        leftDrawerAdapter.setFBUsageMenu(false, getFBConnectHandler());
+                        makeYammToast(R.string.fb_disconnect_success, Toast.LENGTH_SHORT);
+                        isLoadingFB = false;
+                        if (Session.getActiveSession()!=null) {
+                            Session.getActiveSession().closeAndClearTokenInformation();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e("MainActivity/disconnectFacebook/Failure", "FB Disconnect Failure");
+                        isLoadingFB = false;
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION))
+                            makeYammToast(getString(R.string.no_other_authentication_error), Toast.LENGTH_LONG);
+                        else
+                            makeYammToast(R.string.fb_disconnect_failure, Toast.LENGTH_LONG);
+                    }
+                });
+            }
+        };
+    }
+
+  /*  private View.OnClickListener getKakaoConnectHandler() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                com.kakao.widget.LoginButton button = new LoginButton(MainActivity.this);
+                button.setLoginSessionCallback(new SessionCallback() {
+                    @Override
+                    public void onSessionOpened() {
+                        Log.d("MainActivity/getKakaoConnectHandler", "Kakao Session Opened : " + com.kakao.Session.getCurrentSession().getAccessToken());
+                        YammAPIAdapter.getFBConnectService().connectKakao(com.kakao.Session.getCurrentSession().getAccessToken(), new Callback<String>() {
+                            @Override
+                            public void success(String s, Response response) {
+                                Log.d("MainActivity/connecKakao/Success", "Kakao Connect Successful");
+                                leftDrawerAdapter.setKakaoUsageMenu(true, getKakaoDisconnectHandler());
+                                makeYammToast(R.string.kakao_connect_success, Toast.LENGTH_SHORT);
+                            }
+
+                            @Override
+                            public void failure(RetrofitError retrofitError) {
+                                Log.e("MainActivity/connectKakao/Failure", "Kakao Connect Failure");
+                                makeYammToast(R.string.kakao_connect_failure, Toast.LENGTH_SHORT);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onSessionClosed(KakaoException e) {
+                        Log.d("MainActivity/getKakaoConnectHandler","Kakao Session Closed");
+                    }
+                });
+                Log.d("MainActivity/getKakaoConnectHandler", button.touch + "");
+            }
+        };
+    }*/
+
+    private View.OnClickListener getKakaoDisconnectHandler() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                YammAPIAdapter.getFBConnectService().disconnectKakao(new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        Log.d("MainActivity/disconnectKakao/Success", "Kakao Disconnect Successful");
+                        leftDrawerAdapter.setKakaoUsageMenu(false, null);
+                        SessionCallback callback = new SessionCallback() {
+                            @Override
+                            public void onSessionOpened() {
+                                Log.d("MainActivity/onSessionOpened","Kakao Opened");
+                            }
+
+                            @Override
+                            public void onSessionClosed(KakaoException e) {
+                                Log.d("MainActivity/onSessionClosed","Kakao Closed");
+                            }
+                        };
+
+                        makeYammToast(R.string.kakao_disconnect_success, Toast.LENGTH_SHORT);
+                        com.kakao.Session.initializeSession(MainActivity.this, callback);
+                        com.kakao.Session.getCurrentSession().close(callback);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError retrofitError) {
+                        Log.e("MainActivity/disconnectKakao/Failure", "Kakao Disconnect Failure");
+                        String msg = retrofitError.getCause().getMessage();
+                        if (msg.equals(YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION))
+                            makeYammToast(getString(R.string.no_other_authentication_error), Toast.LENGTH_LONG);
+                        else
+                            makeYammToast(R.string.kakao_disconnect_failure, Toast.LENGTH_LONG);
+                    }
+                });
+            }
+        };
+    }
+
+    private View.OnClickListener getPasswordChangeHandler(){
+        return new View.OnClickListener() {
+            private EditText messageText, messageText2;
+
+            @Override
+            public void onClick(View v) {
+
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_password_change);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                messageText = (EditText) dialog.findViewById(R.id.dialog_edit_text);
+                messageText2 = (EditText) dialog.findViewById(R.id.dialog_edit_text_2);
+
+                Button positiveButton = (Button) dialog.findViewById(R.id.dialog_positive_button);
+                Button negativeButton = (Button) dialog.findViewById(R.id.dialog_negative_button);
+                ImageButton closeButton = (ImageButton) dialog.findViewById(R.id.dialog_close_button);
+
+                View.OnClickListener dismissListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismissCurrentDialog();
+                        BaseActivity.hideSoftKeyboard(MainActivity.this);
+                    }
+                };
+                messageText.setTransformationMethod(new HiddenPassTransformationMethod());
+                messageText2.setTransformationMethod(new HiddenPassTransformationMethod());
+                closeButton.setOnClickListener(dismissListener);
+
+
+                positiveButton.setOnClickListener(getPositiveListener());
+                negativeButton.setOnClickListener(dismissListener);
+
+                dialog.show();
+                showSoftKeyboard(messageText, MainActivity.this);
+                messageText.requestFocus();
+
+                currentDialog = dialog;
+            }
+
+            private View.OnClickListener getPositiveListener(){
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (messageText.getText().toString().equals(messageText2.getText().toString())) {
+                            if (messageText.getText().toString().length() < 8 ||
+                                    !messageText.getText().toString().matches("^.*[0-9~!@#\\$%\\^&\\*\\(\\)_\\+\\-=` \\{}\\|\\[\\]\\\\:\";'<>\\?,\\.\\/].*$")){
+                                makeYammToast(R.string.password_format_error_message, Toast.LENGTH_SHORT);
+                                return ;
+                            }
+                            final Dialog dialog = createFullScreenDialog(MainActivity.this, getString(R.string.progress_dialog_message));
+                            dialog.show();
+                            YammAPIAdapter.getTokenService().changePassword(messageText.getText().toString(), new Callback<String>() {
+                                @Override
+                                public void success(String s, Response response) {
+                                    Log.d("MainActivity/getPasswordChangeHandler", "Password Change Done");
+                                    makeYammToast(R.string.password_change_success, Toast.LENGTH_SHORT);
+                                    dialog.dismiss();
+                                    dismissCurrentDialog();
+                                    BaseActivity.hideSoftKeyboard(MainActivity.this);
+                                }
+
+                                @Override
+                                public void failure(RetrofitError retrofitError) {
+                                    Log.e("MainActivity/getPasswordChangeHandler", "Password Change Error");
+                                    makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                        else
+                            makeYammToast(R.string.verification_pw_not_identical, Toast.LENGTH_SHORT);
+                    }
+                };
+            }
+        };
+    }
+
+
     public void showTutorial(){
         drawerLayout.closeDrawers();
         tutorial = new TutorialFragment();
@@ -595,7 +853,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         prefs.edit().putBoolean(TUTORIAL, false).commit();
 
-        Log.i("MainFragmentInterface/showTutorial","Set TUTORIAL prefs to false");
+        Log.i("MainFragmentInterface/showTutorial", "Set TUTORIAL prefs to false");
     }
 
     /*
@@ -662,7 +920,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     @Override
                     public void success(YammAPIService.RawFriends rawFriends, Response response) {
                         friendsList = rawFriends.getFriendsList();
-                        Log.i("MainActivity/sendContactsToServer","Friend List Loaded "  + friendsList);
+                        Log.i("MainActivity/sendContactsToServer", "Friend List Loaded " + friendsList);
                         setContactNames();
                         BaseActivity.putInPref(prefs, getString(R.string.FRIEND_LIST), fromFriendListToString(friendsList));
                     }
@@ -676,7 +934,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                         }
                         Log.e("MainActivity/sendContactsToServer", "Phone Sending Failed");
                     }
-                });
+                }
+        );
     }
 
     private void setContactNames(){
@@ -724,17 +983,30 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
         }
     }
 
-    private void trackNewRecommendationMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("New Recommendation", props);
-        Log.i("MainActivity/trackNewRecommendationMixpanel","New Recommendation Tracked ");
+    private void getDishListFromServer(){
+        YammAPIAdapter.getTokenService().getDishes(new Callback<List<DishItem>>() {
+            @Override
+            public void success(List<DishItem> dishItems, Response response) {
+                Log.d("MainActivity/getDishListFromServer/success","Got List From Server " + dishItems);
+                fullDishList = dishItems;
+                if (shouldOpenSearchWidget){
+                    if (fullScreenDialog!=null)
+                        fullScreenDialog.dismiss();
+                    showSearchWidget();
+                    shouldOpenSearchWidget = false;
+                }
+            }
 
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.e("MainActivity/getDishListFromServer/failure","Fail to load Dish from Server");
+            }
+        });
     }
 
-    private void trackEnteredGroupRecommendationMixpanel(){
-        JSONObject props = new JSONObject();
-        mixpanel.track("Entered Group Recommendation", props);
-        Log.i("MainActivity/trackEnteredGroupRecommendationMixpanel","Entered Group Recommendation Tracked ");
+    private void showSearchWidget(){
+        searchWidget = new SearchWidget(fullDishList, MainActivity.this);
+        searchWidget.showSearchDialog();
     }
 }
 

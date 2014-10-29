@@ -12,15 +12,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.interfaces.MainFragmentInterface;
+import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         loadBundle();
         setSelectedItems();
         loadDishes();
-        trackReceivedGroupRecommendation();
+        MixpanelController.trackReceivedGroupRecommendation(selectedFriend.size(), selectedTime);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
                     @Override
                     public void success(String s, Response response) {
                         Log.i("GroupRecommendationActivity/sendPushMessage", "Push " + s);
-                        trackGroupPokeFriendMixpanel(selectedFriend.size(), selectedTime, fDish.getName());
+                        MixpanelController.trackGroupPokeFriendMixpanel(selectedFriend.size(), selectedTime, fDish.getName());
                     }
 
                     @Override
@@ -197,6 +195,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
         Bundle bundle = new Bundle();
         bundle.putString("dishes", new Gson().toJson(dishItems, type));
         bundle.putBoolean("isGroup", true);
+        bundle.putBoolean("shouldPerform",true);
 
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
@@ -233,6 +232,7 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             public void success(List<DishItem> dishes, Response response) {
                 Log.i("GroupRecommendationActivity/getGroupSuggestions", "Group Recommendation Success " + dishItems);
                 dishItems = dishes;
+                MixpanelController.trackRecommendationsMixpanel(dishItems, MixpanelController.GROUP);
                 setFragment();
 
 
@@ -308,32 +308,5 @@ public class GroupRecommendationActivity extends BaseActivity implements MainFra
             return "lunch";
         else
             return "dinner";
-    }
-
-    private void trackReceivedGroupRecommendation(){
-        JSONObject props = new JSONObject();
-        try{
-            props.put("count", selectedFriend.size());
-            props.put("meal", selectedTime);
-
-        }catch(JSONException e){
-            Log.e("GroupRecommendationActivity/trackReceivedGroupRecommendation","JSON Error");
-        }
-        mixpanel.track("Received Group Recommendation", props);
-        Log.i("GroupRecommendationActivity/trackReceivedGroupRecommendation","Received Group Recommendation Tracked");
-    }
-
-    private void trackGroupPokeFriendMixpanel(int count, String time, String dish){
-        JSONObject props = new JSONObject();
-        try{
-            props.put("Method", "YAMM");
-            props.put("Count", count);
-            props.put("meal", time);
-            props.put("Dish", dish);
-        }catch(JSONException e){
-            Log.e("GroupRecommendationActivity/trackGroupPokeFriend","JSON Error");
-        }
-        mixpanel.track("Group Poke Friend", props);
-        Log.i("GroupRecommendationActivity/trackGroupPokeFriend","Group Poke Friend Tracked");
     }
 }

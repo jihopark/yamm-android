@@ -17,28 +17,24 @@
         app:pageColor="@android:color/transparent"
         app:fillColor="#c3ffffff"
         app:strokeColor="#c3ffffff"
-        android:layout_above="@+id/intro_button_layout"
+        android:layout_above="@+id/start_button"
         android:layout_marginBottom="34dp"
         />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+    <ImageButton
+        style="@style/IntroButton"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/enabled_round_button"
         android:layout_alignParentBottom="true"
-        android:id="@+id/intro_button_layout">
-        <Button
-            style="@style/IntroButton"
-            android:layout_marginBottom="14dp"
-            android:textColor="#ffe0323b"
-            android:background="@drawable/white_round_button"
-            android:text="@string/intro_join_button"
-            android:id="@+id/join_button"/>
-        <Button
-            style="@style/IntroButton"
-            android:layout_marginBottom="18dp"
-            android:textColor="#ffffffff"
-            android:background="@drawable/enabled_round_button"
-            android:text="@string/intro_login_button"
-            android:id="@+id/login_button"/>
-    </LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/start_button"
+        android:src="@drawable/yamm_start_text"/>
+    <fragment
+        android:name="com.teamyamm.yamm.app.widget.JoinFragment"
+        android:id="@+id/join_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </RelativeLayout>

@@ -22,6 +22,10 @@ import java.util.List;
  */
 public class YammLeftDrawerAdapter extends BaseAdapter {
     private final static int pushUsageIndex = 3;
+    private final static int fbUsageIndex = 3;
+    private final static int kakaoUsageIndex = 4;
+
+
     private List<LeftDrawerItem> items;
     private Context context;
 
@@ -65,6 +69,45 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
         notifyDataSetInvalidated();
     }
 
+    public void setFBUsageMenu(boolean b, View.OnClickListener click){
+        LeftDrawerItem item;
+        if (b){
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
+                    context.getString(R.string.left_drawer_connect_status_positive), fbUsageIndex, null, click);
+        }
+        else{
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_fb_title),
+                    context.getString(R.string.left_drawer_connect_status_negative), fbUsageIndex, null, click);
+        }
+        if (items.size() > fbUsageIndex)
+            items.set(fbUsageIndex, item);
+        else
+            items.add(fbUsageIndex, item);
+
+        Log.i("YammLeftDrawerAdapter/setFBUsageMenu","FB Usage Menu set to " + b);
+        notifyDataSetInvalidated();
+    }
+
+    public void setKakaoUsageMenu(boolean b, View.OnClickListener click){
+        LeftDrawerItem item;
+        if (b){
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_kakao_title),
+                    context.getString(R.string.left_drawer_connect_status_positive), kakaoUsageIndex, null, click);
+        }
+        else{
+            item = new LeftDrawerItem(context.getString(R.string.left_drawer_kakao_title),
+                    context.getString(R.string.left_drawer_connect_status_negative), kakaoUsageIndex, null, click);
+        }
+        if (items.size() > kakaoUsageIndex)
+            items.set(kakaoUsageIndex, item);
+        else
+            items.add(kakaoUsageIndex, item);
+
+        Log.i("YammLeftDrawerAdapter/setKakaoUsageMenu","Kakao Usage Menu set to " + b);
+        notifyDataSetInvalidated();
+    }
+
+
     public void addMenuItems(LeftDrawerItem item){
         items.add(item);
     }
@@ -78,8 +121,8 @@ public class YammLeftDrawerAdapter extends BaseAdapter {
     }
 
     private class LeftDrawerItemView extends RelativeLayout{
-        private final int[] iconRes = {R.drawable.sidemenu_icon_01, R.drawable.sidemenu_icon_02,
-                                          R.drawable.sidemenu_icon_03, R.drawable.sidemenu_icon_04,
+        private final int[] iconRes = {R.drawable.sidemenu_icon_01, R.drawable.sidemenu_icon_03,
+                                          R.drawable.sidemenu_icon_02,R.drawable.sidemenu_icon_06, R.drawable.sidemenu_icon_07,
                                             R.drawable.sidemenu_icon_05};
 
         private LeftDrawerItem item;

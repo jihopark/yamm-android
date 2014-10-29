@@ -36,6 +36,9 @@ public class YammAPIAdapter {
     private static YammAPIService dislikeService = null;
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
+    private static YammAPIService oAuthLoginService = null;
+    private static YammAPIService fbConnectService = null;
+
     private static String token = null;
     private static Context context = null;
     private static AndroidLogger logger = null;
@@ -194,17 +197,76 @@ public class YammAPIAdapter {
         return loginService;
     }
 
+    /*
+    * Service for FB Login
+    * */
+    public static YammAPIService getOAuthLoginService(){
+        checkAPIURL();
+
+        Log.i("YammAPIAdapter/getOAuthLoginService", "Oauth LoginService initiated");
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiURL)
+                .setErrorHandler(new OAuthLoginErrorHandler())
+                .setLog(setRestAdapterLog())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+
+        oAuthLoginService = restAdapter.create(YammAPIService.class);
+
+        return oAuthLoginService;
+    }
+
+    /*
+   * Service for FB Connect/Disconnect
+   * */
+    public static YammAPIService getFBConnectService(){
+        checkAPIURL();
+
+        if (fbConnectService == null) {
+            if (token==null){
+                Log.e("YammAPIAdapter/getFBConnectService","Token should be set first!!");
+                return null;
+            }
+
+            Log.i("YammAPIAdapter/getFBConnectService", "FB ConnectService initiated");
+
+            RequestInterceptor interceptor = new RequestInterceptor() {
+                @Override
+                public void intercept(RequestFacade request) {
+                    request.addHeader("Authorization", "Bearer " + token);
+                }
+            };
+
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(apiURL)
+                    .setErrorHandler(new FBConnectErrorHandler())
+                    .setLog(setRestAdapterLog())
+                    .setLogLevel(RestAdapter.LogLevel.FULL)
+                    .setRequestInterceptor(interceptor)
+                    .build();
+
+            fbConnectService = restAdapter.create(YammAPIService.class);
+        }
+        return fbConnectService;
+    }
+
+
     private static RestAdapter.Log setRestAdapterLog(){
         return new RestAdapter.Log() {
             @Override
             public void log(String s) {
                 Log.i("YammAPIServiceLog", s);
                 if (context!=null) {
-                    if (logger==null) {
-                        logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
-                        Log.i("YammAPIAdapter/setRestAdapterLog","Logger is null. Init Logentries Logger");
+                    try {
+                        if (logger == null) {
+                            logger = AndroidLogger.getLogger(context, context.getResources().getString(R.string.logentries_key), false);
+                            Log.i("YammAPIAdapter/setRestAdapterLog", "Logger is null. Init Logentries Logger");
+                        }
+                        logger.info(s);
+                    }catch(IllegalThreadStateException e){
+                        Log.e("YammAPIAdapter/setRestAdapterLog","Fuck Logentries Error");
+                        e.printStackTrace();
                     }
-                    logger.info(s);
                 }
             }
         };
@@ -213,6 +275,64 @@ public class YammAPIAdapter {
     /*
     Error Handlers
     * */
+
+    public static class FBConnectErrorHandler implements ErrorHandler{
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("FBConnectErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            if (r != null && r.getStatus() == 400) {
+                Log.e("FBConnectErrorHandler/handleError","Handling 400 Error");
+                YammAPIService.YammRetrofitError error = new YammAPIService.YammRetrofitError();
+                Gson gson = new Gson();
+                try {
+                    error = gson.fromJson(responseToString(r), error.getClass());
+                }catch(JsonSyntaxException e){
+                    Log.e("FBConnectErrorHandler/handleError","Json Syntax Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(IllegalStateException e){
+                    Log.e("FBConnectErrorHandler/handleError","Illegal State Exception Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }catch(NullPointerException e){
+                    Log.e("FBConnectErrorHandler/handleError","NullpointerException Caught");
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+                }
+
+                Log.e("FBConnectErrorHandler/handleError",error.getMessage());
+
+                if (error.getCode().equals("NoOtherAuthenticationMethod")) {
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NO_OTHER_AUTHENTICATION);
+                }
+                else if (error.getCode().equals("AlreadyRegistered")){
+                    return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
+                }
+            }
+            Log.e("FBConnectErrorHandler/handleError","Unidentified Error");
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+    }
+
+    public static class OAuthLoginErrorHandler implements ErrorHandler{
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Response r = cause.getResponse();
+
+            if (cause.isNetworkError()){
+                Log.e("OAuthLoginErrorHandler/handleError","Handling Network Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.NETWORK);
+            }
+            if (r != null && r.getStatus() == 403) {
+                Log.e("OAuthLoginErrorHandler/handleError","Handling 403 Error");
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.AUTHENTICATION);
+            }
+            Log.e("OAuthLoginErrorHandler/handleError","Unidentified Error " + r.getStatus());
+            return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
+        }
+    }
 
     public static class TokenErrorHandler implements ErrorHandler{
         @Override
@@ -258,30 +378,6 @@ public class YammAPIAdapter {
             }
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
-        }
     }
 
     public static class JoinErrorHandler implements ErrorHandler {
@@ -316,7 +412,7 @@ public class YammAPIAdapter {
             Log.e("JoinErrorHandler/handleError",error.getMessage());
 
 
-            if (error.getCode().equals("DuplicateAccount")) {
+            if (error.getCode().equals("DuplicatePhone")) {
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
             }
             else if (error.getCode().equals("IncorrectAuthCode"))
@@ -329,33 +425,11 @@ public class YammAPIAdapter {
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.EMAIL_FORMAT);
             else if (error.getCode().equals("InvalidParam:phone:pattern"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.PHONE_FORMAT);
-
+            else if (error.getCode().equals("InvalidToken")){
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INVALID_TOKEN);
+            }
             Log.e("JoinErrorHandler/handleError", "Handling Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
-        }
-
-        private String responseToString(Response result){
-            //Try to get response body
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-
-                reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
-
-                String line;
-
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return sb.toString();
         }
     }
 
@@ -375,5 +449,29 @@ public class YammAPIAdapter {
             Log.e("LoginErrorHandler/handleError","Unidentified Error");
             return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.UNIDENTIFIED);
         }
+    }
+
+    public static String responseToString(Response result){
+        //Try to get response body
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            reader = new BufferedReader(new InputStreamReader(result.getBody().in()));
+
+            String line;
+
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
     }
 }

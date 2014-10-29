@@ -10,13 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/dish_pager" />
+    <!--
     <ImageButton
         style="@style/DislikeButton"
         android:id="@+id/dish_dislike_button"
         />
+        -->
     <ImageButton
         style="@style/SearchMapButton"
-        android:layout_toLeftOf="@+id/dish_dislike_button"
+        android:layout_alignParentRight="true"
         android:id="@+id/search_map_button"
         />
     <ImageButton
@@ -26,7 +28,7 @@
         />
     <ImageButton
         style="@style/NextButton"
-        android:layout_above="@+id/dish_dislike_button"
+        android:layout_above="@+id/search_map_button"
         android:id="@+id/dish_next_right_button"
         />
     <ImageButton
@@ -34,7 +36,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="false"
         android:src="@drawable/arrow_left"
-        android:layout_above="@+id/dish_dislike_button"
+        android:layout_above="@+id/search_map_button"
         android:id="@+id/dish_next_left_button"
         android:visibility="gone"
         />

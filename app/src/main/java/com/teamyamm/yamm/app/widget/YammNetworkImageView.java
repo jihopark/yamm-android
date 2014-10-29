@@ -43,6 +43,8 @@ public class YammNetworkImageView extends ImageView {
     /** The URL of the network image to load */
     private String mUrl;
     private ProgressBar circle;
+    private int count = 0;
+    private final static int MAX_COUNT = 4; //try to reload images MAX_COUNT number of times.
 
     /**
      * Resource ID of the image to be used as a placeholder until the network image is loaded.
@@ -166,6 +168,10 @@ public class YammNetworkImageView extends ImageView {
                         if (mErrorImageId != 0) {
                             setImageResource(mErrorImageId);
                         }
+                        if (++count < MAX_COUNT){
+                            Log.d("YammNetworkImageView/onErrorResponse","Reload Image for the " + count + " times");
+                            loadImageIfNecessary(false);
+                        }
                     }
 
                     @Override
@@ -235,7 +241,7 @@ public class YammNetworkImageView extends ImageView {
 
     @Override
     public void setImageBitmap(Bitmap bm) {
-        Log.d("FadeInNetworkImageView/setImageBitmap", "Transition");
+        Log.d("YammNetworkImageView/setImageBitmap", "Transition");
         TransitionDrawable td = new TransitionDrawable(new Drawable[]{
                 new ColorDrawable(android.R.color.transparent),
                 new BitmapDrawable(getContext().getResources(), bm)

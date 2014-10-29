@@ -4,6 +4,7 @@ import com.teamyamm.yamm.app.pojos.BattleItem;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.GridItem;
+import com.teamyamm.yamm.app.pojos.YammPlace;
 
 import java.util.List;
 import java.util.Set;
@@ -15,23 +16,45 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Query;
 
 public interface YammAPIService {
 
 
-    //User Registration
+    @GET("/client-info")
+    void getClientInfo(Callback<RawClientInfo> callback);
 
+    public static class RawClientInfo{
+        public String android_version;
+    }
+
+    //User Registration
+    @FormUrlEncoded
+    @POST("/registration/facebook")
+    void facebookRegistration(@Field("name") String name, @Field("fb_token") String token, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
+
+    @FormUrlEncoded
+    @POST("/registration/kakao")
+    void kakaoRegistration(@Field("name") String name, @Field("kakao_token") String token, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
+
+    @FormUrlEncoded
+    @POST("/registration/password")
+    void pwRegistration(@Field("name") String name, @Field("password") String password, @Field("phone") String phone, @Field("authcode") String code, Callback<YammToken> callback);
+
+    @Deprecated
     @FormUrlEncoded
     @POST("/registration/user")
     void userRegistration(@Field("name") String name, @Field("email") String email,
                             @Field("password") String password, @Field("phone") String phone, @Field("authcode") String authcode, Callback<String> cb);
 
     public static class YammToken{
-        private String access_token;
-        private String token_type;
+        public int uid;
+        public String access_token;
+        public String token_type;
 
-        public YammToken(String access_token, String token_type){
+        public YammToken(int uid, String access_token, String token_type){
+            this.uid = uid;
             this.access_token = access_token;
             this.token_type = token_type;
         }
@@ -40,6 +63,7 @@ public interface YammAPIService {
     }
 
     public class YammRetrofitException extends RuntimeException{
+        public static final String INVALID_TOKEN = "TOK"; //Invalid OAuth Token
         public static final String UNIDENTIFIED = "WTF"; //unidentified
         public static final String NETWORK = "NET"; //network error
         public static final String AUTHENTICATION = "AUT"; //authentication is wrong
@@ -49,6 +73,7 @@ public interface YammAPIService {
         public static final String PASSWORD_FORMAT = "PWF"; //password should contain at least one number or special char
         public static final String EMAIL_FORMAT = "EMF"; //email format is wrong
         public static final String PHONE_FORMAT = "PHF"; //phone format is wrong
+        public static final String NO_OTHER_AUTHENTICATION = "NOA"; //no other authentication method (email, facebook, kakao)
 
 
         public YammRetrofitException(Throwable e, String message){
@@ -92,9 +117,25 @@ public interface YammAPIService {
     }
 
     /*
-    * Gets GridItems from Server in GridActivity
+    * FB Login. Should send FB AccessToken
     * */
 
+    @GET("/auth/facebook")
+    void fbLogin(@Query("fb_token") String token, Callback<RawOAuthToken> callback);
+
+    @GET("/auth/kakao")
+    void kakaoLogin(@Query("kakao_token") String token, Callback<RawOAuthToken> callback);
+
+    public static class RawOAuthToken {
+        public String access_token;
+        public String token_type;
+        public String uid;
+    }
+
+    /*
+    * Gets GridItems from Server in GridActivity
+    * */
+    @Deprecated
     @GET("/cannot-eat-choices")
     void getGridItems(Callback<Choices> cb);
 
@@ -121,6 +162,7 @@ public interface YammAPIService {
     * To start battle, send ""
     * */
 
+    @Deprecated
     @GET("/battle/next-round")
     void getBattleItem(@Query("results") String result, Callback<RawBattleItem> callback);
 
@@ -201,6 +243,7 @@ public interface YammAPIService {
         }
     }
 
+    @Deprecated
     @GET("/preferences/suggestions")
     void getPersonalDishes(Callback<List<DishItem>> cb);
 
@@ -231,15 +274,50 @@ public interface YammAPIService {
         }
     }
 
+    @GET("/dish")
+    void getDishes(Callback<List<DishItem>> callback);
+
+    /*
+    * Personal Recommendation
+    * */
+
+    //suggestionType SHOULD BE "lunch" or "dinner"
+    @GET("/suggestion/personal")
+    void getSuggestion(@Query("suggestionType") String type, Callback<RawSuggestion> cb);
+
+    public static class RawSuggestion{
+        public String title;
+        public List<DishItem> dishes;
+    }
+
+    @GET("/suggestion/personal-check-new")
+    void checkIfNewSuggestion(Callback<RawCheck> cb);
+
+    public static class RawCheck{
+        public boolean lunch, dinner, alcohol, today;
+    }
+    /*
+    * Group Recommendation
+    * */
+
+    @Deprecated
     @GET("/group/suggestions")
-    void getGroupSuggestions(@Query("mealType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
+    void getOldGroupSuggestions(@Query("mealType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
+
+    @GET("/suggestion/group")
+    void getGroupSuggestions(@Query("suggestionType") String meal, @Query("userIds") String userIDs, Callback<List<DishItem>> callback);
 
     @POST("/group/next-suggestion")
     void postDislikeDishGroup(@Body RawDislike dislike, Callback<DishItem> callback);
 
+    @Deprecated
     @FormUrlEncoded
     @POST("/password-recovery/request")
     void requestPasswordRecovery(@Field("email") String email, Callback<String> cb);
+
+    @FormUrlEncoded
+    @POST("/password-recovery/request")
+    void requestPasswordRecoveryFromPhone(@Field("phone") String phone, Callback<String> cb);
 
     /*
     * About Push Messages
@@ -283,20 +361,51 @@ public interface YammAPIService {
     @GET ("/user/info")
     void getUserInfo(Callback<RawInfo> callback);
 
+    @FormUrlEncoded
+    @PUT ("/user/facebook")
+    void connectFacebook(@Field("fb_short_lived_token") String token, Callback<String> callback);
+
+    @DELETE("/user/facebook")
+    void disconnectFacebook(Callback<String> callback);
+
+    @FormUrlEncoded
+    @PUT ("/user/kakao")
+    void connectKakao(@Field("kakao_access_token") String token, Callback<String> callback);
+
+    @DELETE("/user/kakao")
+    void disconnectKakao(Callback<String> callback);
+
+    @FormUrlEncoded
+    @PUT ("/user/password")
+    void changePassword(@Field("password") String password, Callback<String> callback);
+
+
+    @Deprecated
+    @FormUrlEncoded
+    @PUT("/user/phone")
+    void registerPhone(@Field("newPhone") String phone, @Field("authcode") String code, Callback<String> callback);
+
     public class RawInfo{
         public long uid;
         public String email;
         public String phone;
         public String name;
+        public String facebook_uid;
+        public String kakao_uid;
 
-        public RawInfo(long uid, String email, String phone, String name){
-            this.uid = uid;
+        public RawInfo(long uid, String email, String phone, String name, String facebook_uid, String kakao_uid){
+                this.uid = uid;
             this.email = email;
             this.phone = phone;
             this.name = name;
+            this.facebook_uid =facebook_uid;
+            this.kakao_uid = kakao_uid;
         }
     }
 
+    @GET("/map/nearby")
+    void getPlacesNearby(@Query("lat") double lat, @Query("lng") double lng,
+                               @Query("dish_id") int id, Callback<List<YammPlace>> callback);
     /*
     * Error
     * */

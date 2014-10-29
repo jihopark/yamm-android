@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="460"
-        android:background="#b2220002"
+        android:background="#b2000000"
         android:id="@+id/dish_views_container">
         <LinearLayout
             android:layout_alignParentTop="true"
@@ -41,6 +41,24 @@
             android:layout_height="74dp"
             android:src="@drawable/vs"
             />
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp">
+            <View
+                android:id="@+id/progress_bar_done"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="#ffe0323b"/>
+            <View
+                android:id="@+id/progress_bar_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ff000000"/>
+        </LinearLayout>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

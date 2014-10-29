@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="70dp">
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:textSize="20sp"
+            android:color="@color/place_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name_text"/>
+        <TextView
+            android:textSize="12sp"
+            android:color="@color/place_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/address_text"/>
+    </LinearLayout>
+    <TextView
+        android:textSize="12sp"
+        android:layout_centerVertical="true"
+        android:color="@color/place_name_text"
+        android:layout_toLeftOf="@+id/place_detail_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance_text"/>
+    <ImageButton
+        android:background="@android:color/transparent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/list_right_arrow"
+        android:layout_width="15dp"
+        android:layout_height="24.5dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/place_detail_button"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffe2ddcb"/>
+</RelativeLayout>

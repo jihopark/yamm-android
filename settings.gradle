@@ -1,1 +1,1 @@
-include ':app', ':HeaderListView', ':sdk'
+include ':app', ':facebook'

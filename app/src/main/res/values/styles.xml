@@ -55,8 +55,6 @@
     <style name="IntroButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginRight">15dp</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -84,13 +82,16 @@
 
     <!-- Join Activity -->
     <style name="JoinEditText">
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">46dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:textColorHint">#ffaaa8a1</item>
-        <item name="android:background">@drawable/textlines</item>
         <item name="android:textColor">@color/join_text_color</item>
+        <item name="android:background">@drawable/textlines</item>
     </style>
 
     <style name="VeriButton">
@@ -207,7 +208,25 @@
     </style>
 
 
+
     <!-- Main Activity -->
+    <style name="YammMainButton">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">130dp</item>
+    </style>
+
+    <style name="CurrentLocationButton">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:paddingRight">21dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/friend_pick_round_button</item>
+    </style>
     <style name="FriendPickButton">
         <item name="android:paddingLeft">9dp</item>
         <item name="android:paddingRight">21dp</item>

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.teamyamm.yamm.app"
-    android:versionCode="10"
+    android:versionCode="11"
     android:versionName="@string/app_version_name">
 
     <!-- Permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -20,7 +23,6 @@
     <permission android:name="com.teamyamm.yamm.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
     <uses-permission android:name="com.teamyamm.yamm.permission.C2D_MESSAGE"/>
-
 
     <application
         android:allowBackup="true"
@@ -45,7 +47,9 @@
         <activity
             android:name="com.teamyamm.yamm.app.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/YammLogoActionBarTheme" >
+            android:theme="@style/YammLogoActionBarTheme"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask">
         </activity>
 
         <!-- Intro Screen -->
@@ -62,7 +66,7 @@
             android:name="com.teamyamm.yamm.app.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/YammLoginActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.IntroActivity" />
@@ -81,7 +85,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.JoinActivity"
             android:label="@string/title_activity_join"
-            android:theme="@style/YammJoinActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.IntroActivity" />
@@ -97,7 +101,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.FriendActivity"
             android:label="@string/title_activity_friend"
-            android:theme="@style/YammFriendActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
@@ -107,7 +111,7 @@
         <activity
             android:name="com.teamyamm.yamm.app.InviteActivity"
             android:label="@string/title_activity_invite"
-            android:theme="@style/YammInviteActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.FriendActivity" />
@@ -117,20 +121,57 @@
         <activity
             android:name="com.teamyamm.yamm.app.GroupRecommendationActivity"
             android:label="@string/title_activity_group_recommendation"
-            android:theme="@style/YammGroupRecommendationActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
         </activity>
 
+        <!-- Yamm Activity -->
+        <activity
+            android:name="com.teamyamm.yamm.app.YammActivity"
+            android:label="@string/title_activity_group_recommendation"
+            android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.MainActivity" />
+        </activity>
+
+
         <!-- Poke Activity -->
         <activity
             android:name="com.teamyamm.yamm.app.PokeActivity"
             android:label="@string/title_activity_poke"
-            android:theme="@style/YammPokeActionBarTheme" >
+            android:theme="@style/YammActionBarTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamyamm.yamm.app.MainActivity" />
+        </activity>
+
+        <!-- New Join Activity -->
+        <activity
+            android:name=".NewJoinActivity"
+            android:label="@string/title_activity_new_join"
+            android:theme="@style/YammActionBarTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamyamm.yamm.app.IntroActivity" />
+            </activity>
+
+        <!-- Map Activity -->
+        <activity
+            android:launchMode="singleTask"
+            android:name="com.teamyamm.yamm.app.MapActivity"
+            android:label="@string/title_activity_map"
+            android:theme="@style/YammActionBarTheme" >
+           </activity>
+
+        <!-- Place Activity -->
+        <activity
+            android:launchMode="singleTask"
+            android:name="com.teamyamm.yamm.app.PlaceActivity"
+            android:label="@string/title_activity_place"
+            android:theme="@style/YammActionBarTheme" >
         </activity>
 
         <!-- Poke AlertActivity -->
@@ -139,10 +180,24 @@
             android:label="@string/title_activity_poke_alert"
             ></activity>
 
+        <!-- For Google Maps API -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB2cCpoRAmxqFo5JrNSZgPbGPG5nCteT_I"/>
+
+        <uses-feature
+            android:glEsVersion="0x00020000"
+            android:required="true"/>
+
         <!-- For KaKao SDK -->
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+
+        <activity
+            android:name="com.kakao.LoginActivity"
+            android:theme="@style/YammPokeDialog"
+            android:configChanges="orientation|screenSize"/>
 
         <!-- For Push -->
         <meta-data android:name="com.google.android.gms.version"
@@ -164,6 +219,10 @@
         <meta-data android:name="com.kakao.sdk.GcmProjectId" android:value="@string/gcm_project_number"/>
         ...
 
+        <!-- For Facebook Login -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_test_id"/>
+        <activity android:name="com.facebook.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
 
 </manifest>

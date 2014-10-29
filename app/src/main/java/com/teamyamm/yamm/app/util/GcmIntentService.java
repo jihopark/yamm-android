@@ -93,11 +93,11 @@ public class GcmIntentService extends IntentService {
         if (BaseActivity.CURRENT_APPLICATION_STATUS.equals(env))
             return true;
 
-        if ((BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.STAGING)
+        /*if ((BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.STAGING)
                 && env.equals(BaseActivity.PRODUCTION)) ||
                 (BaseActivity.CURRENT_APPLICATION_STATUS.equals(BaseActivity.PRODUCTION)
                 && env.equals(BaseActivity.STAGING)))
-            return true;
+            return true;*/
         return false;
     }
 

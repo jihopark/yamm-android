@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_version_name">0.1.10</string>
+    <string name="app_version_name">0.2.1</string>
+    <string name="facebook_app_test_id">842999912412097</string>
+    <string name="facebook_app_id">842551369123618</string>
     <string name="logentries_key">6036cb0d-331d-4124-8245-e93f91de1388</string>
     <string name="app_name">Yamm</string>
     <string name="hello_world">Hello world!</string>
@@ -18,23 +20,33 @@
     <string name="title_activity_group_recommendation">그룹 추천</string>
     <string name="title_activity_poke">친구랑 같이 먹기</string>
     <string name="title_activity_poke_alert">친구랑 같이 먹어요</string>
+    <string name="title_activity_new_join">가입하기</string>
+    <string name="title_activity_map">음식점 찾기</string>
+    <string name="title_activity_place">음식점 정보</string>
+    <string name="title_fragment_phone_auth">휴대폰 인증</string>
+
 
     <!-- Error Messages -->
     <string name="network_error_message">인터넷 연결이 안됬거나 불안정합니다</string>
-    <string name="location_error">위치를 확인할 수가 없습니다</string>
+    <string name="location_error">위치를 확인할 수가 없습니다\n위치 정보가 켜져있어야 검색이 가능합니다</string>
     <string name="gps_accuracy_warning_text">GPS가 부정확합니다</string>
-    <string name="login_authentication_error_message">이메일이나 비밀번호가 틀렸습니다</string>
+    <string name="login_authentication_error_message">전화번호나 비밀번호가 틀렸습니다</string>
     <string name="join_error_message">잘못된 정보가 있습니다. 확인해주세요</string>
     <string name="phone_number_error_message">전화번호 형식이 잘못되었습니다</string>
-    <string name="verification_error_message">문자전송에 실패했습니다. 재전송하세요</string>
+    <string name="verification_error_message">문자전송에 실패했습니다.\n번호를 확인하고 다시 시도해주세요</string>
     <string name="unidentified_error_message">알수 없는 오류가 발생했습니다. 다시 시도해주세요</string>
-    <string name="duplicate_account_error_message">이미 같은 이메일이나 휴대폰 번호로 가입되어 있습니다</string>
+    <string name="duplicate_account_error_message">이미 같은 휴대폰 번호로 가입되어 있습니다</string>
+    <string name="invalid_token_error_message">페북이나 카톡 인증이 잘못되었습니다.\n다시 시도해주세요</string>
     <string name="incorrect_authcode_error_message">인증번호를 다시 확인하세요</string>
     <string name="email_format_error_message">잘못된 이메일 형식입니다</string>
     <string name="password_format_error_message">비밀번호에 숫자나 특수문자가 포함되어야 합니다</string>
     <string name="password_min_error_message">비밀번호는 최소한 8자이어야 합니다</string>
     <string name="invalid_token_error">다시 한번 로그인해주세요</string>
     <string name="wtf_error_handle_message">죄송합니다, 오류가 있어 재시작하였습니다</string>
+    <string name="fb_login_duplicate_error_message">같은 이메일로 가입돼 있습니다\n로그인 후 페북 연동을 해주시기 바랍니다</string>
+    <string name="fb_invalid_token_message">페이스북에서 올바른 정보를 불러오지 못했습니다</string>
+    <string name="location_api_error">GPS를 활성화해야 현재 위치를 알 수 있습니다</string>
+    <string name="geocoding_error">해당 장소를 찾을 수 없었습니다</string>
     <!-- Shared Preferences KEY -->
     <string name="GRID_RESULT">GRID</string>
     <string name="PREVIOUS_ACTIVITY">ACTIVITY</string>
@@ -46,6 +58,7 @@
     <string name="PREVIOUS_ACTIVITY_GRID">GridActivity</string>
     <string name="PREVIOUS_ACTIVITY_INVITE">FriendActivity</string>
     <string name="PREVIOUS_ACTIVITY_FRIEND">InviteActivity</string>
+    <string name="PREVIOUS_ACTIVITY_PHONE">PhoneAuthActivity</string>
     <string name="BATTLE_RESULTS">battleitems</string>
     <string name="CONTACT_READ_TIME">contact</string>
     <string name="PHONE_NAME_MAP">phonenamemap</string>
@@ -56,6 +69,8 @@
     <string name="PREV_END_OF_RECOMMENDATION_GROUP">endgroup</string>
 
     <!-- Dialog -->
+    <string name="dialog_positive_formal">확인</string>
+    <string name="dialog_negative_formal">취소</string>
     <string name="dialog_positive">네</string>
     <string name="dialog_negative">아니오</string>
     <string name="internet_alert_title">인터넷?</string>
@@ -64,9 +79,13 @@
     <string name="meal_picker_dialog_title">설마 아침부터...</string>
     <string name="invalid_date_message">오늘 이후의 날짜를 입력해주세요</string>
     <string name="invalid_date_title">과거</string>
-    <string name="progress_dialog_message">조금만 기다려주세요!</string>
+    <string name="progress_dialog_message">잠시만 기다려주십시오</string>
     <string name="join_progress_dialog_title">가입 처리 중입니다\n조금만 기다려주세요</string>
     <string name="new_recommendation_message">당신 취향에 맞는 새로운 추천입니다</string>
+
+    <string name="join_success">가입이 완료되었습니다</string>
+    <string name="join_welcome_message">Yamm에 가입되었습니다\n버튼을 눌러 추천을 받으시거나\n검색으로 무엇을 먹을지 골라보세요</string>
+
 
     <string name="fb_dialog_title">좋아요 해주세요</string>
     <string name="fb_dialog_message">Yamm 페이스북에 좋아요를 누르면 더 많은 정보와 소식을 알려드려요! 다양한 이벤트와 재밌거리를 위해 페이스북 라이크 고고!!</string>
@@ -88,10 +107,23 @@
     <string name="place_pick_title">음식점 검색</string>
     <string name="place_pick_message">드시고 싶은 위치에서 음식점을 검색해 보세요.</string>
 
+    <string name="search_button">검색</string>
+    <string name="dish_search_pick_title">음식 선택</string>
+    <string name="dish_search_pick_message">먹고 싶은 음식을 골라주세요</string>
+    <string name="dish_search_dialog_positive">찾아줘!</string>
+    <string name="no_matching_dish_error">해당 음식을 검색할 수 없습니다</string>
+
+    <string name="password_change_dialog_title">비밀번호 변경</string>
+
     <!-- Intro Activity -->
     <string name="intro_join_button">가입하기</string>
-    <string name="intro_login_button">로그인</string>
-
+    <string name="intro_login_text">이미 회원이신가요? 로그인</string>
+    <string name="intro_start_button">Yamm 바로 시작</string>
+    <string name="phone_auth_back_dialog_message">가입 과정이 아직 끝나지 않았습니다\n처음부터 다시 시작하시겠습니까?</string>
+    <string name="phone_auth_fragment_back_dialog_message">가입 과정이 아직 끝나지 않았습니다\n뒤로 돌아가시겠습니까?</string>
+    <string name="phone_auth_request_button">Yamm 가입하기</string>
+    <string name="phone_question_message">휴대폰 번호를 통해 친구들을 초대하고\n같이 먹을 메뉴를 추천받을 수 있습니다</string>
+    <string name="phone_auth_title_message">으로\n인증번호를 보냈습니다.</string>
     <!--Grid Activity -->
     <string name="grid_introduction">절대로 못먹는 음식이 있으면 선택하세요.</string>
     <string name="grid_checkbox_text">나는 채식주의자 얌</string>
@@ -108,11 +140,19 @@
     <string name="battle_intro_dialog">당신의 입맛을 알아내기 위해\n음식 배틀을 준비했어요\n좋아하는 음식을 골라주세요</string>
     <string name="battle_loading_toast">로딩 중입니다</string>
     <string name="battle_intro_button">시 작</string>
+
+    <string name="check_app_version_message">Yamm의 새로운 버전이 출시되었습니다\n업데이트하시겠습니까?</string>
+
     <!-- Join Activity-->
+    <string name="fb_join_text">페이스북으로 로그인</string>
+    <string name="kakao_join_text">카카오톡으로 로그인</string>
+    <string name="phone_question_button">\?</string>
+
     <string name="verification_field">인증번호</string>
     <string name="verification_name">이름</string>
     <string name="verification_email">이메일 주소</string>
     <string name="verification_pw">비번(8자이상,특수문자/숫자 포함)</string>
+    <string name="verification_pw_2">비번 확인</string>
     <string name="verification_phone">전화번호</string>
     <string name="verification_button">인증</string>
     <string name="verification_sent">3분간 유효한 인증번호가 발송되었습니다</string>
@@ -125,15 +165,16 @@
     <string name="join_checkbox_message">서비스 약관와 개인정보 보호정책에 동의하시나요?</string>
     <string name="verification_done_message">인증되었습니다</string>
     <string name="join_confirm_button">가입하기</string>
+    <string name="verification_pw_not_identical">비밀번호가 일치하지 않습니다</string>
 
     <!-- Login Activity -->
     <string name="login_button">로그인하기</string>
     <string name="login_pw">비밀번호</string>
     <string name="forgot_password"><u>비밀번호를 모르겠어요</u></string>
-    <string name="forgot_password_no_email">비밀번호가 기억 안나는 이메일을 적어주세요</string>
+    <string name="forgot_password_no_phone">올바른 전화번호를 적어주세요</string>
     <string name="forgot_password_dialog_title">비밀번호 재설정</string>
-    <string name="forgot_password_dialog_message">비밀번호를 재설정하겠습니다\n입력하신 이메일이 맞나요?</string>
-    <string name="forgot_password_sent">해당 주소로 이메일이 보내졌습니다\n곧 다시 뵙길 바래요</string>
+    <string name="forgot_password_dialog_message">비밀번호를 재설정하겠습니다\n입력하신 전화번호가 정확한가요?</string>
+    <string name="forgot_password_sent">해당 번호로 문자가 보내졌습니다\n곧 다시 뵙길 바래요</string>
 
     <!-- Main Activty & Fragment -->
     <string name="friend_pick_button">얌친들과 함께 먹을 음식추천</string>
@@ -145,19 +186,41 @@
     <string name="drawer_close">사이드 메뉴를 닫으시겠습니까?</string>
 
     <string name="left_drawer_logout">로그아웃</string>
-    <string name="left_drawer_change_pw">비번변경</string>
+    <string name="left_drawer_pw">비밀번호</string>
+    <string name="left_drawer_change_pw">설정</string>
     <string name="left_drawer_change_phone">기기변경</string>
     <string name="left_drawer_alarm_title">알림</string>
     <string name="left_drawer_alarm_status_positive">사용중</string>
     <string name="left_drawer_alarm_status_negative">정지됨</string>
+    <string name="left_drawer_fb_title">페이스북</string>
+    <string name="left_drawer_connect_status_positive">해제</string>
+    <string name="left_drawer_connect_status_negative">연동</string>
+    <string name="left_drawer_kakao_title">카카오톡</string>
     <string name="left_drawer_help">도움말</string>
     <string name="left_drawer_not_ready">아직 준비 중입니다ㅠㅠ</string>
 
+    <string name="password_change_success">비밀번호가 변경되었습니다</string>
+    <string name="fb_disconnect_success">페이스북 연동이 해제되었습니다</string>
+    <string name="fb_disconnect_failure">페이스북 연동을 해제하지 못했습니다\n다시 한번 해주세요</string>
+    <string name="fb_connect_success">페이스북이 연동되었습니다</string>
+    <string name="fb_connect_failure">페이스북으로부터 정보를 불러오지 못했습니다\n다시 한번 해주세요</string>
+    <string name="kakao_disconnect_success">카톡 연동이 해제되었습니다</string>
+    <string name="kakao_disconnect_failure">카톡 연동을 해제하지 못했습니다\n다시 한번 해주세요</string>
+    <string name="kakao_connect_success">카톡이 연동되었습니다</string>
+    <string name="kakao_connect_failure">카톡으로부터 정보를 불러오지 못했습니다\n다시 한번 해주세요</string>
+    <string name="login_success">로그인되었습니다</string>
+    <string name="fb_join_success">페이스북으로 시작되었습니다</string>
+    <string name="kakao_join_success">카카오톡으로 시작되었습니다</string>
+    <string name="oauth_login_failure">가입되지 않은 계정입니다\n먼저 가입해주세요</string>
+    <string name="no_other_authentication_error">다른 인증방식이 없습니다\n먼저 비밀번호를 설정해주세요</string>
+    <string name="already_registered_error">이미 다른 계정과 연동되어있습니다</string>
+
+    <string name="dish_not_loaded">로딩 중입니다</string>
     <!-- Friends Activity & Fragment -->
 
     <string name="friend_invite_button">친구초대</string>
     <string name="friend_pick_confirm_button">같이 먹을 메뉴 보기</string>
-    <string name="friends_list_empty">등록된 얌친이 없습니다\n주소록에 있는 친구들을 초대해보세요</string>
+    <string name="friends_list_empty">등록된 얌친이 없습니다\n주소록에 있는 친구들을\n초대해보세요</string>
     <string name="empty_invite_button">친구 초대</string>
 
     <!-- Invite Activity -->
@@ -174,6 +237,8 @@
     <string name="poke_friend_singular">친구한테</string>
     <string name="poke_friend_plural">친구들한테</string>
 
+    <!-- Place Activity -->
+    <string name="no_place_message">주변에 해당 음식점이 없네요\n\n현재 위치를 바꾸거나\n다른 메뉴를 선택해보세요</string>
 
     <!-- Push Messages -->
     <string name="poke_push_title">밥 같이 먹어요</string>
@@ -199,6 +264,17 @@
     <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>
     <string name="dialog_group_poke_title">그래 같이 먹어요</string>
     <string name="dialog_group_poke_message">얌친들에게 이 음식을 먹자고 보낼까요?</string>
+
+    <!--Yamm Activity -->
+    <string name="today_lunch_title">오늘 점심</string>
+    <string name="today_dinner_title">오늘 저녁</string>
+    <string name="today_yamm_title">오늘의 얌</string>
+    <string name="today_yamm_message">오늘의 얌</string>
+    <string name="today_lunch_message">오늘 점심에는 이런 메뉴 어떠세요?</string>
+    <string name="today_dinner_message">오늘 저녁에는 이런 메뉴 어떠세요?</string>
+    <string name="today_drink_title">오늘 술안주</string>
+    <string name="today_drink_message">오늘은 어떤 안주와 한잔?</string>
+
 
     <!-- Tutorial Fragment -->
     <string name="tutorial_page_1">페이지를 넘겨서\n간단한 사용법을 확인해보세요</string>

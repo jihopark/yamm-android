@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/light_brown_background">
+    <TextView
+        android:background="#ffe2ddcb"
+        android:textSize="20sp"
+        android:textColor="@color/join_text_color"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:id="@+id/phone_auth_title"/>
+    <EditText
+        android:layout_below="@+id/phone_auth_title"
+        style="@style/JoinEditText"
+        android:id="@+id/phone_auth_field"
+        android:hint="@string/verification_field"
+        android:inputType="number"
+        android:imeOptions="actionDone"/>
+    <Button
+        android:layout_below="@+id/phone_auth_field"
+        android:enabled="false"
+        style="@style/JoinConfirmButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/phone_auth_submit"
+        android:text="확인"/>
+</RelativeLayout>

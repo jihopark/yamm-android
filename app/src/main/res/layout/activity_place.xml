@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="302dp" />
+     <RelativeLayout
+         android:paddingLeft="15dp"
+         android:background="#ff322c27"
+         android:layout_width="match_parent"
+         android:layout_height="fill_parent" >
+        <TextView
+            android:textSize="20sp"
+            android:textColor="#ffffffff"
+            android:layout_marginTop="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name_text"
+            android:layout_alignParentTop="true"/>
+         <TextView
+             android:textSize="12sp"
+             android:textColor="#ff8e847c"
+             android:layout_marginTop="10dp"
+             android:layout_below="@+id/name_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/address_text"/>
+         <TextView
+             android:textSize="15sp"
+             android:textColor="#ffffffff"
+             android:layout_marginTop="22dp"
+             android:layout_marginRight="16dp"
+             android:layout_alignParentRight="true"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/distance_text"/>
+         <TextView
+             android:textSize="15sp"
+             android:textColor="#ff34abff"
+             android:layout_marginTop="22dp"
+             android:layout_below="@+id/address_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/phone_text"/>
+         <TextView
+             android:textSize="15sp"
+             android:textColor="#ffd4cbaf"
+             android:layout_marginTop="22dp"
+             android:layout_below="@+id/phone_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/type_text"/>
+         <TextView
+             android:textSize="15sp"
+             android:textColor="#ffd4cbaf"
+             android:layout_marginTop="10dp"
+             android:layout_below="@+id/type_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/menu_text"/>
+         </RelativeLayout>
+</LinearLayout>

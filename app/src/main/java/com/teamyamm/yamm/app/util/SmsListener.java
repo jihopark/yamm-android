@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,6 +19,11 @@ import com.teamyamm.yamm.app.R;
 public class SmsListener extends BroadcastReceiver {
     private EditText editText;
     private ImageView confirmImage;
+    public SmsListener(EditText editText){
+        super();
+        this.editText = editText;
+    }
+
     public SmsListener(EditText editText, ImageView confirmImage){
         super();
         this.editText = editText;
@@ -62,6 +66,6 @@ public class SmsListener extends BroadcastReceiver {
     private void setVeriCodeText(String code){
         Log.i("SmsListener/setVeriCodeText","EditText Set to " + code);
         editText.setText(code);
-        confirmImage.setVisibility(View.VISIBLE);
+      //  confirmImage.setVisibility(View.VISIBLE);
     }
 }
