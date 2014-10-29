@@ -1,7 +1,9 @@
 package com.teamyamm.yamm.app;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -45,6 +47,8 @@ public class NewJoinActivity extends BaseActivity {
     public final static String PHONE = "PH";
     public final static String NAME = "NA";
     public final static String PW = "PW";
+
+    private final static String termsURL = "http://terms.yamm.me/";
 
     private EditText nameField, phoneField, pwField;
     private Button phoneAuthRequest;
@@ -301,10 +305,16 @@ public class NewJoinActivity extends BaseActivity {
         agreementTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeYammToast(R.string.left_drawer_not_ready ,Toast.LENGTH_SHORT);
+                showYammTermsWebPage();
             }
         });
 
+    }
+
+    private void showYammTermsWebPage(){
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(termsURL));
+        startActivity(i);
     }
 
     private void configNameEditText(){
