@@ -3,7 +3,6 @@ package com.teamyamm.yamm.app;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,15 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.VolleyController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.BattleItem;
-import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
-import com.teamyamm.yamm.app.widget.YammImageView;
 
 import java.util.ArrayList;
 
@@ -42,7 +38,6 @@ public class BattleActivity extends BaseActivity {
     private ArrayList<YammAPIService.RawBattleItemForPost> battleItems;
     private YammAPIService.RawBattleItem dishes;
     private Dialog fullScreenDialog;
-    CallPreloadImageAsyncTask imagePreloadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +51,15 @@ public class BattleActivity extends BaseActivity {
 
         setInitialLoading();
 
-        service = YammAPIAdapter.getTokenService();
-
-        setBattleFragments();
-
-        imagePreloadTask = new CallPreloadImageAsyncTask();
-
         hideActionBar();
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
-        imagePreloadTask.cancel(true);
+    public void onResume(){
+        super.onResume();
+        service = YammAPIAdapter.getTokenService();
+
+        setBattleFragments();
     }
 
     /*
@@ -144,6 +135,9 @@ public class BattleActivity extends BaseActivity {
    * Setup Battle Fragments
    * */
     private void setBattleFragments() {
+        if (bf!=null)
+            return ;
+        Log.d("BattleActivity/setBattleFragments","Loading Battle Fragment");
         bf = (BattleFragment) getSupportFragmentManager().findFragmentById(R.id.battle_fragment);
 
         getInitialBattleItem();
@@ -171,9 +165,8 @@ public class BattleActivity extends BaseActivity {
                             dishes.getBattleItem(i).getFirst() + "," + dishes.getBattleItem(i).getSecond());
                 }
 
-                bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this,"1/"+totalBattle);
+                bf.setDishItemView(dishes.getBattleItem(0), BattleActivity.this, 0, totalBattle);
                 try {
-                    imagePreloadTask.execute();
                 } catch (IllegalStateException e) {
                     Log.e("BattleActivity/getInitialBattleItem", "The task already been Executed");
                 }
@@ -181,7 +174,6 @@ public class BattleActivity extends BaseActivity {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                imagePreloadTask.cancel(true);
                 Log.e("BattleActivity/getBattleItems", "Fail");
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
@@ -220,7 +212,7 @@ public class BattleActivity extends BaseActivity {
         }
 
         bf.setLayoutClickable(false);
-        bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this, (battleCount+1)+"/"+totalBattle);
+        bf.setDishItemView(dishes.getBattleItem(battleCount), BattleActivity.this, battleCount, totalBattle);
         bf.setLayoutClickable(true);
 
 
@@ -295,65 +287,5 @@ public class BattleActivity extends BaseActivity {
             }
         });
         VolleyController.getRequestQueue().getCache().clear();
-    }
-
-    private void preloadImages(int w, int h){
-        for (int i=1;i<totalBattle;i++) {
-            DishItem a = dishes.getBattleItem(i).getFirst();
-            DishItem b = dishes.getBattleItem(i).getSecond();
-            Log.i("BattleActivity/preloadImages", "Preloading:" +
-                    a + "," + b + " " + w + "x" + h);
-            Picasso.with(BattleActivity.this)
-                    .load(YammImageView.getURL(YammImageView.DISH, w, h, a.getId()))
-                    .skipMemoryCache()
-                    .error(R.drawable.mainback_test)
-                    .fetch();
-            Picasso.with(BattleActivity.this)
-                    .load(YammImageView.getURL(YammImageView.DISH, w, h, b.getId()))
-                    .skipMemoryCache()
-                    .error(R.drawable.mainback_test)
-                    .fetch();
-        }
-        return ;
-    }
-
-
-    public class CallPreloadImageAsyncTask extends AsyncTask<Integer, Integer, Integer> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            while(true){
-                Log.d("BattleActivity/CallPreloadImageAsyncTask", "Checking");
-                if (bf!=null)
-                    Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured"
-                            + bf.getImageWidth() + "x" + bf.getImageHeight());
-
-                if (bf!=null && bf.getImageHeight() != 0 && bf.getImageWidth() != 0) {
-                    int w = bf.getImageWidth();
-                    int h = bf.getImageHeight();
-
-                 //   Log.d("BattleActivity/CallPreloadImageAsyncTask", "Dimensions measured" + w + "x" + h);
-                 //   preloadImages(w, h);
-                    break;
-                }
-
-            }
-            return 1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-            Log.i("BattleActivity/CallPreloadImageAsyncTask", "Done");
-        }
     }
 }
