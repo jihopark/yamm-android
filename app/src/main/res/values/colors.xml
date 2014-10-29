@@ -2,7 +2,7 @@
 
     <color name="black_overlay">#c8000000</color>
     <color name="default_color">#ffe0323b</color>
-    <color name="brown_color">#ff574d44</color>
+    <color name="title_area_background">#ff3a332d</color>
     <color name="light_brown_background">#fff3f0e6</color>
     <color name="fb_background">#ff39538b</color>
     <color name="kakao_background">#ffe7d501</color>
