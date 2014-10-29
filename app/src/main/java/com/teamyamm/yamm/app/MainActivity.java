@@ -644,7 +644,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 Session session = Session.getActiveSession();
                 if (!session.isOpened() && !session.isClosed()) {
                     session.openForRead(new Session.OpenRequest(MainActivity.this)
-                            .setPermissions(Arrays.asList("public_profile", "email"))
+                            .setPermissions(Arrays.asList("public_profile", "user_friends"))
                             .setCallback(statusCallback));
                 } else {
                     Session.openActiveSession(MainActivity.this, true, statusCallback);
