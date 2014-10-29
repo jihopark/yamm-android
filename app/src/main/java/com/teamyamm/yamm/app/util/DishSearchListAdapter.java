@@ -94,7 +94,9 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
         }
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<DishItem> filteredList = (ArrayList<DishItem>) results.values;
+            if (results==null || results.values ==null)
+                return ;
+            ArrayList<DishItem> filteredList = new ArrayList<DishItem>((ArrayList<DishItem>) results.values);
             if(results != null && results.count > 0) {
                 clear();
                 for (DishItem i : filteredList) {
