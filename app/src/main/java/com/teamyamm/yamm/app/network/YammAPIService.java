@@ -405,7 +405,7 @@ public interface YammAPIService {
 
     @GET("/map/nearby")
     void getPlacesNearby(@Query("lat") double lat, @Query("lng") double lng,
-                               @Query("rad") double rad, @Query("dish_id") int id, Callback<List<YammPlace>> callback);
+                               @Query("dish_id") int id, Callback<List<YammPlace>> callback);
     /*
     * Error
     * */

@@ -52,7 +52,6 @@ public class MapActivity extends BaseActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
     public final static int DEFAULT_ZOOM_LEVEL = 13;
-    private final double DEFAULT_RADIUS = 1.5;
 
 
     private final static int
@@ -255,7 +254,7 @@ public class MapActivity extends BaseActivity implements
     private void loadPlaces(){
         list = (ListView) findViewById(R.id.yamm_places_list);
         list.setEmptyView(findViewById(R.id.empty_view));
-        YammAPIAdapter.getTokenService().getPlacesNearby(x,y, DEFAULT_RADIUS , dishId, new Callback<List<YammPlace>>() {
+        YammAPIAdapter.getTokenService().getPlacesNearby(x,y , dishId, new Callback<List<YammPlace>>() {
             @Override
             public void success(List<YammPlace> yammPlaces, Response response) {
                 YammPlacesListAdapter adapter = new YammPlacesListAdapter(MapActivity.this, yammPlaces);
