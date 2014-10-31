@@ -74,7 +74,7 @@ public interface YammAPIService {
         public static final String EMAIL_FORMAT = "EMF"; //email format is wrong
         public static final String PHONE_FORMAT = "PHF"; //phone format is wrong
         public static final String NO_OTHER_AUTHENTICATION = "NOA"; //no other authentication method (email, facebook, kakao)
-
+        public static final String DUPLICATE_OAUTH_ACCOUNT = "DUO"; //same fb or kakao oauth
 
         public YammRetrofitException(Throwable e, String message){
             super(message, e);

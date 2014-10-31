@@ -279,6 +279,9 @@ public class BattleActivity extends BaseActivity {
                 retrofitError.printStackTrace();
                 if (retrofitError.isNetworkError())
                     makeYammToast(getString(R.string.network_error_message), Toast.LENGTH_LONG);
+                else if (retrofitError.getResponse().getStatus() == 401) {
+                    invalidToken();
+                }
                 else
                     makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
 

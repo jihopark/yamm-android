@@ -222,6 +222,8 @@ public class PhoneAuthFragment extends Fragment {
             act.makeYammToast(getString(R.string.password_format_error_message), Toast.LENGTH_SHORT);
         else if (msg.equals(YammAPIService.YammRetrofitException.PASSWORD_MIN))
             act.makeYammToast(getString(R.string.password_min_error_message), Toast.LENGTH_SHORT);
+        else if (msg.equals(YammAPIService.YammRetrofitException.DUPLICATE_OAUTH_ACCOUNT))
+            act.makeYammToast(getString(R.string.duplicate_oauth_account_error_message),Toast.LENGTH_SHORT);
         else
             act.makeYammToast(getString(R.string.unidentified_error_message), Toast.LENGTH_SHORT);
     }
