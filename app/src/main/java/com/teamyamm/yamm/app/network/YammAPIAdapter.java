@@ -415,6 +415,9 @@ public class YammAPIAdapter {
             if (error.getCode().equals("DuplicatePhone")) {
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_ACCOUNT);
             }
+            else if (error.getCode().equals("DuplicateAccount")) {
+                return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.DUPLICATE_OAUTH_ACCOUNT);
+            }
             else if (error.getCode().equals("IncorrectAuthCode"))
                 return new YammAPIService.YammRetrofitException(cause, YammAPIService.YammRetrofitException.INCORRECT_AUTHCODE);
             else if (error.getCode().equals("InvalidParam:password:minlen"))

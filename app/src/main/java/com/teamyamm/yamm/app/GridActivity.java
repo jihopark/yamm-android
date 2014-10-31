@@ -123,9 +123,15 @@ public class GridActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError retrofitError) {
                 progressDialog.dismiss();
-                Log.e("GridActivity/sendGridResults","Sending Error");
+                Log.e("GridActivity/sendGridResults", "Sending Error");
                 retrofitError.printStackTrace();
-                makeYammToast( getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
+                if (retrofitError.isNetworkError())
+                    makeYammToast( getString(R.string.network_error_message), Toast.LENGTH_LONG);
+                else if (retrofitError.getResponse().getStatus() == 401) {
+                    invalidToken();
+                }
+                else
+                    makeYammToast( getString(R.string.unidentified_error_message), Toast.LENGTH_LONG);
             }
         });
 

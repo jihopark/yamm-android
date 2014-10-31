@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
+import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.PushContent;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
@@ -123,6 +124,7 @@ public class PokeAlertActivity extends Activity {
                 }
                 service.sendPokeResponse(new YammAPIService.RawPokeMessage(uids, true, content.getDish().getId()), callback);
                 MixpanelController.trackPokeResponseMixpanel(true, PokeAlertActivity.this);
+                addDishToPositive(content.getDish());
                 finish();
             }
         });
@@ -191,5 +193,32 @@ public class PokeAlertActivity extends Activity {
         toast.setDuration(duration);
         toast.setView(layout);
         toast.show();
+    }
+
+    private void addDishToPositive(DishItem item){
+        final String category = "POKERESPONSE";
+
+        YammAPIService service = YammAPIAdapter.getTokenService();
+
+        Log.d("PokeAlertActivity/addDishToPositive", "Like " + item.getName() + " POKERESPONSE");
+
+        if (service==null) {
+            return ;
+        }
+
+        service.postLikeDish(new YammAPIService.RawLike(item.getId(), category, ""), new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.i("PokeAlertActivity/postLikeDish","Success " + s);
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                String msg = retrofitError.getCause().getMessage();
+                if (msg.equals(YammAPIService.YammRetrofitException.AUTHENTICATION)) {
+                    Log.e("PokeAlertActivity/addDishToPositive", "Invalid Token, Logging out");
+                }
+            }
+        });
     }
 }
