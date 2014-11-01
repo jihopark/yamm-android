@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
     private boolean shouldOpenSearchWidget = false;
 
-    private static boolean isLoadingFB = false;
+    private static boolean isLoadingFB = false, shouldConnectFB = false;
 
     private YammLeftDrawerAdapter leftDrawerAdapter;
 
@@ -601,7 +601,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     @Override
     protected void onSessionStateChange(Session session, SessionState state, Exception exception) {
         super.onSessionStateChange(session, state, exception);
-        if (state.isOpened() && !isLoadingFB) {
+        if (state.isOpened() && !isLoadingFB && shouldConnectFB) {
             isLoadingFB = true;
             Log.d("MainActivity/onSessionStateChange", session.getAccessToken());
             YammAPIAdapter.getFBConnectService().connectFacebook(session.getAccessToken(), new Callback<String>() {
@@ -629,6 +629,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     if (Session.getActiveSession()!=null) {
                         Session.getActiveSession().closeAndClearTokenInformation();
                     }
+                    shouldConnectFB = false;
                 }
             });
         }
@@ -640,6 +641,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
             public void onClick(View v) {
                 if (isLoadingFB)
                     return ;
+
+                shouldConnectFB = true;
 
                 Session session = Session.getActiveSession();
                 if (!session.isOpened() && !session.isClosed()) {

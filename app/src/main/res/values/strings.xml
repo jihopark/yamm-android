@@ -36,7 +36,7 @@
     <string name="verification_error_message">문자전송에 실패했습니다.\n번호를 확인하고 다시 시도해주세요</string>
     <string name="unidentified_error_message">알수 없는 오류가 발생했습니다. 다시 시도해주세요</string>
     <string name="duplicate_account_error_message">이미 같은 휴대폰 번호로 가입되어 있습니다</string>
-    <string name="duplicate_oauth_account_error_message">이미 같은 페북이나 카톡 계정으로 가입되어 있습니다</string>
+    <string name="duplicate_oauth_account_error_message">이미 같은 페북이나 카톡 계정으로 가입되어 있습니다</tring>
     <string name="invalid_token_error_message">페북이나 카톡 인증이 잘못되었습니다.\n다시 시도해주세요</string>
     <string name="incorrect_authcode_error_message">인증번호를 다시 확인하세요</string>
     <string name="email_format_error_message">잘못된 이메일 형식입니다</string>
@@ -261,7 +261,7 @@
     <string name="group_finish_dialog_title">다 골랐나요</string>
     <string name="group_finish_dialog_message">얌친들과 먹을 메뉴를 다 보셨나요?</string>
     <string name="group_finish_dialog_positive">다 봤어요</string>
-    <string name="group_finish_dialog_negative">더 볼래요</string>
+    <string name="group_finish_dialog_negative">아니요</string>
     <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>
     <string name="dialog_group_poke_title">그래 같이 먹어요</string>
     <string name="dialog_group_poke_message">얌친들에게 이 음식을 먹자고 보낼까요?</string>
