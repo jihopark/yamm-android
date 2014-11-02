@@ -183,7 +183,7 @@
         <!-- For Google Maps API -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB2cCpoRAmxqFo5JrNSZgPbGPG5nCteT_I"/>
+            android:value="AIzaSyCJDGbVag9locrOk_3j-rAeOB8O2krcwrM"/>
 
         <uses-feature
             android:glEsVersion="0x00020000"

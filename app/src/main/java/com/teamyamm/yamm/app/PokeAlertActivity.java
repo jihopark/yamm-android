@@ -21,6 +21,7 @@ import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.PushContent;
+import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.widget.YammImageView;
 
@@ -126,6 +127,7 @@ public class PokeAlertActivity extends Activity {
                 MixpanelController.trackPokeResponseMixpanel(true, PokeAlertActivity.this);
                 addDishToPositive(content.getDish());
                 finish();
+                LocationSearchHelper.startMapActivity(PokeAlertActivity.this, content.getDish());
             }
         });
         negative.setOnClickListener(new View.OnClickListener() {

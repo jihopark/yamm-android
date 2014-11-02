@@ -36,7 +36,7 @@
     <string name="verification_error_message">문자전송에 실패했습니다.\n번호를 확인하고 다시 시도해주세요</string>
     <string name="unidentified_error_message">알수 없는 오류가 발생했습니다. 다시 시도해주세요</string>
     <string name="duplicate_account_error_message">이미 같은 휴대폰 번호로 가입되어 있습니다</string>
-    <string name="duplicate_oauth_account_error_message">이미 같은 페북이나 카톡 계정으로 가입되어 있습니다</tring>
+    <string name="duplicate_oauth_account_error_message">이미 같은 페북이나 카톡 계정으로 가입되어 있습니다</string>
     <string name="invalid_token_error_message">페북이나 카톡 인증이 잘못되었습니다.\n다시 시도해주세요</string>
     <string name="incorrect_authcode_error_message">인증번호를 다시 확인하세요</string>
     <string name="email_format_error_message">잘못된 이메일 형식입니다</string>
@@ -233,10 +233,10 @@
     <string name="kakao_app_message">얌 - 우리 뭐 먹지?</string>
 
     <!-- Poke Activity -->
-    <string name="poke_contact_confirm">친구한테 물어보기!</string>
+    <string name="poke_contact_confirm">얌친한테 물어보기!</string>
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
-    <string name="poke_friend_singular">친구한테</string>
-    <string name="poke_friend_plural">친구들한테</string>
+    <string name="poke_friend_singular">얌친한테</string>
+    <string name="poke_friend_plural">얌친들한테</string>
 
     <!-- Place Activity -->
     <string name="no_place_message">주변에 해당 음식점이 없네요\n\n현재 위치를 바꾸거나\n다른 메뉴를 선택해보세요</string>
