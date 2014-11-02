@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private Dialog fullScreenDialog;
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
+    private boolean isLoadingDishes = false;
     protected boolean isLeftMenuLoaded = false;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
@@ -198,6 +199,8 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     fullScreenDialog = createFullScreenDialog(MainActivity.this, getString(R.string.progress_dialog_message));
                     fullScreenDialog.show();
                     shouldOpenSearchWidget = true;
+                    if (!isLoadingDishes)
+                        getDishListFromServer();
                     return true;
                 }
 
@@ -987,6 +990,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     }
 
     private void getDishListFromServer(){
+        isLoadingDishes = true;
         YammAPIAdapter.getTokenService().getDishes(new Callback<List<DishItem>>() {
             @Override
             public void success(List<DishItem> dishItems, Response response) {
@@ -998,11 +1002,20 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     showSearchWidget();
                     shouldOpenSearchWidget = false;
                 }
+                isLoadingDishes = false;
+
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e("MainActivity/getDishListFromServer/failure","Fail to load Dish from Server");
+                if (shouldOpenSearchWidget){
+                    if (fullScreenDialog!=null)
+                        fullScreenDialog.dismiss();
+                    makeYammToast(R.string.unidentified_error_message, Toast.LENGTH_SHORT);
+                    shouldOpenSearchWidget = false;
+                }
+                isLoadingDishes= false;
             }
         });
     }
