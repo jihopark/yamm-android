@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
-        android:background="#ff574d44"
+        android:background="@color/title_area_background"
         android:id="@+id/date_pick_spinner_container">
         <Spinner
             android:layout_alignParentTop="true"

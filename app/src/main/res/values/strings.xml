@@ -233,10 +233,10 @@
     <string name="kakao_app_message">얌 - 우리 뭐 먹지?</string>
 
     <!-- Poke Activity -->
-    <string name="poke_contact_confirm">친구한테 물어보기!</string>
+    <string name="poke_contact_confirm">얌친한테 물어보기!</string>
     <string name="poke_yamm_confirm">얌친한테 물어보기!</string>
-    <string name="poke_friend_singular">친구한테</string>
-    <string name="poke_friend_plural">친구들한테</string>
+    <string name="poke_friend_singular">얌친한테</string>
+    <string name="poke_friend_plural">얌친들한테</string>
 
     <!-- Place Activity -->
     <string name="no_place_message">주변에 해당 음식점이 없네요\n\n현재 위치를 바꾸거나\n다른 메뉴를 선택해보세요</string>
@@ -261,7 +261,7 @@
     <string name="group_finish_dialog_title">다 골랐나요</string>
     <string name="group_finish_dialog_message">얌친들과 먹을 메뉴를 다 보셨나요?</string>
     <string name="group_finish_dialog_positive">다 봤어요</string>
-    <string name="group_finish_dialog_negative">더 볼래요</string>
+    <string name="group_finish_dialog_negative">아니요</string>
     <string name="dialog_group_recommendation">얌친들과 함께 먹으면 좋을 메뉴를 고르는 중이에요\n모두가 좋아하는 메뉴가 있을까요?</string>
     <string name="dialog_group_poke_title">그래 같이 먹어요</string>
     <string name="dialog_group_poke_message">얌친들에게 이 음식을 먹자고 보낼까요?</string>

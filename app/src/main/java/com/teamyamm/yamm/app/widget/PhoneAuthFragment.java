@@ -176,7 +176,7 @@ public class PhoneAuthFragment extends Fragment {
         YammAPIAdapter.getJoinService().pwRegistration(name, pw, phone, auth.getText().toString(), new Callback<YammAPIService.YammToken>() {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
-                Log.i("PhoneAuthFragment/fbRegistration", "Password Registration Success");
+                Log.i("PhoneAuthFragment/pwRegistration", "Password Registration Success");
                 MixpanelController.setMixpanelAlias(yammToken.uid + "@password");
                 MixpanelController.trackJoiningMixpanel("PW");
 
@@ -185,7 +185,9 @@ public class PhoneAuthFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError retrofitError) {
+                Log.e("PhoneAuthFragment/pwRegistration", "Password Registration Failure " + retrofitError.getBody());
                 handleJoinError(retrofitError.getCause().getMessage());
+
             }
         });
     }

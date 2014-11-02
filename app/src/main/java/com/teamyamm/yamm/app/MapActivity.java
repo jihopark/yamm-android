@@ -51,7 +51,7 @@ import retrofit.client.Response;
 public class MapActivity extends BaseActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
-    public final static int DEFAULT_ZOOM_LEVEL = 13;
+    public final static int DEFAULT_ZOOM_LEVEL = 14;
 
 
     private final static int
