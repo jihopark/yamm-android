@@ -113,6 +113,10 @@ public class ImageCacheManager{
 
     }
 
+    public ImageCache getImageCache(){
+        return mImageCache;
+    }
+
     public Bitmap getBitmap(String url) {
         try {
             return mImageCache.getBitmap(createKey(url));

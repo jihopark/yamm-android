@@ -59,6 +59,7 @@ import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.YammItem;
+import com.teamyamm.yamm.app.util.ImageCacheManager;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 
 import java.io.IOException;
@@ -653,6 +654,14 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void logOut(){
+        if (ImageCacheManager.getInstance()!=null){
+            if (ImageCacheManager.getInstance().getImageCache()!=null
+                    && ImageCacheManager.getInstance().getImageCache() instanceof ImageCacheManager.BitmapLruImageCache){
+                ((ImageCacheManager.BitmapLruImageCache) ImageCacheManager.getInstance().getImageCache()).evictAll();
+                Log.d("BaseActivity/logOut","Clear Image Cache");
+            }
+        }
+
         if (this instanceof MainActivity)
             ((MainActivity)this).isLeftMenuLoaded = false;
         try {
