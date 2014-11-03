@@ -50,7 +50,7 @@ public class SmsListener extends BroadcastReceiver {
                         Log.i("SmsListener/onReceive","Message Received " + msgBody + " from " + msg_from);
 
                         if (msgBody.substring(0,4).equals("YAMM")){
-                            setVeriCodeText(msgBody.substring(msgBody.length() - 4, msgBody.length()));
+                            setVeriCodeText(msgBody.substring(11, 15));
                             BaseActivity activity = (BaseActivity) context;
                             activity.makeYammToast(activity.getString(R.string.verification_done_message),Toast.LENGTH_SHORT);
                         }
