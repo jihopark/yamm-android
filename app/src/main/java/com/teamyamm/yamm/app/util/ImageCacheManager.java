@@ -11,6 +11,11 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.teamyamm.yamm.app.network.VolleyController;
 
+import java.lang.ref.SoftReference;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Implementation of volley's ImageCache interface. This manager tracks the application image loader and cache.
  *
@@ -43,15 +48,35 @@ public class ImageCacheManager{
      */
     private ImageCache mImageCache;
 
+    private static HashSet<String> usedBitmap;
+
     /**
      * @return
      * 		instance of the cache manager
      */
     public static ImageCacheManager getInstance(){
-        if(mInstance == null)
+        if(mInstance == null) {
             mInstance = new ImageCacheManager();
-
+            usedBitmap = new HashSet<String>();
+            Log.d("ImageCacheManager/getInstance","New Instance Created. Used Bitmap Set Initialized");
+        }
         return mInstance;
+    }
+
+    public static void addFromUsedBitmaps(String url){
+        usedBitmap.add(url);
+        Log.d("ImageCacheManager/addFromUsedBitmap",usedBitmap.size() + " Remaining. Bitmap Added" + url);
+
+    }
+
+
+    public static void removeFromUsedBitmaps(String url){
+        usedBitmap.remove(url);
+        Log.d("ImageCacheManager/removeFromUsedBitmap",usedBitmap.size() + " Remaining. Bitmap Removed " + url);
+    }
+
+    public static boolean isInUsedBitmaps(String url){
+        return usedBitmap.contains(url);
     }
 
     /**
@@ -80,6 +105,12 @@ public class ImageCacheManager{
         }
 
         mImageLoader = new ImageLoader(VolleyController.getRequestQueue(), mImageCache);
+
+        if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+            mReusableBitmaps =
+                    Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
+        }
+
     }
 
     public Bitmap getBitmap(String url) {
@@ -135,6 +166,10 @@ public class ImageCacheManager{
      * @author Trey Robinson
      *
      */
+
+    Set<SoftReference<Bitmap>> mReusableBitmaps;
+
+
     public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
 
         private final String TAG = this.getClass().getSimpleName();
@@ -144,19 +179,34 @@ public class ImageCacheManager{
         }
 
         @Override
-        protected int sizeOf(String key, Bitmap value) {
-            return value.getRowBytes() * value.getHeight();
+            protected int sizeOf(String key, Bitmap value) {
+                return value.getRowBytes() * value.getHeight();
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, String key,
+                                    Bitmap oldValue, Bitmap newValue) {
+            if (!ImageCacheManager.isInUsedBitmaps(key)){
+                Log.d("ImageCacheManager/entryRemoved","Bitmap Not in Use. Recycle! " + key);
+                if (!oldValue.isRecycled()) {
+                    oldValue.recycle();
+                    Log.d("ImageCacheManager/entryRemoved","Recycled!");
+                }
+            }
         }
 
         @Override
         public Bitmap getBitmap(String url) {
-            Log.v(TAG, "Retrieved item from Mem Cache");
+            if (get(url)==null)
+                Log.d("BitmapLruImageCache/getBitmap", "Does not exist in Cache " + url);
+            else
+                Log.d("BitmapLruImageCache/getBitmap", "Retrieved item from Mem Cache " + url);
             return get(url);
         }
 
         @Override
         public void putBitmap(String url, Bitmap bitmap) {
-            Log.v(TAG, "Added item to Mem Cache");
+            Log.d("BitmapLruImageCache/putBitmap", "Added item to Mem Cache");
             put(url, bitmap);
         }
     }

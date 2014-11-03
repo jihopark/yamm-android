@@ -76,6 +76,7 @@ import retrofit.client.Response;
  * Created by parkjiho on 5/7/14.
  */
 public class BaseActivity extends ActionBarActivity {
+
     public final static Type DISH_ITEM_LIST_TYPE = new TypeToken<List<DishItem>>(){}.getType();
 
     public final static int KAKAO = 1;
