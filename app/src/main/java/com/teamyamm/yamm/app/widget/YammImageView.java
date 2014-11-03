@@ -214,7 +214,10 @@ public class YammImageView extends FrameLayout {
         else{
             Log.e("YammImageView/loadImage","Image not Ready");
         }
+    }
 
+    public String getImageURL(){
+        return getURL(path, width, height, id);
     }
 
     private void measureDynamicDimension(){

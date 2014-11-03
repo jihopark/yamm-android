@@ -200,8 +200,7 @@ public class PhoneAuthFragment extends Fragment {
         act.putInPref(act.prefs, getString(R.string.AUTH_TOKEN), accessToken);
         YammAPIAdapter.setToken(accessToken);
         act.goToActivity(GridActivity.class);
-
-        act.makeYammToast(R.string.join_success, Toast.LENGTH_SHORT);
+      //  act.makeYammToast(R.string.join_success, Toast.LENGTH_SHORT);
     }
 
     private void handleJoinError(String msg) {

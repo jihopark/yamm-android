@@ -34,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.teamyamm.yamm.app.util.ImageCacheManager;
 
 /**
  * Handles fetching an image from a URL as well as the life-cycle of the
@@ -91,6 +92,7 @@ public class YammNetworkImageView extends ImageView {
     public void setImageUrl(String url, ImageLoader imageLoader) {
         mUrl = url;
         mImageLoader = imageLoader;
+        ImageCacheManager.addFromUsedBitmaps(mUrl);
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
     }

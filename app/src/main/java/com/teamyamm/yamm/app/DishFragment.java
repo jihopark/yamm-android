@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.util.ImageCacheManager;
 import com.teamyamm.yamm.app.widget.YammImageView;
 
 import java.lang.reflect.Field;
@@ -40,6 +41,7 @@ public class DishFragment extends Fragment {
     private MainFragment parentFragment;
     private ImageView mainBar;
     private TextView nameText, commentText;
+    private YammImageView image;
 
     //private AutoCompleteTextView placePickEditText;
 
@@ -104,6 +106,7 @@ public class DishFragment extends Fragment {
 
         if (parentFragment!=null) {
             Log.d("DishFragment/onDetatch","Detatch DishFragment " + index);
+            ImageCacheManager.removeFromUsedBitmaps(image.getImageURL());
             parentFragment.detachDishFragment(index);
         }
 
@@ -139,7 +142,7 @@ public class DishFragment extends Fragment {
         TextView comment = (TextView) main_layout.findViewById(R.id.dish_comment_text);
         comment.setText(item.getComment());
 
-        YammImageView image = (YammImageView) main_layout.findViewById(R.id.dish_image);
+        image = (YammImageView) main_layout.findViewById(R.id.dish_image);
         image.setID(item.getId());
         if (isGroup)
             image.setPath(YammImageView.GROUP);

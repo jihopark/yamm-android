@@ -122,6 +122,7 @@ public class MainFragment extends Fragment {
         super.onDetach();
 
         Log.i("MainFragment/onDetach","Detaching all other components");
+
         dishPager.setOnPageChangeListener(null);
 
         if (buttonAnimation!=null && mainBarAnimation!=null && buttonAnimation!=null
