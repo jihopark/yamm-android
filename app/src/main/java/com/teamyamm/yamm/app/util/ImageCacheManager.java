@@ -11,10 +11,7 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.teamyamm.yamm.app.network.VolleyController;
 
-import java.lang.ref.SoftReference;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Implementation of volley's ImageCache interface. This manager tracks the application image loader and cache.
@@ -63,6 +60,13 @@ public class ImageCacheManager{
         return mInstance;
     }
 
+    /*
+    * Referenced for Bitmap Cache Memory Management
+    * https://chris.banes.me/2011/12/28/android-bitmap-caching/
+    * http://developer.android.com/training/displaying-bitmaps/manage-memory.html
+    * See also overide method of entryRemoved in BitmapLruImageCacahe
+    * */
+
     public static void addFromUsedBitmaps(String url){
         usedBitmap.add(url);
         Log.d("ImageCacheManager/addFromUsedBitmap",usedBitmap.size() + " Remaining. Bitmap Added" + url);
@@ -105,12 +109,6 @@ public class ImageCacheManager{
         }
 
         mImageLoader = new ImageLoader(VolleyController.getRequestQueue(), mImageCache);
-
-        if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
-            mReusableBitmaps =
-                    Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
-        }
-
     }
 
     public ImageCache getImageCache(){
@@ -171,9 +169,6 @@ public class ImageCacheManager{
      *
      */
 
-    Set<SoftReference<Bitmap>> mReusableBitmaps;
-
-
     public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
 
         private final String TAG = this.getClass().getSimpleName();
@@ -186,6 +181,7 @@ public class ImageCacheManager{
             protected int sizeOf(String key, Bitmap value) {
                 return value.getRowBytes() * value.getHeight();
         }
+
 
         @Override
         protected void entryRemoved(boolean evicted, String key,
