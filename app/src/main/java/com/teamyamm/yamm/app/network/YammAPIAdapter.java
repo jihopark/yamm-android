@@ -26,9 +26,9 @@ import retrofit.client.Response;
  */
 public class YammAPIAdapter {
     public static String apiURL = "";
-    public static final String testURL = "https://yammapitest-22293.onmodulus.net/";
+    public static final String testURL = "https://zx3.yamm.me";
     public static final String prodURL = "https://api.yamm.me";
-    public static final String stagURL = "https://yammapistaging-22297.onmodulus.net";
+    public static final String stagURL = "https://y2q.yamm.me";
 
 
     private static YammAPIService service = null;
