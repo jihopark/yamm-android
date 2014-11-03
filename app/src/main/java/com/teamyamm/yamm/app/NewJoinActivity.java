@@ -483,7 +483,7 @@ public class NewJoinActivity extends BaseActivity {
             @Override
             public void success(YammAPIService.VeriExp s, Response response) {
                 Log.i("NewJoinActivity/getVeriDialogPositiveListener", "VeriExpires at " + s);
-                makeYammToast(R.string.verification_sent, Toast.LENGTH_SHORT);
+               // makeYammToast(R.string.verification_sent, Toast.LENGTH_SHORT);
                 dialog.dismiss();
                 createPhoneAuthFragment();
             }
