@@ -25,6 +25,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class ImageCacheManager{
 
+    public final static int MIN_CACHE_SIZE = 10 * 1024 * 1024;
+
     /**
      * Volley recommends in-memory L1 cache but both a disk and memory cache are provided.
      * Volley includes a L2 disk cache out of the box but you can technically use a disk cache as an L1 cache provided
@@ -177,8 +179,10 @@ public class ImageCacheManager{
 
     public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
         private int count = 0;
+
         public BitmapLruImageCache(int maxSize) {
             super(maxSize);
+
         }
 
         @Override
@@ -209,15 +213,21 @@ public class ImageCacheManager{
         @Override
         public void putBitmap(String url, Bitmap bitmap) {
             Log.d("BitmapLruImageCache/putBitmap", count++ + ":Added item to Mem Cache ");
-            put(url, getDecodedBitmap(bitmap));
+            put(url, bitmap);
         }
 
         private static final int COMPRESS_QUALITY = 70;
 
         public Bitmap getDecodedBitmap(Bitmap b){
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            b.compress(CompressFormat.JPEG, COMPRESS_QUALITY, out);
-            return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+            try {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                b.compress(CompressFormat.JPEG, COMPRESS_QUALITY, out);
+                return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+            }catch(OutOfMemoryError e){
+                Log.e("ImageCacheManager/getDecodedBitmap","Out of Memory Error Caught");
+
+                return b;
+            }
         }
     }
 

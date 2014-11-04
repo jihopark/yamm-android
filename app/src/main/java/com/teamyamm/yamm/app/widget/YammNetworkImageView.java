@@ -167,7 +167,11 @@ public class YammNetworkImageView extends ImageView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (mErrorImageId != 0) {
-                            setImageResource(mErrorImageId);
+                            try {
+                                setImageResource(mErrorImageId);
+                            }catch(OutOfMemoryError e){
+                                Log.e("YammNetworkImageView/onErrorResponse","Out of Memory Error Caught");
+                            }
                         }
                         if (++count < MAX_COUNT){
                             Log.d("YammNetworkImageView/onErrorResponse","Reload Image for the " + count + " times");
@@ -195,7 +199,11 @@ public class YammNetworkImageView extends ImageView {
                             circle.setVisibility(View.GONE);
                             setImageBitmap(response.getBitmap());
                         } else if (mDefaultImageId != 0) {
-                            setImageResource(mDefaultImageId);
+                            try {
+                                setImageResource(mDefaultImageId);
+                            }catch(OutOfMemoryError e){
+                                Log.e("YammNetWorkImageView/onResponse","Out of Memory Error Caught");
+                            }
                         }
                     }
                 }, maxWidth, maxHeight);
@@ -206,7 +214,11 @@ public class YammNetworkImageView extends ImageView {
 
     private void setDefaultImageOrNull() {
         if(mDefaultImageId != 0) {
-            setImageResource(mDefaultImageId);
+            try {
+                setImageResource(mDefaultImageId);
+            }catch(OutOfMemoryError e){
+                Log.e("YammNetworkImageView/onErrorResponse","Out of Memory Error Caught");
+            }
         }
         else {
             setImageBitmap(null);
@@ -228,7 +240,6 @@ public class YammNetworkImageView extends ImageView {
             setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
-            Log.d("YammNetWorkImageView/onDetachedFromWindow/ImageCache","ImageView Detached");
 
         }
         super.onDetachedFromWindow();

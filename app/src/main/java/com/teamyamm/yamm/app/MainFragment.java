@@ -121,7 +121,7 @@ public class MainFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
-        Log.i("MainFragment/onDetach","Detaching all other components");
+        Log.i("MainFragment/onDetach", "Detaching all other components");
 
         dishPager.setOnPageChangeListener(null);
 
@@ -280,10 +280,12 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onPageSelected(int i) {
+
             if (i == DEFAULT_NUMBER_OF_DISHES)
                 currentPage = DEFAULT_NUMBER_OF_DISHES - 1;
             else
                 currentPage = i;
+            Log.d("DishFragmentPagerAdapter/onPageSelected","Current Page " + i);
             setNextButtons();
             setPokeButton();
             setSearchButton();
@@ -338,8 +340,9 @@ public class MainFragment extends Fragment {
         }
 
         public DishItem getCurrentDishItem(){
-            if (fragments.size() > currentPage)
-                return fragments.get(currentPage).getDishItem();
+            if (fragments.size() > currentPage) {
+                return dishItems.get(currentPage);
+            }
             Log.e("DishFragmentPagerAdapter/getCurrentDishItem","Current Page is wrong, returning first item");
             return fragments.get(0).getDishItem();
         }
@@ -414,7 +417,7 @@ public class MainFragment extends Fragment {
         service.postLikeDish(new YammAPIService.RawLike(item.getId(), category, detail), new Callback<String>() {
             @Override
             public void success(String s, Response response) {
-                Log.i("MainFragment/postLikeDish","Success " + s);
+                Log.i("MainFragment/postLikeDish", "Success " + s);
             }
 
             @Override
@@ -424,7 +427,7 @@ public class MainFragment extends Fragment {
                     Log.e("PokeActivity/addDishToPositive", "Invalid Token, Logging out");
                     if (getActivity() instanceof BaseActivity) {
                         ((BaseActivity) getActivity()).invalidToken();
-                        return ;
+                        return;
                     }
                 }
             }
@@ -534,7 +537,7 @@ public class MainFragment extends Fragment {
     private void setLocationManagerListener(){
         //Set Location Listener
         LocationSearchHelper.initLocationSearchHelper((LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE));
-        Log.i("MainFragment/setLocationManagerListener","Location Manager and Listener Set");
+        Log.i("MainFragment/setLocationManagerListener", "Location Manager and Listener Set");
     }
 
     public void startButtonsAnimation() {
