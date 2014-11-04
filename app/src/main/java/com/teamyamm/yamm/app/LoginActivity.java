@@ -194,12 +194,7 @@ public class LoginActivity extends BaseActivity {
 
                 YammAPIAdapter.setToken(yammToken.toString());
 
-                MixpanelController.setMixpanelIdentity(phoneField.getText().toString());
-
-                //For Push Token
-                registerGCM();
-
-                goToActivity(MainActivity.class);
+                toLogin(yammToken.uid+"",PW);
             }
 
             @Override
@@ -243,7 +238,7 @@ public class LoginActivity extends BaseActivity {
                     putInPref(prefs, getString(R.string.AUTH_TOKEN), rawOAuthToken.access_token);
                     YammAPIAdapter.setToken(rawOAuthToken.access_token);
                     Log.d("IntroActivity/fbLogin", "FB Login Success. " + rawOAuthToken.uid);
-                    toLogin(rawOAuthToken.uid+"@facebook", FB);
+                    toLogin(rawOAuthToken.uid, FB);
                 }
 
                 @Override
@@ -298,7 +293,7 @@ public class LoginActivity extends BaseActivity {
                 dialog.dismiss();
 
                 isLoadingKakao = false;
-                toLogin(rawOAuthToken.uid+"@kakao", KAKAO);
+                toLogin(rawOAuthToken.uid, KAKAO);
             }
 
             @Override
