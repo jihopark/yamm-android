@@ -654,6 +654,9 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void logOut(){
+
+        boolean isKakaoClosing = false;
+
         if (ImageCacheManager.getInstance()!=null){
             if (ImageCacheManager.getInstance().getImageCache()!=null
                     && ImageCacheManager.getInstance().getImageCache() instanceof ImageCacheManager.BitmapLruImageCache){
@@ -675,6 +678,7 @@ public class BaseActivity extends ActionBarActivity {
         }
         try {
             if (com.kakao.Session.getCurrentSession().isOpened()) {
+                isKakaoClosing = true;
                 com.kakao.Session.getCurrentSession().close(new SessionCallback() {
                     @Override
                     public void onSessionOpened() {
@@ -684,6 +688,9 @@ public class BaseActivity extends ActionBarActivity {
                     @Override
                     public void onSessionClosed(KakaoException e) {
                         Log.d("BaseActivity/onSessionClosed", "Kakao Session Closed for Logout");
+                        Intent intent = new Intent(getBaseContext(), IntroActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     }
                 });
             }
@@ -694,9 +701,11 @@ public class BaseActivity extends ActionBarActivity {
         isLoggingOut = true;
         removeAuthToken();
         removePersonalData();
-        Intent intent = new Intent(getBaseContext(), IntroActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        if (!isKakaoClosing) {
+            Intent intent = new Intent(getBaseContext(), IntroActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     protected void removeAuthToken(){

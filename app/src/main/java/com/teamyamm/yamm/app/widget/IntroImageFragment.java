@@ -3,12 +3,14 @@ package com.teamyamm.yamm.app.widget;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.util.ImageCacheManager;
 
 
 /**
@@ -44,7 +46,17 @@ public class IntroImageFragment extends Fragment {
 
     private void setImageView(){
         Log.i("IntroImageFragment/setImageView","Created Image for " + position);
-        imageView.setImageDrawable(getActivity().getResources().getDrawable(getResources().getIdentifier("@drawable/intro_0" + (position + 1), "drawable", getActivity().getPackageName())));
-        imageView.setScaleType(ImageView.ScaleType.MATRIX);
+        try {
+            imageView.setImageDrawable(getActivity().getResources().getDrawable(getResources().getIdentifier("@drawable/intro_0" + (position + 1), "drawable", getActivity().getPackageName())));
+            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+        }catch(OutOfMemoryError e){
+            Log.e("IntroImageFragment/setImageView","Out of Memory Error Caught");
+            if (ImageCacheManager.getInstance()!=null
+                    && ImageCacheManager.getInstance().getImageCache()!=null && ImageCacheManager.getInstance().getImageCache() instanceof LruCache){
+                if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+                    ((LruCache) ImageCacheManager.getInstance().getImageCache()).evictAll();
+                }
+            }
+        }
     }
 }
