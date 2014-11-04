@@ -58,6 +58,8 @@ public class NewJoinActivity extends BaseActivity {
     private int authType;
     private boolean isFragmentShown = false;
 
+    private boolean isKeyboardUp = false;
+
     private boolean isNameDone = false, isPhoneDone = false, isPWDone = false, isCheckDone = false;
 
     private boolean enablePhoneAuthRequest = false;
@@ -351,8 +353,10 @@ public class NewJoinActivity extends BaseActivity {
                                 String name = user.getName();
                                 // If you asked for email permission
                                 Log.d("NewJoinActivity/configNameEditText", "Name Fetched from FB: " + name);
-                                if (nameField!=null)
+                                if (nameField!=null) {
                                     nameField.setText(name);
+                                    nameField.setSelection(nameField.getText().length());
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.d("NewJoinActivity/configNameEditText", "Exception in loading FB Name");
@@ -369,9 +373,10 @@ public class NewJoinActivity extends BaseActivity {
                 protected void onSuccess(final UserProfile userProfile) {
                     String name = userProfile.getNickname();
                     Log.d("NewJoinActivity/configNameEditField", "Name Fetched from Kakao: " + name);
-                    if (nameField!=null)
+                    if (nameField!=null) {
                         nameField.setText(name);
-
+                        nameField.setSelection(nameField.getText().length());
+                    }
                 }
 
                 @Override
@@ -391,7 +396,6 @@ public class NewJoinActivity extends BaseActivity {
                 }
             });
         }
-
     }
 
     public String getOAuthToken(){
