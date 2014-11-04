@@ -44,12 +44,7 @@ public class VolleyController{
 
     private static void createImageCache(){
         Log.d("VolleyController/createImageCache","Image Cache Size(MB)" + getCacheSize(context) / 1024 / 1024);
-        long free = Runtime.getRuntime().maxMemory() - (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-        Log.d("VolleyController/createImageCache","Total Free Memory Size(MB)" + (free / 1024 / 1024));
-        Log.d("VolleyController/createImageCache","Max Memory Size(MB)" + (Runtime.getRuntime().maxMemory() / 1024 / 1024));
-
-        WTFExceptionHandler.sendLogToServer(context, "Image Cache Size(MB) " + getCacheSize(context) / 1024 / 1024
-                + "\n" + "Total Free Memory Size(MB)" + (free / 1024 / 1024));
+        WTFExceptionHandler.sendLogToServer(context, "Image Cache Size(MB) " + getCacheSize(context) / 1024 / 1024);
 
         getRequestQueue().getCache().clear();
 
@@ -76,7 +71,7 @@ public class VolleyController{
         Log.d("VolleyController/getCacheSize", "cacheSize " + cacheSize + " Screenbytes" + 3*screenBytes );
 
 
-        return Math.max(3*screenBytes, cacheSize);
+        return 3*screenBytes;
     }
 
     public static void clearRequestQueue(){

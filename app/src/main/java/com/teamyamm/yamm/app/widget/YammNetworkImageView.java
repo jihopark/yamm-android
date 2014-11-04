@@ -34,7 +34,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.teamyamm.yamm.app.util.ImageCacheManager;
 
 /**
  * Handles fetching an image from a URL as well as the life-cycle of the
@@ -45,6 +44,7 @@ public class YammNetworkImageView extends ImageView {
     private String mUrl;
     private ProgressBar circle;
     private int count = 0;
+    private Bitmap myBitmap;
     private final static int MAX_COUNT = 4; //try to reload images MAX_COUNT number of times.
 
     /**
@@ -92,7 +92,7 @@ public class YammNetworkImageView extends ImageView {
     public void setImageUrl(String url, ImageLoader imageLoader) {
         mUrl = url;
         mImageLoader = imageLoader;
-        ImageCacheManager.addFromUsedBitmaps(mUrl);
+      //  ImageCacheManager.addFromUsedBitmaps(mUrl);
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
     }
@@ -229,6 +229,8 @@ public class YammNetworkImageView extends ImageView {
             setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
+            Log.d("YammNetWorkImageView/onDetachedFromWindow/ImageCache","ImageView Detached");
+
         }
         super.onDetachedFromWindow();
     }
@@ -243,13 +245,17 @@ public class YammNetworkImageView extends ImageView {
 
     @Override
     public void setImageBitmap(Bitmap bm) {
-        Log.d("YammNetworkImageView/setImageBitmap", "Transition");
+        Log.d("YammNetworkImageView/setImageBitmap", "Transition ");
         TransitionDrawable td = new TransitionDrawable(new Drawable[]{
                 new ColorDrawable(android.R.color.transparent),
                 new BitmapDrawable(getContext().getResources(), bm)
         });
-
+        myBitmap = bm;
+       // ImageCacheManager.addFromUsedBitmaps(bm);
         setImageDrawable(td);
         td.startTransition(FADE_IN_TIME_MS);
     }
+
+
+
 }

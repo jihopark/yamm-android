@@ -3,6 +3,8 @@ package com.teamyamm.yamm.app.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
@@ -11,7 +13,11 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.teamyamm.yamm.app.network.VolleyController;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
+
+import retrofit.http.HEAD;
 
 /**
  * Implementation of volley's ImageCache interface. This manager tracks the application image loader and cache.
@@ -45,8 +51,6 @@ public class ImageCacheManager{
      */
     private ImageCache mImageCache;
 
-    private static HashSet<String> usedBitmap;
-
     /**
      * @return
      * 		instance of the cache manager
@@ -54,8 +58,6 @@ public class ImageCacheManager{
     public static ImageCacheManager getInstance(){
         if(mInstance == null) {
             mInstance = new ImageCacheManager();
-            usedBitmap = new HashSet<String>();
-            Log.d("ImageCacheManager/getInstance","New Instance Created. Used Bitmap Set Initialized");
         }
         return mInstance;
     }
@@ -67,9 +69,11 @@ public class ImageCacheManager{
     * See also overide method of entryRemoved in BitmapLruImageCacahe
     * */
 
-    public static void addFromUsedBitmaps(String url){
-        usedBitmap.add(url);
-        Log.d("ImageCacheManager/addFromUsedBitmap",usedBitmap.size() + " Remaining. Bitmap Added" + url);
+//    private static Set<SoftReference<Bitmap>> usedBitmap;
+
+   /* public static void addFromUsedBitmaps(Bitmap bitmap){
+        usedBitmap.add(new SoftReference<Bitmap>(bitmap));
+        Log.d("ImageCacheManager/addFromUsedBitmap", usedBitmap.size() + " Remaining. Bitmap Added");
 
     }
 
@@ -82,6 +86,14 @@ public class ImageCacheManager{
     public static boolean isInUsedBitmaps(String url){
         return usedBitmap.contains(url);
     }
+    public static void removeFromUsedBitmaps(Bitmap bitmap){
+        usedBitmap.remove(new SoftReference<Bitmap>(bitmap));
+        Log.d("ImageCacheManager/removeFromUsedBitmap",usedBitmap.size() + " Remaining. Bitmap Removed ");
+    }
+
+    public static boolean isInUsedBitmaps(Bitmap bitmap){
+        return usedBitmap.contains(new SoftReference<Bitmap>(bitmap));
+    }*/
 
     /**
      * Initializer for the manager. Must be called prior to use.
@@ -170,29 +182,25 @@ public class ImageCacheManager{
      */
 
     public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
-
-        private final String TAG = this.getClass().getSimpleName();
-
+        private int count = 0;
         public BitmapLruImageCache(int maxSize) {
             super(maxSize);
         }
 
         @Override
-            protected int sizeOf(String key, Bitmap value) {
+        protected int sizeOf(String key, Bitmap value) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
                 return value.getRowBytes() * value.getHeight();
+            } else {
+                return value.getByteCount();
+            }
         }
 
 
         @Override
         protected void entryRemoved(boolean evicted, String key,
                                     Bitmap oldValue, Bitmap newValue) {
-            if (!ImageCacheManager.isInUsedBitmaps(key)){
-                Log.d("ImageCacheManager/entryRemoved","Bitmap Not in Use. Recycle! " + key);
-                if (!oldValue.isRecycled()) {
-                    oldValue.recycle();
-                    Log.d("ImageCacheManager/entryRemoved","Recycled!");
-                }
-            }
+            Log.d("ImageCacheManager/entryRemoved", --count + ":Entry Removed" + key);
         }
 
         @Override
@@ -206,12 +214,16 @@ public class ImageCacheManager{
 
         @Override
         public void putBitmap(String url, Bitmap bitmap) {
-            Log.d("BitmapLruImageCache/putBitmap", "Added item to Mem Cache");
-            put(url, bitmap);
+            Log.d("BitmapLruImageCache/putBitmap", count++ + ":Added item to Mem Cache ");
+            put(url, getDecodedBitmap(bitmap));
+        }
+
+        private static final int COMPRESS_QUALITY = 70;
+
+        public Bitmap getDecodedBitmap(Bitmap b){
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            b.compress(CompressFormat.JPEG, COMPRESS_QUALITY, out);
+            return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
         }
     }
-
-
-
-
 }

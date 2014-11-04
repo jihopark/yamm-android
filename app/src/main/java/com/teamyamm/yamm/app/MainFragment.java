@@ -193,7 +193,7 @@ public class MainFragment extends Fragment {
     private void setDishPager(){
         dishAdapter = new DishFragmentPagerAdapter(getChildFragmentManager());
         dishPager = (ViewPager) main_layout.findViewById(R.id.dish_pager);
-        dishPager.setOffscreenPageLimit(3);
+        dishPager.setOffscreenPageLimit(2);
         dishPager.setAdapter(dishAdapter);
         dishPager.setOnPageChangeListener(dishAdapter);
         setNextButtons();

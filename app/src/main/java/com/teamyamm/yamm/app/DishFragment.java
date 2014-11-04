@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.teamyamm.yamm.app.pojos.DishItem;
-import com.teamyamm.yamm.app.util.ImageCacheManager;
 import com.teamyamm.yamm.app.widget.YammImageView;
 
 import java.lang.reflect.Field;
@@ -106,7 +105,6 @@ public class DishFragment extends Fragment {
 
         if (parentFragment!=null) {
             Log.d("DishFragment/onDetatch","Detatch DishFragment " + index);
-            ImageCacheManager.removeFromUsedBitmaps(image.getImageURL());
             parentFragment.detachDishFragment(index);
         }
 
