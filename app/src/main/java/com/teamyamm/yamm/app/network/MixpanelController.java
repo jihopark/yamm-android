@@ -62,16 +62,16 @@ public class MixpanelController {
         Log.d("MixpanelController/logOut","Mixpanel distinct id is " + mixpanel.getDistinctId());
     }
 
-    public static void setMixpanelAlias(String email){
+    public static void setMixpanelAlias(String uid){
         if (!checkMixpanelAPI())
             return ;
 
-        mixpanel.alias(email, null);
-        Log.i("MixpanelController/setMixpanelAlias", "Mixpanel - Setting Unique ID with email " + email);
+        mixpanel.alias(uid, null);
+        Log.i("MixpanelController/setMixpanelAlias", "Mixpanel - Setting Unique ID" + uid);
 
         mixpanel.getPeople().identify(mixpanel.getDistinctId());
-        mixpanel.getPeople().set("$email",email);
-        Log.i("MixpanelController/setMixpanelAlias","Mixpanel - Setting Name for Account"+ email);
+        mixpanel.getPeople().set("uid",uid);
+        Log.i("MixpanelController/setMixpanelAlias","Mixpanel - Setting uid for Account"+ uid);
     }
 
     public static void setMixpanelIdentity(String email){

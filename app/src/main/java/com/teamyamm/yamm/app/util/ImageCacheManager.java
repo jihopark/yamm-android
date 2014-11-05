@@ -117,6 +117,7 @@ public class ImageCacheManager{
                 break;
             case MEMORY:
                 mImageCache = new BitmapLruImageCache(cacheSize);
+                break;
             default:
                 mImageCache = new BitmapLruImageCache(cacheSize);
                 break;
@@ -185,10 +186,15 @@ public class ImageCacheManager{
 
     public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
         private int count = 0;
+        private final static int minCacheSize = 10*1024*1024;
+        private boolean shouldCache = true;
 
         public BitmapLruImageCache(int maxSize) {
             super(maxSize);
-
+            if (maxSize < minCacheSize) {
+                shouldCache = false;
+                Log.d("BitmapLruImageCache/constructor","Cache Size Too Low, Disable Cache");
+            }
         }
 
         @Override
@@ -209,17 +215,23 @@ public class ImageCacheManager{
 
         @Override
         public Bitmap getBitmap(String url) {
-            if (get(url)==null)
-                Log.d("BitmapLruImageCache/getBitmap", "Does not exist in Cache " + url);
-            else
-                Log.d("BitmapLruImageCache/getBitmap", "Retrieved item from Mem Cache " + url);
-            return get(url);
+            if (shouldCache) {
+
+                if (get(url) == null)
+                    Log.d("BitmapLruImageCache/getBitmap", "Does not exist in Cache " + url);
+                else
+                    Log.d("BitmapLruImageCache/getBitmap", "Retrieved item from Mem Cache " + url);
+                return get(url);
+            }
+            return null;
         }
 
         @Override
         public void putBitmap(String url, Bitmap bitmap) {
-            Log.d("BitmapLruImageCache/putBitmap", count++ + ":Added item to Mem Cache ");
-            put(url, bitmap);
+            if (shouldCache) {
+                put(url, bitmap);
+                Log.d("BitmapLruImageCache/putBitmap", count++ + ":Added item to Mem Cache ");
+            }
         }
 
         private static final int COMPRESS_QUALITY = 70;
