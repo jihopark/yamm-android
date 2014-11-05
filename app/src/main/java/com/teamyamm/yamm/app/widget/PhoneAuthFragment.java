@@ -141,7 +141,7 @@ public class PhoneAuthFragment extends Fragment {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
                 Log.i("PhoneAuthFragment/fbRegistration", "KAKAO Registration Success");
-                MixpanelController.setMixpanelAlias(yammToken.uid + "@kakao");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"");
                 MixpanelController.trackJoiningMixpanel("KAKAO");
 
                 finishRegistration(yammToken.access_token);
@@ -159,7 +159,7 @@ public class PhoneAuthFragment extends Fragment {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
                 Log.i("PhoneAuthFragment/fbRegistration","FB Registration Success");
-                MixpanelController.setMixpanelAlias(yammToken.uid+"@facebook");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"");
                 MixpanelController.trackJoiningMixpanel("FB");
 
                 finishRegistration(yammToken.access_token);
@@ -177,7 +177,7 @@ public class PhoneAuthFragment extends Fragment {
             @Override
             public void success(YammAPIService.YammToken yammToken, Response response) {
                 Log.i("PhoneAuthFragment/pwRegistration", "Password Registration Success");
-                MixpanelController.setMixpanelAlias(yammToken.uid + "@password");
+                MixpanelController.setMixpanelAlias(yammToken.uid+"");
                 MixpanelController.trackJoiningMixpanel("PW");
 
                 finishRegistration(yammToken.access_token);
