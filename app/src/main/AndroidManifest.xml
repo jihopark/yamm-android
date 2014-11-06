@@ -25,6 +25,7 @@
     <uses-permission android:name="com.teamyamm.yamm.permission.C2D_MESSAGE"/>
 
     <application
+        android:debuggable="false"
         android:allowBackup="true"
         android:icon="@drawable/yamm_launcher"
         android:label="@string/app_name"
