@@ -709,18 +709,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void removeAuthToken(){
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(getString(R.string.AUTH_TOKEN));
-        editor.remove(PROPERTY_REG_ID);
-        editor.remove(PROPERTY_APP_VERSION);
-        regid = null;
-        editor.commit();
-
-        //GCM push
-        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
-        people.clearPushRegistrationId();
-
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
                 Secure.ANDROID_ID);
 
@@ -741,6 +729,17 @@ public class BaseActivity extends ActionBarActivity {
         }
 
         YammAPIAdapter.setToken(null);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getString(R.string.AUTH_TOKEN));
+        editor.remove(PROPERTY_REG_ID);
+        editor.remove(PROPERTY_APP_VERSION);
+        regid = null;
+        editor.commit();
+
+        //GCM push
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
+        people.clearPushRegistrationId();
     }
 
     protected void removePersonalData(){
