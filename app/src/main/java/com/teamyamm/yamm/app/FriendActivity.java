@@ -230,7 +230,7 @@ public class FriendActivity extends BaseActivity implements FriendListInterface,
             public void onNothingSelected(AdapterView<?> parent) { }
 
         });
-        setDefaultValueForSpinner(datePickSpinner);
+        setDefaultValueForSpinner(datePickSpinner, YammFragment.TODAY);
     }
 
 }

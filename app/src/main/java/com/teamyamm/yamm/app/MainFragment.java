@@ -62,6 +62,7 @@ public class MainFragment extends Fragment {
     private List<DishItem> dishItems;
     private int currentPage = 0;
     private boolean isGroup;
+    private int suggestionType = YammFragment.TODAY;
     private boolean hasPerformed = false;
     public boolean isPerforming = false;
 
@@ -165,7 +166,7 @@ public class MainFragment extends Fragment {
         dishItems = new Gson().fromJson(s, type);
         isGroup = bundle.getBoolean("isGroup");
         hasPerformed = !bundle.getBoolean("shouldPerform");
-
+        suggestionType = bundle.getInt("suggestionType");
     }
 
     public ImageButton getButton(int viewId){
@@ -392,7 +393,7 @@ public class MainFragment extends Fragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("dish", new Gson().toJson(getCurrentDishItem(), DishItem.class));
-
+                    bundle.putInt("suggestionType",suggestionType);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

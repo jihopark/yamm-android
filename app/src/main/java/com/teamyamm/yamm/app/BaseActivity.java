@@ -139,7 +139,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
 
-        checkAppVersion();
+   //     checkAppVersion();
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));
@@ -709,18 +709,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     protected void removeAuthToken(){
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(getString(R.string.AUTH_TOKEN));
-        editor.remove(PROPERTY_REG_ID);
-        editor.remove(PROPERTY_APP_VERSION);
-        regid = null;
-        editor.commit();
-
-        //GCM push
-        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
-        people.clearPushRegistrationId();
-
         String deviceId = Secure.getString(getApplicationContext().getContentResolver(),
                 Secure.ANDROID_ID);
 
@@ -741,6 +729,17 @@ public class BaseActivity extends ActionBarActivity {
         }
 
         YammAPIAdapter.setToken(null);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getString(R.string.AUTH_TOKEN));
+        editor.remove(PROPERTY_REG_ID);
+        editor.remove(PROPERTY_APP_VERSION);
+        regid = null;
+        editor.commit();
+
+        //GCM push
+        MixpanelAPI.People people = MixpanelController.mixpanel.getPeople();
+        people.clearPushRegistrationId();
     }
 
     protected void removePersonalData(){
@@ -960,7 +959,8 @@ public class BaseActivity extends ActionBarActivity {
         if (regid == null || regid.isEmpty())
             regid = getRegistrationId(getApplicationContext());
         else {
-            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is Issued");
+            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is Issued. Renewing Push Token with Kakao Push Server.");
+            sendRegistrationIdToBackend();
             return;
         }
         Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid " + regid);
@@ -1084,17 +1084,32 @@ public class BaseActivity extends ActionBarActivity {
         return getString(R.string.poke_friend_singular);
     }
 
-    protected void setDefaultValueForSpinner(Spinner s){
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
+    protected void setDefaultValueForSpinner(Spinner s, int type){
 
-        if (hour < 14 && hour > 2){
-            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Lunch!");
-            s.setSelection(0);
+        if (type == YammFragment.TODAY) {
+            //Set By Current Type
+
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+
+            if (hour < 14 && hour > 2) {
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Lunch!");
+                s.setSelection(0);
+            } else {
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Dinner!");
+                s.setSelection(1);
+            }
         }
         else{
-            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Dinner!");
-            s.setSelection(1);
+            //Set By Recommendation Type
+            if (type == YammFragment.DRINK || type == YammFragment.DINNER){
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Dinner!");
+                s.setSelection(1);
+            }
+            else if (type == YammFragment.LUNCH){
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Lunch!");
+                s.setSelection(0);
+            }
         }
     }
 

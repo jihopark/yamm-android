@@ -156,6 +156,7 @@ public class YammActivity extends BaseActivity implements MainFragmentInterface 
         Bundle bundle = new Bundle();
         bundle.putString("dishes", new Gson().toJson(dishes, DISH_ITEM_LIST_TYPE));
         bundle.putBoolean("isGroup", false);
+        bundle.putInt("suggestionType", type);
         bundle.putBoolean("shouldPerform", shouldPerformAnimation);
         mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
