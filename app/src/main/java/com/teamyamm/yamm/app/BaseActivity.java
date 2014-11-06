@@ -139,7 +139,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
 
-        checkAppVersion();
+   //     checkAppVersion();
 
         prefs = getSharedPreferences(BaseActivity.packageName, MODE_PRIVATE);
         Thread.setDefaultUncaughtExceptionHandler(new WTFExceptionHandler(this, prefs));
