@@ -959,7 +959,8 @@ public class BaseActivity extends ActionBarActivity {
         if (regid == null || regid.isEmpty())
             regid = getRegistrationId(getApplicationContext());
         else {
-            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is Issued");
+            Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid is Issued. Renewing Push Token with Kakao Push Server.");
+            sendRegistrationIdToBackend();
             return;
         }
         Log.i("BaseActivity/checkIfPushTokenIsIssued", "Regid " + regid);
