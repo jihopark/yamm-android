@@ -913,7 +913,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
 
         YammAPIService service = restAdapter.create(YammAPIService.class);*/
 
-        YammAPIService service = YammAPIAdapter.getTokenService();
+        YammAPIService service = YammAPIAdapter.getTokenService(false);
 
         if (service==null) {
             invalidToken();

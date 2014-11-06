@@ -51,6 +51,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     private boolean yammEnableButtonFlag = false, contactEnableButtonFlag = false;
     private Button yammConfirmButton, contactConfirmButton;
 
+    private int suggestionType = YammFragment.TODAY;
+
     private DishItem currentItem;
 
     @Override
@@ -73,7 +75,8 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
     }
     private void getBundle(){
         currentItem = new Gson().fromJson(getIntent().getExtras().getString("dish"), DishItem.class);
-        Log.i("PokeActivity/getBundle","Current Dish Item " + currentItem.getName());
+        suggestionType = getIntent().getExtras().getInt("suggestionType");
+        Log.i("PokeActivity/getBundle","Current Dish Item " + currentItem.getName() + " SuggestionType " + suggestionType);
     }
 
     private void setContactList(){
@@ -346,7 +349,7 @@ public class PokeActivity extends BaseActivity implements FriendListInterface, D
             }
             public void onNothingSelected(AdapterView<?> parent) { }
         });
-        setDefaultValueForSpinner(datePickSpinner);
+        setDefaultValueForSpinner(datePickSpinner, suggestionType);
     }
 
     public String getPokeMessage(String time, String name){

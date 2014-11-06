@@ -33,6 +33,7 @@ public class YammAPIAdapter {
 
     private static YammAPIService service = null;
     public static YammAPIService tokenService = null;
+    public static YammAPIService unloggedTokenService = null;
     private static YammAPIService dislikeService = null;
     private static YammAPIService joinService = null;
     private static YammAPIService loginService = null;
@@ -88,15 +89,47 @@ public class YammAPIAdapter {
     /*
     * Service that only needs token
     * */
-    public static YammAPIService getTokenService(){
-        if (tokenService == null){
+    public static YammAPIService getTokenService(boolean shouldLog){
+        if (shouldLog) {
+            if (tokenService == null) {
+                checkAPIURL();
+                if (token == null) {
+                    Log.e("YammAPIAdapter/getTokenService", "Token should be set first!!");
+                    return null;
+                }
+
+                Log.i("YammAPIAdapter/getTokenService", "tokenService initiated with " + token);
+
+                RequestInterceptor interceptor = new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Authorization", "Bearer " + token);
+                    }
+                };
+
+                RestAdapter restAdapter = new RestAdapter.Builder()
+                        .setEndpoint(apiURL)
+                        .setLog(setRestAdapterLog())
+                        .setLogLevel(RestAdapter.LogLevel.FULL)
+                        .setErrorHandler(new TokenErrorHandler())
+                        .setRequestInterceptor(interceptor)
+                        .build();
+
+                tokenService = restAdapter.create(YammAPIService.class);
+            }
+            return tokenService;
+        }
+        Log.d("YammAPIAdapter/getTokenService", "Unlogged Token Called");
+
+        // If Should not be Logged
+        if (unloggedTokenService == null) {
             checkAPIURL();
-            if (token==null){
-                Log.e("YammAPIAdapter/getTokenService","Token should be set first!!");
+            if (token == null) {
+                Log.e("YammAPIAdapter/getTokenService", "Token should be set first!!");
                 return null;
             }
 
-            Log.i("YammAPIAdapter/getTokenService", "tokenService initiated with " + token);
+            Log.i("YammAPIAdapter/getTokenService", "UnLoggedTokenService initiated with " + token);
 
             RequestInterceptor interceptor = new RequestInterceptor() {
                 @Override
@@ -107,15 +140,17 @@ public class YammAPIAdapter {
 
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint(apiURL)
-                    .setLog(setRestAdapterLog())
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setErrorHandler(new TokenErrorHandler())
                     .setRequestInterceptor(interceptor)
                     .build();
 
-            tokenService = restAdapter.create(YammAPIService.class);
+            unloggedTokenService = restAdapter.create(YammAPIService.class);
         }
-        return tokenService;
+        return unloggedTokenService;
+    }
+
+    public static YammAPIService getTokenService(){
+        return getTokenService(true);
     }
 
     /*
