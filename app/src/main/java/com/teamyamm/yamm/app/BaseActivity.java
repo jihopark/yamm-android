@@ -1084,17 +1084,32 @@ public class BaseActivity extends ActionBarActivity {
         return getString(R.string.poke_friend_singular);
     }
 
-    protected void setDefaultValueForSpinner(Spinner s){
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
+    protected void setDefaultValueForSpinner(Spinner s, int type){
 
-        if (hour < 14 && hour > 2){
-            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Lunch!");
-            s.setSelection(0);
+        if (type == YammFragment.TODAY) {
+            //Set By Current Type
+
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+
+            if (hour < 14 && hour > 2) {
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Lunch!");
+                s.setSelection(0);
+            } else {
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Dinner!");
+                s.setSelection(1);
+            }
         }
         else{
-            Log.d("BaseActivity/setDefaultValueForSpinner","Yay Dinner!");
-            s.setSelection(1);
+            //Set By Recommendation Type
+            if (type == YammFragment.DRINK || type == YammFragment.DINNER){
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Dinner!");
+                s.setSelection(1);
+            }
+            else if (type == YammFragment.LUNCH){
+                Log.d("BaseActivity/setDefaultValueForSpinner", "Yay Lunch!");
+                s.setSelection(0);
+            }
         }
     }
 
