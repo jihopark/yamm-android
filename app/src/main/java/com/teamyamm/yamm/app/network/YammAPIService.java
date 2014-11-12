@@ -4,6 +4,7 @@ import com.teamyamm.yamm.app.pojos.BattleItem;
 import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.GridItem;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 import com.teamyamm.yamm.app.pojos.YammPlace;
 
 import java.util.List;
@@ -274,6 +275,9 @@ public interface YammAPIService {
         }
     }
 
+    @GET("/search-category")
+    void getSearchCategories(Callback<List<SearchCategory>> callback);
+
     @GET("/dish")
     void getDishes(Callback<List<DishItem>> callback);
 
@@ -406,6 +410,10 @@ public interface YammAPIService {
     @GET("/map/nearby")
     void getPlacesNearby(@Query("lat") double lat, @Query("lng") double lng,
                                @Query("dish_id") int id, Callback<List<YammPlace>> callback);
+    @GET("/map/nearby")
+    void getPlacesNearbyByCategory(@Query("lat") double lat, @Query("lng") double lng,
+                         @Query("category_id") int id, Callback<List<YammPlace>> callback);
+
     /*
     * Error
     * */

@@ -4,8 +4,8 @@ package com.teamyamm.yamm.app.pojos;
  * Created by parkjiho on 5/12/14.
  */
 public class DishItem {
-    private int id;
-    private String name;
+    protected int id;
+    protected String name;
     private String comment;
 
     public DishItem(int id, String name){

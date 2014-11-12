@@ -61,11 +61,13 @@ public class MapActivity extends BaseActivity implements
     private double x,y;
     private String dishName;
     private int dishId;
+    private boolean isCategory;
     private Dialog fullScreenDialog;
     private ListView list;
     private TextView descriptionText;
     private Button currentLocationText;
     private String currentLocation;
+
 
     private LocationClient mLocationClient;
 
@@ -133,6 +135,7 @@ public class MapActivity extends BaseActivity implements
 
         dishId = getIntent().getExtras().getInt(LocationSearchHelper.DISH_ID);
         dishName = getIntent().getExtras().getString(LocationSearchHelper.DISH_NAME);
+        isCategory = getIntent().getExtras().getBoolean(LocationSearchHelper.IS_CATEGORY);
 
         if (dishId == 0 || dishName == null){
             Log.e("MapActivity/initActivity", "Dish isn't Set.");
@@ -254,7 +257,8 @@ public class MapActivity extends BaseActivity implements
     private void loadPlaces(){
         list = (ListView) findViewById(R.id.yamm_places_list);
         list.setEmptyView(findViewById(R.id.empty_view));
-        YammAPIAdapter.getTokenService().getPlacesNearby(x,y , dishId, new Callback<List<YammPlace>>() {
+
+        Callback callback = new Callback<List<YammPlace>>() {
             @Override
             public void success(List<YammPlace> yammPlaces, Response response) {
                 YammPlacesListAdapter adapter = new YammPlacesListAdapter(MapActivity.this, yammPlaces);
@@ -272,7 +276,16 @@ public class MapActivity extends BaseActivity implements
                 Log.e("MapActivity/getPlacesNearBy/Failure", "Get Places Nearby Fail");
                 finish();
             }
-        });
+        };
+
+        if (isCategory){
+            Log.d("MapActivity/loadPlaces","Get Places Nearby By Category");
+            YammAPIAdapter.getTokenService().getPlacesNearbyByCategory(x,y,dishId, callback);
+        }
+        else {
+            Log.d("MapActivity/loadPlaces","Get Places Nearby By Dish");
+            YammAPIAdapter.getTokenService().getPlacesNearby(x, y, dishId, callback);
+        }
     }
 
     private void addMarkers(List<YammPlace> places){

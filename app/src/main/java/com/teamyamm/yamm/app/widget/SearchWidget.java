@@ -19,6 +19,7 @@ import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.network.YammAPIAdapter;
 import com.teamyamm.yamm.app.network.YammAPIService;
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 import com.teamyamm.yamm.app.util.DishSearchListAdapter;
 import com.teamyamm.yamm.app.util.LocationSearchHelper;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
@@ -87,11 +88,18 @@ public class SearchWidget {
                 DishItem item =null;
                 if (textView.getText()!=null)
                     item = adapter.checkIfDishIsPresent(textView.getText().toString());
+
                 if (item!=null){
                     BaseActivity.hideSoftKeyboard((Activity)context);
                     dialog.dismiss();
-                    addDishToPositive(item);
-                    MixpanelController.trackSearchDishMixpanel(item);
+
+                    if (item instanceof SearchCategory) {
+                        MixpanelController.trackSearchCategoryMixpanel((SearchCategory)item);
+                    }
+                    else{
+                        addDishToPositive(item);
+                        MixpanelController.trackSearchDishMixpanel(item);
+                    }
                     LocationSearchHelper.startMapActivity(context, item);
                 }
                 else{
@@ -105,6 +113,10 @@ public class SearchWidget {
         });
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    public void addCategories(List<SearchCategory> searchCategories){
+        adapter.addCategories(searchCategories);
     }
 
     private void addDishToPositive(DishItem item){
