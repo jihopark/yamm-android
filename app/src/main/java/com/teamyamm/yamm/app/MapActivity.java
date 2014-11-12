@@ -258,6 +258,15 @@ public class MapActivity extends BaseActivity implements
         list = (ListView) findViewById(R.id.yamm_places_list);
         list.setEmptyView(findViewById(R.id.empty_view));
 
+        //Set OnClickListener for Empty Text View
+        findViewById(R.id.empty_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationSearchHelper.showLocationDialog(MapActivity.this);
+            }
+        });
+
+        //Callback for load places
         Callback callback = new Callback<List<YammPlace>>() {
             @Override
             public void success(List<YammPlace> yammPlaces, Response response) {
@@ -280,7 +289,7 @@ public class MapActivity extends BaseActivity implements
 
         if (isCategory){
             Log.d("MapActivity/loadPlaces","Get Places Nearby By Category");
-            YammAPIAdapter.getTokenService().getPlacesNearbyByCategory(x,y,dishId, callback);
+            YammAPIAdapter.getTokenService().getPlacesNearbyByCategory(x, y, dishId, callback);
         }
         else {
             Log.d("MapActivity/loadPlaces","Get Places Nearby By Dish");
