@@ -41,6 +41,7 @@ import com.teamyamm.yamm.app.pojos.DishItem;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.LeftDrawerItem;
 import com.teamyamm.yamm.app.pojos.PushContent;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 import com.teamyamm.yamm.app.util.WTFExceptionHandler;
 import com.teamyamm.yamm.app.util.YammLeftDrawerAdapter;
 import com.teamyamm.yamm.app.widget.SearchWidget;
@@ -77,6 +78,7 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
     private boolean isDialogOpen = false;
     private boolean isLoading = false;
     private boolean isLoadingDishes = false;
+    private boolean isLoadingCategories = false;
     protected boolean isLeftMenuLoaded = false;
     private PushContent pushContent = null;
     private TutorialFragment tutorial;
@@ -1003,7 +1005,6 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                     shouldOpenSearchWidget = false;
                 }
                 isLoadingDishes = false;
-
             }
 
             @Override
@@ -1018,10 +1019,25 @@ public class MainActivity extends BaseActivity implements MainFragmentInterface 
                 isLoadingDishes= false;
             }
         });
+
     }
 
     private void showSearchWidget(){
-        searchWidget = new SearchWidget(fullDishList, MainActivity.this);
+        if (searchWidget== null) {
+            searchWidget = new SearchWidget(fullDishList, MainActivity.this);
+            YammAPIAdapter.getTokenService().getSearchCategories(new Callback<List<SearchCategory>>() {
+                @Override
+                public void success(List<SearchCategory> searchCategories, Response response) {
+                    Log.d("MainActivity/showSearchWidget", "Loaded search category");
+                    searchWidget.addCategories(searchCategories);
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    Log.e("MainActivity/showSearchWidget", "Error in loading search categories");
+                }
+            });
+        }
         searchWidget.showSearchDialog();
     }
 }

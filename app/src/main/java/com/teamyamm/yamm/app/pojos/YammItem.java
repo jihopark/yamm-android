@@ -36,7 +36,7 @@ public abstract class YammItem implements Comparable<YammItem> {
             return 1;
         }
         else {
-            return nameCompareTo(name,compare.getName());
+            return nameCompareTo(this.getName(),compare.getName());
         }
     }
 

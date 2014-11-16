@@ -14,6 +14,7 @@ public class PushContent {
     public final static String POKE = "POKE";
     public final static String FACEBOOK ="FB";
     public final static String POKE_RESPONSE = "POKE_RESPONSE";
+    public final static String TODAY = "TODAY";
 
     private String type;
     private Friend sender;
@@ -48,7 +49,7 @@ public class PushContent {
             dish = gson.fromJson(extras.getString("dish"), DishItem.class);
             sender = gson.fromJson(extras.getString("sender"), Friend.class);
         }
-        else if (type.equals(ADMIN) || type.equals(UPDATE)){
+        else if (type.equals(ADMIN) || type.equals(UPDATE) || type.equals(TODAY)){
             message = extras.getString("mp_message");
             if (extras.containsKey("title"))
                 title = extras.getString("title");

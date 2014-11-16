@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -446,6 +447,20 @@ public class MixpanelController {
         }
         mixpanel.track("Search Dish", props);
         Log.i("MixpanelController/trackSearchDishMixpanel", "Search Dish Tracked");
+    }
+
+    public static void trackSearchCategoryMixpanel(SearchCategory category){
+        if (!checkMixpanelAPI())
+            return;
+
+        JSONObject props = new JSONObject();
+        try {
+            props.put("Category", category.getName());
+        } catch (JSONException e) {
+            Log.e("MixpanelController/trackSearchCategoryMixpanel", "JSON Error");
+        }
+        mixpanel.track("Search Category", props);
+        Log.i("MixpanelController/trackSearchCategoryMixpanel", "Search Category Tracked");
     }
 
     public static void trackEnteredPlaceMixpanel() {

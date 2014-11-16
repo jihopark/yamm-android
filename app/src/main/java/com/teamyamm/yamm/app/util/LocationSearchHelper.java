@@ -26,6 +26,7 @@ import com.teamyamm.yamm.app.MapActivity;
 import com.teamyamm.yamm.app.R;
 import com.teamyamm.yamm.app.network.MixpanelController;
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,7 @@ public class LocationSearchHelper {
     public final static String LANG = "LANG";
     public final static String LONG = "LONG";
     public final static String DISH_NAME = "name";
+    public final static String IS_CATEGORY = "category";
     public final static String DISH_ID = "id";
 
 
@@ -109,6 +111,7 @@ public class LocationSearchHelper {
         mapIntent.putExtra(LONG, 0);
         mapIntent.putExtra(DISH_NAME, item.getName());
         mapIntent.putExtra(DISH_ID, item.getId());
+        mapIntent.putExtra(IS_CATEGORY, item instanceof SearchCategory);
 
         context.startActivity(mapIntent);
     }

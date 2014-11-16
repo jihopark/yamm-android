@@ -27,6 +27,8 @@ import com.teamyamm.yamm.app.BaseActivity;
 import com.teamyamm.yamm.app.MainActivity;
 import com.teamyamm.yamm.app.PokeAlertActivity;
 import com.teamyamm.yamm.app.R;
+import com.teamyamm.yamm.app.YammActivity;
+import com.teamyamm.yamm.app.YammFragment;
 import com.teamyamm.yamm.app.pojos.Friend;
 import com.teamyamm.yamm.app.pojos.PushContent;
 
@@ -210,6 +212,27 @@ public class GcmIntentService extends IntentService {
             }
             else
                 Log.i("GcmIntentService/sendNotification","FB Notification came but ignored");
+        }
+        else if (content.getType().equals(PushContent.TODAY)){
+            Log.i("GcmIntentService/sendNotification","Today Notification " + content.getMessage());
+            Intent intent = new Intent(this, YammActivity.class);
+            intent.putExtra("TYPE", YammFragment.TODAY);
+            intent.putExtra("LOADNEWDISHES", true);
+
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    intent, 0);
+
+
+            String title = content.getTitle();
+            if (title == null || title.isEmpty())
+                title = getString(R.string.push_admin_default_title);
+
+            mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.yamm_stat_notify)
+                    .setContentTitle(title)
+                    .setContentText(content.getMessage())
+                    .setAutoCancel(true)
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
         else if (content.getType().equals(PushContent.ADMIN)){
             Log.i("GcmIntentService/sendNotification","ADMIN Notification");

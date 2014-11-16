@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
 import com.teamyamm.yamm.app.pojos.DishItem;
+import com.teamyamm.yamm.app.pojos.SearchCategory;
 import com.teamyamm.yamm.app.widget.SearchDishItemView;
 
 import java.util.ArrayList;
@@ -27,6 +28,15 @@ public class DishSearchListAdapter extends ArrayAdapter<DishItem> {
         this.context = context;
         this.suggestions = new ArrayList<DishItem>();
         this.items = items;
+    }
+
+    public void addCategories(List<SearchCategory> categories){
+        for (SearchCategory i : categories){
+            items.add(i);
+        }
+        notifyDataSetChanged();
+        Log.d("DishSearchListAdapter/addCategories","Categories added to DishSearchList Adapter");
+
     }
 
     @Override

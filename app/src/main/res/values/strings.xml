@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_version_name">0.2.2</string>
+    <string name="app_version_name">0.2.3</string>
     <string name="facebook_app_test_id">842999912412097</string>
     <string name="facebook_app_id">842551369123618</string>
     <string name="logentries_key">6036cb0d-331d-4124-8245-e93f91de1388</string>
@@ -34,7 +34,7 @@
     <string name="join_error_message">잘못된 정보가 있습니다. 확인해주세요</string>
     <string name="phone_number_error_message">전화번호 형식이 잘못되었습니다</string>
     <string name="verification_error_message">문자전송에 실패했습니다.\n번호를 확인하고 다시 시도해주세요</string>
-    <string name="unidentified_error_message">알수 없는 오류가 발생했습니다. 다시 시도해주세요</string>
+    <string name="unidentified_error_message">인터넷 연결이 안됬거나 불안정합니다.\n다시 시도해주세요</string>
     <string name="duplicate_account_error_message">이미 같은 휴대폰 번호로 가입되어 있습니다</string>
     <string name="duplicate_oauth_account_error_message">이미 같은 페북이나 카톡 계정으로 가입되어 있습니다</string>
     <string name="invalid_token_error_message">페북이나 카톡 인증이 잘못되었습니다.\n다시 시도해주세요</string>
