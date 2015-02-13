@@ -3,10 +3,11 @@ Yamm - 우리 뭐 먹지?  v0.2 Android Application
 This repository contains the source code for the Yamm Android App.
 
 Yamm is a mobile application service provided for Korean users. 
-It recommends what menu to eat by analyzing tastes of user(s).
+It recommends what menu to eat by analyzing tastes of user(s). 
 
 This android app is for user taste inputs and user recommendations 
 
+The [Demo Video](https://www.youtube.com/watch?v=tDzufFzgjeM&feature=youtu.be) of the running app(from sign up to main features)
 
 Building
 ============
