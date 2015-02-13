@@ -9,6 +9,8 @@ This android app is for user taste inputs and user recommendations
 
 The [Demo Video](https://www.youtube.com/watch?v=tDzufFzgjeM&feature=youtu.be) of the running app(from sign up to main features)
 
+Read [my writings](http://parkjiho.kr/tag/first-startup-failure/) about my startup failure experience, related to this app.
+
 Building
 ============
 The app was written with Android Studio 0.5.8 & built with Gradle 19.0.3.
