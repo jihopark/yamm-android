@@ -7,6 +7,8 @@ It recommends what menu to eat by analyzing tastes of user(s).
 
 This android app is for user taste inputs and user recommendations 
 
+The [Design Portfolio](http://bellox.net/archives/project/yamm-3) of Yamm by Bellox, our team's designer
+
 The [Demo Video](https://www.youtube.com/watch?v=tDzufFzgjeM&feature=youtu.be) of the running app(from sign up to main features)
 
 Read [my writings](http://parkjiho.kr/tag/first-startup-failure/) about my startup failure experience, related to this app.
